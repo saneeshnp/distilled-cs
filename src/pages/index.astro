@@ -1,17 +1,1095 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import frameworkData from '../data/lean-cs-data.json';
 
+const stages = frameworkData.maturity_stages.stages;
+const principles = frameworkData.principles;
+const stageHooks: Record<string, string> = {
+  crawl: 'Build the foundation. Survive the chaos.',
+  walk: 'Define processes. Prove your impact.',
+  run: 'Scale operations. Drive measurable outcomes.',
+  fly: 'Predict and prevent. Lead with data.',
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Distilled CS">
+
+  <!-- Section 1: Hero -->
+  <section class="hero" id="hero-section">
+    <canvas id="hero-bg-canvas" aria-hidden="true"></canvas>
+
+    <div class="hero-content">
+      <!-- Top: Headline -->
+      <div class="hero-heading">
+        <h1 class="hero-headline" id="hero-headline">
+          <span class="hero-word">Stop</span>
+          <span class="hero-word">guessing.</span>
+          <br />
+          <span class="hero-word">Start</span>
+          <span class="hero-word accent">measuring.</span>
+        </h1>
+        <p class="hero-subtitle" id="hero-subtitle">
+          The open framework for Customer Success maturity.
+        </p>
+      </div>
+
+      <!-- Middle: Stage cards (all visible on desktop) -->
+      <div class="hero-stages" id="hero-stages">
+        {stages.map((stage, i) => (
+          <button
+            class={`hero-stage-card ${i === 0 ? 'active' : ''}`}
+            data-stage-idx={i}
+            style={`--stage-color: ${stage.color}`}
+            type="button"
+          >
+            <div class="stage-card-number">{String(i + 1).padStart(2, '0')}</div>
+            <div class="stage-card-name">{stage.label}</div>
+            <div class="stage-card-hook">{stageHooks[stage.id]}</div>
+            <div class="stage-card-glow" aria-hidden="true"></div>
+          </button>
+        ))}
+      </div>
+
+      <!-- Progress rail -->
+      <div class="hero-progress" id="hero-progress">
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-labels">
+          {stages.map((stage, i) => (
+            <span class={`progress-label ${i === 0 ? 'active' : ''}`} data-label-idx={i} style={`--dot-color: ${stage.color}`}>
+              {stage.label}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <!-- CTAs -->
+      <div class="hero-ctas" id="hero-ctas">
+        <a href="/assess/" class="btn btn-primary" id="hero-cta-primary" data-contextual="hero-cta">Take the Assessment</a>
+        <a href="/model/" class="btn btn-secondary">Explore the Framework</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: The Problem -->
+  <section class="section-problem" id="why-distilled-cs">
+    <div class="container">
+      <h2 class="section-headline scroll-reveal">Customer Success has a framework problem</h2>
+      <div class="problem-statements">
+        <p class="problem-statement scroll-reveal">
+          Sales has MEDDIC. Marketing has ABM. DevOps has DORA. <strong>What does CS have?</strong>
+        </p>
+        <p class="problem-statement scroll-reveal">
+          Every CS team reinvents the wheel — building health scores from scratch, guessing at benchmarks, and hoping their metrics are the right ones.
+        </p>
+        <p class="problem-statement scroll-reveal">
+          Existing frameworks are paywalled, vendor-locked, or too generic to be useful.
+        </p>
+        <p class="problem-statement scroll-reveal accent-text">
+          It's time for an open standard.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: What Distilled CS Does (3 Pillars) -->
+  <section class="section-pillars" id="how-it-works">
+    <div class="container">
+      <div class="pillars-grid">
+        <div class="pillar-card scroll-reveal">
+          <div class="pillar-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke="var(--color-accent)" stroke-width="2"/><path d="M14 20l4 4 8-8" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="pillar-title">Assess</h3>
+          <p class="pillar-desc">Know where you stand. Our 5-minute assessment scores your CS maturity across 7 domains.</p>
+        </div>
+        <div class="pillar-card scroll-reveal">
+          <div class="pillar-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M8 32l8-12 6 8 10-16" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3 class="pillar-title">Navigate</h3>
+          <p class="pillar-desc">Get prescriptive guidance. Not generic advice — context-aware recommendations for YOUR stage, YOUR team, YOUR customers.</p>
+        </div>
+        <div class="pillar-card scroll-reveal">
+          <div class="pillar-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="8" y="22" width="6" height="10" rx="1" fill="var(--color-accent)" opacity="0.4"/><rect x="17" y="16" width="6" height="16" rx="1" fill="var(--color-accent)" opacity="0.6"/><rect x="26" y="10" width="6" height="22" rx="1" fill="var(--color-accent)"/></svg>
+          </div>
+          <h3 class="pillar-title">Measure</h3>
+          <p class="pillar-desc">Track what matters. A metrics directory that tells you what to track, what to ignore, and what benchmarks to hit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3b: Principles (preview) -->
+  <section class="section-principles" id="principles">
+    <div class="container">
+      <h2 class="section-headline scroll-reveal">Built on seven guiding principles</h2>
+      <p class="section-subheadline scroll-reveal">The beliefs that shape every recommendation, metric, and benchmark in the framework.</p>
+      <div class="principles-preview-grid">
+        {principles.map((p, i) => (
+          <div class="principle-preview scroll-reveal" style={`--reveal-delay: ${i * 0.06}s`}>
+            <span class="principle-preview-number">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="principle-preview-title">{p.title}</h3>
+            <p class="principle-preview-summary">{p.summary}</p>
+          </div>
+        ))}
+      </div>
+      <div class="section-cta scroll-reveal">
+        <a href="/principles/" class="btn btn-secondary">Read all principles</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: The Maturity Model (preview) -->
+  <section class="section-stages" id="maturity-stages">
+    <div class="container">
+      <h2 class="section-headline scroll-reveal">Four stages of CS maturity — The Distilled CS Framework</h2>
+      <p class="section-subheadline scroll-reveal">From reactive firefighting to predictive growth engine. Where does your team stand?</p>
+      <div class="stages-grid">
+        {stages.map((stage, i) => (
+          <div class="stage-card scroll-reveal" style={`--stage-color: ${stage.color}; --stage-delay: ${i * 0.1}s`}>
+            <div class="stage-color-bar" style={`background: ${stage.color}`}></div>
+            <div class="stage-card-content">
+              <span class="stage-label" style={`color: ${stage.color}`}>{stage.label}</span>
+              <span class="stage-subtitle">{stage.subtitle}</span>
+              <ul class="stage-chars">
+                {stage.key_characteristics.slice(0, 3).map(char => (
+                  <li>{char}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div class="section-cta scroll-reveal">
+        <a href="/model/" class="btn btn-secondary">Explore the full maturity model</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Open and Vendor-Neutral -->
+  <section class="section-open" id="open-source">
+    <div class="container">
+      <div class="open-content scroll-reveal">
+        <h2 class="section-headline">Open source. Vendor neutral. Community driven.</h2>
+        <p class="open-body">
+          Distilled CS is licensed under CC BY 4.0. No vendor lock-in, no paywall, no agenda.
+          Just like the FinOps Foundation standardized cloud cost management, Distilled CS aims to give
+          Customer Success a shared language and measurement framework.
+        </p>
+        <p class="open-body emphasis">Built by practitioners, for practitioners.</p>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Contribute on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Final CTA -->
+  <section class="section-final-cta" id="get-started">
+    <div class="container">
+      <div class="final-cta-inner scroll-reveal">
+        <h2 class="final-cta-headline">Ready to find out where your CS team stands?</h2>
+        <a href="/assess/" class="btn btn-primary btn-large">Take the Assessment</a>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ── Hero ───────────────────────────────── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 2rem 1.5rem;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  #hero-bg-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.75rem;
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+  }
+
+  /* ── Hero heading ── */
+  .hero-heading {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  .hero-headline {
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .hero-word {
+    display: inline-block;
+  }
+
+  .hero-word.accent {
+    color: var(--color-accent);
+  }
+
+  .hero-subtitle {
+    font-size: clamp(0.9375rem, 1.5vw, 1.125rem);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    max-width: 30rem;
+    margin-inline: auto;
+  }
+
+  /* ── Stage cards (all visible on desktop) ── */
+  .hero-stages {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @media (min-width: 640px) {
+    .hero-stages {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-stages {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  .hero-stage-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding: 1.125rem 1.125rem;
+    background: rgba(18, 18, 26, 0.6);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.4s ease, transform 0.3s ease, background 0.4s ease;
+    -webkit-tap-highlight-color: transparent;
+    font-family: var(--font-body);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .hero-stage-card:hover {
+    transform: translateY(-2px);
+    background: rgba(18, 18, 26, 0.8);
+  }
+
+  .hero-stage-card.active {
+    border-color: var(--stage-color);
+    background: rgba(18, 18, 26, 0.85);
+    transform: translateY(-3px);
+  }
+
+  .stage-card-glow {
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--stage-color) 12%, transparent), transparent 70%);
+  }
+
+  .hero-stage-card.active .stage-card-glow {
+    opacity: 1;
+  }
+
+  .stage-card-number {
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.25rem;
+    opacity: 0.5;
+    transition: color 0.4s ease, opacity 0.4s ease;
+  }
+
+  .hero-stage-card.active .stage-card-number {
+    color: var(--stage-color);
+    opacity: 0.8;
+  }
+
+  .stage-card-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 0.375rem;
+    transition: color 0.4s ease;
+  }
+
+  .hero-stage-card.active .stage-card-name {
+    color: var(--stage-color);
+  }
+
+  .stage-card-hook {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.45;
+    transition: color 0.4s ease;
+  }
+
+  .hero-stage-card.active .stage-card-hook {
+    color: var(--color-text-secondary);
+  }
+
+  /* ── Progress rail ── */
+  .hero-progress {
+    width: 100%;
+    max-width: 32rem;
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .progress-track {
+    height: 2px;
+    background: var(--color-border);
+    border-radius: 1px;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 1px;
+    transition: width 0.5s ease, background 0.5s ease;
+  }
+
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .progress-label {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    transition: color 0.3s ease;
+    cursor: default;
+  }
+
+  .progress-label.active {
+    color: var(--dot-color);
+  }
+
+  /* ── Hero CTAs ── */
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  /* ── Hero entrance animations ── */
+  .hero.entered .hero-heading {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .hero.entered .hero-stages {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.7s ease 0.25s, transform 0.7s ease 0.25s;
+  }
+
+  .hero.entered .hero-progress {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease 0.45s, transform 0.6s ease 0.45s;
+  }
+
+  .hero.entered .hero-ctas {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease 0.55s, transform 0.6s ease 0.55s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-heading, .hero-stages, .hero-progress, .hero-ctas {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+    .hero-stage-card {
+      transition: none !important;
+    }
+  }
+
+  /* ── Buttons ────────────────────────────── */
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s ease-out;
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+    color: var(--color-bg);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-hover);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-1px);
+  }
+
+  .btn-large {
+    padding: 1rem 2.5rem;
+    font-size: 1.0625rem;
+  }
+
+  /* ── Section: Problem ───────────────────── */
+  .section-problem {
+    padding: 8rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .section-headline {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: 3rem;
+    max-width: 40rem;
+    letter-spacing: -0.02em;
+  }
+
+  .problem-statements {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 40rem;
+  }
+
+  .problem-statement {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .problem-statement strong {
+    color: var(--color-text-primary);
+  }
+
+  .accent-text {
+    color: var(--color-accent) !important;
+    font-family: var(--font-display);
+    font-size: 1.5rem !important;
+    font-style: italic;
+  }
+
+  /* ── Section: Pillars ───────────────────── */
+  .section-pillars {
+    padding: 8rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .pillars-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  .pillar-card {
+    padding: 2rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    transition: border-color 0.25s ease-out, transform 0.25s ease-out;
+  }
+
+  .pillar-card:hover {
+    border-color: var(--color-accent-subtle);
+    border-color: rgba(245, 166, 35, 0.25);
+    transform: translateY(-2px);
+  }
+
+  .pillar-icon {
+    margin-bottom: 1.25rem;
+  }
+
+  .pillar-title {
+    font-size: 1.375rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text-primary);
+  }
+
+  .pillar-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ── Section: Principles preview ─────────── */
+  .section-principles {
+    padding: 8rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .principles-preview-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  @media (min-width: 640px) {
+    .principles-preview-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .principles-preview-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  .principle-preview {
+    padding: 1.5rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.625rem;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .principle-preview:hover {
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+  }
+
+  .principle-preview-number {
+    font-family: var(--font-body);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+    opacity: 0.5;
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .principle-preview-title {
+    font-family: var(--font-display);
+    font-size: 1.1875rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.375rem;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .principle-preview-summary {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+  }
+
+  /* ── Section: Stages ────────────────────── */
+  .section-stages {
+    padding: 8rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .section-subheadline {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    margin-top: -2rem;
+    margin-bottom: 3rem;
+    max-width: 36rem;
+  }
+
+  .stages-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .stages-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .stages-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .stage-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: border-color 0.25s ease-out, transform 0.25s ease-out;
+  }
+
+  .stage-card:hover {
+    border-color: var(--stage-color);
+    transform: translateY(-2px);
+  }
+
+  .stage-color-bar {
+    height: 3px;
+  }
+
+  .stage-card-content {
+    padding: 1.5rem;
+  }
+
+  .stage-label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .stage-subtitle {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .stage-chars {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .stage-chars li {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .stage-chars li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--stage-color);
+  }
+
+  .section-cta {
+    margin-top: 3rem;
+    text-align: center;
+  }
+
+  /* ── Section: Open ──────────────────────── */
+  .section-open {
+    padding: 8rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .open-content {
+    max-width: 36rem;
+  }
+
+  .open-body {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .open-body.emphasis {
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-style: italic;
+  }
+
+  /* ── Section: Final CTA ─────────────────── */
+  .section-final-cta {
+    padding: 8rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .final-cta-inner {
+    text-align: center;
+  }
+
+  .final-cta-headline {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: 2rem;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Scroll reveal base ─────────────────── */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+</style>
+
+<script>
+  // ── Dynamic CTA for assessed users ──
+  try {
+    if (localStorage.getItem('distilledcs_completed') === 'true') {
+      const ctaBtn = document.getElementById('hero-cta-primary');
+      if (ctaBtn) ctaBtn.textContent = 'View My Assessment';
+    }
+  } catch {}
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Scroll-triggered reveals for sections below hero ──
+  if (!prefersReducedMotion) {
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const delay = el.style.getPropertyValue('--stage-delay') || '0';
+            el.style.transition = `opacity 0.6s ease ${delay}, transform 0.6s ease ${delay}`;
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+            revealObserver.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.scroll-reveal').forEach(el => revealObserver.observe(el));
+  } else {
+    document.querySelectorAll('.scroll-reveal').forEach(el => {
+      (el as HTMLElement).style.opacity = '1';
+      (el as HTMLElement).style.transform = 'none';
+    });
+  }
+
+  // ── Hero entrance ──
+  const heroSection = document.getElementById('hero-section')!;
+  requestAnimationFrame(() => {
+    heroSection.classList.add('entered');
+  });
+
+  // ══════════════════════════════════════════
+  //  STAGE CARD CONTROLLER
+  // ══════════════════════════════════════════
+  const STAGE_COUNT = 4;
+  const AUTO_INTERVAL = 3500;
+  const RESUME_DELAY = 6000;
+
+  const cards = document.querySelectorAll<HTMLElement>('.hero-stage-card');
+  const labels = document.querySelectorAll<HTMLElement>('.progress-label');
+  const progressFill = document.getElementById('progress-fill')!;
+  const stagesEl = document.getElementById('hero-stages')!;
+
+  const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
+  let currentStage = 0;
+  let autoTimer: ReturnType<typeof setInterval> | null = null;
+  let resumeTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function goToStage(idx: number) {
+    if (idx < 0 || idx >= STAGE_COUNT || idx === currentStage) return;
+    cards[currentStage].classList.remove('active');
+    labels[currentStage].classList.remove('active');
+
+    currentStage = idx;
+    cards[currentStage].classList.add('active');
+    labels[currentStage].classList.add('active');
+
+    // Progress fill
+    const pct = (currentStage / (STAGE_COUNT - 1)) * 100;
+    progressFill.style.width = `${pct}%`;
+    progressFill.style.background = stageColors[currentStage];
+  }
+
+  function nextStage() {
+    goToStage((currentStage + 1) % STAGE_COUNT);
+  }
+
+  function startAuto() {
+    stopAuto();
+    autoTimer = setInterval(nextStage, AUTO_INTERVAL);
+  }
+
+  function stopAuto() {
+    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+    if (resumeTimer) { clearTimeout(resumeTimer); resumeTimer = null; }
+  }
+
+  function pauseAndResume() {
+    stopAuto();
+    resumeTimer = setTimeout(startAuto, RESUME_DELAY);
+  }
+
+  // ── Card clicks ──
+  cards.forEach((card, i) => {
+    card.addEventListener('click', () => {
+      goToStage(i);
+      pauseAndResume();
+    });
+  });
+
+  // ── Mobile swipe ──
+  let touchStartX = 0;
+  let touchStartY = 0;
+  stagesEl.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  stagesEl.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0 && currentStage < STAGE_COUNT - 1) goToStage(currentStage + 1);
+      else if (dx > 0 && currentStage > 0) goToStage(currentStage - 1);
+      pauseAndResume();
+    }
+  }, { passive: true });
+
+  // ── Start auto-cycle ──
+  startAuto();
+
+  // ══════════════════════════════════════════
+  //  BACKGROUND CANVAS — Geometric constellation network
+  // ══════════════════════════════════════════
+  if (!prefersReducedMotion) {
+    const bgCanvas = document.getElementById('hero-bg-canvas') as HTMLCanvasElement;
+    if (bgCanvas) {
+      const ctx = bgCanvas.getContext('2d')!;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const isMobile = window.innerWidth < 768;
+
+      function resize() {
+        const w = heroSection.offsetWidth;
+        const h = heroSection.offsetHeight;
+        bgCanvas.width = w * dpr;
+        bgCanvas.height = h * dpr;
+        bgCanvas.style.width = w + 'px';
+        bgCanvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      // ── Constellation nodes ──
+      interface Node {
+        x: number; y: number;
+        baseX: number; baseY: number;
+        size: number;
+        alpha: number;
+        colorIdx: number;
+        phase: number;
+        speed: number;
+        drift: number;
+      }
+
+      const nodeCount = isMobile ? 40 : 80;
+      const nodes: Node[] = [];
+      const CONNECTION_DIST = isMobile ? 120 : 180;
+
+      for (let i = 0; i < nodeCount; i++) {
+        const x = Math.random() * heroSection.offsetWidth;
+        const y = Math.random() * heroSection.offsetHeight;
+        nodes.push({
+          x, y, baseX: x, baseY: y,
+          size: 0.8 + Math.random() * 2,
+          alpha: 0.08 + Math.random() * 0.2,
+          colorIdx: Math.floor(Math.random() * 4),
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.2 + Math.random() * 0.4,
+          drift: 20 + Math.random() * 40,
+        });
+      }
+
+      // ── Horizontal grid lines ──
+      const gridLineCount = isMobile ? 4 : 7;
+      const gridLines: number[] = [];
+      for (let i = 0; i < gridLineCount; i++) {
+        gridLines.push((i + 1) / (gridLineCount + 1));
+      }
+
+      const rgbs = ['229,115,115', '255,183,77', '129,199,132', '100,181,246'];
+      let t = 0;
+      let mouseX = heroSection.offsetWidth * 0.5;
+      let mouseY = heroSection.offsetHeight * 0.5;
+
+      heroSection.addEventListener('mousemove', (e) => {
+        const rect = heroSection.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+      });
+
+      function drawBg() {
+        t += 0.004;
+        const W = heroSection.offsetWidth;
+        const H = heroSection.offsetHeight;
+        ctx.clearRect(0, 0, W, H);
+
+        // ── Ambient gradient glow (follows active stage color) ──
+        const gradColor = rgbs[currentStage];
+        const grd = ctx.createRadialGradient(W * 0.5, H * 0.4, 0, W * 0.5, H * 0.4, Math.max(W, H) * 0.8);
+        grd.addColorStop(0, `rgba(${gradColor}, 0.06)`);
+        grd.addColorStop(0.4, `rgba(${gradColor}, 0.02)`);
+        grd.addColorStop(1, 'rgba(10, 10, 15, 0)');
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, W, H);
+
+        // Secondary glow near mouse
+        const mouseGrd = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 250);
+        mouseGrd.addColorStop(0, `rgba(${gradColor}, 0.04)`);
+        mouseGrd.addColorStop(1, 'rgba(10, 10, 15, 0)');
+        ctx.fillStyle = mouseGrd;
+        ctx.fillRect(0, 0, W, H);
+
+        // ── Subtle horizontal grid lines ──
+        ctx.lineWidth = 0.5;
+        for (const ratio of gridLines) {
+          const y = H * ratio;
+          const wave = Math.sin(t * 0.5 + ratio * 10) * 3;
+          ctx.beginPath();
+          ctx.moveTo(0, y + wave);
+          // Draw as subtle wavy line
+          for (let x = 0; x <= W; x += 40) {
+            const wy = y + Math.sin(t * 0.3 + x * 0.005 + ratio * 5) * 4;
+            ctx.lineTo(x, wy);
+          }
+          ctx.strokeStyle = `rgba(${rgbs[currentStage]}, 0.03)`;
+          ctx.stroke();
+        }
+
+        // ── Move nodes ──
+        for (const n of nodes) {
+          n.x = n.baseX + Math.sin(t * n.speed + n.phase) * n.drift;
+          n.y = n.baseY + Math.cos(t * n.speed * 0.7 + n.phase) * n.drift * 0.5;
+
+          // Subtle mouse repel
+          const dx = n.x - mouseX;
+          const dy = n.y - mouseY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 200) {
+            const force = (200 - dist) / 200 * 8;
+            n.x += (dx / dist) * force;
+            n.y += (dy / dist) * force;
+          }
+
+          // Wrap
+          if (n.x < -20) n.baseX += W + 40;
+          if (n.x > W + 20) n.baseX -= W + 40;
+          if (n.y < -20) n.baseY += H + 40;
+          if (n.y > H + 20) n.baseY -= H + 40;
+        }
+
+        // ── Draw connections ──
+        ctx.lineWidth = 0.5;
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const dx = nodes[i].x - nodes[j].x;
+            const dy = nodes[i].y - nodes[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CONNECTION_DIST) {
+              const alpha = (1 - dist / CONNECTION_DIST) * 0.08;
+              const cIdx = nodes[i].colorIdx;
+              ctx.beginPath();
+              ctx.moveTo(nodes[i].x, nodes[i].y);
+              ctx.lineTo(nodes[j].x, nodes[j].y);
+              ctx.strokeStyle = `rgba(${rgbs[cIdx]}, ${alpha})`;
+              ctx.stroke();
+            }
+          }
+        }
+
+        // ── Draw nodes ──
+        for (const n of nodes) {
+          const twinkle = n.alpha * (0.5 + Math.sin(t * 2 + n.phase) * 0.5);
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${rgbs[n.colorIdx]}, ${twinkle})`;
+          ctx.fill();
+
+          // Soft glow for larger nodes
+          if (n.size > 1.5) {
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.size * 3, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${rgbs[n.colorIdx]}, ${twinkle * 0.15})`;
+            ctx.fill();
+          }
+        }
+
+        requestAnimationFrame(drawBg);
+      }
+      drawBg();
+    }
+  }
+</script>

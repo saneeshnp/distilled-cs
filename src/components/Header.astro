@@ -1,0 +1,455 @@
+---
+const pathname = Astro.url.pathname;
+const isHome = pathname === '/';
+
+const homeSubLinks = [
+  { href: '/#why-distilled-cs', label: 'Why Distilled CS' },
+  { href: '/#how-it-works', label: 'How It Works' },
+  { href: '/#principles', label: 'Principles' },
+  { href: '/#maturity-stages', label: 'Maturity Stages' },
+  { href: '/#open-source', label: 'Open Source' },
+  { href: '/#get-started', label: 'Get Started' },
+];
+
+const navLinks = [
+  { href: '/principles/', label: 'Principles' },
+  { href: '/assess/', label: 'Assessment' },
+  { href: '/model/', label: 'Model' },
+  { href: '/metrics/', label: 'Metrics' },
+  { href: '/checklist/', label: 'Checklist' },
+  { href: '/blog/', label: 'Blog' },
+];
+---
+
+<header class="header">
+  <div class="container header-inner">
+    <a href="/" class="logo">
+      <span class="logo-text">Distilled</span><span class="logo-accent">CS</span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Main navigation">
+      <ul>
+        <!-- Home with dropdown -->
+        <li class="nav-dropdown">
+          <a
+            href="/"
+            class:list={['nav-link nav-link-has-dropdown', { active: isHome }]}
+            aria-current={isHome ? 'page' : undefined}
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Home
+            <svg class="dropdown-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            {homeSubLinks.map(sub => (
+              <li role="none">
+                <a href={sub.href} class="dropdown-link" role="menuitem">{sub.label}</a>
+              </li>
+            ))}
+          </ul>
+        </li>
+
+        {navLinks.map(link => (
+          <li>
+            <a
+              href={link.href}
+              class:list={['nav-link', { active: pathname === link.href }]}
+              aria-current={pathname === link.href ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="stage-badge" id="nav-stage-badge" style="display:none;" aria-label="Your maturity stage"></div>
+    </nav>
+
+    <button
+      class="mobile-toggle"
+      id="mobile-menu-toggle"
+      aria-label="Toggle navigation menu"
+      aria-expanded="false"
+    >
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+
+  <nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation" hidden>
+    <ul>
+      <!-- Home with expandable sub-links on mobile -->
+      <li class="mobile-dropdown">
+        <div class="mobile-dropdown-header">
+          <a
+            href="/"
+            class:list={['nav-link-mobile', { active: isHome }]}
+            aria-current={isHome ? 'page' : undefined}
+          >
+            Home
+          </a>
+          <button
+            class="mobile-dropdown-toggle"
+            aria-label="Expand Home sections"
+            aria-expanded="false"
+            type="button"
+          >
+            <svg class="dropdown-chevron" width="12" height="7" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <ul class="mobile-sub-menu" hidden>
+          {homeSubLinks.map(sub => (
+            <li>
+              <a href={sub.href} class="nav-link-mobile nav-link-sub">{sub.label}</a>
+            </li>
+          ))}
+        </ul>
+      </li>
+
+      {navLinks.map(link => (
+        <li>
+          <a
+            href={link.href}
+            class:list={['nav-link-mobile', { active: pathname === link.href }]}
+            aria-current={pathname === link.href ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .logo:hover {
+    color: var(--color-text-primary);
+  }
+
+  .logo-accent {
+    color: var(--color-accent);
+  }
+
+  .nav-desktop {
+    display: none;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .nav-desktop ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    border-radius: 0.375rem;
+    transition: color 0.2s ease-out, background-color 0.2s ease-out;
+  }
+
+  .nav-link:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface);
+  }
+
+  .nav-link.active {
+    color: var(--color-accent);
+  }
+
+  /* ── Dropdown (desktop) ── */
+  .nav-link-has-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .dropdown-chevron {
+    transition: transform 0.2s ease-out;
+    flex-shrink: 0;
+  }
+
+  .nav-dropdown {
+    position: relative;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.375rem);
+    left: 0;
+    min-width: 11rem;
+    padding: 0.375rem;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0.2s;
+  }
+
+  .nav-dropdown:hover .dropdown-menu,
+  .nav-dropdown:focus-within .dropdown-menu,
+  .nav-dropdown.open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .nav-dropdown:hover .dropdown-chevron,
+  .nav-dropdown:focus-within .dropdown-chevron,
+  .nav-dropdown.open .dropdown-chevron {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    border-radius: 0.375rem;
+    transition: color 0.15s ease-out, background-color 0.15s ease-out;
+    white-space: nowrap;
+  }
+
+  .dropdown-link:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-hover);
+  }
+
+  .stage-badge {
+    margin-left: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    border-radius: 9999px;
+    font-family: var(--font-body);
+    font-weight: 500;
+  }
+
+  /* Mobile toggle */
+  .mobile-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  @media (min-width: 768px) {
+    .nav-desktop {
+      display: flex;
+    }
+    .mobile-toggle {
+      display: none;
+    }
+  }
+
+  .hamburger-line {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: var(--color-text-secondary);
+    border-radius: 1px;
+    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+  }
+
+  .mobile-toggle[aria-expanded="true"] .hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .mobile-toggle[aria-expanded="true"] .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-toggle[aria-expanded="true"] .hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Mobile nav */
+  .nav-mobile {
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+  }
+
+  .nav-mobile ul {
+    list-style: none;
+    margin: 0;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .nav-link-mobile {
+    display: block;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    border-radius: 0.5rem;
+    transition: color 0.2s ease-out, background-color 0.2s ease-out;
+  }
+
+  .nav-link-mobile:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-surface-hover);
+  }
+
+  .nav-link-mobile.active {
+    color: var(--color-accent);
+  }
+
+  /* ── Mobile dropdown ── */
+  .mobile-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-dropdown-header .nav-link-mobile {
+    flex: 1;
+  }
+
+  .mobile-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s ease-out;
+  }
+
+  .mobile-dropdown-toggle:hover {
+    background-color: var(--color-surface-hover);
+  }
+
+  .mobile-dropdown-toggle[aria-expanded="true"] .dropdown-chevron {
+    transform: rotate(180deg);
+  }
+
+  .mobile-sub-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 1rem;
+  }
+
+  .nav-link-sub {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    color: var(--color-text-muted);
+  }
+
+  .nav-link-sub:hover {
+    color: var(--color-text-primary);
+  }
+</style>
+
+<script>
+  // Mobile menu toggle
+  const toggle = document.getElementById('mobile-menu-toggle');
+  const nav = document.getElementById('mobile-nav');
+
+  if (toggle && nav) {
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      nav.hidden = expanded;
+    });
+  }
+
+  // Mobile dropdown sub-menu toggle
+  document.querySelectorAll('.mobile-dropdown-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      const subMenu = btn.closest('.mobile-dropdown')?.querySelector('.mobile-sub-menu');
+      if (subMenu) subMenu.hidden = expanded;
+    });
+  });
+
+  // Close mobile menu when a sub-link is clicked (smooth scroll on same page)
+  document.querySelectorAll('.mobile-sub-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (toggle && nav) {
+        toggle.setAttribute('aria-expanded', 'false');
+        nav.hidden = true;
+      }
+    });
+  });
+
+  // Desktop dropdown: close on link click
+  document.querySelectorAll('.dropdown-link').forEach(link => {
+    link.addEventListener('click', () => {
+      const dd = link.closest('.nav-dropdown');
+      if (dd) dd.classList.remove('open');
+    });
+  });
+
+  // Show stage badge if assessment completed
+  try {
+    const completed = localStorage.getItem('distilledcs_completed');
+    const scoresRaw = localStorage.getItem('distilledcs_scores');
+    if (completed === 'true' && scoresRaw) {
+      const scores = JSON.parse(scoresRaw);
+      const badge = document.getElementById('nav-stage-badge');
+      if (badge && scores.stage) {
+        const stageColors = {
+          crawl: 'var(--color-stage-crawl)',
+          walk: 'var(--color-stage-walk)',
+          run: 'var(--color-stage-run)',
+          fly: 'var(--color-stage-fly)',
+        };
+        const label = scores.stage.charAt(0).toUpperCase() + scores.stage.slice(1);
+        badge.textContent = label;
+        badge.style.display = 'inline-block';
+        badge.style.backgroundColor = stageColors[scores.stage] || 'var(--color-accent)';
+        badge.style.color = '#0a0a0f';
+      }
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+</script>

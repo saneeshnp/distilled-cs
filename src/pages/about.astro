@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About" description="About Distilled CS — an open, vendor-neutral customer success maturity framework.">
+
+  <div class="container about-page">
+
+    <header class="page-header">
+      <h1 class="page-title">About Distilled CS</h1>
+      <p class="page-subtitle">
+        An open, vendor-neutral framework for Customer Success maturity.
+      </p>
+    </header>
+
+    <div class="page-body">
+      <section class="content-section">
+        <h2>What is Distilled CS?</h2>
+        <p>
+          Distilled CS is a community-driven framework that gives Customer Success teams a shared language for measuring maturity, setting benchmarks, and building repeatable processes. It is inspired by what the FinOps Foundation did for cloud cost management — providing an open standard where none existed.
+        </p>
+      </section>
+
+      <section class="content-section">
+        <h2>Why we built this</h2>
+        <p>
+          Every CS team reinvents the wheel — building health scores from scratch, guessing at benchmarks, and hoping their metrics are the right ones. Existing frameworks are paywalled, vendor-locked, or too generic to be useful. Distilled CS aims to change that by offering a practical, context-aware framework that adapts to your stage of growth, team size, and customer segment.
+        </p>
+      </section>
+
+      <section class="content-section">
+        <h2>Open source & community</h2>
+        <p>
+          Distilled CS is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. No vendor lock-in, no paywall, no hidden agenda. Built by practitioners, for practitioners.
+        </p>
+      </section>
+
+      <div class="placeholder-notice">
+        <p>This page is being expanded with more details about the project's history, contributors, and roadmap. Check back soon.</p>
+      </div>
+    </div>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+  .about-page {
+    padding: 3rem 0 5rem;
+    max-width: 42rem;
+    margin-inline: auto;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    color: var(--color-text-primary);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.03em;
+  }
+
+  .page-subtitle {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .page-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .content-section h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .content-section p {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  .content-section a {
+    color: var(--color-accent);
+  }
+
+  .content-section a:hover {
+    color: var(--color-accent-hover);
+  }
+
+  .placeholder-notice {
+    margin-top: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .placeholder-notice p {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+    line-height: 1.6;
+  }
+</style>

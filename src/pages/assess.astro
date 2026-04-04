@@ -1,0 +1,786 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import frameworkData from '../data/lean-cs-data.json';
+
+const contextParams = frameworkData.context_parameters.parameters;
+const domains = frameworkData.assessment_domains.domains;
+const stages = frameworkData.maturity_stages.stages;
+---
+
+<BaseLayout title="Assessment" description="Assess your Customer Success maturity across 7 domains in under 5 minutes.">
+
+  <div class="container assess-page">
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-wrap" id="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Assessment progress"></div>
+      <span class="progress-label" id="progress-label" aria-live="polite"></span>
+    </div>
+
+    <!-- Phase 1: Context Profile -->
+    <section class="phase" id="phase-profile">
+      <h1 class="phase-title">First, tell us about your company and team</h1>
+      <p class="phase-subtitle">These don't affect your maturity score — they help us tailor benchmarks and recommendations to your context.</p>
+
+      <div class="profile-form" id="profile-form">
+        {contextParams.map((param, idx) => (
+          <div class="profile-question" data-param-id={param.id} data-index={idx}>
+            <h2 class="question-label" id={`label-${param.id}`}>{param.question}</h2>
+            <div class="options-grid" role="radiogroup" aria-labelledby={`label-${param.id}`}>
+              {param.options.sort((a, b) => a.sort - b.sort).map(opt => (
+                <button
+                  class="option-card"
+                  data-param={param.id}
+                  data-value={opt.id}
+                  type="button"
+                  role="radio"
+                  aria-checked="false"
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div class="phase-nav">
+        <button class="btn btn-primary" id="profile-next" disabled>Continue to Assessment</button>
+      </div>
+    </section>
+
+    <!-- Phase 2: Capability Assessment -->
+    <section class="phase" id="phase-assessment" style="display:none;">
+      <div id="assessment-domains">
+        {domains.map((domain, dIdx) => (
+          <div class="domain-block" data-domain={domain.id} data-domain-index={dIdx} style={dIdx > 0 ? 'display:none;' : ''}>
+            <div class="domain-header">
+              <span class="domain-icon">{
+                domain.icon === 'layers' ? '◈' :
+                domain.icon === 'map' ? '◇' :
+                domain.icon === 'activity' ? '◆' :
+                domain.icon === 'bar-chart' ? '▦' :
+                domain.icon === 'trending-up' ? '▲' :
+                domain.icon === 'handshake' ? '⤝' :
+                domain.icon === 'users' ? '●' : '●'
+              }</span>
+              <div>
+                <h2 class="domain-title">{domain.label}</h2>
+                <p class="domain-desc">{domain.description}</p>
+              </div>
+            </div>
+
+            {domain.questions.map((q, qIdx) => (
+              <div class="assess-question" data-question-id={q.id}>
+                <h3 class="question-text" id={`label-${q.id}`}>{q.question}</h3>
+                <div class="options-stack" role="radiogroup" aria-labelledby={`label-${q.id}`}>
+                  {q.options.map(opt => (
+                    <button
+                      class="option-card option-assess"
+                      data-question={q.id}
+                      data-score={opt.score}
+                      type="button"
+                      role="radio"
+                      aria-checked="false"
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <div class="domain-nav">
+              {dIdx > 0 && <button class="btn btn-secondary domain-prev" data-target={dIdx - 1} type="button">Back</button>}
+              {dIdx < domains.length - 1
+                ? <button class="btn btn-primary domain-next" data-target={dIdx + 1} type="button" disabled>Next Domain</button>
+                : <button class="btn btn-primary" id="finish-assessment" type="button" disabled>See Your Results</button>
+              }
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Phase 3: Results -->
+    <section class="phase" id="phase-results" style="display:none;">
+      <div id="results-content"></div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .assess-page {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    position: sticky;
+    top: 4rem;
+    z-index: 50;
+    background: var(--color-bg);
+    padding: 0.75rem 0;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--color-surface);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-bar::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: var(--progress, 0%);
+    background: var(--color-accent);
+    border-radius: 2px;
+    transition: width 0.3s ease-out;
+  }
+
+  .progress-label {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    min-width: 5rem;
+    text-align: right;
+  }
+
+  /* Phase titles */
+  .phase-title {
+    font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .phase-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    max-width: 32rem;
+  }
+
+  /* Profile questions */
+  .profile-question {
+    margin-bottom: 2.5rem;
+  }
+
+  .question-label {
+    font-size: 1.125rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+
+  @media (min-width: 640px) {
+    .options-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Option cards */
+  .option-card {
+    padding: 0.875rem 1.125rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    font-family: var(--font-body);
+    line-height: 1.5;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease-out, background 0.2s ease-out, color 0.2s ease-out, transform 0.15s ease-out;
+  }
+
+  .option-card:hover {
+    border-color: var(--color-border-hover);
+    background: var(--color-surface-hover);
+    color: var(--color-text-primary);
+  }
+
+  .option-card.selected {
+    border-color: var(--color-accent);
+    background: var(--color-accent-subtle);
+    color: var(--color-text-primary);
+  }
+
+  /* Assessment options — full width stack */
+  .options-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .option-assess {
+    /* inherits from .option-card */
+  }
+
+  /* Domain block */
+  .domain-block {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .domain-header {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .domain-icon {
+    font-size: 1.5rem;
+    color: var(--color-accent);
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+  }
+
+  .domain-title {
+    font-size: 1.375rem;
+    margin-bottom: 0.375rem;
+    font-family: var(--font-display);
+  }
+
+  .domain-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .assess-question {
+    margin-bottom: 2.5rem;
+  }
+
+  .question-text {
+    font-size: 1rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+  }
+
+  /* Navigation */
+  .phase-nav, .domain-nav {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .domain-nav {
+    justify-content: flex-end;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s ease-out;
+  }
+
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-accent-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-hover);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  /* ── Results ── */
+  :global(.results-header) {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  :global(.results-stage-badge) {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border-radius: 9999px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  :global(.results-stage-name) {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    margin-bottom: 0.375rem;
+  }
+
+  :global(.results-stage-subtitle) {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+  }
+
+  :global(.results-overall-score) {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-top: 0.5rem;
+  }
+
+  :global(.results-section) {
+    margin-bottom: 2.5rem;
+  }
+
+  :global(.results-section-title) {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    margin-bottom: 1rem;
+  }
+
+  :global(.domain-score-row) {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  :global(.domain-score-label) {
+    flex: 1;
+    font-size: 0.9375rem;
+  }
+
+  :global(.domain-score-bar-wrap) {
+    flex: 2;
+    height: 8px;
+    background: var(--color-surface);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  :global(.domain-score-bar) {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease-out;
+  }
+
+  :global(.domain-score-value) {
+    width: 3rem;
+    text-align: right;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  :global(.highlight-tag) {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+  }
+
+  :global(.priority-actions-list) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  :global(.priority-actions-list li) {
+    padding: 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  :global(.priority-number) {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  :global(.results-ctas) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+    justify-content: center;
+  }
+
+  :global(.results-ctas .btn) {
+    display: inline-block;
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s ease-out;
+  }
+
+  :global(.results-ctas .btn-primary) {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  :global(.results-ctas .btn-secondary) {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-hover);
+  }
+
+  :global(.results-ctas .btn-retake) {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    font-size: 0.8125rem;
+  }
+</style>
+
+<script>
+  import { saveProfile, saveScores, setAssessmentCompleted, resetAll, isAssessmentCompleted, getScores, getProfile } from '../scripts/context-manager.js';
+  import { calculateAllDomainScores, calculateOverallScore, determineStage } from '../scripts/scoring-engine.js';
+  import frameworkData from '../data/lean-cs-data.json';
+
+  const contextParams = frameworkData.context_parameters.parameters;
+  const domains = frameworkData.assessment_domains.domains;
+  const stages = frameworkData.maturity_stages.stages;
+
+  // State
+  const profile: Record<string, string> = {};
+  const responses: Record<string, number> = {};
+  let currentDomainIdx = 0;
+
+  const totalQuestions = contextParams.length + domains.reduce((s: number, d: any) => s + d.questions.length, 0);
+
+  // Elements
+  const progressBar = document.getElementById('progress-bar');
+  const progressLabel = document.getElementById('progress-label');
+  const progressBarWrap = document.getElementById('progress-bar-wrap');
+  const phaseProfile = document.getElementById('phase-profile') as HTMLElement;
+  const phaseAssessment = document.getElementById('phase-assessment') as HTMLElement;
+  const phaseResults = document.getElementById('phase-results') as HTMLElement;
+  const profileNextBtn = document.getElementById('profile-next') as HTMLButtonElement;
+  const finishBtn = document.getElementById('finish-assessment');
+
+  // ── Results HTML generator (reusable) ──
+  function generateResultsHTML(domainScores: Record<string, number>, overallScore: number, stageId: string, showUpdateBtn: boolean = false): string {
+    const stage = stages.find((s: any) => s.id === stageId);
+    const sorted = Object.entries(domainScores).sort((a, b) => b[1] - a[1]);
+    const strongestId = sorted[0][0];
+    const weakestId = sorted[sorted.length - 1][0];
+    const weakest3 = sorted.slice(-3).reverse().map(([id]) => domains.find((d: any) => d.id === id));
+
+    const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
+    const color = stageColors[stageId] || '#F5A623';
+
+    return `
+      <div class="results-header">
+        <div class="results-stage-badge" style="background: ${color}20; color: ${color}; border: 1px solid ${color}40;">Your Maturity Stage</div>
+        <h1 class="results-stage-name" style="color: ${color}">${stage?.label || stageId}</h1>
+        <p class="results-stage-subtitle">${stage?.subtitle || ''}</p>
+        <p class="results-overall-score">Overall score: ${overallScore} / 4.0</p>
+      </div>
+
+      <div class="results-section">
+        <h2 class="results-section-title">Domain Breakdown</h2>
+        ${sorted.map(([id, score]) => {
+          const d = domains.find((dm: any) => dm.id === id);
+          const pct = ((score / 4) * 100).toFixed(0);
+          const barColor = score >= 3.4 ? '#64B5F6' : score >= 2.6 ? '#81C784' : score >= 1.8 ? '#FFB74D' : '#E57373';
+          const isStrong = id === strongestId;
+          const isWeak = id === weakestId;
+          return `<div class="domain-score-row">
+            <span class="domain-score-label">
+              ${d?.label || id}
+              ${isStrong ? '<span class="highlight-tag" style="background:#81C78430;color:#81C784;">Strongest</span>' : ''}
+              ${isWeak ? '<span class="highlight-tag" style="background:#E5737330;color:#E57373;">Needs focus</span>' : ''}
+            </span>
+            <div class="domain-score-bar-wrap">
+              <div class="domain-score-bar" style="width:${pct}%;background:${barColor};"></div>
+            </div>
+            <span class="domain-score-value">${score}</span>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <div class="results-section">
+        <h2 class="results-section-title">Top Priority Actions</h2>
+        <ol class="priority-actions-list">
+          ${weakest3.slice(0, 3).map((d: any, i: number) => {
+            const stageActions = stage?.priority_actions || [];
+            const rawAction = stageActions[i];
+            const action = typeof rawAction === 'string' ? rawAction : rawAction?.text || (d ? `Focus on improving ${d.label}` : 'Continue building your CS foundation');
+            return `<li><span class="priority-number">${i + 1}</span><span>${action}</span></li>`;
+          }).join('')}
+        </ol>
+      </div>
+
+      <div class="results-ctas">
+        <a href="/model/" class="btn btn-primary">Explore the Maturity Model</a>
+        <a href="/metrics/" class="btn btn-secondary">See Your Metrics Priorities</a>
+        ${showUpdateBtn
+          ? '<button class="btn btn-retake" id="update-answers-btn" type="button">Update My Answers</button>'
+          : '<button class="btn btn-retake" id="retake-btn" type="button">Retake Assessment</button>'
+        }
+      </div>
+    `;
+  }
+
+  // ── Show results screen ──
+  function showResults(domainScores: Record<string, number>, overallScore: number, stageId: string, isReturning: boolean = false) {
+    const resultsContent = document.getElementById('results-content');
+    if (resultsContent) resultsContent.innerHTML = generateResultsHTML(domainScores, overallScore, stageId, isReturning);
+
+    phaseProfile.style.display = 'none';
+    phaseAssessment.style.display = 'none';
+    phaseResults.style.display = '';
+    if (progressBarWrap) progressBarWrap.style.display = 'none';
+
+    // Bind retake/update handler
+    document.getElementById('retake-btn')?.addEventListener('click', () => {
+      resetAll();
+      window.location.reload();
+    });
+
+    document.getElementById('update-answers-btn')?.addEventListener('click', () => {
+      startAssessmentWithPreviousAnswers();
+    });
+  }
+
+  // ── Pre-populate and start assessment with previous answers ──
+  function startAssessmentWithPreviousAnswers() {
+    const savedScores = getScores();
+    const savedProfile = getProfile();
+    const savedResponses = savedScores?.responses || {};
+
+    // Pre-populate profile state and UI
+    if (savedProfile) {
+      for (const [key, val] of Object.entries(savedProfile)) {
+        profile[key] = val as string;
+        const btn = document.querySelector(`#profile-form .option-card[data-param="${key}"][data-value="${val}"]`) as HTMLElement | null;
+        if (btn) {
+          btn.closest('.profile-question')?.querySelectorAll('.option-card').forEach(b => {
+            b.classList.remove('selected');
+            b.setAttribute('aria-checked', 'false');
+          });
+          btn.classList.add('selected');
+          btn.setAttribute('aria-checked', 'true');
+        }
+      }
+    }
+
+    // Pre-populate responses state and UI
+    for (const [qId, score] of Object.entries(savedResponses)) {
+      responses[qId] = score as number;
+      const btn = document.querySelector(`.option-assess[data-question="${qId}"][data-score="${score}"]`) as HTMLElement | null;
+      if (btn) {
+        btn.closest('.assess-question')?.querySelectorAll('.option-assess').forEach(b => {
+          b.classList.remove('selected');
+          b.setAttribute('aria-checked', 'false');
+        });
+        btn.classList.add('selected');
+        btn.setAttribute('aria-checked', 'true');
+      }
+    }
+
+    // Enable profile continue button if all answered
+    if (Object.keys(profile).length === contextParams.length) {
+      profileNextBtn.removeAttribute('disabled');
+    }
+
+    // Show profile phase
+    phaseResults.style.display = 'none';
+    phaseProfile.style.display = '';
+    phaseAssessment.style.display = 'none';
+    if (progressBarWrap) progressBarWrap.style.display = '';
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Check if returning user → show results immediately ──
+  if (isAssessmentCompleted()) {
+    const savedScores = getScores();
+    if (savedScores && savedScores.domainScores && savedScores.overallScore && savedScores.stage) {
+      showResults(savedScores.domainScores, savedScores.overallScore, savedScores.stage, true);
+    }
+  }
+
+  function updateProgress() {
+    const answered = Object.keys(profile).length + Object.keys(responses).length;
+    const pct = Math.round((answered / totalQuestions) * 100);
+    if (progressBar) {
+      progressBar.style.setProperty('--progress', pct + '%');
+      progressBar.setAttribute('aria-valuenow', String(pct));
+    }
+    if (progressLabel) progressLabel.textContent = `${answered} of ${totalQuestions}`;
+  }
+
+  // ── Profile option selection ──
+  document.querySelectorAll('#profile-form .option-card').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const paramId = btn.getAttribute('data-param')!;
+      const value = btn.getAttribute('data-value')!;
+
+      btn.closest('.profile-question')?.querySelectorAll('.option-card').forEach(b => {
+        b.classList.remove('selected');
+        b.setAttribute('aria-checked', 'false');
+      });
+      btn.classList.add('selected');
+      btn.setAttribute('aria-checked', 'true');
+      profile[paramId] = value;
+
+      if (Object.keys(profile).length === contextParams.length) {
+        profileNextBtn.removeAttribute('disabled');
+      }
+      updateProgress();
+    });
+  });
+
+  // ── Continue to assessment ──
+  profileNextBtn?.addEventListener('click', () => {
+    if (Object.keys(profile).length < contextParams.length) return;
+    phaseProfile.style.display = 'none';
+    phaseAssessment.style.display = '';
+    showDomain(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ── Assessment option selection ──
+  document.querySelectorAll('.option-assess').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const qId = btn.getAttribute('data-question')!;
+      const score = parseInt(btn.getAttribute('data-score')!, 10);
+
+      btn.closest('.assess-question')?.querySelectorAll('.option-assess').forEach(b => {
+        b.classList.remove('selected');
+        b.setAttribute('aria-checked', 'false');
+      });
+      btn.classList.add('selected');
+      btn.setAttribute('aria-checked', 'true');
+      responses[qId] = score;
+
+      updateDomainNav();
+      updateProgress();
+    });
+  });
+
+  function showDomain(idx: number) {
+    currentDomainIdx = idx;
+    document.querySelectorAll('.domain-block').forEach((d, i) => {
+      (d as HTMLElement).style.display = i === idx ? '' : 'none';
+    });
+    updateDomainNav();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateDomainNav() {
+    const domain = domains[currentDomainIdx];
+    const allAnswered = domain.questions.every((q: any) => typeof responses[q.id] === 'number');
+    const block = document.querySelector(`.domain-block[data-domain-index="${currentDomainIdx}"]`);
+    const nextBtn = block?.querySelector('.domain-next') as HTMLButtonElement | null;
+    const finBtn = block?.querySelector('#finish-assessment') as HTMLButtonElement | null;
+    if (nextBtn) nextBtn.disabled = !allAnswered;
+    if (finBtn) finBtn.disabled = !allAnswered;
+  }
+
+  // Domain navigation
+  document.querySelectorAll('.domain-next').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = parseInt(btn.getAttribute('data-target')!, 10);
+      showDomain(target);
+    });
+  });
+
+  document.querySelectorAll('.domain-prev').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = parseInt(btn.getAttribute('data-target')!, 10);
+      showDomain(target);
+    });
+  });
+
+  // ── Finish & show results ──
+  finishBtn?.addEventListener('click', () => {
+    const domainScores = calculateAllDomainScores(responses);
+    const overallScore = calculateOverallScore(domainScores);
+    const stageId = determineStage(overallScore);
+
+    // Save to localStorage
+    saveProfile(profile);
+    saveScores({ domainScores, overallScore, stage: stageId, responses, timestamp: new Date().toISOString() });
+    setAssessmentCompleted(true);
+
+    showResults(domainScores, overallScore, stageId, false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Init progress (only if not showing results)
+  if (!isAssessmentCompleted()) {
+    updateProgress();
+  }
+</script>

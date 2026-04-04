@@ -1,0 +1,513 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import frameworkData from '../data/lean-cs-data.json';
+
+const stages = frameworkData.maturity_stages.stages;
+const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+
+const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
+---
+
+<BaseLayout title="Checklist" description="Your stage-specific action checklist — track your progress toward CS maturity.">
+  <div class="container checklist-page">
+
+    <!-- Assessed view (JS populated) -->
+    <div id="checklist-assessed" data-show-if-assessed style="display:none;"></div>
+
+    <!-- Non-assessed view -->
+    <div id="checklist-default" data-hide-if-assessed>
+      <div class="page-header">
+        <h1 class="page-title">CS Maturity Checklist</h1>
+        <p class="page-subtitle">Priority actions for every maturity stage. Take the assessment to get a personalized, interactive checklist.</p>
+        <a href="/assess/" class="btn btn-primary">Take the Assessment</a>
+      </div>
+
+      {stages.map(stage => (
+        <div class="stage-checklist-block">
+          <h2 class="stage-checklist-title">
+            <span class="stage-dot" style={`background: ${stageColors[stage.id]}`}></span>
+            <span style={`color: ${stageColors[stage.id]}`}>{stage.label}</span>
+            <span class="stage-checklist-subtitle">{stage.subtitle}</span>
+          </h2>
+          <ul class="checklist-static">
+            {stage.priority_actions.map((action: any) => {
+              const text = typeof action === 'string' ? action : action.text;
+              const time = typeof action === 'object' ? action.estimated_time : null;
+              const why = typeof action === 'object' ? action.why_it_matters : null;
+              return (
+                <li>
+                  <span class="action-text">{text}</span>
+                  {time && <span class="action-time">{time}</span>}
+                  {why && <p class="action-why">{why}</p>}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .checklist-page {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .page-header {
+    margin-bottom: 3rem;
+  }
+
+  .page-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .page-subtitle {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    max-width: 36rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s ease-out;
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+    color: var(--color-bg);
+    transform: translateY(-1px);
+  }
+
+  /* Stage checklist blocks (non-assessed static view) */
+  .stage-checklist-block {
+    margin-bottom: 2.5rem;
+  }
+
+  .stage-checklist-title {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 1.25rem;
+    font-family: var(--font-display);
+    margin-bottom: 1rem;
+  }
+
+  .stage-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .stage-checklist-subtitle {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-weight: 400;
+  }
+
+  .checklist-static {
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .checklist-static li {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin-bottom: 0.25rem;
+  }
+
+  .action-time {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 0.0625rem 0.375rem;
+    border-radius: 9999px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .action-why {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin: 0.25rem 0 0;
+    font-style: italic;
+  }
+
+  /* Interactive checklist styles (JS rendered) */
+  :global(.checklist-group) {
+    margin-bottom: 2.5rem;
+  }
+
+  :global(.checklist-group-header) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  :global(.checklist-group-title) {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+  }
+
+  :global(.checklist-group-count) {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  :global(.checklist-progress-bar) {
+    height: 4px;
+    background: var(--color-surface);
+    border-radius: 2px;
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+  }
+
+  :global(.checklist-progress-fill) {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease-out;
+  }
+
+  :global(.checklist-items) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  :global(.checklist-item) {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease-out, opacity 0.2s ease-out;
+    user-select: none;
+  }
+
+  :global(.checklist-item:hover) {
+    border-color: var(--color-border-hover);
+  }
+
+  :global(.checklist-item.checked) {
+    opacity: 0.6;
+  }
+
+  :global(.checklist-item.checked .checklist-text) {
+    text-decoration: line-through;
+  }
+
+  :global(.checklist-checkbox) {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid var(--color-border-hover);
+    border-radius: 0.25rem;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-out;
+  }
+
+  :global(.checklist-item.checked .checklist-checkbox) {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  :global(.checklist-checkmark) {
+    color: var(--color-bg);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  :global(.checklist-item-content) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  :global(.checklist-item-header) {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  :global(.checklist-text) {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  :global(.checklist-time) {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  :global(.checklist-why) {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin-top: 0.375rem;
+    margin-bottom: 0;
+    font-style: italic;
+  }
+
+  :global(.checklist-item.checked .checklist-why) {
+    display: none;
+  }
+
+  :global(.checklist-celebration) {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.875rem;
+    color: var(--color-accent);
+    font-weight: 500;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  :global(.overall-progress) {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+
+  :global(.overall-progress-label) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.625rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  :global(.overall-progress-pct) {
+    font-weight: 600;
+    color: var(--color-accent);
+    font-size: 1.125rem;
+  }
+
+  :global(.overall-progress-bar) {
+    height: 6px;
+    background: var(--color-bg);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  :global(.overall-progress-fill) {
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 3px;
+    transition: width 0.3s ease-out;
+  }
+</style>
+
+<script>
+  import { isAssessmentCompleted, getScores } from '../scripts/context-manager.js';
+  import frameworkData from '../data/lean-cs-data.json';
+
+  const stages = frameworkData.maturity_stages.stages;
+  const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+  const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
+  const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+
+  const CHECKLIST_KEY = 'distilledcs_checklist';
+
+  function getChecklist(): Record<string, boolean> {
+    try {
+      const raw = localStorage.getItem(CHECKLIST_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch { return {}; }
+  }
+
+  function saveChecklist(data: Record<string, boolean>) {
+    try { localStorage.setItem(CHECKLIST_KEY, JSON.stringify(data)); } catch {}
+  }
+
+  if (isAssessmentCompleted()) {
+    const scores = getScores();
+    if (scores && scores.stage) {
+      const userStage = scores.stage;
+      const userIdx = stageOrder.indexOf(userStage);
+
+      // Show assessed, hide default
+      document.querySelectorAll('[data-show-if-assessed]').forEach(el => (el as HTMLElement).style.display = '');
+      document.querySelectorAll('[data-hide-if-assessed]').forEach(el => (el as HTMLElement).style.display = 'none');
+
+      // Build groups: Foundation (previous stage), Current, Next milestone
+      interface ChecklistGroup {
+        title: string;
+        color: string;
+        items: { id: string; text: string; estimated_time?: string; why_it_matters?: string }[];
+      }
+
+      const groups: ChecklistGroup[] = [];
+
+      function mapActions(stage: any) {
+        return stage.priority_actions.map((a: any, i: number) => ({
+          id: `${stage.id}_${i}`,
+          text: typeof a === 'string' ? a : a.text,
+          estimated_time: typeof a === 'object' ? a.estimated_time : undefined,
+          why_it_matters: typeof a === 'object' ? a.why_it_matters : undefined,
+        }));
+      }
+
+      if (userIdx > 0) {
+        const prevStage = stages[userIdx - 1];
+        groups.push({
+          title: `Foundation (${stageLabels[prevStage.id]} — should be done)`,
+          color: stageColors[prevStage.id],
+          items: mapActions(prevStage),
+        });
+      }
+
+      const currentStage = stages[userIdx];
+      groups.push({
+        title: `Current Priorities (${stageLabels[currentStage.id]})`,
+        color: stageColors[currentStage.id],
+        items: mapActions(currentStage),
+      });
+
+      if (userIdx < stages.length - 1) {
+        const nextStage = stages[userIdx + 1];
+        groups.push({
+          title: `Next Milestone (${stageLabels[nextStage.id]})`,
+          color: stageColors[nextStage.id],
+          items: mapActions(nextStage),
+        });
+      }
+
+      const allItems = groups.flatMap(g => g.items);
+      let checklist = getChecklist();
+
+      function render() {
+        const container = document.getElementById('checklist-assessed');
+        if (!container) return;
+
+        const totalChecked = allItems.filter(item => checklist[item.id]).length;
+        const totalItems = allItems.length;
+        const overallPct = totalItems > 0 ? Math.round((totalChecked / totalItems) * 100) : 0;
+
+        let html = `
+          <div class="page-header">
+            <h1 class="page-title">Your CS Checklist</h1>
+            <p class="page-subtitle">Action items for your maturity journey. Check them off as you go — your progress is saved automatically.</p>
+          </div>
+          <div class="overall-progress">
+            <div class="overall-progress-label">
+              <span>Overall Progress</span>
+              <span class="overall-progress-pct">${overallPct}%</span>
+            </div>
+            <div class="overall-progress-bar">
+              <div class="overall-progress-fill" style="width:${overallPct}%"></div>
+            </div>
+          </div>
+        `;
+
+        groups.forEach(group => {
+          const groupChecked = group.items.filter(item => checklist[item.id]).length;
+          const groupTotal = group.items.length;
+          const groupPct = groupTotal > 0 ? Math.round((groupChecked / groupTotal) * 100) : 0;
+          const allDone = groupChecked === groupTotal && groupTotal > 0;
+
+          html += `
+            <div class="checklist-group">
+              <div class="checklist-group-header">
+                <span class="checklist-group-title" style="color:${group.color}">${group.title}</span>
+                <span class="checklist-group-count">${groupChecked}/${groupTotal}</span>
+              </div>
+              <div class="checklist-progress-bar">
+                <div class="checklist-progress-fill" style="width:${groupPct}%;background:${group.color}"></div>
+              </div>
+              <div class="checklist-items">
+                ${group.items.map(item => {
+                  const isChecked = !!checklist[item.id];
+                  return `
+                    <div class="checklist-item ${isChecked ? 'checked' : ''}" data-item-id="${item.id}">
+                      <div class="checklist-checkbox">
+                        ${isChecked ? '<span class="checklist-checkmark">&#10003;</span>' : ''}
+                      </div>
+                      <div class="checklist-item-content">
+                        <div class="checklist-item-header">
+                          <span class="checklist-text">${item.text}</span>
+                          ${item.estimated_time ? `<span class="checklist-time">${item.estimated_time}</span>` : ''}
+                        </div>
+                        ${item.why_it_matters ? `<p class="checklist-why">${item.why_it_matters}</p>` : ''}
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+              ${allDone ? '<div class="checklist-celebration">All done! Great work on this section.</div>' : ''}
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+
+        // Attach click handlers
+        container.querySelectorAll('.checklist-item').forEach(el => {
+          el.addEventListener('click', () => {
+            const id = el.getAttribute('data-item-id');
+            if (id) {
+              checklist[id] = !checklist[id];
+              saveChecklist(checklist);
+              render();
+            }
+          });
+        });
+      }
+
+      render();
+    }
+  }
+</script>

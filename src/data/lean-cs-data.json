@@ -1,0 +1,2169 @@
+{
+  "meta": {
+    "framework_name": "Distilled CS",
+    "version": "0.1.0",
+    "description": "A vendor-neutral, open customer success maturity framework with contextual guidance",
+    "license": "CC BY 4.0",
+    "last_updated": "2026-03-27"
+  },
+  "principles": [
+    {
+      "id": "outcomes_over_activities",
+      "title": "Outcomes Over Activities",
+      "summary": "Measure what customers achieve, not what your team does.",
+      "description": "It's easy to track how many calls were made or how many emails were sent. But activity volume doesn't correlate with customer success. The framework centers on customer outcomes — value realization, adoption, expansion — because those are the leading indicators of retention and growth. A team that drives 10 outcomes with 5 touches is outperforming one that logs 50 activities with no measurable impact.",
+      "icon": "target"
+    },
+    {
+      "id": "context_drives_strategy",
+      "title": "Context Drives Strategy",
+      "summary": "What works at $5M ARR breaks at $100M. Tailor everything.",
+      "description": "There is no universal CS playbook. A 3-person team managing 200 SMB accounts operates fundamentally differently from a 40-person team with enterprise logos. Stage of growth, customer segment, team size, and product complexity all shape which practices matter most and which benchmarks to target. Every recommendation in this framework adapts to your context — because best practices without context are just guesses.",
+      "icon": "compass"
+    },
+    {
+      "id": "proactive_over_reactive",
+      "title": "Proactive Over Reactive",
+      "summary": "Intervene before customers disengage, not after they churn.",
+      "description": "Reactive CS waits for red flags — a missed renewal, a support escalation, a cancellation request. By then, the opportunity to influence the outcome has already passed. Maturing CS organizations build systems that surface risk early and trigger intervention before customers feel the pain. This means investing in health scoring, adoption monitoring, and lifecycle automation rather than firefighting.",
+      "icon": "shield"
+    },
+    {
+      "id": "data_informed_not_data_paralyzed",
+      "title": "Data-Informed, Not Data-Paralyzed",
+      "summary": "Track fewer metrics, but act on them ruthlessly.",
+      "description": "Dashboards with 30 metrics create the illusion of insight. Real maturity means identifying the 4-6 metrics that genuinely predict outcomes for your context, instrumenting them properly, and building workflows around them. It's better to act on one trustworthy signal than to stare at a dozen unreliable ones. Start with what you can measure today. Refine as you mature.",
+      "icon": "chart"
+    },
+    {
+      "id": "cs_is_a_culture",
+      "title": "Customer Success Is a Culture, Not a Department",
+      "summary": "CS fails in a silo. Embed it across every team that touches the customer.",
+      "description": "Customer outcomes depend on product, sales, marketing, and support — not just the CS team. When CS operates in isolation, it becomes a bottleneck: context gets lost in handoffs, insights never reach the people who can act on them, and the CS team ends up owning outcomes it can't fully control. The fix isn't better hand-off documents — it's making customer success a shared responsibility. Organizations that embed CS into deal reviews, QBRs, roadmap planning, and escalation workflows unlock compounding value. Account executives, solution engineers, and product managers should all internalize retention and expansion as their responsibility. The moment CS is excluded from the rhythm of the business, value realization drops and scaling becomes a headcount problem instead of a leverage problem.",
+      "icon": "people"
+    },
+    {
+      "id": "segment_then_scale",
+      "title": "Segment, Then Scale",
+      "summary": "Not every customer needs a CSM. Build coverage models that match value.",
+      "description": "Applying the same touch model to every account is the fastest path to burnout or bloated headcount. High-value accounts need strategic, human-led engagement. Long-tail accounts need digital, automated journeys. The dividing line depends on your economics — and it will shift as you grow. The goal is not fewer CSMs or more CSMs; it's the right engagement for each segment at a cost the business can sustain.",
+      "icon": "layers"
+    }
+  ],
+  "context_parameters": {
+    "description": "Factual inputs about the company and CS team. These do not score maturity — they set the lens through which all recommendations, benchmarks, and priorities are interpreted.",
+    "parameters": [
+      {
+        "id": "company_arr",
+        "label": "Company ARR",
+        "question": "What is your company's approximate Annual Recurring Revenue?",
+        "type": "single_select",
+        "options": [
+          {
+            "id": "arr_under_5m",
+            "label": "Under $5M",
+            "sort": 1
+          },
+          {
+            "id": "arr_5m_20m",
+            "label": "$5M – $20M",
+            "sort": 2
+          },
+          {
+            "id": "arr_20m_100m",
+            "label": "$20M – $100M",
+            "sort": 3
+          },
+          {
+            "id": "arr_over_100m",
+            "label": "Over $100M",
+            "sort": 4
+          }
+        ]
+      },
+      {
+        "id": "customer_segment",
+        "label": "Primary Customer Segment",
+        "question": "What is the primary customer segment your CS team serves?",
+        "type": "single_select",
+        "options": [
+          {
+            "id": "seg_smb",
+            "label": "SMB (ACV under $25K)",
+            "sort": 1
+          },
+          {
+            "id": "seg_midmarket",
+            "label": "Mid-Market (ACV $25K–$100K)",
+            "sort": 2
+          },
+          {
+            "id": "seg_enterprise",
+            "label": "Enterprise (ACV over $100K)",
+            "sort": 3
+          },
+          {
+            "id": "seg_mixed",
+            "label": "Mixed segments",
+            "sort": 4
+          }
+        ]
+      },
+      {
+        "id": "industry_vertical",
+        "label": "Industry",
+        "question": "What best describes your company's industry?",
+        "type": "single_select",
+        "options": [
+          {
+            "id": "ind_b2b_saas",
+            "label": "B2B SaaS",
+            "sort": 1
+          },
+          {
+            "id": "ind_b2c_saas",
+            "label": "B2C SaaS",
+            "sort": 2
+          },
+          {
+            "id": "ind_infra_platform",
+            "label": "Infrastructure / Platform",
+            "sort": 3
+          },
+          {
+            "id": "ind_services",
+            "label": "Professional Services / Consulting",
+            "sort": 4
+          },
+          {
+            "id": "ind_other",
+            "label": "Other",
+            "sort": 5
+          }
+        ]
+      },
+      {
+        "id": "product_complexity",
+        "label": "Product Complexity",
+        "question": "How complex is your product to implement and adopt?",
+        "type": "single_select",
+        "options": [
+          {
+            "id": "complexity_low",
+            "label": "Self-serve / Low-touch (users can onboard themselves)",
+            "sort": 1
+          },
+          {
+            "id": "complexity_moderate",
+            "label": "Moderate (guided onboarding, some configuration)",
+            "sort": 2
+          },
+          {
+            "id": "complexity_high",
+            "label": "High (enterprise deployment, custom implementation)",
+            "sort": 3
+          }
+        ]
+      },
+      {
+        "id": "cs_team_age",
+        "label": "CS Team Age",
+        "question": "How long has a formal CS function existed at your company?",
+        "type": "single_select",
+        "options": [
+          {
+            "id": "age_under_1y",
+            "label": "Under 1 year",
+            "sort": 1
+          },
+          {
+            "id": "age_1_3y",
+            "label": "1–3 years",
+            "sort": 2
+          },
+          {
+            "id": "age_over_3y",
+            "label": "Over 3 years",
+            "sort": 3
+          }
+        ]
+      },
+      {
+        "id": "cs_team_size",
+        "label": "CS Team Size",
+        "question": "How many people are on your CS team (including leadership)?",
+        "type": "single_select",
+        "options": [
+          {
+            "id": "size_1_3",
+            "label": "1–3 people",
+            "sort": 1
+          },
+          {
+            "id": "size_4_10",
+            "label": "4–10 people",
+            "sort": 2
+          },
+          {
+            "id": "size_11_25",
+            "label": "11–25 people",
+            "sort": 3
+          },
+          {
+            "id": "size_over_25",
+            "label": "Over 25 people",
+            "sort": 4
+          }
+        ]
+      },
+      {
+        "id": "cs_ops_exists",
+        "label": "CS Ops Function",
+        "question": "Does a dedicated CS Operations role or team exist?",
+        "type": "single_select",
+        "options": [
+          {
+            "id": "ops_no",
+            "label": "No",
+            "sort": 1
+          },
+          {
+            "id": "ops_partial",
+            "label": "Someone handles it part-time alongside other duties",
+            "sort": 2
+          },
+          {
+            "id": "ops_yes",
+            "label": "Yes, dedicated CS Ops role or team",
+            "sort": 3
+          }
+        ]
+      }
+    ]
+  },
+  "maturity_stages": {
+    "description": "Four maturity stages mapped to score ranges. Derived from capability assessment scores.",
+    "stages": [
+      {
+        "id": "crawl",
+        "label": "Crawl",
+        "subtitle": "Reactive / Foundational",
+        "score_range": [
+          1,
+          1.7
+        ],
+        "color": "#E57373",
+        "description": "CS exists but operates mostly on instinct and firefighting. Customer engagement is inconsistent, metrics are sparse or manually tracked, and most effort goes into reacting to problems rather than preventing them.",
+        "typical_profile": "Early-stage companies with under $5M ARR, or larger companies that have recently formed a CS function. Team size is usually 1–3 people wearing multiple hats.",
+        "key_characteristics": [
+          "No formal customer segmentation — every customer gets a similar experience",
+          "Health is assessed by gut feel, not data",
+          "No documented playbooks or journey maps",
+          "CSMs are reactive — responding to escalations and complaints",
+          "Metrics limited to basic churn rate, maybe CSAT",
+          "CS reports into Sales or Support, low organizational visibility"
+        ],
+        "priority_actions": [
+          {
+            "text": "Define basic customer segmentation (at least 2–3 tiers)",
+            "estimated_time": "1–2 weeks",
+            "why_it_matters": "Segmentation lets you allocate limited CS resources where they'll have the most impact on retention."
+          },
+          {
+            "text": "Implement a simple health score using 3–5 signals",
+            "estimated_time": "2–4 weeks",
+            "why_it_matters": "Even a basic health score replaces gut-feel with data, letting you catch at-risk accounts before they churn."
+          },
+          {
+            "text": "Document the onboarding process as your first playbook",
+            "estimated_time": "1–2 weeks",
+            "why_it_matters": "A documented onboarding process ensures consistent time-to-value and reduces dependency on individual CSMs."
+          },
+          {
+            "text": "Start tracking logo retention and GRR monthly",
+            "estimated_time": "1–2 weeks",
+            "why_it_matters": "You can't improve what you don't measure — monthly retention tracking creates accountability and surfaces trends early."
+          },
+          {
+            "text": "Establish a regular cadence for customer touchpoints",
+            "estimated_time": "1–2 weeks",
+            "why_it_matters": "Consistent touchpoints build trust and give you early warning signals before small issues become churn risks."
+          },
+          {
+            "text": "Get CS a seat at the table — establish regular syncs with Sales and Product teams",
+            "estimated_time": "2–4 weeks",
+            "why_it_matters": "Cross-functional alignment prevents handoff gaps and ensures customer feedback reaches the teams that can act on it."
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "label": "Walk",
+        "subtitle": "Informed / Structured",
+        "score_range": [
+          1.8,
+          2.5
+        ],
+        "color": "#FFB74D",
+        "description": "CS has organized its data and customers, established basic processes, but hasn't fully operationalized them at scale. The team is moving from reactive to structured, with defined segments and some playbooks in place.",
+        "typical_profile": "Companies with $5M–$20M ARR that have had a CS team for 1–3 years. Team size is 4–10 people with emerging specialization.",
+        "key_characteristics": [
+          "Customer base is segmented by ARR or tier, engagement models differ by segment",
+          "Basic health scores exist but may be inconsistently maintained",
+          "Some playbooks documented, especially for onboarding and renewal",
+          "CSMs have defined books of business with rough coverage ratios",
+          "Tracking GRR, NRR, and basic adoption metrics",
+          "CS has a seat at the table but isn't yet driving strategic decisions"
+        ],
+        "priority_actions": [
+          {
+            "text": "Operationalize health scores — make them systematic, not manual",
+            "estimated_time": "2–4 weeks",
+            "why_it_matters": "Systematic health scores eliminate CSM bias and ensure every account is evaluated with the same rigor."
+          },
+          {
+            "text": "Build playbooks for risk mitigation and expansion identification",
+            "estimated_time": "3–6 weeks",
+            "why_it_matters": "Playbooks turn your best CSMs' instincts into repeatable processes the whole team can execute consistently."
+          },
+          {
+            "text": "Implement QBR/EBR cadence for top-tier accounts",
+            "estimated_time": "2–4 weeks",
+            "why_it_matters": "Structured business reviews deepen executive relationships and surface expansion opportunities before renewal."
+          },
+          {
+            "text": "Define time-to-value metrics by segment",
+            "estimated_time": "2–4 weeks",
+            "why_it_matters": "Knowing how long each segment takes to reach value lets you set realistic expectations and intervene when onboarding stalls."
+          },
+          {
+            "text": "Start measuring CSM capacity and coverage ratios formally",
+            "estimated_time": "1–2 weeks",
+            "why_it_matters": "Capacity data gives you the evidence to hire ahead of need and prevents CSM burnout from silently eroding service quality."
+          },
+          {
+            "text": "Build a CS roadmap aligned with company strategy",
+            "estimated_time": "2–4 weeks",
+            "why_it_matters": "A strategic roadmap elevates CS from a support function to a growth driver with clear, measurable business objectives."
+          },
+          {
+            "text": "Share customer health data with other teams — create a shared dashboard or Slack channel",
+            "estimated_time": "1–2 weeks",
+            "why_it_matters": "Transparent health data breaks down silos and enables Sales, Product, and Support to act on customer signals proactively."
+          }
+        ]
+      },
+      {
+        "id": "run",
+        "label": "Run",
+        "subtitle": "Proactive / Operationalized",
+        "score_range": [
+          2.6,
+          3.3
+        ],
+        "color": "#81C784",
+        "description": "CS is data-driven and proactive. Playbooks govern the customer lifecycle, health scores trigger automated actions, and CS is a recognized revenue contributor. The team operates with discipline and consistency at scale.",
+        "typical_profile": "Companies with $20M–$100M ARR that have had a CS team for 3+ years. Team size is 11–25 with dedicated CS Ops, possibly CS leadership at VP+ level.",
+        "key_characteristics": [
+          "Multi-dimensional health scores with automated alerts and triggers",
+          "Comprehensive playbooks for all lifecycle stages",
+          "Customer journey fully mapped with defined milestones and success criteria",
+          "CS actively identifies and drives expansion opportunities",
+          "Dedicated CS platform in use (Gainsight, ChurnZero, Vitally, etc.)",
+          "CS metrics are part of company-level reporting and board updates",
+          "Formal career paths and development programs for the CS team"
+        ],
+        "priority_actions": [
+          {
+            "text": "Build predictive models for churn and expansion",
+            "estimated_time": "2–3 months",
+            "why_it_matters": "Predictive models shift CS from reacting to churn signals to intervening months before risk materializes."
+          },
+          {
+            "text": "Implement digital CS motions for long-tail accounts",
+            "estimated_time": "1–2 months",
+            "why_it_matters": "Digital motions let you deliver consistent value to your entire customer base without linearly scaling headcount."
+          },
+          {
+            "text": "Develop cross-functional alignment frameworks with Product, Sales, and Marketing",
+            "estimated_time": "1–2 months",
+            "why_it_matters": "Formal alignment frameworks ensure customer insights systematically influence product direction and go-to-market strategy."
+          },
+          {
+            "text": "Start exploring CS monetization (paid success plans, premium support)",
+            "estimated_time": "2–3 months",
+            "why_it_matters": "Monetized CS transforms the team from a cost center into a revenue stream while delivering higher-touch service to customers who want it."
+          },
+          {
+            "text": "Build cohort analysis capabilities for retention forecasting",
+            "estimated_time": "1–2 months",
+            "why_it_matters": "Cohort analysis reveals which customer segments retain best and why, enabling you to forecast revenue with greater accuracy."
+          },
+          {
+            "text": "Establish CS benchmarking against industry peers",
+            "estimated_time": "2–4 weeks",
+            "why_it_matters": "Benchmarking gives leadership objective context on whether your CS metrics represent strong performance or hidden risk."
+          },
+          {
+            "text": "Formalize CS integration — include CS in product planning and structured sales handoffs, track customer outcomes cross-functionally",
+            "estimated_time": "2–3 months",
+            "why_it_matters": "Formal integration ensures customer outcomes are a shared responsibility, not just a CS team metric that other teams can ignore."
+          }
+        ]
+      },
+      {
+        "id": "fly",
+        "label": "Fly",
+        "subtitle": "Predictive / Optimized",
+        "score_range": [
+          3.4,
+          4
+        ],
+        "color": "#64B5F6",
+        "description": "CS is a strategic growth engine. Predictive analytics anticipate customer needs before they arise. CS influences product roadmap, drives expansion revenue, and is fully integrated into the company's go-to-market strategy.",
+        "typical_profile": "Companies with $100M+ ARR with mature CS functions spanning 3+ years. Large teams with specialized roles, robust CS Ops, and C-suite representation.",
+        "key_characteristics": [
+          "Predictive health scoring with machine learning models",
+          "CS influences product roadmap based on customer outcome data",
+          "Expansion revenue is a primary CS metric with shared ownership",
+          "Digital and human CS motions are seamlessly integrated",
+          "Customer advocacy programs are mature and measurable",
+          "CS cost-to-serve is optimized and well-understood",
+          "CS may be partially or fully monetized"
+        ],
+        "priority_actions": [
+          {
+            "text": "Optimize cost-to-serve ratios while maintaining outcomes",
+            "estimated_time": "2–3 months",
+            "why_it_matters": "Optimized cost-to-serve proves CS is scalable and protects the function's budget during belt-tightening."
+          },
+          {
+            "text": "Build advanced customer advocacy and referral programs",
+            "estimated_time": "1–2 months",
+            "why_it_matters": "Advocacy programs turn your happiest customers into a measurable acquisition channel with lower CAC than outbound."
+          },
+          {
+            "text": "Implement AI-driven automation for risk and opportunity detection",
+            "estimated_time": "3–6 months",
+            "why_it_matters": "AI automation surfaces signals at a scale no human team can match, catching risks and opportunities across thousands of accounts."
+          },
+          {
+            "text": "Develop industry-specific CS playbooks",
+            "estimated_time": "1–2 months",
+            "why_it_matters": "Industry-specific playbooks let CSMs speak the customer's language and deliver value frameworks tailored to their vertical."
+          },
+          {
+            "text": "Pioneer thought leadership and contribute to CS industry standards",
+            "estimated_time": "3–6 months",
+            "why_it_matters": "Thought leadership positions your company as a CS leader, attracting top talent and building trust with prospects."
+          },
+          {
+            "text": "Explore platform-level customer success (embed success into the product)",
+            "estimated_time": "3–6 months",
+            "why_it_matters": "Product-embedded success scales infinitely by guiding every user toward value without requiring CSM intervention."
+          },
+          {
+            "text": "Embed CS culture company-wide — customer outcomes become a shared OKR with aligned incentives across Sales, Product, and CS",
+            "estimated_time": "3–6 months",
+            "why_it_matters": "When customer outcomes are everyone's OKR, the entire organization pulls toward retention and expansion, not just CS."
+          }
+        ]
+      }
+    ]
+  },
+  "assessment_domains": {
+    "description": "Seven capability domains, each with 3 questions scored 1–4. Domain average determines domain maturity. Overall average determines stage.",
+    "domains": [
+      {
+        "id": "segmentation_coverage",
+        "label": "Segmentation & Coverage",
+        "icon": "layers",
+        "description": "How you divide your customer base and allocate CS resources across segments.",
+        "weight": 1,
+        "questions": [
+          {
+            "id": "sc_q1",
+            "question": "How do you segment your customer base for CS engagement?",
+            "options": [
+              {
+                "score": 1,
+                "label": "We don't segment — all customers get a similar experience"
+              },
+              {
+                "score": 2,
+                "label": "Basic segmentation by ARR or contract size"
+              },
+              {
+                "score": 3,
+                "label": "Multi-factor segmentation (ARR + complexity + strategic value + lifecycle stage)"
+              },
+              {
+                "score": 4,
+                "label": "Dynamic segmentation that adjusts based on real-time signals and customer behavior"
+              }
+            ]
+          },
+          {
+            "id": "sc_q2",
+            "question": "How is CSM workload and account assignment managed?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Ad hoc — accounts are assigned without clear logic"
+              },
+              {
+                "score": 2,
+                "label": "Basic tiering (high-touch vs. low-touch) with rough account distribution"
+              },
+              {
+                "score": 3,
+                "label": "Defined engagement models per segment with documented playbooks per tier"
+              },
+              {
+                "score": 4,
+                "label": "Data-driven assignment with capacity modeling, workload balancing, and regular optimization"
+              }
+            ]
+          },
+          {
+            "id": "sc_q3",
+            "question": "Do you have defined CSM coverage ratios?",
+            "options": [
+              {
+                "score": 1,
+                "label": "No — we don't track this"
+              },
+              {
+                "score": 2,
+                "label": "Informal guidelines (e.g., roughly 1 CSM per $2M ARR)"
+              },
+              {
+                "score": 3,
+                "label": "Formal ratios based on segment, reviewed during planning cycles"
+              },
+              {
+                "score": 4,
+                "label": "Ratios are regularly reviewed, adjusted based on journey complexity, and modeled against outcomes"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "journey_lifecycle",
+        "label": "Journey & Lifecycle",
+        "icon": "map",
+        "description": "How well you've mapped, documented, and operationalized the customer journey from onboarding through renewal and expansion.",
+        "weight": 1,
+        "questions": [
+          {
+            "id": "jl_q1",
+            "question": "Is your customer journey mapped?",
+            "options": [
+              {
+                "score": 1,
+                "label": "No — we don't have a documented customer journey"
+              },
+              {
+                "score": 2,
+                "label": "Partially mapped for some segments or lifecycle stages"
+              },
+              {
+                "score": 3,
+                "label": "Fully mapped with defined stages, milestones, and success criteria"
+              },
+              {
+                "score": 4,
+                "label": "Mapped with automated triggers, milestone tracking, and continuous optimization based on data"
+              }
+            ]
+          },
+          {
+            "id": "jl_q2",
+            "question": "Do you have playbooks for key customer lifecycle moments?",
+            "options": [
+              {
+                "score": 1,
+                "label": "No playbooks — CSMs handle situations individually"
+              },
+              {
+                "score": 2,
+                "label": "A few informal playbooks (e.g., onboarding checklist)"
+              },
+              {
+                "score": 3,
+                "label": "Documented playbooks for major lifecycle moments (onboarding, risk, renewal, expansion)"
+              },
+              {
+                "score": 4,
+                "label": "Comprehensive playbooks that are segment-specific, regularly tested, and updated based on outcomes"
+              }
+            ]
+          },
+          {
+            "id": "jl_q3",
+            "question": "How is customer onboarding managed?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Ad hoc — each CSM handles it differently"
+              },
+              {
+                "score": 2,
+                "label": "Basic checklist or template exists"
+              },
+              {
+                "score": 3,
+                "label": "Structured program with milestones, time-to-value targets, and handoff criteria"
+              },
+              {
+                "score": 4,
+                "label": "Segment-specific onboarding programs with measured outcomes, automation, and continuous improvement"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "health_risk",
+        "label": "Health Scoring & Risk",
+        "icon": "activity",
+        "description": "How you assess customer health, detect risk signals, and manage at-risk accounts.",
+        "weight": 1,
+        "questions": [
+          {
+            "id": "hr_q1",
+            "question": "Do you have customer health scores?",
+            "options": [
+              {
+                "score": 1,
+                "label": "No — health is assessed informally by CSM judgment"
+              },
+              {
+                "score": 2,
+                "label": "Basic health score exists but is manually maintained (e.g., spreadsheet RAG status)"
+              },
+              {
+                "score": 3,
+                "label": "Multi-dimensional health score combining usage, engagement, support, and sentiment data"
+              },
+              {
+                "score": 4,
+                "label": "Predictive health scoring with automated risk triggers and ML-based signals"
+              }
+            ]
+          },
+          {
+            "id": "hr_q2",
+            "question": "How do you identify at-risk accounts?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Reactively — when customers complain or announce they're leaving"
+              },
+              {
+                "score": 2,
+                "label": "CSM gut feel and manual monitoring of key accounts"
+              },
+              {
+                "score": 3,
+                "label": "Data-driven signals with defined risk thresholds and escalation paths"
+              },
+              {
+                "score": 4,
+                "label": "Predictive models that flag risk early, with automated escalation and cross-functional response"
+              }
+            ]
+          },
+          {
+            "id": "hr_q3",
+            "question": "How are at-risk accounts managed once identified?",
+            "options": [
+              {
+                "score": 1,
+                "label": "No formal process — CSM handles it alone"
+              },
+              {
+                "score": 2,
+                "label": "CSM escalates to manager, response is case-by-case"
+              },
+              {
+                "score": 3,
+                "label": "Defined save playbook with escalation path, executive involvement criteria, and tracking"
+              },
+              {
+                "score": 4,
+                "label": "Cross-functional risk response team with documented save plays, win-back programs, and outcome analysis"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "metrics_data",
+        "label": "Metrics & Data",
+        "icon": "bar-chart",
+        "description": "What you measure, how you measure it, and the tooling and infrastructure supporting your CS analytics.",
+        "weight": 1,
+        "questions": [
+          {
+            "id": "md_q1",
+            "question": "What retention and revenue metrics do you track?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Basic churn count or rate only"
+              },
+              {
+                "score": 2,
+                "label": "Logo retention and revenue retention (GRR or NRR)"
+              },
+              {
+                "score": 3,
+                "label": "GRR and NRR tracked separately, with cohort-level visibility"
+              },
+              {
+                "score": 4,
+                "label": "Full retention analytics with cohort analysis, forecasting, and leading indicator correlation"
+              }
+            ]
+          },
+          {
+            "id": "md_q2",
+            "question": "Do you measure time-to-value (TTV)?",
+            "options": [
+              {
+                "score": 1,
+                "label": "No — we don't track this"
+              },
+              {
+                "score": 2,
+                "label": "Informally — we have a rough sense of how long onboarding takes"
+              },
+              {
+                "score": 3,
+                "label": "Defined TTV metric with segment-specific targets"
+              },
+              {
+                "score": 4,
+                "label": "TTV tracked, benchmarked, actively optimized, and tied to downstream retention outcomes"
+              }
+            ]
+          },
+          {
+            "id": "md_q3",
+            "question": "What CS tooling and data infrastructure do you use?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Spreadsheets and basic CRM only"
+              },
+              {
+                "score": 2,
+                "label": "CRM with some automation (email sequences, task reminders)"
+              },
+              {
+                "score": 3,
+                "label": "Dedicated CS platform (Gainsight, ChurnZero, Vitally, Totango, etc.)"
+              },
+              {
+                "score": 4,
+                "label": "Integrated CS tech stack with analytics, product telemetry, BI dashboards, and automation"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "expansion_value",
+        "label": "Expansion & Value",
+        "icon": "trending-up",
+        "description": "How CS drives expansion revenue, tracks product adoption, and demonstrates value realization to customers.",
+        "weight": 1,
+        "questions": [
+          {
+            "id": "ev_q1",
+            "question": "Who owns expansion revenue and how is it managed?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Sales owns all expansion — CS is not involved"
+              },
+              {
+                "score": 2,
+                "label": "CS informally flags opportunities, Sales closes them"
+              },
+              {
+                "score": 3,
+                "label": "CS identifies expansion opportunities with a defined handoff process to Sales or AM"
+              },
+              {
+                "score": 4,
+                "label": "CS co-owns or owns expansion with clear metrics, targets, and compensation alignment"
+              }
+            ]
+          },
+          {
+            "id": "ev_q2",
+            "question": "How do you track product adoption?",
+            "options": [
+              {
+                "score": 1,
+                "label": "We don't track adoption in a structured way"
+              },
+              {
+                "score": 2,
+                "label": "Basic login or usage data (DAU/MAU, login frequency)"
+              },
+              {
+                "score": 3,
+                "label": "Feature-level adoption tracked by segment with defined adoption milestones"
+              },
+              {
+                "score": 4,
+                "label": "Adoption tied to customer outcomes, with expansion-readiness signals and automated triggers"
+              }
+            ]
+          },
+          {
+            "id": "ev_q3",
+            "question": "Do you conduct structured business reviews with customers?",
+            "options": [
+              {
+                "score": 1,
+                "label": "No — or very rarely, only when the customer asks"
+              },
+              {
+                "score": 2,
+                "label": "Annually for top accounts, informal otherwise"
+              },
+              {
+                "score": 3,
+                "label": "Quarterly cadence for key accounts with a defined review framework"
+              },
+              {
+                "score": 4,
+                "label": "Regular cadence tailored by segment, outcome-focused with documented action items and follow-through tracking"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "org_strategy",
+        "label": "CS Organization & Strategy",
+        "icon": "users",
+        "description": "Organizational positioning of CS, strategic alignment with the business, and team development maturity.",
+        "weight": 1,
+        "questions": [
+          {
+            "id": "os_q1",
+            "question": "Where does Customer Success sit in the organization?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Unclear or buried deep under another function (Sales, Support, Services)"
+              },
+              {
+                "score": 2,
+                "label": "Reports to a Sales, Support, or Services leader"
+              },
+              {
+                "score": 3,
+                "label": "Reports to CRO, COO, or a dedicated CS VP"
+              },
+              {
+                "score": 4,
+                "label": "Direct C-suite representation (CCO, or CS VP reporting to CEO) with strategic mandate"
+              }
+            ]
+          },
+          {
+            "id": "os_q2",
+            "question": "Is there a documented CS strategy aligned with company goals?",
+            "options": [
+              {
+                "score": 1,
+                "label": "No — CS operates without a formal strategy"
+              },
+              {
+                "score": 2,
+                "label": "Informal goals exist but aren't documented or aligned cross-functionally"
+              },
+              {
+                "score": 3,
+                "label": "Written CS strategy with defined goals aligned to company OKRs"
+              },
+              {
+                "score": 4,
+                "label": "Comprehensive roadmap with cross-functional alignment, executive sponsorship, and regular strategic reviews"
+              }
+            ]
+          },
+          {
+            "id": "os_q3",
+            "question": "How is CS team development and career growth managed?",
+            "options": [
+              {
+                "score": 1,
+                "label": "No formal development or career path for CS team members"
+              },
+              {
+                "score": 2,
+                "label": "Basic onboarding for new hires, informal mentoring"
+              },
+              {
+                "score": 3,
+                "label": "Defined career paths (IC and management tracks) with ongoing training programs"
+              },
+              {
+                "score": 4,
+                "label": "Structured development with certifications, coaching, skills assessment, and internal mobility programs"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cs_culture_alignment",
+        "label": "CS Culture & Cross-Functional Alignment",
+        "icon": "handshake",
+        "description": "How well Customer Success is embedded as a cultural practice across the organization — not just a department, but a shared mindset.",
+        "weight": 1,
+        "questions": [
+          {
+            "id": "ca_q1",
+            "question": "How involved is CS in cross-functional discussions (product roadmap, sales handoffs, renewal strategy)?",
+            "options": [
+              {
+                "score": 1,
+                "label": "CS is rarely invited to cross-functional meetings; other teams make decisions without CS input"
+              },
+              {
+                "score": 2,
+                "label": "CS is occasionally consulted on customer-related decisions but isn't a regular participant"
+              },
+              {
+                "score": 3,
+                "label": "CS has a standing seat at key cross-functional meetings (product, sales, support) and contributes to planning"
+              },
+              {
+                "score": 4,
+                "label": "CS is deeply integrated into all customer-impacting decisions; other teams proactively seek CS perspective"
+              }
+            ]
+          },
+          {
+            "id": "ca_q2",
+            "question": "How well do other teams (Sales, Product, Engineering, Support) understand what CS does and why it matters?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Other teams see CS as reactive support or glorified account management with unclear value"
+              },
+              {
+                "score": 2,
+                "label": "Some teams understand CS's role, but there's frequent confusion about responsibilities and boundaries"
+              },
+              {
+                "score": 3,
+                "label": "Most teams understand CS's strategic value and actively collaborate on customer outcomes"
+              },
+              {
+                "score": 4,
+                "label": "CS's mission and impact are universally understood; customer success is seen as everyone's responsibility"
+              }
+            ]
+          },
+          {
+            "id": "ca_q3",
+            "question": "To what extent are customer outcomes (retention, expansion, health) treated as a shared responsibility across teams?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Customer retention is solely CS's problem; other teams focus only on their own metrics"
+              },
+              {
+                "score": 2,
+                "label": "There's lip service to shared ownership, but CS still bears most of the accountability for churn and renewals"
+              },
+              {
+                "score": 3,
+                "label": "Key customer metrics (NRR, churn, health) are visible to and partially owned by multiple teams"
+              },
+              {
+                "score": 4,
+                "label": "Customer outcomes are a company-wide OKR; Sales, Product, and CS share accountability with aligned incentives"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "metrics_directory": {
+    "description": "Catalog of CS metrics with contextual recommendations by maturity stage and company profile.",
+    "metrics": [
+      {
+        "id": "nrr",
+        "name": "Net Revenue Retention (NRR)",
+        "category": "revenue",
+        "also_known_as": [
+          "Net Dollar Retention",
+          "NDR"
+        ],
+        "definition": "The percentage of recurring revenue retained from existing customers over a period, including expansion, contraction, and churn. NRR above 100% means the customer base is growing without new logos.",
+        "formula": "(Starting ARR + Expansion - Contraction - Churn) / Starting ARR × 100",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "medium",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Focus on GRR first. You need to stop the bleeding before optimizing for growth. NRR is noise when your churn fundamentals aren't solid.",
+          "walk": "Start tracking NRR alongside GRR. Use it to build the case for CS as a revenue function, but don't optimize for it yet.",
+          "run": "NRR should be a primary CS metric. Your expansion motions and risk management should directly influence this number.",
+          "fly": "NRR is a board-level metric. Focus on predictive modeling and cohort-level NRR analysis to drive strategic decisions."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "100-105%",
+            "great": "105-110%",
+            "world_class": "110%+"
+          },
+          "seg_midmarket": {
+            "good": "105-110%",
+            "great": "110-120%",
+            "world_class": "120%+"
+          },
+          "seg_enterprise": {
+            "good": "110-115%",
+            "great": "115-130%",
+            "world_class": "130%+"
+          }
+        },
+        "common_mistakes": [
+          "Tracking NRR before you have reliable GRR — you can't grow what you can't retain",
+          "Blending all segments into one NRR number — segment-level NRR reveals where the real problems and opportunities are",
+          "Confusing NRR with logo retention — you can have great NRR with terrible logo churn if a few large accounts expand"
+        ],
+        "related_metrics": [
+          "grr",
+          "expansion_revenue",
+          "logo_retention"
+        ],
+        "audience": [
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Report monthly to leadership as the definitive measure of CS’s impact on revenue growth."
+          },
+          {
+            "role": "CRO/CCO",
+            "relevance": "Board-level metric showing whether the installed base is growing or shrinking without new logos."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Track by team and segment to identify which CSMs and accounts are driving net growth."
+          }
+        ]
+      },
+      {
+        "id": "grr",
+        "name": "Gross Revenue Retention (GRR)",
+        "category": "revenue",
+        "also_known_as": [
+          "Gross Dollar Retention",
+          "GDR"
+        ],
+        "definition": "The percentage of recurring revenue retained from existing customers, excluding expansion. GRR can never exceed 100%. It purely measures your ability to keep what you have.",
+        "formula": "(Starting ARR - Contraction - Churn) / Starting ARR × 100",
+        "priority_by_stage": {
+          "crawl": "high",
+          "walk": "high",
+          "run": "high",
+          "fly": "medium"
+        },
+        "why_priority": {
+          "crawl": "This is your most important metric. If GRR is low, nothing else matters — you're losing the foundation.",
+          "walk": "GRR remains critical. Your playbooks and health scores should be directly aimed at improving this number.",
+          "run": "GRR should be stable and high. Now focus on understanding GRR by cohort and segment to find hidden weaknesses.",
+          "fly": "GRR should be consistently strong. Shift attention to optimizing cost-to-retain and identifying structural churn vs. preventable churn."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "80-85%",
+            "great": "85-90%",
+            "world_class": "90%+"
+          },
+          "seg_midmarket": {
+            "good": "85-90%",
+            "great": "90-95%",
+            "world_class": "95%+"
+          },
+          "seg_enterprise": {
+            "good": "90-95%",
+            "great": "95-98%",
+            "world_class": "98%+"
+          }
+        },
+        "common_mistakes": [
+          "Ignoring GRR because NRR looks healthy — expansion can mask a retention problem for a while, but not forever",
+          "Not separating voluntary churn (customer chose to leave) from involuntary churn (payment failure, company closed)",
+          "Measuring GRR annually only — monthly or quarterly cohort GRR catches trends much earlier"
+        ],
+        "related_metrics": [
+          "nrr",
+          "churn_rate",
+          "logo_retention"
+        ],
+        "audience": [
+          {
+            "role": "CS Manager",
+            "relevance": "Monitor weekly to catch emerging retention issues before they become trends."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Report monthly to leadership as the baseline health indicator of the customer base."
+          },
+          {
+            "role": "CSM",
+            "relevance": "Understand GRR trends in your book of business to prioritize at-risk accounts."
+          },
+          {
+            "role": "CEO/Founder",
+            "relevance": "GRR is the foundation of sustainable growth — if it’s declining, scaling efforts are wasted."
+          }
+        ]
+      },
+      {
+        "id": "logo_retention",
+        "name": "Logo (Customer) Retention Rate",
+        "category": "retention",
+        "also_known_as": [
+          "Customer Retention Rate",
+          "Logo Churn (inverse)"
+        ],
+        "definition": "The percentage of customers retained over a period, regardless of revenue size. Every customer counts equally.",
+        "formula": "(Customers at End - New Customers Added) / Customers at Start × 100",
+        "priority_by_stage": {
+          "crawl": "high",
+          "walk": "high",
+          "run": "medium",
+          "fly": "medium"
+        },
+        "why_priority": {
+          "crawl": "Track this alongside GRR. It's the simplest retention metric and tells you the raw reality of how many customers are leaving.",
+          "walk": "Segment logo retention by tier and cohort. Patterns here drive your risk management playbooks.",
+          "run": "Logo retention should be stable. Focus on understanding which segments and cohorts deviate and why.",
+          "fly": "Logo retention is a hygiene metric at this stage. The strategic focus shifts to revenue retention and expansion."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "75-80%",
+            "great": "80-85%",
+            "world_class": "85%+"
+          },
+          "seg_midmarket": {
+            "good": "85-90%",
+            "great": "90-93%",
+            "world_class": "93%+"
+          },
+          "seg_enterprise": {
+            "good": "90-95%",
+            "great": "95-97%",
+            "world_class": "97%+"
+          }
+        },
+        "common_mistakes": [
+          "Treating all logo churn equally — losing a $500K enterprise account is very different from losing a $5K SMB account",
+          "Not tracking first-year vs. mature customer churn separately — first-year churn signals onboarding and sales alignment issues"
+        ],
+        "related_metrics": [
+          "grr",
+          "churn_rate",
+          "time_to_value"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Track monthly to understand customer attrition in your portfolio and identify patterns."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Review by cohort and segment to spot systemic retention problems across the team."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Use alongside GRR to separate 'how many customers leave' from 'how much revenue leaves.'"
+          }
+        ]
+      },
+      {
+        "id": "time_to_value",
+        "name": "Time to Value (TTV)",
+        "category": "onboarding",
+        "also_known_as": [
+          "Time to First Value",
+          "TTFV"
+        ],
+        "definition": "The time it takes for a new customer to achieve their first meaningful outcome or value milestone after purchase. This is not just 'go live' — it's when the customer experiences the value they were promised.",
+        "formula": "Date of first value milestone - Date of contract start (in days)",
+        "priority_by_stage": {
+          "crawl": "medium",
+          "walk": "high",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Start by defining what 'value' means for your product. Even an informal TTV target is better than nothing.",
+          "walk": "Define TTV formally by segment. This becomes the north star for your onboarding playbook.",
+          "run": "TTV should be tracked, benchmarked, and actively optimized. Correlate TTV with first-year retention to prove its impact.",
+          "fly": "TTV is a leading indicator for everything downstream. Predictive models should use TTV as a primary input."
+        },
+        "benchmarks_by_context": {
+          "complexity_low": {
+            "good": "Under 14 days",
+            "great": "Under 7 days",
+            "world_class": "Under 3 days"
+          },
+          "complexity_moderate": {
+            "good": "Under 45 days",
+            "great": "Under 30 days",
+            "world_class": "Under 14 days"
+          },
+          "complexity_high": {
+            "good": "Under 90 days",
+            "great": "Under 60 days",
+            "world_class": "Under 30 days"
+          }
+        },
+        "common_mistakes": [
+          "Defining TTV as 'go live' rather than 'first value realized' — a customer can be live and still not getting value",
+          "Having one TTV target across all segments — enterprise onboarding is fundamentally different from SMB self-serve",
+          "Not connecting TTV to downstream metrics like retention — if you can't prove faster TTV leads to better retention, it's just a vanity metric"
+        ],
+        "related_metrics": [
+          "logo_retention",
+          "csat",
+          "adoption_rate"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Track for each new customer to ensure they hit value milestones on time and flag delays early."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Benchmark across the team and identify which CSMs or segments consistently achieve faster TTV."
+          },
+          {
+            "role": "Product Manager",
+            "relevance": "Use TTV data to identify product friction that slows time-to-value and prioritize UX improvements."
+          }
+        ]
+      },
+      {
+        "id": "health_score",
+        "name": "Customer Health Score",
+        "category": "health",
+        "also_known_as": [
+          "Customer Health Index",
+          "Account Health"
+        ],
+        "definition": "A composite score that evaluates the overall health of a customer relationship, typically combining product usage, engagement quality, support sentiment, and business outcomes into a single indicator.",
+        "formula": "Varies — typically a weighted combination of: Product usage signals (30-40%) + Engagement frequency and quality (20-30%) + Support ticket sentiment and volume (15-20%) + Business outcome achievement (15-20%)",
+        "priority_by_stage": {
+          "crawl": "medium",
+          "walk": "high",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Start simple. Even a 3-color RAG status (red/amber/green) based on 3 signals is better than nothing. Don't over-engineer it.",
+          "walk": "Build a real health score with 5–7 weighted inputs. The key is consistency — every CSM should assess health the same way.",
+          "run": "Health scores should be automated and trigger workflows. Focus on predictive accuracy — does your score actually predict churn?",
+          "fly": "Health scoring should be ML-enhanced, validated against outcomes, and continuously calibrated."
+        },
+        "health_score_components_by_stage": {
+          "crawl": {
+            "recommended_inputs": [
+              "Product login frequency",
+              "Support ticket volume",
+              "CSM sentiment (gut feel, documented)"
+            ],
+            "scoring_method": "Simple RAG (Red/Amber/Green) updated monthly by CSM",
+            "what_to_skip": "Don't try to build a 10-factor weighted model. It will be inaccurate and nobody will maintain it."
+          },
+          "walk": {
+            "recommended_inputs": [
+              "Product usage depth (feature adoption, not just logins)",
+              "Engagement recency and quality",
+              "Support ticket sentiment",
+              "Stakeholder relationship strength",
+              "Contract and renewal status"
+            ],
+            "scoring_method": "Weighted score (0–100) with defined thresholds for healthy/at-risk/critical",
+            "what_to_skip": "Don't add NPS as a health input yet unless you have reliable, frequent NPS data. Annual NPS is too lagging."
+          },
+          "run": {
+            "recommended_inputs": [
+              "Product usage trends (not just current state)",
+              "Multi-stakeholder engagement map",
+              "Support trend analysis",
+              "Business outcome achievement vs. success plan",
+              "Expansion readiness signals",
+              "Executive sponsor engagement"
+            ],
+            "scoring_method": "Automated composite score with trend indicators and automated alerts at threshold crossings",
+            "what_to_skip": "Don't rely solely on automated scores — keep a CSM override mechanism for qualitative signals the data can't capture."
+          },
+          "fly": {
+            "recommended_inputs": [
+              "All Run-stage inputs plus: Predictive churn probability",
+              "Customer effort score trends",
+              "Product usage relative to peer cohort",
+              "Advocacy and referral activity",
+              "Multi-product adoption depth"
+            ],
+            "scoring_method": "ML-driven predictive health with cohort benchmarking, anomaly detection, and confidence intervals",
+            "what_to_skip": "Don't black-box the model. CSMs need to understand why the score is what it is, or they won't trust it."
+          }
+        },
+        "common_mistakes": [
+          "Building a complex health score before you have reliable data inputs — garbage in, garbage out",
+          "Making health scores entirely subjective (CSM opinion) or entirely objective (data only) — the best scores blend both",
+          "Not validating the score against actual outcomes — if red accounts aren't churning more than green accounts, your score is broken",
+          "Updating health scores too infrequently — monthly is minimum, weekly is better for high-touch accounts"
+        ],
+        "related_metrics": [
+          "churn_rate",
+          "nrr",
+          "csat",
+          "adoption_rate"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Check daily to identify at-risk accounts and prioritize outreach to declining health scores."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Review weekly to spot portfolio-level health trends and allocate resources to struggling segments."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Track aggregate health distribution as a leading indicator of future retention and expansion."
+          },
+          {
+            "role": "Product Manager",
+            "relevance": "Correlate health score components with product usage to identify features that drive customer success."
+          }
+        ]
+      },
+      {
+        "id": "expansion_revenue",
+        "name": "Expansion Revenue",
+        "category": "revenue",
+        "also_known_as": [
+          "Upsell/Cross-sell Revenue",
+          "Account Growth"
+        ],
+        "definition": "Additional recurring revenue generated from existing customers through upsells, cross-sells, seat expansion, or plan upgrades.",
+        "formula": "Total new ARR from existing customers in period",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "medium",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Don't focus here yet. Retain first, expand later. Premature expansion focus can damage customer trust.",
+          "walk": "Start tracking expansion informally. Identify which customers expanded and why — look for patterns.",
+          "run": "Expansion should be a formal CS metric with defined processes for identifying and advancing opportunities.",
+          "fly": "Expansion revenue should be predictable and forecastable. CS should have a pipeline of expansion opportunities."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "5-10% of base ARR annually",
+            "great": "10-15%",
+            "world_class": "15%+"
+          },
+          "seg_midmarket": {
+            "good": "10-15%",
+            "great": "15-25%",
+            "world_class": "25%+"
+          },
+          "seg_enterprise": {
+            "good": "15-20%",
+            "great": "20-35%",
+            "world_class": "35%+"
+          }
+        },
+        "common_mistakes": [
+          "Pushing expansion before the customer has achieved first value — this erodes trust fast",
+          "Not distinguishing organic expansion (customer naturally grows) from CS-driven expansion (proactive opportunity identification)",
+          "Crediting expansion entirely to Sales or entirely to CS — misalignment here creates organizational friction"
+        ],
+        "related_metrics": [
+          "nrr",
+          "adoption_rate",
+          "health_score"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Identify expansion-ready accounts in your book and flag opportunities for upsell conversations."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Track expansion pipeline and conversion rates across the team to forecast growth from existing accounts."
+          },
+          {
+            "role": "CRO/CCO",
+            "relevance": "Monitor as a key indicator of CS’s revenue contribution and alignment with sales-led growth."
+          }
+        ]
+      },
+      {
+        "id": "csat",
+        "name": "Customer Satisfaction Score (CSAT)",
+        "category": "sentiment",
+        "also_known_as": [
+          "Customer Satisfaction"
+        ],
+        "definition": "A measure of customer satisfaction with a specific interaction, process, or experience, typically on a 1–5 or 1–7 scale.",
+        "formula": "(Number of satisfied responses [4-5 on a 5-point scale] / Total responses) × 100",
+        "priority_by_stage": {
+          "crawl": "medium",
+          "walk": "medium",
+          "run": "medium",
+          "fly": "low"
+        },
+        "why_priority": {
+          "crawl": "Useful as a quick pulse check, especially post-onboarding. Easy to implement.",
+          "walk": "Track CSAT at key lifecycle touchpoints. Use it as one input to health scores.",
+          "run": "CSAT is useful but limited. Supplement with CES and outcome-based metrics.",
+          "fly": "CSAT should be one of many sentiment inputs, not a primary strategic metric."
+        },
+        "benchmarks_by_context": {
+          "_default": {
+            "good": "75-80%",
+            "great": "80-90%",
+            "world_class": "90%+"
+          }
+        },
+        "common_mistakes": [
+          "Using CSAT as your primary CS metric — satisfaction doesn't predict retention as strongly as you'd think",
+          "Survey fatigue — too many CSAT surveys reduce response rates and data quality",
+          "Not acting on low CSAT scores — collecting data without a response loop makes customers feel ignored"
+        ],
+        "related_metrics": [
+          "nps",
+          "health_score",
+          "ces"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Review after key interactions (onboarding, QBRs) to gauge satisfaction and course-correct quickly."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Aggregate across the team to identify CSMs or segments with consistently low satisfaction."
+          },
+          {
+            "role": "Product Manager",
+            "relevance": "Use CSAT trends to prioritize product improvements that directly impact customer experience."
+          }
+        ]
+      },
+      {
+        "id": "adoption_rate",
+        "name": "Product Adoption Rate",
+        "category": "usage",
+        "also_known_as": [
+          "Feature Adoption",
+          "Product Engagement"
+        ],
+        "definition": "The degree to which customers are actively using key features and capabilities of your product relative to what's available and relevant to their use case.",
+        "formula": "Varies by context. Common: (Active users of feature / Total licensed users) × 100, or (Features actively used / Features available in plan) × 100",
+        "priority_by_stage": {
+          "crawl": "medium",
+          "walk": "high",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Start with the basics — are customers logging in? How often? Even crude usage data is valuable.",
+          "walk": "Move beyond logins to feature-level adoption. Define what 'healthy adoption' looks like for each segment.",
+          "run": "Adoption should be a leading indicator in your health score. Correlate adoption patterns with retention outcomes.",
+          "fly": "Adoption analytics should be sophisticated — cohort comparisons, adoption velocity, and predictive adoption modeling."
+        },
+        "benchmarks_by_context": {
+          "complexity_low": {
+            "good": "60-70% DAU/MAU",
+            "great": "70-80%",
+            "world_class": "80%+"
+          },
+          "complexity_moderate": {
+            "good": "40-50% WAU/MAU",
+            "great": "50-65%",
+            "world_class": "65%+"
+          },
+          "complexity_high": {
+            "good": "30-40% MAU",
+            "great": "40-55%",
+            "world_class": "55%+"
+          }
+        },
+        "common_mistakes": [
+          "Tracking logins as adoption — logging in is not the same as deriving value",
+          "Using one adoption metric across all segments — enterprise adoption looks very different from SMB",
+          "Not defining 'sticky features' — the features that, when adopted, most strongly predict retention"
+        ],
+        "related_metrics": [
+          "health_score",
+          "time_to_value",
+          "expansion_revenue"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Monitor per-account adoption to identify customers who aren’t using key features and intervene."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Track adoption trends across segments to inform training priorities and playbook updates."
+          },
+          {
+            "role": "Product Manager",
+            "relevance": "Identify low-adoption features to determine if they need better UX, documentation, or deprecation."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Correlate adoption rates with retention to prove the business case for adoption-focused CS motions."
+          }
+        ]
+      },
+      {
+        "id": "ttfv",
+        "name": "Time to First Value (TTFV)",
+        "category": "onboarding",
+        "also_known_as": [
+          "Time to Wow",
+          "Activation Time"
+        ],
+        "definition": "The number of days from contract signing to the customer achieving their first defined success milestone. Unlike Time to Value which may include full go-live, TTFV focuses on the earliest meaningful moment of value realization.",
+        "formula": "Date of first success milestone achieved - Contract start date (in days)",
+        "priority_by_stage": {
+          "crawl": "medium",
+          "walk": "high",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Define what 'first value' means for your product — even a rough milestone is better than no milestone.",
+          "walk": "Track TTFV by segment and optimize your onboarding to hit it faster. Faster TTFV = better first-year retention.",
+          "run": "TTFV should be a leading KPI with segment-specific targets. Automate milestone tracking and alert on delays.",
+          "fly": "Predict TTFV at deal close based on customer profile. Use it as an input to health scoring and expansion readiness."
+        },
+        "benchmarks_by_context": {
+          "complexity_low": {
+            "good": "Under 7 days",
+            "great": "Under 3 days",
+            "world_class": "Under 1 day"
+          },
+          "complexity_moderate": {
+            "good": "Under 30 days",
+            "great": "Under 14 days",
+            "world_class": "Under 7 days"
+          },
+          "complexity_high": {
+            "good": "Under 60 days",
+            "great": "Under 30 days",
+            "world_class": "Under 14 days"
+          }
+        },
+        "common_mistakes": [
+          "Confusing TTFV with go-live date — going live doesn’t mean value was achieved",
+          "Using the same TTFV target across all segments — enterprise vs. SMB have wildly different timelines",
+          "Not connecting TTFV to downstream retention metrics to prove ROI of onboarding improvements",
+          "Measuring TTFV without defining clear, customer-validated success milestones"
+        ],
+        "related_metrics": [
+          "time_to_value",
+          "onboarding_completion",
+          "logo_retention"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Track for each new customer to ensure first value milestones are hit within target timelines."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Benchmark TTFV across the team and identify bottlenecks in the onboarding process."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Report as a leading indicator — faster TTFV strongly correlates with better first-year retention."
+          }
+        ]
+      },
+      {
+        "id": "onboarding_completion",
+        "name": "Onboarding Completion Rate",
+        "category": "onboarding",
+        "also_known_as": [
+          "Onboarding Success Rate",
+          "Implementation Completion"
+        ],
+        "definition": "The percentage of new customers who complete all defined onboarding steps within the target onboarding window. Measures the effectiveness of your onboarding program at driving customers through to readiness.",
+        "formula": "(Customers completing all onboarding steps within target window / Total new customers in cohort) × 100",
+        "priority_by_stage": {
+          "crawl": "medium",
+          "walk": "high",
+          "run": "high",
+          "fly": "medium"
+        },
+        "why_priority": {
+          "crawl": "First, define what 'complete onboarding' means. Document your onboarding steps before you can measure completion.",
+          "walk": "Track completion rate and identify where customers get stuck. This is the foundation for onboarding optimization.",
+          "run": "Segment-specific completion targets should exist. Correlate completion rate with first-year retention to prove impact.",
+          "fly": "Onboarding should be highly optimized. Focus on reducing time-to-completion while maintaining quality."
+        },
+        "benchmarks_by_context": {
+          "complexity_low": {
+            "good": "75-85%",
+            "great": "85-92%",
+            "world_class": "92%+"
+          },
+          "complexity_moderate": {
+            "good": "65-75%",
+            "great": "75-85%",
+            "world_class": "85%+"
+          },
+          "complexity_high": {
+            "good": "55-65%",
+            "great": "65-80%",
+            "world_class": "80%+"
+          }
+        },
+        "common_mistakes": [
+          "Not defining onboarding steps clearly enough to measure completion objectively",
+          "Setting the onboarding window too short or too long for the product complexity",
+          "Counting partial completion as success — a customer who does 4 of 5 steps may still not get value",
+          "Not following up with customers who stall partway through onboarding"
+        ],
+        "related_metrics": [
+          "ttfv",
+          "time_to_value",
+          "adoption_rate"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Monitor each customer’s onboarding progress and proactively intervene when steps are incomplete."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Identify which onboarding steps have the highest drop-off rates and redesign them."
+          },
+          {
+            "role": "Product Manager",
+            "relevance": "Use completion data to simplify onboarding flows and reduce product-side friction."
+          }
+        ]
+      },
+      {
+        "id": "product_adoption_depth",
+        "name": "Product Adoption Depth",
+        "category": "usage",
+        "also_known_as": [
+          "Feature Penetration",
+          "Module Utilization"
+        ],
+        "definition": "The percentage of licensed features, modules, or capabilities that a customer is actively using. Unlike basic adoption rate which may just track logins, adoption depth measures how deeply customers engage with the full product surface.",
+        "formula": "(Features/modules actively used / Total features/modules available in customer’s plan) × 100",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "medium",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Track basic product usage first (logins, active users). Feature-level tracking can wait.",
+          "walk": "Define what 'active use' means for each key feature. Start tracking adoption depth for top-tier accounts.",
+          "run": "Adoption depth should be a health score input and expansion indicator. Low depth = at-risk; high depth = expansion-ready.",
+          "fly": "Use adoption depth for predictive modeling. Identify features that most predict retention and steer customers toward them."
+        },
+        "benchmarks_by_context": {
+          "complexity_low": {
+            "good": "50-60%",
+            "great": "60-75%",
+            "world_class": "75%+"
+          },
+          "complexity_moderate": {
+            "good": "35-50%",
+            "great": "50-65%",
+            "world_class": "65%+"
+          },
+          "complexity_high": {
+            "good": "25-40%",
+            "great": "40-55%",
+            "world_class": "55%+"
+          }
+        },
+        "common_mistakes": [
+          "Treating all features equally — some features are core, others are nice-to-have",
+          "Not adjusting expectations by plan tier — a customer on a basic plan shouldn’t be measured against enterprise features",
+          "Measuring adoption without context of use case — a customer may not need every feature to get value",
+          "Ignoring adoption velocity — how quickly customers adopt features matters as much as total adoption"
+        ],
+        "related_metrics": [
+          "adoption_rate",
+          "stickiness_ratio",
+          "expansion_revenue"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Identify underutilized features in accounts and create enablement plans to deepen adoption."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Track adoption depth trends across the portfolio to inform training and enablement strategy."
+          },
+          {
+            "role": "Product Manager",
+            "relevance": "Understand which features customers adopt and which they ignore to inform product roadmap."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Use adoption depth as an expansion readiness signal — deeply adopted customers are prime upsell candidates."
+          }
+        ]
+      },
+      {
+        "id": "stickiness_ratio",
+        "name": "DAU/MAU Ratio (Stickiness)",
+        "category": "usage",
+        "also_known_as": [
+          "Stickiness Score",
+          "Daily Engagement Ratio"
+        ],
+        "definition": "The ratio of daily active users to monthly active users, indicating how habitually customers use the product. A higher ratio means more users return daily, signaling strong product-market fit and engagement.",
+        "formula": "Daily Active Users (DAU) / Monthly Active Users (MAU) × 100",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "medium",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Track basic MAU first. DAU/MAU ratio requires reliable daily usage data you may not have yet.",
+          "walk": "Start tracking DAU/MAU for your core product. Use it as a leading indicator alongside health scores.",
+          "run": "DAU/MAU should be tracked by segment and product area. Use it to identify products/features with strongest stickiness.",
+          "fly": "Model stickiness trends to predict retention and expansion. Benchmark against best-in-class products."
+        },
+        "benchmarks_by_context": {
+          "complexity_low": {
+            "good": "15-25%",
+            "great": "25-40%",
+            "world_class": "40%+"
+          },
+          "complexity_moderate": {
+            "good": "10-20%",
+            "great": "20-30%",
+            "world_class": "30%+"
+          },
+          "complexity_high": {
+            "good": "5-12%",
+            "great": "12-20%",
+            "world_class": "20%+"
+          }
+        },
+        "common_mistakes": [
+          "Expecting enterprise B2B products to match consumer app DAU/MAU ratios — B2B products naturally have lower daily usage",
+          "Not accounting for product type — a weekly reporting tool will naturally have lower daily engagement",
+          "Counting automated or API activity as 'active use' — measure human engagement separately",
+          "Obsessing over DAU/MAU when your product is inherently not a daily-use tool"
+        ],
+        "related_metrics": [
+          "adoption_rate",
+          "product_adoption_depth",
+          "health_score"
+        ],
+        "audience": [
+          {
+            "role": "Product Manager",
+            "relevance": "Use DAU/MAU to measure product-market fit and identify the most engaging product areas."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Track stickiness by segment to identify which customer types find the most daily value."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Monitor as a leading indicator of retention — sticky products retain better."
+          }
+        ]
+      },
+      {
+        "id": "expansion_rate",
+        "name": "Expansion Revenue Rate",
+        "category": "revenue",
+        "also_known_as": [
+          "Account Growth Rate",
+          "Upsell Rate"
+        ],
+        "definition": "The percentage of total recurring revenue from existing customers that comes from upsells, cross-sells, and seat expansion over a given period. Measures how effectively the organization grows within its installed base.",
+        "formula": "(Expansion ARR in period / Starting ARR of existing customers) × 100",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "low",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Don’t focus on expansion yet. Retain first — pushing expansion before customers have value damages trust.",
+          "walk": "Begin tracking which accounts expanded and why. Look for patterns but don’t formalize expansion targets yet.",
+          "run": "Expansion rate should be a formal metric. CS should have defined processes for identifying and qualifying expansion opportunities.",
+          "fly": "Expansion should be predictable and forecastable. CS should have a pipeline with conversion rates and cycle time metrics."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "8-12%",
+            "great": "12-18%",
+            "world_class": "18%+"
+          },
+          "seg_midmarket": {
+            "good": "12-18%",
+            "great": "18-28%",
+            "world_class": "28%+"
+          },
+          "seg_enterprise": {
+            "good": "15-22%",
+            "great": "22-35%",
+            "world_class": "35%+"
+          }
+        },
+        "common_mistakes": [
+          "Conflating organic growth (customer naturally adds users) with proactive expansion (CS-driven upsell)",
+          "Not tracking expansion by source — was it CS-identified, Sales-identified, or product-led?",
+          "Setting expansion targets before retention is stable — expansion on a churning base is a losing strategy",
+          "Ignoring contraction alongside expansion — net expansion (expansion minus downgrades) is more meaningful"
+        ],
+        "related_metrics": [
+          "nrr",
+          "expansion_revenue",
+          "product_adoption_depth"
+        ],
+        "audience": [
+          {
+            "role": "CS Manager",
+            "relevance": "Track expansion rate by CSM and segment to identify top performers and replicable motions."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Report to leadership as a measure of CS’s contribution to revenue growth from the installed base."
+          },
+          {
+            "role": "CRO/CCO",
+            "relevance": "Use to forecast future revenue from existing customers and balance new vs. expansion investment."
+          }
+        ]
+      },
+      {
+        "id": "cac_payback",
+        "name": "CAC Payback Period",
+        "category": "revenue",
+        "also_known_as": [
+          "Customer Payback Period",
+          "Months to Recover CAC"
+        ],
+        "definition": "The number of months required to recover the cost of acquiring a customer through their recurring revenue contribution. A shorter payback period means faster return on acquisition investment.",
+        "formula": "Customer Acquisition Cost / (Monthly Recurring Revenue × Gross Margin %)",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "low",
+          "run": "medium",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Not a CS metric at this stage. Focus on retention fundamentals before worrying about unit economics.",
+          "walk": "Awareness only. Understanding CAC payback helps CS leaders make the case for investment in customer retention.",
+          "run": "Track CAC payback by segment. CS’s impact on retention directly affects payback — shorter churn = faster payback.",
+          "fly": "CAC payback should be optimized cross-functionally. CS should influence sales targeting and customer qualification."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "Under 12 months",
+            "great": "Under 8 months",
+            "world_class": "Under 6 months"
+          },
+          "seg_midmarket": {
+            "good": "Under 18 months",
+            "great": "Under 12 months",
+            "world_class": "Under 9 months"
+          },
+          "seg_enterprise": {
+            "good": "Under 24 months",
+            "great": "Under 18 months",
+            "world_class": "Under 12 months"
+          }
+        },
+        "common_mistakes": [
+          "Not including all acquisition costs (marketing, sales, onboarding) in the CAC calculation",
+          "Ignoring gross margin — revenue ≠ profit, and payback should reflect actual contribution",
+          "Not segmenting CAC payback — blended payback hides massive segment-level differences",
+          "Treating CAC payback as purely a finance/sales metric when CS retention directly impacts it"
+        ],
+        "related_metrics": [
+          "grr",
+          "nrr",
+          "logo_retention"
+        ],
+        "audience": [
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Use to justify CS investment — better retention directly shortens payback period."
+          },
+          {
+            "role": "CRO/CCO",
+            "relevance": "Critical for unit economics and investor reporting — shows sustainability of the growth model."
+          },
+          {
+            "role": "CEO/Founder",
+            "relevance": "Fundamental health metric — long payback periods signal a business model problem."
+          }
+        ]
+      },
+      {
+        "id": "ces",
+        "name": "Customer Effort Score (CES)",
+        "category": "sentiment",
+        "also_known_as": [
+          "Effort Score",
+          "Ease of Doing Business"
+        ],
+        "definition": "A measure of how easy customers find it to accomplish their goals with your product and team. Lower effort correlates with higher loyalty. Typically measured on a 1-7 scale where 1 = very difficult and 7 = very easy.",
+        "formula": "(Sum of all effort ratings / Number of responses) — on a 1-7 scale",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "low",
+          "run": "medium",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Not a priority yet. CSAT is easier to implement and gives you a basic sentiment baseline.",
+          "walk": "Consider adding CES to post-interaction surveys (after support tickets, after onboarding). It’s more actionable than CSAT.",
+          "run": "CES should supplement CSAT as a health score input. High-effort experiences are strong churn predictors.",
+          "fly": "CES should drive process optimization across the entire customer journey. Map effort hotspots and systematically reduce them."
+        },
+        "benchmarks_by_context": {
+          "_default": {
+            "good": "5.0-5.5",
+            "great": "5.5-6.0",
+            "world_class": "6.0+"
+          }
+        },
+        "common_mistakes": [
+          "Only measuring CES after support interactions — measure it across the full journey (onboarding, upgrades, renewals)",
+          "Not acting on CES data — collecting effort scores without reducing friction is worse than not measuring at all",
+          "Using CES as a standalone metric — it’s most powerful when combined with CSAT and outcome data",
+          "Survey fatigue — asking CES too frequently reduces response rates and data quality"
+        ],
+        "related_metrics": [
+          "csat",
+          "health_score",
+          "escalation_rate"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Review after key touchpoints to identify high-effort experiences and address them proactively."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Analyze effort hotspots across the customer journey to prioritize process improvements."
+          },
+          {
+            "role": "Product Manager",
+            "relevance": "Use CES data to reduce product friction — high-effort interactions often point to UX problems."
+          }
+        ]
+      },
+      {
+        "id": "escalation_rate",
+        "name": "Escalation Rate",
+        "category": "health",
+        "also_known_as": [
+          "Management Escalation Rate",
+          "Executive Escalation Frequency"
+        ],
+        "definition": "The percentage of accounts that require escalation to management or executive involvement within a given period. High escalation rates may indicate systemic product issues, misaligned expectations, or CSM capability gaps.",
+        "formula": "(Number of accounts with escalations in period / Total active accounts) × 100",
+        "priority_by_stage": {
+          "crawl": "medium",
+          "walk": "medium",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Track escalations informally. At this stage, every escalation is a learning opportunity about your product and processes.",
+          "walk": "Define what constitutes an escalation vs. a normal support issue. Start categorizing escalation types and root causes.",
+          "run": "Escalation rate should be tracked formally with trend analysis. Use root cause data to drive product and process improvements.",
+          "fly": "Escalation patterns should feed into predictive models. The goal is fewer escalations through better proactive risk detection."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "Under 8%",
+            "great": "Under 5%",
+            "world_class": "Under 3%"
+          },
+          "seg_midmarket": {
+            "good": "Under 10%",
+            "great": "Under 6%",
+            "world_class": "Under 3%"
+          },
+          "seg_enterprise": {
+            "good": "Under 12%",
+            "great": "Under 8%",
+            "world_class": "Under 5%"
+          }
+        },
+        "common_mistakes": [
+          "Not distinguishing between proactive escalations (CSM caught risk early) and reactive escalations (customer complained to exec)",
+          "Penalizing CSMs for escalating — this discourages early risk detection and makes the problem worse",
+          "Not tracking escalation resolution rate and time alongside escalation rate",
+          "Ignoring repeat escalations from the same account — this signals a deeper, unresolved issue"
+        ],
+        "related_metrics": [
+          "health_score",
+          "ces",
+          "logo_retention"
+        ],
+        "audience": [
+          {
+            "role": "CS Manager",
+            "relevance": "Track monthly to identify CSMs or accounts with high escalation frequency and intervene."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Monitor trends to detect systemic issues — rising escalation rates signal product or process failures."
+          },
+          {
+            "role": "CSM",
+            "relevance": "Use to identify recurring escalation triggers in your accounts and build proactive mitigation plans."
+          }
+        ]
+      }
+    ]
+  },
+  "contextual_recommendations": {
+    "description": "Lookup table for stage + context specific guidance. Used by the site to render contextual panels.",
+    "coverage_ratio_benchmarks": {
+      "seg_enterprise": {
+        "accounts_per_csm": "10–30 accounts",
+        "arr_per_csm": "$2M–$5M",
+        "engagement_model": "High-touch: named CSM, regular cadence, strategic business reviews"
+      },
+      "seg_midmarket": {
+        "accounts_per_csm": "30–75 accounts",
+        "arr_per_csm": "$2M–$5M",
+        "engagement_model": "Medium-touch: named CSM with digital supplements, quarterly reviews"
+      },
+      "seg_smb": {
+        "accounts_per_csm": "75–200+ accounts",
+        "arr_per_csm": "$1M–$2M",
+        "engagement_model": "Low-touch / digital-first: pooled CSM model, automated journeys, community-driven support"
+      }
+    },
+    "cs_cost_benchmarks": {
+      "arr_under_5m": "CS team costs often 10–20% of ARR. Over-investing early is recommended for long-term retention.",
+      "arr_5m_20m": "Target 8–15% of ARR for CS team costs. Start building efficiency through tooling and playbooks.",
+      "arr_20m_100m": "Target 5–10% of ARR. Expect to see economies of scale from digital CS and automation.",
+      "arr_over_100m": "Target under 5–8% of ARR. Mature organizations achieve this through operational discipline and technology."
+    },
+    "what_to_track_by_stage": {
+      "crawl": {
+        "must_track": [
+          "Logo retention rate",
+          "GRR",
+          "Basic product usage (logins/active users)",
+          "Support ticket volume"
+        ],
+        "nice_to_have": [
+          "CSAT post-onboarding",
+          "Onboarding completion rate"
+        ],
+        "skip_for_now": [
+          "NRR (focus on GRR first)",
+          "Cohort analysis",
+          "Predictive health scores",
+          "Expansion pipeline"
+        ]
+      },
+      "walk": {
+        "must_track": [
+          "GRR",
+          "NRR",
+          "Logo retention",
+          "Health score",
+          "Time to value",
+          "Product adoption rate"
+        ],
+        "nice_to_have": [
+          "CSM capacity ratio",
+          "Expansion revenue",
+          "CSAT at key touchpoints"
+        ],
+        "skip_for_now": [
+          "Predictive churn modeling",
+          "Customer effort score",
+          "Cohort-level NRR"
+        ]
+      },
+      "run": {
+        "must_track": [
+          "GRR",
+          "NRR (overall and by segment)",
+          "Health score accuracy",
+          "TTV",
+          "Expansion revenue",
+          "CSM capacity and cost ratios",
+          "Adoption depth"
+        ],
+        "nice_to_have": [
+          "Cohort NRR",
+          "Customer effort score",
+          "CS ROI / cost-to-serve",
+          "Advocacy metrics"
+        ],
+        "skip_for_now": [
+          "ML-driven predictions (unless you have the data infrastructure)",
+          "CS revenue attribution models"
+        ]
+      },
+      "fly": {
+        "must_track": [
+          "All Run metrics plus: Predictive churn probability",
+          "Customer lifetime value",
+          "CS cost-to-serve by segment",
+          "Expansion pipeline and conversion",
+          "Cohort analysis across all key metrics",
+          "Advocacy and referral metrics"
+        ],
+        "nice_to_have": [
+          "Net promoter score (relationship, not transactional)",
+          "CS-attributed revenue"
+        ],
+        "skip_for_now": [
+          "Nothing — at this stage you should be tracking everything relevant and focusing on optimization"
+        ]
+      }
+    }
+  }
+}

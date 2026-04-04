@@ -1,0 +1,442 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import frameworkData from '../data/lean-cs-data.json';
+
+const stages = frameworkData.maturity_stages.stages;
+const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+---
+
+<BaseLayout title="Maturity Model" description="Explore the four stages of Customer Success maturity: Crawl, Walk, Run, and Fly.">
+
+  <div class="container model-page">
+
+    <!-- Contextual header — shown if assessed (populated by JS) -->
+    <div class="user-stage-header" id="user-stage-header" data-show-if-assessed style="display:none;"></div>
+
+    <!-- CTA for non-assessed users -->
+    <div class="assess-cta" id="model-cta" data-hide-if-assessed>
+      <h1 class="model-title">The Distilled CS Maturity Model</h1>
+      <p class="model-subtitle">Four stages of Customer Success maturity — from reactive firefighting to predictive growth engine.</p>
+      <a href="/assess/" class="btn btn-primary">Take the Assessment to see where you stand</a>
+    </div>
+
+    <!-- Stage progression -->
+    <div class="stages-progression">
+      {stages.map((stage, i) => (
+        <div
+          class="stage-section"
+          data-stage-id={stage.id}
+          id={`stage-${stage.id}`}
+        >
+          <!-- Stage header bar -->
+          <button
+            class="stage-header-bar"
+            aria-expanded="true"
+            aria-controls={`stage-content-${stage.id}`}
+            type="button"
+          >
+            <div class="stage-header-left">
+              <div class="stage-timeline-dot" style={`background: ${stage.color}`}>
+                <span class="stage-number">{i + 1}</span>
+              </div>
+              <div>
+                <h2 class="stage-name" style={`color: ${stage.color}`}>{stage.label}</h2>
+                <span class="stage-subtitle-text">{stage.subtitle}</span>
+              </div>
+            </div>
+            <div class="stage-header-right">
+              <span class="stage-score-range">{stage.score_range[0]} – {stage.score_range[1]}</span>
+              <span class="stage-badge-slot" data-stage-badge={stage.id}></span>
+              <svg class="stage-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </button>
+
+          <!-- Expandable content -->
+          <div class="stage-content" id={`stage-content-${stage.id}`}>
+            <p class="stage-description">{stage.description}</p>
+
+            <div class="stage-details-grid">
+              <div class="stage-detail-block">
+                <h3 class="detail-heading">Key Characteristics</h3>
+                <ul class="detail-list">
+                  {stage.key_characteristics.map(char => (
+                    <li>{char}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="stage-detail-block">
+                <h3 class="detail-heading">Priority Actions</h3>
+                <ol class="detail-list-ordered">
+                  {stage.priority_actions.map((action: any) => (
+                    <li>{typeof action === 'string' ? action : action.text}</li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+
+            <div class="stage-profile">
+              <h3 class="detail-heading">Typical Profile</h3>
+              <p class="typical-profile-text">{stage.typical_profile}</p>
+            </div>
+          </div>
+
+          {i < stages.length - 1 && <div class="stage-connector" style={`border-color: ${stage.color}30`}></div>}
+        </div>
+      ))}
+    </div>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .model-page {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+    max-width: 52rem;
+    margin-inline: auto;
+  }
+
+  .model-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .model-subtitle {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    max-width: 36rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .assess-cta {
+    margin-bottom: 3rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s ease-out;
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+    color: var(--color-bg);
+    transform: translateY(-1px);
+  }
+
+  /* ── User stage header (JS populated) ── */
+  :global(.user-stage-header) {
+    margin-bottom: 3rem;
+  }
+
+  :global(.user-stage-banner) {
+    padding: 2rem;
+    border-radius: 0.75rem;
+    border: 1px solid;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  :global(.user-stage-banner h1) {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    margin-bottom: 0.375rem;
+  }
+
+  :global(.user-stage-banner p) {
+    font-size: 0.9375rem;
+    opacity: 0.85;
+  }
+
+  /* ── Stages progression ── */
+  .stages-progression {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stage-section {
+    position: relative;
+    transition: opacity 0.3s ease-out;
+  }
+
+  .stage-section.dimmed {
+    opacity: 0.5;
+  }
+
+  .stage-section.current {
+    opacity: 1;
+  }
+
+  .stage-connector {
+    width: 2px;
+    height: 1.5rem;
+    margin-left: 1.375rem;
+    border-left: 2px dashed;
+  }
+
+  .stage-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem 0.75rem 0 0;
+    cursor: pointer;
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    transition: border-color 0.2s ease-out;
+  }
+
+  .stage-header-bar:hover {
+    border-color: var(--color-border-hover);
+  }
+
+  .stage-header-bar[aria-expanded="false"] {
+    border-radius: 0.75rem;
+  }
+
+  .stage-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .stage-timeline-dot {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .stage-number {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-bg);
+  }
+
+  .stage-name {
+    font-size: 1.25rem;
+    margin-bottom: 0;
+    font-family: var(--font-display);
+  }
+
+  .stage-subtitle-text {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .stage-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .stage-score-range {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .stage-score-range {
+      display: inline;
+    }
+  }
+
+  .stage-chevron {
+    color: var(--color-text-muted);
+    transition: transform 0.2s ease-out;
+  }
+
+  .stage-header-bar[aria-expanded="false"] .stage-chevron {
+    transform: rotate(-90deg);
+  }
+
+  /* Stage content */
+  .stage-content {
+    padding: 1.5rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-radius: 0 0 0.75rem 0.75rem;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+
+  .stage-content[hidden] {
+    display: none;
+  }
+
+  .stage-description {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .stage-details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .stage-details-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .stage-detail-block {
+    padding: 1.25rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .detail-heading {
+    font-size: 0.875rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .detail-list, .detail-list-ordered {
+    margin: 0;
+    padding: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .detail-list li, .detail-list-ordered li {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .stage-profile {
+    padding: 1.25rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .typical-profile-text {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  :global(.you-are-here) {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
+
+<script>
+  import { isAssessmentCompleted, getScores } from '../scripts/context-manager.js';
+
+  const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+  const stageColors = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
+  const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+  const stageSubtitles = {
+    crawl: 'Reactive / Foundational',
+    walk: 'Informed / Structured',
+    run: 'Proactive / Operationalized',
+    fly: 'Predictive / Optimized',
+  };
+
+  // Accordion toggle
+  document.querySelectorAll('.stage-header-bar').forEach(bar => {
+    bar.addEventListener('click', () => {
+      const expanded = bar.getAttribute('aria-expanded') === 'true';
+      const contentId = bar.getAttribute('aria-controls');
+      const content = document.getElementById(contentId);
+      bar.setAttribute('aria-expanded', String(!expanded));
+      if (content) content.hidden = expanded;
+    });
+  });
+
+  // Contextual personalization
+  if (isAssessmentCompleted()) {
+    const scores = getScores();
+    if (scores && scores.stage) {
+      const userStage = scores.stage;
+      const userStageIdx = stageOrder.indexOf(userStage);
+      const color = stageColors[userStage];
+
+      // Show assessed elements, hide CTA
+      document.querySelectorAll('[data-show-if-assessed]').forEach(el => el.style.display = '');
+      document.querySelectorAll('[data-hide-if-assessed]').forEach(el => el.style.display = 'none');
+
+      // Populate user stage header
+      const header = document.getElementById('user-stage-header');
+      if (header) {
+        header.innerHTML = `
+          <div class="user-stage-banner" style="border-color: ${color}40; background: ${color}08;">
+            <h1 style="color: ${color}">Your stage: ${stageLabels[userStage]}</h1>
+            <p style="color: var(--color-text-secondary)">${stageSubtitles[userStage]} &middot; Overall score: ${scores.overallScore} / 4.0</p>
+          </div>
+        `;
+      }
+
+      // Add badges and visual states to stage sections
+      stageOrder.forEach((stageId, idx) => {
+        const section = document.querySelector(`[data-stage-id="${stageId}"]`);
+        const badgeSlot = document.querySelector(`[data-stage-badge="${stageId}"]`);
+
+        if (idx === userStageIdx) {
+          section?.classList.add('current');
+          if (badgeSlot) {
+            badgeSlot.innerHTML = `<span class="you-are-here" style="background:${color}25; color:${color};">You are here</span>`;
+          }
+        } else if (idx < userStageIdx) {
+          if (badgeSlot) {
+            badgeSlot.innerHTML = `<span class="you-are-here" style="background: var(--color-surface-hover); color: var(--color-text-muted);">Completed</span>`;
+          }
+        } else if (idx === userStageIdx + 1) {
+          if (badgeSlot) {
+            badgeSlot.innerHTML = `<span class="you-are-here" style="background: var(--color-surface-hover); color: var(--color-text-secondary);">Next milestone</span>`;
+          }
+        }
+      });
+
+      // Scroll to current stage
+      const currentEl = document.getElementById(`stage-${userStage}`);
+      if (currentEl) {
+        setTimeout(() => {
+          currentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 400);
+      }
+    }
+  }
+</script>
