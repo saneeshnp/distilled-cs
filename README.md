@@ -1,43 +1,33 @@
-# Astro Starter Kit: Minimal
+# Distilled CS
+
+An open, vendor-neutral customer success maturity framework. Available at [distilledcs.org](https://distilledcs.org).
+
+## What it does
+
+- **Maturity assessment** across 7 CS domains (21 questions + 7 context profile questions)
+- **Context-aware guidance** based on your company's ARR, segment, and team size
+- **Metrics directory** with stage-specific benchmarks and recommendations
+- **Interactive checklist** with progress saved in the browser
+
+## Tech stack
+
+- [Astro 6](https://astro.build) 
+- Tailwind CSS v4
+- Vanilla JavaScript
+
+## Getting started
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev       # Start dev server at localhost:4321
+npm run build     # Build static site to dist/
+npm run preview   # Preview built site locally
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Data
 
-## 🚀 Project Structure
+All framework content (questions, metrics, benchmarks, stages) lives in `src/data/lean-cs-data.json`. Do not hardcode framework content in templates.
 
-Inside of your Astro project, you'll see the following folders and files:
+## License
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Open source. See [LICENSE](./LICENSE) for details.
