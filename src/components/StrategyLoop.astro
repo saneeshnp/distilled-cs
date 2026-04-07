@@ -1,0 +1,406 @@
+---
+interface Props {
+  activePhase?: 'assess' | 'execute' | 'transform';
+  size?: 'sm' | 'md' | 'lg';
+  interactive?: boolean;
+}
+
+const { activePhase, size = 'md', interactive = true } = Astro.props;
+
+const phases = [
+  { id: 'assess', label: 'Assess', tagline: 'Know where you stand', href: '/assess/', icon: 'compass' },
+  { id: 'execute', label: 'Execute', tagline: 'Act on what matters', href: '/playbooks/', icon: 'rocket' },
+  { id: 'transform', label: 'Transform', tagline: 'Measure, level up, repeat', href: '/transform/', icon: 'refresh' },
+];
+
+const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
+---
+
+<div class={`strategy-loop strategy-loop--${size}`} role="img" aria-label="Strategy Loop: Assess, Execute, Transform — a continuous improvement cycle for CS maturity">
+
+  <!-- Desktop: Circular SVG diagram -->
+  <div class="loop-circular">
+    <svg viewBox="0 0 400 400" class="loop-svg" aria-hidden="true">
+      <!-- Arrow path (clockwise arc) -->
+      <defs>
+        <marker id={`arrow-${size}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-accent)" opacity="0.5" />
+        </marker>
+        <linearGradient id={`arrow-grad-${size}`} gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0.4" />
+        </linearGradient>
+      </defs>
+
+      <!-- Circular arrow paths connecting nodes (clockwise: Assess→Execute→Transform→Assess) -->
+      <!-- Arc from Assess (top) to Execute (bottom-right) -->
+      <path class="loop-arrow loop-arrow-1" d="M 225 85 A 140 140 0 0 1 330 290" fill="none" stroke={`url(#arrow-grad-${size})`} stroke-width="2" marker-end={`url(#arrow-${size})`} />
+      <!-- Arc from Execute (bottom-right) to Transform (bottom-left) -->
+      <path class="loop-arrow loop-arrow-2" d="M 300 320 A 140 140 0 0 1 100 320" fill="none" stroke={`url(#arrow-grad-${size})`} stroke-width="2" marker-end={`url(#arrow-${size})`} />
+      <!-- Arc from Transform (bottom-left) to Assess (top) -->
+      <path class="loop-arrow loop-arrow-3" d="M 70 290 A 140 140 0 0 1 175 85" fill="none" stroke={`url(#arrow-grad-${size})`} stroke-width="2" marker-end={`url(#arrow-${size})`} />
+
+      <!-- Center hub: maturity stage dots -->
+      <g class="loop-hub">
+        {stageColors.map((color, i) => {
+          const cx = 190 + (i % 2) * 20;
+          const cy = 190 + Math.floor(i / 2) * 20;
+          return <circle cx={cx} cy={cy} r="5" fill={color} opacity="0.7" />;
+        })}
+        <text x="200" y="215" text-anchor="middle" fill="var(--color-text-muted)" font-size="9" font-family="var(--font-body)">CS Maturity</text>
+      </g>
+    </svg>
+
+    <!-- Node overlays (positioned over SVG) -->
+    {phases.map((phase, i) => {
+      const isActive = activePhase === phase.id;
+      const positions = [
+        { top: '2%', left: '50%', transform: 'translateX(-50%)' },
+        { bottom: '5%', right: '2%' },
+        { bottom: '5%', left: '2%' },
+      ];
+      const pos = positions[i];
+
+      return (
+        <div
+          class={`loop-node loop-node--${phase.id} ${isActive ? 'loop-node--active' : ''}`}
+          style={`${pos.top ? `top:${pos.top};` : ''}${pos.bottom ? `bottom:${pos.bottom};` : ''}${pos.left ? `left:${pos.left};` : ''}${pos.right ? `right:${pos.right};` : ''}${pos.transform ? `transform:${pos.transform};` : ''}`}
+        >
+          {interactive ? (
+            <a href={phase.href} class="loop-node-link" aria-label={`${phase.label}: ${phase.tagline}`}>
+              <span class="loop-node-label">{phase.label}</span>
+              <span class="loop-node-tagline">{phase.tagline}</span>
+            </a>
+          ) : (
+            <div class="loop-node-link" aria-label={`${phase.label}: ${phase.tagline}`}>
+              <span class="loop-node-label">{phase.label}</span>
+              <span class="loop-node-tagline">{phase.tagline}</span>
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+
+  <!-- Mobile: Vertical linear layout -->
+  <div class="loop-linear">
+    {phases.map((phase, i) => {
+      const isActive = activePhase === phase.id;
+      return (
+        <>
+          {interactive ? (
+            <a href={phase.href} class={`loop-linear-node ${isActive ? 'loop-linear-node--active' : ''}`}>
+              <span class="loop-linear-step">{String(i + 1).padStart(2, '0')}</span>
+              <div class="loop-linear-content">
+                <span class="loop-linear-label">{phase.label}</span>
+                <span class="loop-linear-tagline">{phase.tagline}</span>
+              </div>
+              <svg class="loop-linear-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          ) : (
+            <div class={`loop-linear-node ${isActive ? 'loop-linear-node--active' : ''}`}>
+              <span class="loop-linear-step">{String(i + 1).padStart(2, '0')}</span>
+              <div class="loop-linear-content">
+                <span class="loop-linear-label">{phase.label}</span>
+                <span class="loop-linear-tagline">{phase.tagline}</span>
+              </div>
+            </div>
+          )}
+          {i < 2 && (
+            <div class="loop-linear-connector" aria-hidden="true">
+              <svg width="2" height="28" viewBox="0 0 2 28">
+                <line x1="1" y1="0" x2="1" y2="22" stroke="var(--color-accent)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.35" />
+                <polygon points="0,22 2,22 1,28" fill="var(--color-accent)" opacity="0.45" />
+              </svg>
+            </div>
+          )}
+        </>
+      );
+    })}
+    <!-- Repeat indicator -->
+    <div class="loop-linear-repeat" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M2 8a6 6 0 0 1 10.5-4" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" opacity="0.5" />
+        <path d="M12 2l1 2.5-2.5.5" stroke="var(--color-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5" />
+      </svg>
+      <span>Repeat</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .strategy-loop {
+    position: relative;
+    width: 100%;
+  }
+
+  /* ── Size variants ── */
+  .strategy-loop--sm { max-width: 220px; margin: 0 auto; }
+  .strategy-loop--md { max-width: 400px; margin: 0 auto; }
+  .strategy-loop--lg { max-width: 520px; margin: 0 auto; }
+
+  /* ── Circular (desktop only) ── */
+  .loop-circular {
+    display: none;
+    position: relative;
+    aspect-ratio: 1;
+  }
+
+  @media (min-width: 768px) {
+    .loop-circular { display: block; }
+    .loop-linear { display: none !important; }
+  }
+
+  .loop-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── Arrow animation ── */
+  .loop-arrow {
+    stroke-dasharray: 300;
+    stroke-dashoffset: 300;
+    transition: stroke-dashoffset 0.8s ease-out;
+  }
+
+  .strategy-loop.is-visible .loop-arrow-1 { stroke-dashoffset: 0; transition-delay: 0s; }
+  .strategy-loop.is-visible .loop-arrow-2 { stroke-dashoffset: 0; transition-delay: 0.25s; }
+  .strategy-loop.is-visible .loop-arrow-3 { stroke-dashoffset: 0; transition-delay: 0.5s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loop-arrow {
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+      transition: none;
+    }
+  }
+
+  /* ── Nodes ── */
+  .loop-node {
+    position: absolute;
+  }
+
+  .loop-node-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: border-color 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  }
+
+  a.loop-node-link:hover {
+    border-color: rgba(245, 166, 35, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(245, 166, 35, 0.08);
+  }
+
+  a.loop-node-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .loop-node-label {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    color: var(--color-text-primary);
+  }
+
+  .loop-node-tagline {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.2s ease-out, max-height 0.2s ease-out;
+  }
+
+  .loop-node-link:hover .loop-node-tagline,
+  .loop-node-link:focus .loop-node-tagline,
+  .loop-node--active .loop-node-tagline {
+    opacity: 1;
+    max-height: 2rem;
+  }
+
+  /* Active phase pulse */
+  .loop-node--active .loop-node-link {
+    border-color: rgba(245, 166, 35, 0.35);
+    box-shadow: 0 0 20px rgba(245, 166, 35, 0.1);
+  }
+
+  .loop-node--active .loop-node-label {
+    color: var(--color-accent);
+  }
+
+  @keyframes subtle-pulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(245, 166, 35, 0.08); }
+    50% { box-shadow: 0 0 24px rgba(245, 166, 35, 0.18); }
+  }
+
+  .loop-node--active .loop-node-link {
+    animation: subtle-pulse 3s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loop-node--active .loop-node-link {
+      animation: none;
+    }
+  }
+
+  /* Size-specific node adjustments */
+  .strategy-loop--sm .loop-node-link {
+    padding: 0.5rem 0.75rem;
+  }
+  .strategy-loop--sm .loop-node-label {
+    font-size: 0.875rem;
+  }
+  .strategy-loop--sm .loop-node-tagline {
+    font-size: 0.6875rem;
+  }
+  .strategy-loop--lg .loop-node-link {
+    padding: 1rem 1.75rem;
+  }
+  .strategy-loop--lg .loop-node-label {
+    font-size: 1.375rem;
+  }
+  .strategy-loop--lg .loop-node-tagline {
+    font-size: 0.8125rem;
+  }
+
+  /* ── Linear / Mobile ── */
+  .loop-linear {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .loop-linear-node {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 340px;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease-out;
+  }
+
+  a.loop-linear-node:hover {
+    border-color: rgba(245, 166, 35, 0.3);
+  }
+
+  a.loop-linear-node:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .loop-linear-node--active {
+    border-color: rgba(245, 166, 35, 0.35);
+    box-shadow: 0 0 16px rgba(245, 166, 35, 0.08);
+  }
+
+  .loop-linear-step {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  .loop-linear-node--active .loop-linear-step {
+    color: var(--color-accent);
+  }
+
+  .loop-linear-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    flex: 1;
+  }
+
+  .loop-linear-label {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    color: var(--color-text-primary);
+  }
+
+  .loop-linear-node--active .loop-linear-label {
+    color: var(--color-accent);
+  }
+
+  .loop-linear-tagline {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .loop-linear-chevron {
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  .loop-linear-connector {
+    display: flex;
+    justify-content: center;
+    padding: 0.25rem 0;
+  }
+
+  .loop-linear-repeat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    opacity: 0.6;
+  }
+
+  /* Size-specific for linear too */
+  .strategy-loop--sm .loop-linear-node {
+    padding: 0.625rem 1rem;
+    max-width: 240px;
+  }
+  .strategy-loop--sm .loop-linear-label {
+    font-size: 0.9375rem;
+  }
+  .strategy-loop--sm .loop-linear-tagline {
+    font-size: 0.75rem;
+  }
+  .strategy-loop--sm .loop-linear-step {
+    font-size: 1rem;
+  }
+  .strategy-loop--sm .loop-linear-connector svg {
+    height: 20px;
+  }
+</style>
+
+<script>
+  // Scroll-reveal: add .is-visible when component enters viewport
+  const loops = document.querySelectorAll('.strategy-loop');
+  if (loops.length > 0 && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    loops.forEach((el) => observer.observe(el));
+  } else {
+    // Fallback: show immediately
+    loops.forEach((el) => el.classList.add('is-visible'));
+  }
+</script>

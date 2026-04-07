@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import StrategyLoop from '../components/StrategyLoop.astro';
 import frameworkData from '../data/lean-cs-data.json';
+
+const strategyLoop = frameworkData.strategy_loop;
 
 const stages = frameworkData.maturity_stages.stages;
 const principles = frameworkData.principles;
@@ -29,7 +32,7 @@ const stageHooks: Record<string, string> = {
           <span class="hero-word accent">measuring.</span>
         </h1>
         <p class="hero-subtitle" id="hero-subtitle">
-          The open framework for Customer Success maturity.
+          Assess. Execute. Transform. The open CS maturity framework.
         </p>
       </div>
 
@@ -89,34 +92,37 @@ const stageHooks: Record<string, string> = {
         <p class="problem-statement scroll-reveal accent-text">
           It's time for an open standard.
         </p>
+        <p class="problem-statement scroll-reveal loop-intro">
+          Distilled CS gives you a repeatable system: assess where you stand, execute what matters, and transform your CS org — stage by stage.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- Section 3: What Distilled CS Does (3 Pillars) -->
-  <section class="section-pillars" id="how-it-works">
+  <!-- Section 3: The Strategy Loop -->
+  <section class="section-loop" id="strategy-loop">
     <div class="container">
-      <div class="pillars-grid">
-        <div class="pillar-card scroll-reveal">
-          <div class="pillar-icon">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="16" stroke="var(--color-accent)" stroke-width="2"/><path d="M14 20l4 4 8-8" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <h3 class="pillar-title">Assess</h3>
-          <p class="pillar-desc">Know where you stand. Our 5-minute assessment scores your CS maturity across 7 domains.</p>
+      <h2 class="section-headline scroll-reveal">The CS Strategy Loop</h2>
+      <p class="section-subheadline scroll-reveal">A repeating cycle that drives continuous improvement — not a one-time exercise.</p>
+
+      <div class="loop-section-layout">
+        <!-- Loop diagram -->
+        <div class="loop-diagram-wrapper scroll-reveal">
+          <StrategyLoop size="lg" interactive={true} />
         </div>
-        <div class="pillar-card scroll-reveal">
-          <div class="pillar-icon">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M8 32l8-12 6 8 10-16" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <h3 class="pillar-title">Navigate</h3>
-          <p class="pillar-desc">Get prescriptive guidance. Not generic advice — context-aware recommendations for YOUR stage, YOUR team, YOUR customers.</p>
-        </div>
-        <div class="pillar-card scroll-reveal">
-          <div class="pillar-icon">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="8" y="22" width="6" height="10" rx="1" fill="var(--color-accent)" opacity="0.4"/><rect x="17" y="16" width="6" height="16" rx="1" fill="var(--color-accent)" opacity="0.6"/><rect x="26" y="10" width="6" height="22" rx="1" fill="var(--color-accent)"/></svg>
-          </div>
-          <h3 class="pillar-title">Measure</h3>
-          <p class="pillar-desc">Track what matters. A metrics directory that tells you what to track, what to ignore, and what benchmarks to hit.</p>
+
+        <!-- Phase descriptions -->
+        <div class="loop-phases-detail">
+          {strategyLoop.phases.map((phase, i) => (
+            <div class="loop-phase-card scroll-reveal" style={`--reveal-delay: ${i * 0.1}s`}>
+              <span class="loop-phase-number">{String(i + 1).padStart(2, '0')}</span>
+              <div class="loop-phase-content">
+                <h3 class="loop-phase-title">{phase.label}</h3>
+                <p class="loop-phase-tagline">{phase.tagline}</p>
+                <p class="loop-phase-desc">{phase.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -538,53 +544,94 @@ const stageHooks: Record<string, string> = {
     font-style: italic;
   }
 
-  /* ── Section: Pillars ───────────────────── */
-  .section-pillars {
+  /* ── Section: Strategy Loop ──────────────── */
+  .section-loop {
     padding: 8rem 0;
     border-top: 1px solid var(--color-border);
   }
 
-  .pillars-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .loop-section-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    margin-top: 3rem;
   }
 
   @media (min-width: 768px) {
-    .pillars-grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
+    .loop-section-layout {
+      flex-direction: row;
+      align-items: center;
+      gap: 4rem;
+    }
+
+    .loop-diagram-wrapper {
+      flex: 1;
+      max-width: 420px;
+    }
+
+    .loop-phases-detail {
+      flex: 1;
     }
   }
 
-  .pillar-card {
-    padding: 2rem;
+  .loop-phases-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .loop-phase-card {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.75rem;
-    transition: border-color 0.25s ease-out, transform 0.25s ease-out;
+    transition: border-color 0.25s ease-out;
   }
 
-  .pillar-card:hover {
-    border-color: var(--color-accent-subtle);
-    border-color: rgba(245, 166, 35, 0.25);
-    transform: translateY(-2px);
+  .loop-phase-card:hover {
+    border-color: rgba(245, 166, 35, 0.2);
   }
 
-  .pillar-icon {
-    margin-bottom: 1.25rem;
+  .loop-phase-number {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-accent);
+    opacity: 0.5;
+    flex-shrink: 0;
+    line-height: 1;
+    padding-top: 0.125rem;
   }
 
-  .pillar-title {
-    font-size: 1.375rem;
-    margin-bottom: 0.75rem;
+  .loop-phase-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .loop-phase-title {
+    font-size: 1.25rem;
     color: var(--color-text-primary);
   }
 
-  .pillar-desc {
-    font-size: 0.9375rem;
+  .loop-phase-tagline {
+    font-size: 0.875rem;
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .loop-phase-desc {
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
-    line-height: 1.65;
+    line-height: 1.6;
+    margin-top: 0.25rem;
+  }
+
+  .loop-intro {
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin-top: 0.5rem;
   }
 
   /* ── Section: Principles preview ─────────── */

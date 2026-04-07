@@ -4,21 +4,27 @@ const isHome = pathname === '/';
 
 const homeSubLinks = [
   { href: '/#why-distilled-cs', label: 'Why Distilled CS' },
-  { href: '/#how-it-works', label: 'How It Works' },
+  { href: '/#strategy-loop', label: 'The Strategy Loop' },
   { href: '/#principles', label: 'Principles' },
   { href: '/#maturity-stages', label: 'Maturity Stages' },
   { href: '/#open-source', label: 'Open Source' },
   { href: '/#get-started', label: 'Get Started' },
 ];
 
-const navLinks = [
-  { href: '/principles/', label: 'Principles' },
-  { href: '/assess/', label: 'Assessment' },
-  { href: '/model/', label: 'Model' },
+const executeSubLinks = [
+  { href: '/playbooks/', label: 'Playbooks' },
   { href: '/metrics/', label: 'Metrics' },
   { href: '/checklist/', label: 'Checklist' },
+];
+
+const navLinks = [
+  { href: '/principles/', label: 'Principles' },
+  { href: '/assess/', label: 'Assess' },
+  { href: '/transform/', label: 'Transform' },
   { href: '/blog/', label: 'Blog' },
 ];
+
+const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbooks/') || pathname === '/metrics/' || pathname.startsWith('/metrics/') || pathname === '/checklist/';
 ---
 
 <header class="header">
@@ -52,17 +58,71 @@ const navLinks = [
           </ul>
         </li>
 
-        {navLinks.map(link => (
-          <li>
-            <a
-              href={link.href}
-              class:list={['nav-link', { active: pathname === link.href }]}
-              aria-current={pathname === link.href ? 'page' : undefined}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
+        <!-- Principles -->
+        <li>
+          <a
+            href="/principles/"
+            class:list={['nav-link', { active: pathname === '/principles/' }]}
+            aria-current={pathname === '/principles/' ? 'page' : undefined}
+          >
+            Principles
+          </a>
+        </li>
+
+        <!-- Assess -->
+        <li>
+          <a
+            href="/assess/"
+            class:list={['nav-link', { active: pathname === '/assess/' || pathname === '/model/' }]}
+            aria-current={pathname === '/assess/' ? 'page' : undefined}
+          >
+            Assess
+          </a>
+        </li>
+
+        <!-- Execute dropdown -->
+        <li class="nav-dropdown">
+          <a
+            href="/playbooks/"
+            class:list={['nav-link nav-link-has-dropdown', { active: isExecutePage }]}
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Execute
+            <svg class="dropdown-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            {executeSubLinks.map(sub => (
+              <li role="none">
+                <a href={sub.href} class="dropdown-link" role="menuitem">{sub.label}</a>
+              </li>
+            ))}
+          </ul>
+        </li>
+
+        <!-- Transform -->
+        <li>
+          <a
+            href="/transform/"
+            class:list={['nav-link', { active: pathname === '/transform/' }]}
+            aria-current={pathname === '/transform/' ? 'page' : undefined}
+          >
+            Transform
+          </a>
+        </li>
+
+        <!-- Blog -->
+        <li>
+          <a
+            href="/blog/"
+            class:list={['nav-link', { active: pathname === '/blog/' || pathname.startsWith('/blog/') }]}
+            aria-current={pathname === '/blog/' ? 'page' : undefined}
+          >
+            Blog
+          </a>
+        </li>
       </ul>
       <div class="stage-badge" id="nav-stage-badge" style="display:none;" aria-label="Your maturity stage"></div>
     </nav>
@@ -111,17 +171,78 @@ const navLinks = [
         </ul>
       </li>
 
-      {navLinks.map(link => (
-        <li>
+      <!-- Principles -->
+      <li>
+        <a
+          href="/principles/"
+          class:list={['nav-link-mobile', { active: pathname === '/principles/' }]}
+          aria-current={pathname === '/principles/' ? 'page' : undefined}
+        >
+          Principles
+        </a>
+      </li>
+
+      <!-- Assess -->
+      <li>
+        <a
+          href="/assess/"
+          class:list={['nav-link-mobile', { active: pathname === '/assess/' || pathname === '/model/' }]}
+          aria-current={pathname === '/assess/' ? 'page' : undefined}
+        >
+          Assess
+        </a>
+      </li>
+
+      <!-- Execute with expandable sub-links on mobile -->
+      <li class="mobile-dropdown">
+        <div class="mobile-dropdown-header">
           <a
-            href={link.href}
-            class:list={['nav-link-mobile', { active: pathname === link.href }]}
-            aria-current={pathname === link.href ? 'page' : undefined}
+            href="/playbooks/"
+            class:list={['nav-link-mobile', { active: isExecutePage }]}
           >
-            {link.label}
+            Execute
           </a>
-        </li>
-      ))}
+          <button
+            class="mobile-dropdown-toggle"
+            aria-label="Expand Execute sections"
+            aria-expanded="false"
+            type="button"
+          >
+            <svg class="dropdown-chevron" width="12" height="7" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <ul class="mobile-sub-menu" hidden>
+          {executeSubLinks.map(sub => (
+            <li>
+              <a href={sub.href} class="nav-link-mobile nav-link-sub">{sub.label}</a>
+            </li>
+          ))}
+        </ul>
+      </li>
+
+      <!-- Transform -->
+      <li>
+        <a
+          href="/transform/"
+          class:list={['nav-link-mobile', { active: pathname === '/transform/' }]}
+          aria-current={pathname === '/transform/' ? 'page' : undefined}
+        >
+          Transform
+        </a>
+      </li>
+
+      <!-- Blog -->
+      <li>
+        <a
+          href="/blog/"
+          class:list={['nav-link-mobile', { active: pathname === '/blog/' || pathname.startsWith('/blog/') }]}
+          aria-current={pathname === '/blog/' ? 'page' : undefined}
+        >
+          Blog
+        </a>
+      </li>
     </ul>
   </nav>
 </header>

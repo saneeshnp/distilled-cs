@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import StrategyLoop from '../components/StrategyLoop.astro';
 import frameworkData from '../data/lean-cs-data.json';
 
 const contextParams = frameworkData.context_parameters.parameters;
@@ -10,6 +11,11 @@ const stages = frameworkData.maturity_stages.stages;
 <BaseLayout title="Assessment" description="Assess your Customer Success maturity across 7 domains in under 5 minutes.">
 
   <div class="container assess-page">
+
+    <!-- Strategy Loop wayfinding -->
+    <div class="assess-loop-indicator">
+      <StrategyLoop activePhase="assess" size="sm" interactive={false} />
+    </div>
 
     <!-- Progress Bar -->
     <div class="progress-bar-wrap" id="progress-bar-wrap">
@@ -116,6 +122,11 @@ const stages = frameworkData.maturity_stages.stages;
     padding-bottom: 6rem;
     max-width: 48rem;
     margin-inline: auto;
+  }
+
+  .assess-loop-indicator {
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
   }
 
   /* Progress bar */

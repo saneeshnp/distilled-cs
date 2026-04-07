@@ -2165,5 +2165,387 @@
         ]
       }
     }
+  },
+  "strategy_loop": {
+    "phases": [
+      {
+        "id": "assess",
+        "label": "Assess",
+        "tagline": "Know where you stand",
+        "description": "Score your CS maturity across 7 domains. Understand your strengths, gaps, and stage.",
+        "icon": "compass"
+      },
+      {
+        "id": "execute",
+        "label": "Execute",
+        "tagline": "Act on what matters",
+        "description": "Follow stage-specific playbooks. Focus on the highest-leverage moves for your current maturity.",
+        "icon": "rocket"
+      },
+      {
+        "id": "transform",
+        "label": "Transform",
+        "tagline": "Measure, level up, repeat",
+        "description": "Track your progress. Re-assess to validate growth. Cross into your next maturity stage.",
+        "icon": "refresh"
+      }
+    ]
+  },
+  "playbooks": {
+    "crawl": [
+      {
+        "id": "crawl-retention-baseline",
+        "title": "Establish a Retention Baseline",
+        "objective": "Create a single, trusted retention number your team can rally around and improve.",
+        "why": "Without a baseline, you can't tell if CS is working. Most crawl-stage teams don't know their real churn rate — they track logos lost but miss contraction, downgrades, and late renewals. A clear baseline turns 'we think we're doing okay' into 'we know where we stand.'",
+        "steps": [
+          "Audit your billing or subscription data for the last 12 months — identify every churned, downgraded, and expanded account",
+          "Calculate Gross Revenue Retention (GRR) and Logo Retention for the trailing 12 months",
+          "Segment the results by cohort (signup quarter) and customer size if possible",
+          "Identify the top 3 churn reasons by reviewing cancellation notes, support tickets, and CSM feedback",
+          "Set a GRR target for the next quarter based on your current number (aim for 2–5% improvement)",
+          "Create a simple monthly dashboard (spreadsheet is fine) that tracks GRR, logo retention, and churned ARR",
+          "Share the baseline and target with your leadership team to create accountability"
+        ],
+        "metrics_to_watch": ["grr", "logo_retention", "nrr"],
+        "common_pitfalls": [
+          "Using logo count instead of revenue-weighted retention — a churned enterprise account matters more than 10 lost SMB accounts",
+          "Excluding downgrades from churn calculations, which inflates your retention number",
+          "Setting an unrealistic target (e.g., jumping from 80% to 95% GRR in one quarter)"
+        ],
+        "estimated_duration": "2–4 weeks"
+      },
+      {
+        "id": "crawl-customer-segmentation",
+        "title": "Build Your First Customer Segmentation",
+        "objective": "Divide your customer base into 2–3 tiers so you can allocate CS resources where they drive the most impact.",
+        "why": "At the crawl stage, every customer gets the same treatment — which means high-value accounts are under-served and low-value accounts consume disproportionate time. Segmentation is the foundation of every scalable CS motion. Without it, you can't build differentiated playbooks, set appropriate touch models, or make rational hiring decisions.",
+        "steps": [
+          "Export your customer list with ARR/ACV, contract dates, and any available usage data",
+          "Rank customers by ARR and identify natural breakpoints for 2–3 tiers (e.g., Strategic, Core, Scale)",
+          "For each tier, define the engagement model: high-touch (named CSM), mid-touch (pooled), or tech-touch (digital)",
+          "Calculate CSM-to-account ratios for each tier — aim for 1:10–20 for high-touch, 1:30–50 for mid-touch",
+          "Document the expected touchpoint cadence for each tier (weekly, biweekly, monthly, quarterly)",
+          "Assign existing accounts to tiers and rebalance CSM portfolios accordingly",
+          "Review segmentation quarterly — customers grow and shrink, tiers should reflect current value"
+        ],
+        "metrics_to_watch": ["grr", "logo_retention", "csat"],
+        "common_pitfalls": [
+          "Creating too many segments too early — start with 2–3, not 5–6",
+          "Segmenting only by ARR without considering growth potential or strategic value",
+          "Not actually changing behavior after segmentation — tiers without differentiated engagement are just labels"
+        ],
+        "estimated_duration": "2–3 weeks"
+      },
+      {
+        "id": "crawl-onboarding-program",
+        "title": "Create a Basic Onboarding Program",
+        "objective": "Build a repeatable onboarding process that gets new customers to first value within a defined timeframe.",
+        "why": "Onboarding is where you set or break expectations. Crawl-stage teams often treat every new customer differently — whoever happens to be available runs onboarding their own way. This creates inconsistent time-to-value, early churn risk, and no way to identify where the process breaks down. A documented onboarding program is your first real playbook.",
+        "steps": [
+          "Define 'first value' for your product — the specific outcome that makes a customer say 'this is working'",
+          "Map the current onboarding steps your team follows (even if informal) and identify the typical duration",
+          "Create a standardized onboarding checklist with milestones: kickoff, configuration, training, first value achieved",
+          "Set a Time to First Value (TTFV) target based on your current average (aim to reduce by 20–30%)",
+          "Build a simple onboarding email sequence (3–5 emails) that reinforces key milestones and next steps",
+          "Create a handoff template from Sales to CS that captures deal context, success criteria, and key stakeholders",
+          "Track onboarding completion rate and TTFV for every new customer starting now"
+        ],
+        "metrics_to_watch": ["ttfv", "onboarding_completion", "time_to_value"],
+        "common_pitfalls": [
+          "Making onboarding too long — if it takes 90 days to reach first value, customers lose patience and engagement drops",
+          "Focusing on feature training instead of outcome achievement — customers don't care about features, they care about results",
+          "Not having a clear definition of 'done' — onboarding should have a measurable completion criteria, not just fade out"
+        ],
+        "estimated_duration": "3–4 weeks"
+      }
+    ],
+    "walk": [
+      {
+        "id": "walk-health-scoring",
+        "title": "Implement Health Scoring",
+        "objective": "Build a composite health score that predicts retention risk and guides CSM prioritization.",
+        "why": "At the walk stage, your team has enough customers and data to move beyond gut-feel risk assessment. A health score synthesizes product usage, engagement signals, and support patterns into a single actionable indicator. Without it, CSMs waste time on accounts that are fine and miss accounts that are silently churning.",
+        "steps": [
+          "Identify 5–7 leading indicators of churn from your data: login frequency, feature adoption, support ticket volume, stakeholder engagement, NPS/CSAT, contract utilization",
+          "Weight each indicator based on its historical correlation with churn (start with hypothesis, refine with data)",
+          "Define scoring bands: Healthy (green), At-Risk (yellow), Critical (red) with clear thresholds",
+          "Build the score calculation — start in a spreadsheet, then automate in your CS platform or CRM",
+          "Create action protocols for each band: green = nurture cadence, yellow = intervention within 48 hours, red = executive escalation within 24 hours",
+          "Train CSMs on interpreting and acting on health scores — the score is only valuable if it changes behavior",
+          "Review score accuracy quarterly: compare predicted risk to actual outcomes and recalibrate weights"
+        ],
+        "metrics_to_watch": ["health_score", "grr", "logo_retention", "escalation_rate"],
+        "common_pitfalls": [
+          "Using too many inputs in v1 — start with 5–7 signals you can actually measure reliably",
+          "Making the score a vanity metric that nobody acts on — tie it to specific CSM workflows and escalation paths",
+          "Not recalibrating — a health score built on 6-month-old assumptions becomes less accurate over time"
+        ],
+        "estimated_duration": "4–6 weeks"
+      },
+      {
+        "id": "walk-lifecycle-journey-maps",
+        "title": "Build Lifecycle Journey Maps",
+        "objective": "Map the complete customer journey from onboarding through renewal, with defined touchpoints and success milestones at each stage.",
+        "why": "Walk-stage teams have onboarding figured out but lose the thread afterward. Customers drift into a 'messy middle' between onboarding and renewal where engagement is ad hoc. Journey mapping creates a proactive structure for the full lifecycle — ensuring CSMs know what to do at every stage, not just the beginning and end.",
+        "steps": [
+          "Define your lifecycle stages: Onboarding → Adoption → Value Realization → Expansion → Renewal",
+          "For each stage, identify: entry criteria, key milestones, expected duration, primary CSM actions",
+          "Map the ideal touchpoint cadence for each stage and each customer segment",
+          "Identify 'moments of truth' — the 3–5 critical interactions that disproportionately impact retention",
+          "Create playbook templates for each lifecycle stage with talk tracks, email templates, and escalation criteria",
+          "Instrument your CS platform to track which lifecycle stage each customer is in",
+          "Build automated triggers for stage transitions (e.g., customer reaches adoption milestone → move to value realization stage)"
+        ],
+        "metrics_to_watch": ["adoption_rate", "time_to_value", "product_adoption_depth", "nrr"],
+        "common_pitfalls": [
+          "Creating beautiful journey maps that never get operationalized — the map must connect to actual CSM workflows",
+          "Designing a single journey for all segments — enterprise and SMB customers have fundamentally different lifecycles",
+          "Ignoring the 'messy middle' between onboarding and renewal — this is where most silent churn happens"
+        ],
+        "estimated_duration": "3–5 weeks"
+      },
+      {
+        "id": "walk-qbr-ebr-cadence",
+        "title": "Operationalize QBR/EBR Cadence",
+        "objective": "Establish a structured business review program that demonstrates value, surfaces risk, and identifies expansion opportunities.",
+        "why": "QBRs and EBRs are the highest-leverage touchpoints in enterprise CS, but walk-stage teams often run them inconsistently — some CSMs do them religiously, others skip them. When done well, business reviews are where you prove ROI, align on goals, and plant seeds for expansion. When done poorly (or not at all), renewals become negotiations instead of formalities.",
+        "steps": [
+          "Define which customer tiers get QBRs (quarterly) vs. EBRs (executive, semi-annual) — not every customer needs both",
+          "Create a standardized QBR template: outcomes achieved, usage trends, open issues, goals for next quarter, expansion opportunities",
+          "Build an EBR template for strategic accounts: executive summary, ROI analysis, strategic alignment, multi-year roadmap",
+          "Set scheduling targets: 80%+ of eligible accounts should have a completed QBR each quarter",
+          "Train CSMs on running effective business reviews — focus on outcomes and business impact, not feature updates",
+          "Create a QBR follow-up process: action items documented, shared with stakeholders, tracked to completion",
+          "Track QBR completion rate and correlate with renewal rates and expansion to prove ROI of the program"
+        ],
+        "metrics_to_watch": ["nrr", "expansion_revenue", "csat", "grr"],
+        "common_pitfalls": [
+          "Turning QBRs into product demos instead of business value discussions — customers want to see ROI, not roadmaps",
+          "Running QBRs with operational contacts only — executive alignment requires executive participation",
+          "Not tracking follow-up actions — a QBR that generates action items nobody completes is worse than no QBR"
+        ],
+        "estimated_duration": "4–6 weeks"
+      }
+    ],
+    "run": [
+      {
+        "id": "run-digital-engagement",
+        "title": "Scale with Digital-Led Engagement",
+        "objective": "Build a digital CS motion that delivers personalized engagement at scale for your mid-touch and tech-touch segments.",
+        "why": "Run-stage teams have proven their playbooks work with human-led engagement but hit a ceiling — you can't hire CSMs fast enough to keep ratios sustainable as you grow. Digital engagement (in-app messages, automated email journeys, community, self-service resources) lets you maintain quality coverage for your long-tail while freeing CSMs for strategic accounts.",
+        "steps": [
+          "Audit your current engagement model: identify which touchpoints can be automated without losing quality",
+          "Build automated lifecycle email journeys for your tech-touch segment: onboarding, adoption nudges, renewal reminders",
+          "Implement in-app messaging for usage-based triggers: feature adoption prompts, milestone celebrations, risk alerts",
+          "Create a self-service resource hub: knowledge base, video tutorials, best practice guides, community forum",
+          "Build a digital health monitoring system that surfaces at-risk accounts for human intervention",
+          "Design a 'digital-to-human' escalation path: when should a tech-touch account get CSM attention?",
+          "Measure digital engagement effectiveness: open rates, adoption lift, retention impact by segment"
+        ],
+        "metrics_to_watch": ["adoption_rate", "stickiness_ratio", "grr", "logo_retention", "cac_payback"],
+        "common_pitfalls": [
+          "Treating digital engagement as 'set and forget' — automated journeys need regular optimization based on performance data",
+          "Sending generic content to all customers instead of personalizing based on usage patterns and lifecycle stage",
+          "Removing human touchpoints too aggressively — some moments (escalations, renewals, expansions) still need a human"
+        ],
+        "estimated_duration": "6–10 weeks"
+      },
+      {
+        "id": "run-predictive-churn",
+        "title": "Build Predictive Churn Models",
+        "objective": "Move from reactive risk identification to predictive churn modeling that surfaces at-risk accounts before traditional signals appear.",
+        "why": "At the run stage, your health score catches known risk patterns. But predictive modeling catches the unknown — the accounts that look healthy on the surface but match historical churn profiles. This is the shift from 'we react to red accounts' to 'we prevent accounts from turning red.' It requires data maturity, which run-stage teams finally have.",
+        "steps": [
+          "Aggregate your historical churn data: which accounts churned, when, and what their engagement patterns looked like in the 90 days before churn",
+          "Identify predictive features: usage decline velocity, support ticket sentiment, stakeholder departure, login frequency drops, feature abandonment",
+          "Build a baseline model — even a logistic regression on 5–7 features outperforms gut feel",
+          "Validate the model against historical data: what's the false positive rate? False negative rate?",
+          "Integrate predictions into CSM workflows: surface predicted-risk accounts in daily/weekly reports",
+          "Create intervention playbooks specifically for predicted-risk accounts (distinct from confirmed-risk playbooks)",
+          "Track model accuracy quarterly and retrain as your customer base and product evolve"
+        ],
+        "metrics_to_watch": ["health_score", "grr", "logo_retention", "escalation_rate"],
+        "common_pitfalls": [
+          "Over-engineering the first model — a simple model you act on beats a sophisticated model that sits in a notebook",
+          "Not validating against holdout data — in-sample accuracy is meaningless if the model doesn't generalize",
+          "Alerting CSMs on every prediction without confidence thresholds — too many false positives cause alert fatigue"
+        ],
+        "estimated_duration": "6–10 weeks"
+      },
+      {
+        "id": "run-expansion-motion",
+        "title": "Formalize Expansion Motion with CS",
+        "objective": "Build a systematic CS-led expansion motion that identifies, qualifies, and progresses upsell and cross-sell opportunities.",
+        "why": "Run-stage teams generate expansion revenue, but it's often opportunistic — CSMs stumble into upsell conversations during QBRs or react to inbound requests. A formal expansion motion treats CS-sourced pipeline as a predictable revenue stream. This is where CS shifts from a cost center to a revenue contributor, fundamentally changing how leadership views the function.",
+        "steps": [
+          "Define expansion triggers: usage hitting plan limits, new use cases emerging, stakeholder changes, positive health trends",
+          "Create an expansion qualification framework: which signals indicate genuine expansion readiness vs. noise?",
+          "Build expansion playbooks: conversation guides, ROI calculators, case studies for upsell/cross-sell scenarios",
+          "Establish a CS-to-Sales handoff process for qualified expansion opportunities (or empower CSMs to close directly)",
+          "Set expansion targets by segment and CSM — make it part of the operating cadence, not an afterthought",
+          "Track expansion pipeline and conversion rates: CS-sourced vs. Sales-sourced, win rates, deal cycle times",
+          "Create a feedback loop: what happens to opportunities CSMs surface? If Sales drops them, the motion breaks down"
+        ],
+        "metrics_to_watch": ["expansion_revenue", "expansion_rate", "nrr", "csat"],
+        "common_pitfalls": [
+          "Turning CSMs into sellers without training — expansion requires consultative selling skills, not quota pressure",
+          "No credit or incentive for CS-sourced expansion — if CSMs don't benefit from finding opportunities, they won't prioritize it",
+          "Pushing expansion on unhealthy accounts — trying to upsell a customer who's struggling with adoption destroys trust"
+        ],
+        "estimated_duration": "6–8 weeks"
+      }
+    ],
+    "fly": [
+      {
+        "id": "fly-cs-revenue-strategy",
+        "title": "CS-Led Revenue Strategy",
+        "objective": "Position CS as a strategic revenue engine with ownership of net revenue retention, expansion pipeline, and customer lifetime value optimization.",
+        "why": "At the fly stage, CS isn't just supporting retention — it's driving revenue. The best CS organizations own NRR as their north star and have direct influence on pricing, packaging, and go-to-market strategy. This playbook formalizes that shift: CS moves from a post-sale function to a strategic pillar of the revenue organization.",
+        "steps": [
+          "Establish NRR as the primary CS metric with board-level visibility and quarterly targets by segment",
+          "Build a CS revenue model: forecast expansion, contraction, and churn by cohort and segment",
+          "Create a customer value optimization framework: identify which accounts have untapped potential and why",
+          "Embed CS in pricing and packaging decisions — CS has the closest view of how customers actually use and value the product",
+          "Develop a multi-year account planning process for strategic accounts with dedicated expansion roadmaps",
+          "Build CS-sourced pipeline reporting that's integrated with your CRM and revenue operations",
+          "Establish CS representation in board meetings and investor updates with NRR, expansion, and LTV narratives"
+        ],
+        "metrics_to_watch": ["nrr", "expansion_revenue", "expansion_rate", "cac_payback"],
+        "common_pitfalls": [
+          "Losing the customer advocacy mandate in pursuit of revenue — CS credibility depends on being the customer's champion, not another sales team",
+          "Measuring CS solely on revenue without retention guardrails — expansion is meaningless if GRR is declining",
+          "Not investing in CS operations to support the revenue motion — you need RevOps-grade infrastructure for pipeline, forecasting, and attribution"
+        ],
+        "estimated_duration": "Ongoing — 8–12 weeks to establish, continuous refinement"
+      },
+      {
+        "id": "fly-predictive-intelligence",
+        "title": "Predictive Customer Intelligence",
+        "objective": "Build an intelligence layer that anticipates customer needs, automates insight delivery, and enables proactive intervention at scale.",
+        "why": "Fly-stage organizations have the data volume, infrastructure, and operational maturity to move beyond reactive and even predictive models into genuine customer intelligence. This means not just predicting churn, but predicting expansion readiness, identifying product-market fit signals, surfacing cross-sell timing, and anticipating stakeholder changes — all automatically.",
+        "steps": [
+          "Consolidate all customer data sources into a unified customer data platform: product usage, support, billing, CRM, engagement, sentiment",
+          "Build ML models for multiple prediction types: churn risk, expansion propensity, advocacy likelihood, stakeholder risk",
+          "Create an automated insight delivery system: CSMs receive prioritized, actionable intelligence daily, not raw data",
+          "Implement natural language processing on support tickets, call transcripts, and survey responses for sentiment trends",
+          "Build segment-level intelligence dashboards for CS leadership: cohort health, adoption trends, revenue forecasts",
+          "Establish a feedback loop where CSM actions inform model retraining — the system gets smarter as the team uses it",
+          "Publish customer intelligence insights to Product, Marketing, and Sales teams — CS becomes the organization's customer knowledge hub"
+        ],
+        "metrics_to_watch": ["health_score", "nrr", "grr", "expansion_revenue", "logo_retention"],
+        "common_pitfalls": [
+          "Building intelligence capabilities without the data infrastructure to support them — garbage in, garbage out",
+          "Over-automating without human oversight — models make mistakes, and customer relationships are too valuable for unchecked automation",
+          "Hoarding customer intelligence within CS instead of sharing across the organization — the value multiplies when Product, Sales, and Marketing can act on it too"
+        ],
+        "estimated_duration": "Ongoing — 10–16 weeks to establish, continuous refinement"
+      },
+      {
+        "id": "fly-cs-culture-company-wide",
+        "title": "Embed CS Culture Company-Wide",
+        "objective": "Make customer success a company-wide operating principle, not a departmental function — every team owns customer outcomes.",
+        "why": "The final evolution of CS maturity is when customer success stops being a team and becomes a culture. Fly-stage organizations embed customer outcomes into every department's OKRs, every product decision, every sales conversation. When engineering cares about adoption, when marketing cares about expansion, when finance cares about LTV — that's when CS scales beyond headcount.",
+        "steps": [
+          "Establish customer outcome metrics in every department's OKRs: Product owns adoption, Sales owns time-to-value, Support owns resolution impact on health",
+          "Create a cross-functional customer council that meets monthly: CS, Product, Sales, Marketing, Engineering leadership review customer health trends and act on them",
+          "Build a 'voice of customer' program that systematically routes customer feedback to the teams that can act on it",
+          "Embed customer success training in new hire onboarding for all departments — everyone should understand the lifecycle, maturity model, and their role in it",
+          "Establish customer-centric decision frameworks: feature prioritization weighted by retention impact, marketing campaigns measured by expansion influence",
+          "Create shared dashboards and reporting that give every team visibility into customer health, adoption, and outcomes",
+          "Publish an annual 'State of the Customer' report internally — data-driven narrative on customer health, trends, risks, and opportunities"
+        ],
+        "metrics_to_watch": ["nrr", "grr", "csat", "ces", "health_score", "adoption_rate"],
+        "common_pitfalls": [
+          "Mandating culture change top-down without executive buy-in — it needs to be championed by the CEO, not just the VP of CS",
+          "Making it a one-time initiative instead of an ongoing operating rhythm — culture requires reinforcement, not a workshop",
+          "Losing CS team identity in the process — CS should drive the customer-centric culture, not dissolve into it"
+        ],
+        "estimated_duration": "Ongoing — 12–16 weeks to establish foundations, continuous reinforcement"
+      }
+    ]
+  },
+  "stage_transitions": {
+    "crawl_to_walk": {
+      "trigger_signals": [
+        "You have a reliable retention baseline (GRR tracked monthly for 3+ months)",
+        "Basic customer segmentation is in place and being used to differentiate engagement",
+        "At least one documented playbook exists (usually onboarding)",
+        "CSMs are spending more time on proactive outreach than reactive firefighting",
+        "Leadership asks about CS metrics beyond just churn count"
+      ],
+      "key_shifts": [
+        "From gut-feel to data-informed decisions: you start trusting health indicators over intuition",
+        "From one-size-fits-all to segmented engagement: different customers get different treatment",
+        "From individual heroics to repeatable processes: playbooks replace ad hoc actions",
+        "From tracking churn to tracking leading indicators: health scores, adoption, engagement"
+      ],
+      "new_capabilities": [
+        "Health scoring enables proactive risk intervention",
+        "Segmentation unlocks differentiated engagement models and resource planning",
+        "Lifecycle journey maps create predictability across the full customer lifecycle",
+        "QBR/EBR programs build executive relationships and surface expansion opportunities",
+        "CS begins contributing to retention narratives with data, not anecdotes"
+      ],
+      "risks": [
+        "Tool overinvestment — buying a CS platform before your processes are defined leads to expensive shelfware",
+        "Metric proliferation — tracking 15 metrics when you can only act on 4 creates dashboard fatigue",
+        "Premature specialization — splitting CSM roles (onboarding vs. ongoing) before you have enough volume to justify it"
+      ]
+    },
+    "walk_to_run": {
+      "trigger_signals": [
+        "Health scores are established and CSMs use them daily to prioritize their time",
+        "Lifecycle journey maps exist and touchpoints are being followed consistently",
+        "GRR has stabilized or improved over 2+ quarters using your current playbooks",
+        "You're hitting CSM capacity limits — the current model won't scale to 2x accounts",
+        "Expansion revenue is happening but it's opportunistic, not systematic"
+      ],
+      "key_shifts": [
+        "From human-led to human-plus-digital: automation handles the repeatable, humans handle the strategic",
+        "From reactive risk management to predictive: you catch problems before they surface",
+        "From cost center to revenue contributor: CS demonstrates measurable impact on expansion",
+        "From departmental function to cross-functional partner: CS insights influence product, sales, and marketing decisions"
+      ],
+      "new_capabilities": [
+        "Digital engagement allows coverage of 10x more accounts without proportional headcount",
+        "Predictive churn models surface risk 30–60 days earlier than traditional health scores",
+        "Formalized expansion motion creates a predictable CS-sourced pipeline",
+        "Data infrastructure supports sophisticated segmentation, cohort analysis, and attribution",
+        "CS operations becomes a recognized function with dedicated resources"
+      ],
+      "risks": [
+        "Over-automating high-touch accounts — digital engagement is for scale segments, not your top 20 accounts",
+        "Expansion pressure without retention guardrails — if CSMs chase upsells while GRR declines, you're robbing Peter to pay Paul",
+        "Model complexity without interpretability — a churn model nobody understands won't change behavior"
+      ]
+    },
+    "run_to_fly": {
+      "trigger_signals": [
+        "Digital engagement is handling 60%+ of your customer base effectively",
+        "Predictive models are operational and CSMs trust and act on their outputs",
+        "CS-sourced expansion is a meaningful, tracked revenue stream (not one-off wins)",
+        "NRR consistently exceeds 110% and GRR exceeds 90% across segments",
+        "CS has a seat at the executive table and contributes to company strategy discussions"
+      ],
+      "key_shifts": [
+        "From revenue contributor to revenue driver: CS owns NRR and has direct influence on pricing, packaging, and go-to-market",
+        "From predictive to intelligent: models don't just predict risk, they recommend actions and anticipate needs",
+        "From CS department to CS culture: customer success becomes a company-wide operating principle",
+        "From operational to strategic: CS leadership shapes company strategy, not just executes it"
+      ],
+      "new_capabilities": [
+        "Customer intelligence platform provides automated, actionable insights across the entire customer base",
+        "CS-led revenue strategy influences product roadmap, pricing, and go-to-market decisions",
+        "Every department has customer outcome metrics in their OKRs",
+        "Advanced analytics (cohort analysis, LTV modeling, predictive expansion) run continuously and inform decisions in real-time",
+        "CS talent development pipeline produces future CS leaders and cross-functional customer advocates"
+      ],
+      "risks": [
+        "Losing customer advocacy in pursuit of revenue optimization — CS credibility depends on being the customer's champion",
+        "Technology dependence without human judgment — AI and automation are tools, not replacements for relationship intelligence",
+        "Complacency — fly-stage organizations can become bureaucratic and slow, losing the customer intimacy that got them there"
+      ]
+    }
   }
 }
