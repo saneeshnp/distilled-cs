@@ -1,0 +1,409 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import frameworkData from '../../data/lean-cs-data.json';
+
+const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
+
+// Build flat list of all playbooks with stage info and ordering
+const allPlaybooks: any[] = [];
+for (const stageId of stageOrder) {
+  const pbs = (frameworkData.playbooks as any)[stageId] || [];
+  pbs.forEach((pb: any) => {
+    allPlaybooks.push({ ...pb, stageId });
+  });
+}
+
+export function getStaticPaths() {
+  const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+  const all: any[] = [];
+  for (const stageId of stageOrder) {
+    const pbs = (frameworkData.playbooks as any)[stageId] || [];
+    pbs.forEach((pb: any) => {
+      all.push({ ...pb, stageId });
+    });
+  }
+  return all.map((pb, idx) => ({
+    params: { id: pb.id },
+    props: {
+      playbook: pb,
+      stageId: pb.stageId,
+      prevPlaybook: idx > 0 ? all[idx - 1] : null,
+      nextPlaybook: idx < all.length - 1 ? all[idx + 1] : null,
+    },
+  }));
+}
+
+const { playbook, stageId, prevPlaybook, nextPlaybook } = Astro.props;
+
+const color = stageColors[stageId];
+const stageLabel = stageLabels[stageId];
+
+// Resolve metric IDs to names and links
+const allMetrics = frameworkData.metrics_directory.metrics;
+const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
+  const found = allMetrics.find((m: any) => m.id === mId);
+  return found ? { id: mId, name: found.name } : { id: mId, name: mId };
+});
+---
+
+<BaseLayout title={playbook.title} description={playbook.objective}>
+  <div class="container playbook-detail-page">
+
+    <!-- Back link -->
+    <a href="/playbooks/" class="back-link">&larr; All Playbooks</a>
+
+    <!-- Playbook header -->
+    <div class="playbook-header" style={`--stage-color: ${color};`}>
+      <div class="playbook-header-top">
+        <span class="stage-badge" style={`background: ${color}; color: #0a0a0f;`}>{stageLabel}</span>
+        <span class="playbook-duration-badge">{playbook.estimated_duration}</span>
+      </div>
+      <h1 class="playbook-title">{playbook.title}</h1>
+      <p class="playbook-objective">{playbook.objective}</p>
+      <!-- Contextual indicator (JS-populated) -->
+      <div id="playbook-stage-indicator" data-playbook-stage={stageId} style="display:none;" class="stage-indicator"></div>
+    </div>
+
+    <!-- Why this matters -->
+    <section class="playbook-section">
+      <h2 class="section-heading">Why This Matters</h2>
+      <p class="section-body">{playbook.why}</p>
+    </section>
+
+    <!-- Step-by-step action plan -->
+    <section class="playbook-section">
+      <h2 class="section-heading">Action Plan</h2>
+      <ol class="action-steps">
+        {playbook.steps.map((step: string, i: number) => (
+          <li class="action-step">
+            <span class="step-number" style={`color: ${color};`}>{String(i + 1).padStart(2, '0')}</span>
+            <span class="step-text">{step}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <!-- Metrics to watch -->
+    <section class="playbook-section">
+      <h2 class="section-heading">Metrics to Watch</h2>
+      <div class="metrics-list">
+        {metricsToWatch.map((m: any) => (
+          <a href={`/metrics/${m.id}/`} class="metric-link-card">
+            <span class="metric-link-name">{m.name}</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Common pitfalls -->
+    <section class="playbook-section">
+      <h2 class="section-heading">Common Pitfalls</h2>
+      <ul class="pitfalls-list">
+        {playbook.common_pitfalls.map((pitfall: string) => (
+          <li class="pitfall-item">
+            <svg class="pitfall-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <circle cx="9" cy="9" r="8" stroke="#E57373" stroke-width="1.5"/>
+              <path d="M9 5.5v4" stroke="#E57373" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="9" cy="12.5" r="0.75" fill="#E57373"/>
+            </svg>
+            <span>{pitfall}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- Prev/Next navigation -->
+    <nav class="playbook-nav" aria-label="Playbook navigation">
+      {prevPlaybook ? (
+        <a href={`/playbooks/${prevPlaybook.id}/`} class="playbook-nav-link prev">
+          <span class="nav-direction">&larr; Previous</span>
+          <span class="nav-title">{prevPlaybook.title}</span>
+        </a>
+      ) : <div></div>}
+      {nextPlaybook ? (
+        <a href={`/playbooks/${nextPlaybook.id}/`} class="playbook-nav-link next">
+          <span class="nav-direction">Next &rarr;</span>
+          <span class="nav-title">{nextPlaybook.title}</span>
+        </a>
+      ) : <div></div>}
+    </nav>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .playbook-detail-page {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.5rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover {
+    color: var(--color-text-primary);
+  }
+
+  /* Header */
+  .playbook-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .playbook-header-top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .stage-badge {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    font-family: var(--font-body);
+  }
+
+  .playbook-duration-badge {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    padding: 0.2rem 0.625rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.25rem;
+  }
+
+  .playbook-title {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .playbook-objective {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .stage-indicator {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  /* Sections */
+  .playbook-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-heading {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+
+  .section-body {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+  }
+
+  /* Action steps */
+  .action-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .action-step {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .action-step:hover {
+    border-color: var(--color-border-hover);
+  }
+
+  .step-number {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    line-height: 1.4;
+  }
+
+  .step-text {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Metrics */
+  .metrics-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .metric-link-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+
+  .metric-link-card:hover {
+    border-color: var(--color-accent);
+    background: var(--color-surface-hover);
+  }
+
+  .metric-link-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .metric-link-name {
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .metric-link-card svg {
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  /* Pitfalls */
+  .pitfalls-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .pitfall-item {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+  }
+
+  .pitfall-icon {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  /* Navigation */
+  .playbook-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .playbook-nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: border-color 0.2s;
+  }
+
+  .playbook-nav-link:hover {
+    border-color: var(--color-accent);
+  }
+
+  .playbook-nav-link.next {
+    text-align: right;
+  }
+
+  .nav-direction {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-title {
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+    font-weight: 500;
+  }
+</style>
+
+<script>
+  // Contextual: show stage relevance indicator
+  try {
+    const completed = localStorage.getItem('distilledcs_completed');
+    const scoresRaw = localStorage.getItem('distilledcs_scores');
+
+    if (completed === 'true' && scoresRaw) {
+      const scores = JSON.parse(scoresRaw);
+      const userStage = scores.stage;
+      const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+      const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+      const currentIdx = stageOrder.indexOf(userStage);
+      const nextStage = currentIdx < 3 ? stageOrder[currentIdx + 1] : null;
+
+      const indicator = document.getElementById('playbook-stage-indicator');
+      const playbookStage = indicator?.getAttribute('data-playbook-stage');
+
+      if (indicator && playbookStage) {
+        if (playbookStage === userStage) {
+          indicator.textContent = `This playbook is for your current stage: ${stageLabels[userStage]}`;
+          indicator.style.display = 'block';
+          indicator.style.background = 'var(--color-accent-subtle)';
+          indicator.style.color = 'var(--color-accent)';
+        } else if (playbookStage === nextStage) {
+          indicator.textContent = `This is a next-stage playbook — you'll unlock this when you move to ${stageLabels[nextStage]}`;
+          indicator.style.display = 'block';
+          indicator.style.background = 'var(--color-surface-hover)';
+          indicator.style.color = 'var(--color-text-secondary)';
+        }
+      }
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+</script>

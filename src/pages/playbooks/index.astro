@@ -1,0 +1,320 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StrategyLoop from '../../components/StrategyLoop.astro';
+import frameworkData from '../../data/lean-cs-data.json';
+
+const playbooks = frameworkData.playbooks;
+const stages = frameworkData.maturity_stages.stages;
+
+const stageOrder = ['crawl', 'walk', 'run', 'fly'] as const;
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
+
+const allMetrics = frameworkData.metrics_directory.metrics;
+const metricLabels: Record<string, string> = {};
+allMetrics.forEach((m: any) => { metricLabels[m.id] = m.name; });
+---
+
+<BaseLayout title="CS Strategy Playbooks" description="Stage-specific strategy playbooks for Customer Success teams. Actionable guides for every maturity level.">
+  <div class="container playbooks-page">
+
+    <!-- Strategy Loop wayfinding -->
+    <div class="playbooks-loop-indicator">
+      <StrategyLoop activePhase="execute" size="sm" interactive={false} />
+    </div>
+
+    <div class="page-header">
+      <h1 class="page-title">CS Strategy Playbooks</h1>
+      <p class="page-subtitle">High-leverage strategic guides for each maturity stage. Each playbook gives you a clear objective, step-by-step actions, and the metrics to watch.</p>
+    </div>
+
+    <!-- Contextual banner for assessed users (JS-populated) -->
+    <div id="playbooks-context-banner" data-show-if-assessed style="display:none;" class="context-banner"></div>
+
+    <!-- CTA for non-assessed users -->
+    <div class="assess-cta-banner" data-hide-if-assessed>
+      <p>Take the assessment to see which playbooks are recommended for your stage.</p>
+      <a href="/assess/" class="cta-link">Take the Assessment &rarr;</a>
+    </div>
+
+    <!-- Playbooks by stage -->
+    {stageOrder.map((stageId) => {
+      const stagePlaybooks = playbooks[stageId];
+      const color = stageColors[stageId];
+      return (
+        <section class="stage-section" id={`stage-${stageId}`} data-stage={stageId}>
+          <div class="stage-section-header">
+            <span class="stage-badge" style={`background: ${color}; color: #0a0a0f;`}>{stageLabels[stageId]}</span>
+            <span class="stage-section-label">Stage</span>
+            <span class="stage-contextual-tag" data-stage-tag={stageId} style="display:none;"></span>
+          </div>
+          <div class="playbooks-grid">
+            {stagePlaybooks.map((pb: any) => (
+              <a href={`/playbooks/${pb.id}/`} class="playbook-card" style={`--card-accent: ${color};`}>
+                <div class="playbook-card-header">
+                  <h2 class="playbook-card-title">{pb.title}</h2>
+                  <span class="playbook-duration">{pb.estimated_duration}</span>
+                </div>
+                <p class="playbook-card-objective">{pb.objective}</p>
+                <div class="playbook-card-metrics">
+                  {pb.metrics_to_watch.slice(0, 3).map((mId: string) => (
+                    <span class="metric-pill">{metricLabels[mId] || mId}</span>
+                  ))}
+                  {pb.metrics_to_watch.length > 3 && (
+                    <span class="metric-pill metric-pill-more">+{pb.metrics_to_watch.length - 3}</span>
+                  )}
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      );
+    })}
+
+  </div>
+</BaseLayout>
+
+<style>
+  .playbooks-page {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+  }
+
+  .playbooks-loop-indicator {
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .page-subtitle {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    max-width: 42rem;
+    line-height: 1.6;
+  }
+
+  /* CTA banners */
+  .assess-cta-banner,
+  .context-banner {
+    padding: 1rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .assess-cta-banner p,
+  .context-banner p {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+  }
+
+  .cta-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+
+  /* Stage sections */
+  .stage-section {
+    margin-bottom: 3rem;
+  }
+
+  .stage-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .stage-badge {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    font-family: var(--font-body);
+  }
+
+  .stage-section-label {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stage-contextual-tag {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.2rem 0.625rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+  }
+
+  /* Playbook cards grid */
+  .playbooks-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .playbooks-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .playbooks-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .playbook-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: border-color 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    border-top: 3px solid var(--card-accent);
+  }
+
+  .playbook-card:hover {
+    border-color: rgba(245, 166, 35, 0.25);
+    border-top-color: var(--card-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .playbook-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .playbook-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .playbook-card-title {
+    font-size: 1.0625rem;
+    color: var(--color-text-primary);
+    line-height: 1.35;
+  }
+
+  .playbook-duration {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.25rem;
+  }
+
+  .playbook-card-objective {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .playbook-card-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-top: auto;
+  }
+
+  .metric-pill {
+    font-size: 0.6875rem;
+    padding: 0.15rem 0.5rem;
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+    border-radius: 9999px;
+    white-space: nowrap;
+  }
+
+  .metric-pill-more {
+    background: var(--color-surface-hover);
+    color: var(--color-text-muted);
+  }
+
+  /* Highlighted current stage */
+  .stage-section.is-current {
+    border-left: 3px solid var(--color-accent);
+    padding-left: 1rem;
+  }
+</style>
+
+<script>
+  // Contextual: highlight user's current stage
+  try {
+    const completed = localStorage.getItem('distilledcs_completed');
+    const scoresRaw = localStorage.getItem('distilledcs_scores');
+
+    if (completed === 'true' && scoresRaw) {
+      const scores = JSON.parse(scoresRaw);
+      const userStage = scores.stage;
+      const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+      const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+      const currentIdx = stageOrder.indexOf(userStage);
+      const nextStage = currentIdx < 3 ? stageOrder[currentIdx + 1] : null;
+
+      // Show context banner
+      const banner = document.getElementById('playbooks-context-banner');
+      if (banner) {
+        banner.innerHTML = `<p>You're in the <strong>${stageLabels[userStage] || userStage}</strong> stage. Start with the playbooks below highlighted for your level.</p>`;
+        banner.style.display = '';
+      }
+
+      // Hide non-assessed CTA
+      document.querySelectorAll('[data-hide-if-assessed]').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('[data-show-if-assessed]').forEach(el => el.style.display = '');
+
+      // Tag stage sections
+      document.querySelectorAll('[data-stage-tag]').forEach(el => {
+        const stageId = el.getAttribute('data-stage-tag');
+        if (stageId === userStage) {
+          el.textContent = 'Your Stage';
+          el.style.display = '';
+          el.style.color = 'var(--color-accent)';
+          el.style.borderColor = 'var(--color-accent)';
+          el.closest('.stage-section')?.classList.add('is-current');
+        } else if (stageId === nextStage) {
+          el.textContent = 'Coming Next';
+          el.style.display = '';
+          el.style.color = 'var(--color-text-muted)';
+        }
+      });
+
+      // Scroll the current stage into view prominence — move it first visually
+      const currentSection = document.querySelector(`[data-stage="${userStage}"]`);
+      if (currentSection) {
+        currentSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+</script>

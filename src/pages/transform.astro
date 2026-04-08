@@ -1,0 +1,713 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StrategyLoop from '../components/StrategyLoop.astro';
+import frameworkData from '../data/lean-cs-data.json';
+
+const stageTransitions = frameworkData.stage_transitions;
+const stages = frameworkData.maturity_stages.stages;
+const domains = frameworkData.assessment_domains.domains;
+
+const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
+const transitionKeys: Record<string, string> = {
+  crawl: 'crawl_to_walk',
+  walk: 'walk_to_run',
+  run: 'run_to_fly',
+};
+
+const domainLabels: Record<string, string> = {};
+domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
+---
+
+<BaseLayout title="Transform" description="Track your CS maturity progress. Re-assess to validate growth and level up to the next stage.">
+  <div class="container transform-page">
+
+    <!-- Strategy Loop wayfinding -->
+    <div class="transform-loop-indicator">
+      <StrategyLoop activePhase="transform" size="sm" interactive={false} />
+    </div>
+
+    <div class="page-header">
+      <h1 class="page-title">Transform</h1>
+      <p class="page-subtitle">Measure your progress. Re-assess to validate growth. Cross into your next maturity stage.</p>
+    </div>
+
+    <!-- ═══ Assessed user view (JS-populated) ═══ -->
+    <div id="transform-assessed" data-show-if-assessed style="display:none;">
+
+      <!-- Progress dashboard -->
+      <div class="dashboard-grid">
+        <!-- Current stage card -->
+        <div class="dash-card dash-card-stage" id="dash-stage-card">
+          <span class="dash-label">Current Stage</span>
+          <div class="dash-stage-display">
+            <span class="dash-stage-badge" id="dash-stage-badge"></span>
+            <span class="dash-score" id="dash-score"></span>
+          </div>
+        </div>
+
+        <!-- Assessment age -->
+        <div class="dash-card">
+          <span class="dash-label">Last Assessment</span>
+          <span class="dash-value" id="dash-age"></span>
+        </div>
+
+        <!-- Checklist progress -->
+        <div class="dash-card">
+          <span class="dash-label">Checklist Progress</span>
+          <div class="dash-progress-bar-wrap">
+            <div class="dash-progress-bar" id="dash-checklist-bar"></div>
+          </div>
+          <span class="dash-value dash-value-sm" id="dash-checklist-pct"></span>
+        </div>
+      </div>
+
+      <!-- Domain breakdown -->
+      <section class="transform-section" id="domain-breakdown-section">
+        <h2 class="section-heading">Domain Breakdown</h2>
+        <div class="domain-bars" id="domain-bars"></div>
+      </section>
+
+      <!-- Previous assessment comparison (if exists) -->
+      <section class="transform-section" id="comparison-section" style="display:none;">
+        <h2 class="section-heading">Progress Since Last Assessment</h2>
+        <div class="comparison-summary" id="comparison-summary"></div>
+        <div class="comparison-grid" id="comparison-grid"></div>
+      </section>
+
+      <!-- Stage transition guide -->
+      <section class="transform-section" id="transition-section">
+        <h2 class="section-heading" id="transition-heading"></h2>
+        <div class="transition-content" id="transition-content"></div>
+      </section>
+
+      <!-- Re-assess CTA -->
+      <div class="reassess-cta">
+        <h2 class="reassess-headline">Ready to validate your growth?</h2>
+        <p class="reassess-body">Re-take the assessment to see how far you've come. Your previous results will be saved for comparison.</p>
+        <a href="/assess/" class="btn btn-primary btn-large">Re-Assess Now</a>
+      </div>
+    </div>
+
+    <!-- ═══ Not-assessed user view ═══ -->
+    <div id="transform-not-assessed" data-hide-if-assessed>
+      <div class="not-assessed-content">
+        <div class="not-assessed-icon" aria-hidden="true">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="28" stroke="var(--color-accent)" stroke-width="2" stroke-dasharray="6 4" opacity="0.4"/>
+            <path d="M24 32a8 8 0 0 1 16 0" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="28" cy="28" r="2" fill="var(--color-accent)" opacity="0.6"/>
+            <circle cx="36" cy="28" r="2" fill="var(--color-accent)" opacity="0.6"/>
+          </svg>
+        </div>
+        <h2 class="not-assessed-headline">Transform begins with knowing where you stand</h2>
+        <p class="not-assessed-body">
+          The Transform phase is where you track progress, compare results, and prepare for your next maturity stage.
+          But first, you need a baseline.
+        </p>
+        <div class="not-assessed-steps">
+          <div class="step-item">
+            <span class="step-num">01</span>
+            <div>
+              <strong>Assess</strong>
+              <p>Take the 5-minute maturity assessment to establish your baseline.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-num">02</span>
+            <div>
+              <strong>Execute</strong>
+              <p>Follow your stage-specific playbooks and track the right metrics.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <span class="step-num">03</span>
+            <div>
+              <strong>Transform</strong>
+              <p>Come back here to measure your progress and re-assess when ready.</p>
+            </div>
+          </div>
+        </div>
+        <a href="/assess/" class="btn btn-primary btn-large">Start with the Assessment</a>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .transform-page {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+    max-width: 52rem;
+    margin-inline: auto;
+  }
+
+  .transform-loop-indicator {
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .page-subtitle {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    max-width: 36rem;
+    line-height: 1.6;
+  }
+
+  /* ── Dashboard grid ── */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  @media (min-width: 640px) {
+    .dashboard-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .dash-card {
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dash-label {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .dash-stage-display {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .dash-stage-badge {
+    padding: 0.3rem 0.875rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    font-family: var(--font-body);
+  }
+
+  .dash-score {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  .dash-value {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    color: var(--color-text-primary);
+  }
+
+  .dash-value-sm {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .dash-progress-bar-wrap {
+    height: 6px;
+    background: var(--color-surface-hover);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .dash-progress-bar {
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 3px;
+    transition: width 0.6s ease-out;
+    width: 0%;
+  }
+
+  /* ── Sections ── */
+  .transform-section {
+    margin-bottom: 3rem;
+  }
+
+  .section-heading {
+    font-size: 1.25rem;
+    margin-bottom: 1.25rem;
+    color: var(--color-text-primary);
+  }
+
+  /* Domain bars */
+  .domain-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .domain-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .domain-bar-label {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    min-width: 12rem;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 639px) {
+    .domain-bar-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.25rem;
+    }
+    .domain-bar-label {
+      min-width: auto;
+    }
+  }
+
+  .domain-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--color-surface-hover);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .domain-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease-out;
+  }
+
+  .domain-bar-score {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    min-width: 2.5rem;
+    text-align: right;
+  }
+
+  /* ── Comparison ── */
+  .comparison-summary {
+    padding: 1rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .comparison-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .comparison-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .comparison-domain {
+    color: var(--color-text-secondary);
+  }
+
+  .comparison-delta {
+    font-weight: 600;
+    font-family: var(--font-body);
+  }
+
+  .delta-up { color: var(--color-success); }
+  .delta-down { color: var(--color-danger); }
+  .delta-same { color: var(--color-text-muted); }
+
+  /* ── Transition guide ── */
+  .transition-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .transition-block {
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+
+  .transition-block h3 {
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.75rem;
+  }
+
+  .transition-block ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .transition-block li {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .transition-block li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    opacity: 0.5;
+  }
+
+  /* ── Re-assess CTA ── */
+  .reassess-cta {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .reassess-headline {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .reassess-body {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    max-width: 28rem;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
+  }
+
+  /* ── Not-assessed view ── */
+  .not-assessed-content {
+    text-align: center;
+    padding: 3rem 1.5rem;
+  }
+
+  .not-assessed-icon {
+    margin-bottom: 1.5rem;
+  }
+
+  .not-assessed-headline {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .not-assessed-body {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    max-width: 32rem;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+  }
+
+  .not-assessed-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 24rem;
+    margin: 0 auto 2.5rem;
+    text-align: left;
+  }
+
+  .step-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-accent);
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  .step-item strong {
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+  }
+
+  .step-item p {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin-top: 0.125rem;
+    line-height: 1.5;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-block;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: all 0.2s ease-out;
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .btn-large {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+  }
+</style>
+
+<script>
+  const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+  const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+  const stageColors = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
+
+  const domainLabels = {
+    segmentation_coverage: 'Segmentation & Coverage',
+    journey_lifecycle: 'Journey & Lifecycle',
+    health_risk: 'Health Scoring & Risk',
+    metrics_data: 'Metrics & Data',
+    expansion_value: 'Expansion & Value',
+    org_strategy: 'CS Organization & Strategy',
+    cs_culture_alignment: 'CS Culture & Cross-Functional Alignment',
+  };
+
+  const transitionKeys = {
+    crawl: 'crawl_to_walk',
+    walk: 'walk_to_run',
+    run: 'run_to_fly',
+  };
+
+  try {
+    const completed = localStorage.getItem('distilledcs_completed');
+    const scoresRaw = localStorage.getItem('distilledcs_scores');
+    const previousRaw = localStorage.getItem('distilledcs_previous_scores');
+
+    if (completed === 'true' && scoresRaw) {
+      const scores = JSON.parse(scoresRaw);
+      const userStage = scores.stage;
+      const color = stageColors[userStage] || 'var(--color-accent)';
+      const currentIdx = stageOrder.indexOf(userStage);
+      const nextStage = currentIdx < 3 ? stageOrder[currentIdx + 1] : null;
+
+      // Show assessed view, hide not-assessed
+      document.querySelectorAll('[data-show-if-assessed]').forEach(el => el.style.display = '');
+      document.querySelectorAll('[data-hide-if-assessed]').forEach(el => el.style.display = 'none');
+
+      // Stage card
+      const badge = document.getElementById('dash-stage-badge');
+      if (badge) {
+        badge.textContent = stageLabels[userStage] || userStage;
+        badge.style.background = color;
+        badge.style.color = '#0a0a0f';
+      }
+      const scoreEl = document.getElementById('dash-score');
+      if (scoreEl) scoreEl.textContent = `Score: ${scores.overallScore?.toFixed(2) || '—'}`;
+
+      // Assessment age
+      const ageEl = document.getElementById('dash-age');
+      if (ageEl && scores.timestamp) {
+        const days = Math.floor((Date.now() - new Date(scores.timestamp).getTime()) / (1000 * 60 * 60 * 24));
+        if (days === 0) ageEl.textContent = 'Today';
+        else if (days === 1) ageEl.textContent = '1 day ago';
+        else ageEl.textContent = `${days} days ago`;
+      } else if (ageEl) {
+        ageEl.textContent = '—';
+      }
+
+      // Checklist progress
+      try {
+        const checklistRaw = localStorage.getItem('distilledcs_checklist');
+        const checklist = checklistRaw ? JSON.parse(checklistRaw) : {};
+        const total = Object.keys(checklist).length;
+        const done = Object.values(checklist).filter(Boolean).length;
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+        const bar = document.getElementById('dash-checklist-bar');
+        const pctEl = document.getElementById('dash-checklist-pct');
+        if (bar) bar.style.width = `${pct}%`;
+        if (pctEl) pctEl.textContent = total > 0 ? `${done}/${total} items (${pct}%)` : 'No items tracked yet';
+      } catch { /* ignore */ }
+
+      // Domain breakdown bars
+      const domainBarsEl = document.getElementById('domain-bars');
+      if (domainBarsEl && scores.domainScores) {
+        let html = '';
+        for (const [domId, score] of Object.entries(scores.domainScores)) {
+          const pct = ((score / 4) * 100).toFixed(1);
+          const label = domainLabels[domId] || domId;
+          html += `
+            <div class="domain-bar-row">
+              <span class="domain-bar-label">${label}</span>
+              <div class="domain-bar-track">
+                <div class="domain-bar-fill" style="width: ${pct}%; background: ${color};"></div>
+              </div>
+              <span class="domain-bar-score">${Number(score).toFixed(1)}</span>
+            </div>
+          `;
+        }
+        domainBarsEl.innerHTML = html;
+      }
+
+      // Previous assessment comparison
+      if (previousRaw) {
+        const prev = JSON.parse(previousRaw);
+        const compSection = document.getElementById('comparison-section');
+        const compSummary = document.getElementById('comparison-summary');
+        const compGrid = document.getElementById('comparison-grid');
+
+        if (compSection && compSummary && compGrid && prev.domainScores && scores.domainScores) {
+          compSection.style.display = '';
+
+          // Stage comparison
+          const prevStageLabel = stageLabels[prev.stage] || prev.stage;
+          const currStageLabel = stageLabels[userStage] || userStage;
+          const scoreDelta = (scores.overallScore - (prev.overallScore || 0)).toFixed(2);
+          const stageChanged = prev.stage !== userStage;
+
+          let summaryHtml = '';
+          if (stageChanged) {
+            summaryHtml = `<strong>You advanced from ${prevStageLabel} to ${currStageLabel}!</strong> Overall score changed by <strong>${scoreDelta >= 0 ? '+' : ''}${scoreDelta}</strong>.`;
+          } else {
+            summaryHtml = `You're still in the <strong>${currStageLabel}</strong> stage. Overall score changed by <strong>${scoreDelta >= 0 ? '+' : ''}${scoreDelta}</strong>.`;
+          }
+
+          // Find improved and declined domains
+          const improved = [];
+          const declined = [];
+          for (const [domId, score] of Object.entries(scores.domainScores)) {
+            const prevScore = prev.domainScores[domId] || 0;
+            const delta = score - prevScore;
+            if (delta > 0.1) improved.push(domainLabels[domId] || domId);
+            else if (delta < -0.1) declined.push(domainLabels[domId] || domId);
+          }
+
+          if (improved.length > 0) summaryHtml += ` You improved in <strong>${improved.join(', ')}</strong>.`;
+          if (declined.length > 0) summaryHtml += ` Focus next on <strong>${declined.join(', ')}</strong>.`;
+
+          compSummary.innerHTML = summaryHtml;
+
+          // Domain-by-domain comparison
+          let gridHtml = '';
+          for (const [domId, score] of Object.entries(scores.domainScores)) {
+            const prevScore = prev.domainScores[domId] || 0;
+            const delta = score - prevScore;
+            const label = domainLabels[domId] || domId;
+            let deltaClass = 'delta-same';
+            let deltaText = '—';
+            if (delta > 0.01) { deltaClass = 'delta-up'; deltaText = `+${delta.toFixed(2)} ↑`; }
+            else if (delta < -0.01) { deltaClass = 'delta-down'; deltaText = `${delta.toFixed(2)} ↓`; }
+            else { deltaText = 'No change'; }
+
+            gridHtml += `
+              <div class="comparison-row">
+                <span class="comparison-domain">${label}</span>
+                <span class="comparison-delta ${deltaClass}">${deltaText}</span>
+              </div>
+            `;
+          }
+          compGrid.innerHTML = gridHtml;
+        }
+      }
+
+      // Stage transition guide
+      const transKey = transitionKeys[userStage];
+      const transHeading = document.getElementById('transition-heading');
+      const transContent = document.getElementById('transition-content');
+      const transSection = document.getElementById('transition-section');
+
+      if (transKey && transHeading && transContent) {
+        // Fetch transition data from embedded JSON
+        const transitionData = {
+          crawl_to_walk: {
+            trigger_signals: ["You have a reliable retention baseline (GRR tracked monthly for 3+ months)", "Basic customer segmentation is in place and being used to differentiate engagement", "At least one documented playbook exists (usually onboarding)", "CSMs are spending more time on proactive outreach than reactive firefighting", "Leadership asks about CS metrics beyond just churn count"],
+            key_shifts: ["From gut-feel to data-informed decisions", "From one-size-fits-all to segmented engagement", "From individual heroics to repeatable processes", "From tracking churn to tracking leading indicators"],
+            new_capabilities: ["Health scoring enables proactive risk intervention", "Segmentation unlocks differentiated engagement models", "Lifecycle journey maps create predictability", "QBR/EBR programs build executive relationships"],
+          },
+          walk_to_run: {
+            trigger_signals: ["Health scores are established and CSMs use them daily", "Lifecycle journey maps exist and touchpoints are followed consistently", "GRR has stabilized or improved over 2+ quarters", "You're hitting CSM capacity limits", "Expansion revenue is happening but it's opportunistic"],
+            key_shifts: ["From human-led to human-plus-digital", "From reactive risk management to predictive", "From cost center to revenue contributor", "From departmental function to cross-functional partner"],
+            new_capabilities: ["Digital engagement allows 10x account coverage", "Predictive churn models surface risk 30-60 days earlier", "Formalized expansion motion creates predictable pipeline", "CS operations becomes a recognized function"],
+          },
+          run_to_fly: {
+            trigger_signals: ["Digital engagement handles 60%+ of your customer base", "Predictive models are operational and trusted", "CS-sourced expansion is a meaningful revenue stream", "NRR consistently exceeds 110% and GRR exceeds 90%", "CS has a seat at the executive table"],
+            key_shifts: ["From revenue contributor to revenue driver", "From predictive to intelligent", "From CS department to CS culture", "From operational to strategic"],
+            new_capabilities: ["Customer intelligence provides automated, actionable insights", "CS-led revenue strategy influences company decisions", "Every department has customer outcome metrics in their OKRs", "Advanced analytics run continuously and inform decisions"],
+          },
+        };
+
+        const trans = transitionData[transKey];
+        if (trans) {
+          const nextLabel = nextStage ? stageLabels[nextStage] : '';
+          const nextColor = nextStage ? stageColors[nextStage] : '';
+          transHeading.textContent = `What changes when you move from ${stageLabels[userStage]} to ${nextLabel}`;
+
+          let html = '';
+          html += `<div class="transition-block"><h3>Signs you're ready</h3><ul>${trans.trigger_signals.map(s => `<li>${s}</li>`).join('')}</ul></div>`;
+          html += `<div class="transition-block"><h3>Key shifts</h3><ul>${trans.key_shifts.map(s => `<li>${s}</li>`).join('')}</ul></div>`;
+          html += `<div class="transition-block"><h3>New capabilities you'll unlock</h3><ul>${trans.new_capabilities.map(s => `<li>${s}</li>`).join('')}</ul></div>`;
+          transContent.innerHTML = html;
+        }
+      } else if (transSection && userStage === 'fly') {
+        // Fly stage — no next transition
+        transSection.innerHTML = `
+          <h2 class="section-heading">You're at the highest maturity stage</h2>
+          <div class="transition-block">
+            <p style="font-size:0.9375rem;color:var(--color-text-secondary);line-height:1.6;">
+              At the Fly stage, the focus shifts to continuous optimization, industry leadership, and embedding CS as a company-wide culture.
+              Re-assess periodically to ensure you're maintaining excellence across all domains.
+            </p>
+          </div>
+        `;
+      }
+
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+</script>

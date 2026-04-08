@@ -4,6 +4,7 @@
 const PROFILE_KEY = 'distilledcs_profile';
 const SCORES_KEY = 'distilledcs_scores';
 const COMPLETED_KEY = 'distilledcs_completed';
+const PREVIOUS_SCORES_KEY = 'distilledcs_previous_scores';
 
 // Stage score ranges (from framework data)
 const STAGE_RANGES = [
@@ -148,4 +149,30 @@ export function getProfileValue(key) {
   const profile = getProfile();
   if (!profile || typeof profile !== 'object') return null;
   return profile[key] ?? null;
+}
+
+// Previous scores management (for re-assessment comparison)
+export function savePreviousScores() {
+  const current = safeGetItem(SCORES_KEY);
+  if (current) {
+    return safeSetItem(PREVIOUS_SCORES_KEY, current);
+  }
+  return false;
+}
+
+export function getPreviousScores() {
+  return safeParse(safeGetItem(PREVIOUS_SCORES_KEY));
+}
+
+export function hasPreviousAssessment() {
+  return safeGetItem(PREVIOUS_SCORES_KEY) !== null;
+}
+
+export function getAssessmentAge() {
+  const scores = getScores();
+  if (!scores || !scores.timestamp) return null;
+  const assessedDate = new Date(scores.timestamp);
+  const now = new Date();
+  const diffMs = now - assessedDate;
+  return Math.floor(diffMs / (1000 * 60 * 60 * 24));
 }

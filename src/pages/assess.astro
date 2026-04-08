@@ -514,7 +514,7 @@ const stages = frameworkData.maturity_stages.stages;
 </style>
 
 <script>
-  import { saveProfile, saveScores, setAssessmentCompleted, resetAll, isAssessmentCompleted, getScores, getProfile } from '../scripts/context-manager.js';
+  import { saveProfile, saveScores, setAssessmentCompleted, resetAll, isAssessmentCompleted, getScores, getProfile, savePreviousScores } from '../scripts/context-manager.js';
   import { calculateAllDomainScores, calculateOverallScore, determineStage } from '../scripts/scoring-engine.js';
   import frameworkData from '../data/lean-cs-data.json';
 
@@ -780,6 +780,11 @@ const stages = frameworkData.maturity_stages.stages;
     const domainScores = calculateAllDomainScores(responses);
     const overallScore = calculateOverallScore(domainScores);
     const stageId = determineStage(overallScore);
+
+    // Save previous scores before overwriting (for re-assessment comparison)
+    if (isAssessmentCompleted()) {
+      savePreviousScores();
+    }
 
     // Save to localStorage
     saveProfile(profile);
