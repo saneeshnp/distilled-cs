@@ -43,6 +43,17 @@ const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D',
 
 // Health score components (only for health_score metric)
 const healthComponents = metric.health_score_components_by_stage || null;
+
+// Build reverse lookup: which playbooks reference this metric?
+const playbooks = frameworkData.playbooks as Record<string, any[]>;
+const usedInPlaybooks: { id: string; title: string; stageId: string }[] = [];
+for (const stageId of stageOrder) {
+  for (const pb of (playbooks[stageId] || [])) {
+    if (pb.metrics_to_watch && pb.metrics_to_watch.includes(metric.id)) {
+      usedInPlaybooks.push({ id: pb.id, title: pb.title, stageId });
+    }
+  }
+}
 ---
 
 <BaseLayout title={metric.name} description={metric.definition}>
@@ -186,6 +197,24 @@ const healthComponents = metric.health_score_components_by_stage || null;
             <li>{mistake}</li>
           ))}
         </ul>
+      </section>
+    )}
+
+    <!-- Used in Playbooks -->
+    {usedInPlaybooks.length > 0 && (
+      <section class="metric-section">
+        <h2 class="section-heading">Used in Playbooks</h2>
+        <div class="playbook-refs">
+          {usedInPlaybooks.map(pb => (
+            <a href={`/playbooks/${pb.id}/`} class="playbook-ref-card" style={`--ref-color: ${stageColors[pb.stageId]};`}>
+              <span class="playbook-ref-badge" style={`background: ${stageColors[pb.stageId]}; color: #0a0a0f;`}>{stageLabels[pb.stageId]}</span>
+              <span class="playbook-ref-title">{pb.title}</span>
+              <svg class="playbook-ref-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          ))}
+        </div>
       </section>
     )}
 
@@ -539,6 +568,54 @@ const healthComponents = metric.health_score_components_by_stage || null;
   .related-name {
     font-size: 0.8125rem;
     color: var(--color-text-primary);
+  }
+
+  /* Used in Playbooks */
+  .playbook-refs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .playbook-ref-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+
+  .playbook-ref-card:hover {
+    border-color: var(--ref-color, var(--color-accent));
+    background: var(--color-surface-hover);
+  }
+
+  .playbook-ref-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .playbook-ref-badge {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+
+  .playbook-ref-title {
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+    flex: 1;
+  }
+
+  .playbook-ref-arrow {
+    color: var(--color-text-muted);
+    flex-shrink: 0;
   }
 </style>
 

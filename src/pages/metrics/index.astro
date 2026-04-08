@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import StrategyLoop from '../../components/StrategyLoop.astro';
 import frameworkData from '../../data/lean-cs-data.json';
 
 const metrics = frameworkData.metrics_directory.metrics;
@@ -19,9 +20,14 @@ const categoryLabels: Record<string, string> = {
 <BaseLayout title="Metrics Directory" description="CS metrics that matter — with stage-specific priorities, benchmarks, and guidance.">
   <div class="container metrics-page">
 
+    <!-- Strategy Loop wayfinding -->
+    <div class="metrics-loop-indicator">
+      <StrategyLoop activePhase="execute" size="sm" interactive={false} />
+    </div>
+
     <div class="page-header">
       <h1 class="page-title">Metrics Directory</h1>
-      <p class="page-subtitle">Every metric a CS team should know — with context-aware priorities and benchmarks tailored to your stage.</p>
+      <p class="page-subtitle">The right metrics for your stage. Part of the Execute phase — track these as you work through your playbooks.</p>
     </div>
 
     <!-- Contextual banner (JS populated) -->
@@ -61,6 +67,11 @@ const categoryLabels: Record<string, string> = {
   .metrics-page {
     padding-top: 2rem;
     padding-bottom: 6rem;
+  }
+
+  .metrics-loop-indicator {
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
   }
 
   .page-header {

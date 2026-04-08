@@ -117,6 +117,14 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
       </ul>
     </section>
 
+    <!-- Next step CTA -->
+    <div class="next-step-cta">
+      <a href="/checklist/" class="next-step-link">
+        <span class="next-step-label">Next step</span>
+        <span class="next-step-text">Track your execution: Go to Checklist &rarr;</span>
+      </a>
+    </div>
+
     <!-- Prev/Next navigation -->
     <nav class="playbook-nav" aria-label="Playbook navigation">
       {prevPlaybook ? (
@@ -368,6 +376,42 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
   .nav-title {
     font-size: 0.9375rem;
     color: var(--color-text-primary);
+    font-weight: 500;
+  }
+
+  /* Next step CTA */
+  .next-step-cta {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .next-step-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-accent-subtle);
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+
+  .next-step-link:hover {
+    border-color: var(--color-accent);
+    background: rgba(245, 166, 35, 0.08);
+  }
+
+  .next-step-label {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .next-step-text {
+    font-size: 0.9375rem;
+    color: var(--color-accent);
     font-weight: 500;
   }
 </style>

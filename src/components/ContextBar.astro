@@ -93,6 +93,15 @@
     color: var(--color-text-primary);
   }
 
+  :global(.context-bar-phase) {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    padding: 0.0625rem 0.5rem;
+    border: 1px solid rgba(245, 166, 35, 0.25);
+    border-radius: 9999px;
+  }
+
   /* Mobile: show only stage, hide profile details */
   @media (max-width: 639px) {
     :global(.context-bar-detail) {
@@ -133,6 +142,20 @@
       if (bar && inner) {
         const profileParts = [arrLabel, segLabel, sizeLabel].filter(Boolean);
 
+        // Determine current loop phase from URL
+        const path = window.location.pathname;
+        let loopPhase = '';
+        if (path.startsWith('/assess') || path.startsWith('/model')) {
+          loopPhase = 'Assess';
+        } else if (path.startsWith('/playbooks') || path.startsWith('/metrics') || path.startsWith('/checklist')) {
+          loopPhase = 'Execute';
+        } else if (path.startsWith('/transform')) {
+          loopPhase = 'Transform';
+        }
+        const phaseHtml = loopPhase
+          ? `<span class="context-bar-separator context-bar-detail">|</span><span class="context-bar-phase">${loopPhase}</span>`
+          : '';
+
         inner.innerHTML = `
           <div class="context-bar-profile">
             ${profileParts.map((part, i) => `<span class="context-bar-detail">${part}</span>${i < profileParts.length - 1 ? '<span class="context-bar-separator context-bar-detail">|</span>' : ''}`).join('')}
@@ -140,6 +163,7 @@
               <span class="context-bar-dot" style="background:${color}"></span>
               Stage: ${stageLabels[stage]}
             </span>
+            ${phaseHtml}
           </div>
           <div class="context-bar-actions">
             <a href="/assess/" class="context-bar-link" aria-label="Edit your assessment answers">Edit Assessment</a>

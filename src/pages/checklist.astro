@@ -413,6 +413,40 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
     border-radius: 3px;
     transition: width 0.3s ease-out;
   }
+
+  :global(.next-step-cta) {
+    margin-top: 2rem;
+  }
+
+  :global(.next-step-link) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-accent-subtle);
+    border: 1px solid rgba(245, 166, 35, 0.2);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+
+  :global(.next-step-link:hover) {
+    border-color: var(--color-accent);
+    background: rgba(245, 166, 35, 0.08);
+  }
+
+  :global(.next-step-label) {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  :global(.next-step-text) {
+    font-size: 0.9375rem;
+    color: var(--color-accent);
+    font-weight: 500;
+  }
 </style>
 
 <script>
@@ -566,6 +600,18 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
             </div>
           `;
         });
+
+        // Show Transform CTA when checklist is mostly complete (>= 70%)
+        if (overallPct >= 70) {
+          html += `
+            <div class="next-step-cta">
+              <a href="/transform/" class="next-step-link">
+                <span class="next-step-label">Next step</span>
+                <span class="next-step-text">Ready to Transform? Measure your progress &rarr;</span>
+              </a>
+            </div>
+          `;
+        }
 
         container.innerHTML = html;
 
