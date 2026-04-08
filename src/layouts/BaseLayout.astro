@@ -39,6 +39,33 @@ const pageTitle = title === 'Distilled CS' ? title : `${title} | Distilled CS`;
   </head>
   <body>
     <a href="#main-content" class="skip-link">Skip to content</a>
+
+    <!-- Preview banner -->
+    <div class="preview-banner" id="preview-banner" role="status">
+      <div class="preview-banner-inner">
+        <svg class="preview-banner-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <p class="preview-banner-text">This site is an early preview and under active development.</p>
+        <button class="preview-banner-close" id="preview-banner-close" type="button" aria-label="Dismiss banner">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <script>
+      try {
+        if (sessionStorage.getItem('distilledcs_banner_dismissed') === 'true') {
+          document.getElementById('preview-banner')?.classList.add('hidden');
+        }
+      } catch {}
+      document.getElementById('preview-banner-close')?.addEventListener('click', () => {
+        const banner = document.getElementById('preview-banner');
+        if (banner) {
+          banner.classList.add('dismissing');
+          try { sessionStorage.setItem('distilledcs_banner_dismissed', 'true'); } catch {}
+          setTimeout(() => banner.classList.add('hidden'), 250);
+        }
+      });
+    </script>
+
     <Header />
     <ContextBar />
     <main id="main-content">

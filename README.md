@@ -131,7 +131,7 @@ The site is fully static — no backend, no database, no API calls. All user dat
 
 All framework content — assessment questions, metrics, benchmarks, playbooks, stage definitions, and recommendations — lives in a single JSON file (`src/data/lean-cs-data.json`). This is the single source of truth. Pages read from this file at build time and at runtime for contextual overlays.
 
-For detailed technical documentation (project structure, architecture patterns, build commands, component APIs), see **[CLAUDE.md](./CLAUDE.md)**.
+For detailed technical documentation (project structure, architecture patterns, build commands, component APIs), see **[README.md](./README.md)**.
 
 ## Getting Started
 
@@ -148,4 +148,4 @@ Distilled CS is a community project. The framework content, assessment questions
 
 ## License
 
-Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Free to use, adapt, and share — with attribution.
+Licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Free to use, adapt, and share — with attribution. Any adaptations must be shared under the same license.
