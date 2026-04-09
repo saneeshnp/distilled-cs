@@ -4,122 +4,104 @@ import StrategyLoop from '../components/StrategyLoop.astro';
 import frameworkData from '../data/lean-cs-data.json';
 
 const strategyLoop = frameworkData.strategy_loop;
-
 const stages = frameworkData.maturity_stages.stages;
 const principles = frameworkData.principles;
-const stageHooks: Record<string, string> = {
-  crawl: 'Build the foundation. Survive the chaos.',
-  walk: 'Define processes. Prove your impact.',
-  run: 'Scale operations. Drive measurable outcomes.',
-  fly: 'Predict and prevent. Lead with data.',
-};
 ---
 
-<BaseLayout title="Distilled CS">
+<BaseLayout title="Distilled CS — CS Strategy & Maturity Framework">
 
   <!-- Section 1: Hero -->
-  <section class="hero" id="hero-section">
-    <canvas id="hero-bg-canvas" aria-hidden="true"></canvas>
-
-    <div class="hero-content">
-      <!-- Top: Headline -->
-      <div class="hero-heading">
-        <h1 class="hero-headline" id="hero-headline">
-          <span class="hero-word">Stop</span>
-          <span class="hero-word">guessing.</span>
-          <br />
-          <span class="hero-word">Start</span>
-          <span class="hero-word accent">measuring.</span>
+  <section class="hp-hero" id="hero-section">
+    <div class="hp-hero-inner">
+      <!-- Left column: Text -->
+      <div class="hp-hero-text" id="hp-hero-text">
+        <h1 class="hp-hero-headline">
+          An open framework to assess your Customer Success organization's maturity and focus on what matters.
         </h1>
-        <p class="hero-subtitle" id="hero-subtitle">
-          Assess. Execute. Transform. The open CS maturity framework.
+        <p class="hp-hero-sub">
+          Distilled CS provides a structured approach to customer success — with a maturity assessment, stage-specific playbooks, benchmarks, and an execution checklist. Open source and vendor neutral.
         </p>
-      </div>
-
-      <!-- Middle: Stage cards (all visible on desktop) -->
-      <div class="hero-stages" id="hero-stages">
-        {stages.map((stage, i) => (
-          <button
-            class={`hero-stage-card ${i === 0 ? 'active' : ''}`}
-            data-stage-idx={i}
-            style={`--stage-color: ${stage.color}`}
-            type="button"
-          >
-            <div class="stage-card-number">{String(i + 1).padStart(2, '0')}</div>
-            <div class="stage-card-name">{stage.label}</div>
-            <div class="stage-card-hook">{stageHooks[stage.id]}</div>
-            <div class="stage-card-glow" aria-hidden="true"></div>
-          </button>
-        ))}
-      </div>
-
-      <!-- Progress rail -->
-      <div class="hero-progress" id="hero-progress">
-        <div class="progress-track">
-          <div class="progress-fill" id="progress-fill"></div>
-        </div>
-        <div class="progress-labels">
-          {stages.map((stage, i) => (
-            <span class={`progress-label ${i === 0 ? 'active' : ''}`} data-label-idx={i} style={`--dot-color: ${stage.color}`}>
-              {stage.label}
-            </span>
-          ))}
+        <div class="hp-hero-ctas">
+          <a href="/assess/" class="btn btn-primary" id="hp-hero-cta-primary" data-contextual="hero-cta">Take the Assessment</a>
+          <a href="/model/" class="btn btn-secondary">Explore the Framework</a>
         </div>
       </div>
 
-      <!-- CTAs -->
-      <div class="hero-ctas" id="hero-ctas">
-        <a href="/assess/" class="btn btn-primary" id="hero-cta-primary" data-contextual="hero-cta">Take the Assessment</a>
-        <a href="/model/" class="btn btn-secondary">Explore the Framework</a>
+      <!-- Right column: Animated SVG loop — based on user-edited positions -->
+      <div class="hp-hero-visual" id="hp-hero-visual">
+        <svg class="hp-hero-svg" viewBox="0 0 400 420" role="img" aria-label="Strategy Loop: Assess, Execute, Transform — a continuous improvement cycle">
+          <defs>
+            <radialGradient id="hp-center-glow" cx="50%" cy="52%" r="50%">
+              <stop offset="0%" stop-color="rgba(245,166,35,0.07)" />
+              <stop offset="100%" stop-color="rgba(245,166,35,0)" />
+            </radialGradient>
+          </defs>
+
+          <!-- Decorative orbital rings -->
+          <g class="hp-orbital-group">
+            <circle cx="200" cy="215" r="185" fill="none" stroke="rgba(245,166,35,0.06)" stroke-width="1" stroke-dasharray="4 8" />
+            <circle cx="200" cy="215" r="168" fill="none" stroke="rgba(91,154,139,0.05)" stroke-width="0.5" stroke-dasharray="2 12" />
+            <circle cx="200" cy="30" r="2.5" fill="var(--color-accent)" opacity="0.4" />
+            <circle cx="385" cy="215" r="2" fill="var(--color-secondary)" opacity="0.35" />
+            <circle cx="200" cy="400" r="2.5" fill="var(--color-accent)" opacity="0.3" />
+            <circle cx="15" cy="215" r="2" fill="var(--color-secondary)" opacity="0.35" />
+          </g>
+
+          <!-- Center glow -->
+          <circle cx="195" cy="223" r="85" fill="url(#hp-center-glow)" />
+
+          <!-- Flowing arrow arcs (bezier curves from user-edited SVG) -->
+          <!-- Arc 1: Assess → Execute -->
+          <path class="hp-flow-arrow hp-flow-arrow--1" d="M 239 94 C 309 117 349 191 327 262" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-opacity="0.4" />
+          <!-- Arc 2: Execute → Transform -->
+          <path class="hp-flow-arrow hp-flow-arrow--2" d="M 290 319 C 233 372 156 372 100 319" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-opacity="0.4" />
+          <!-- Arc 3: Transform → Assess -->
+          <path class="hp-flow-arrow hp-flow-arrow--3" d="M 64 261 C 42 191 81 116 152 93" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-opacity="0.4" />
+
+          <!-- Center label -->
+          <text x="197" y="222" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-secondary)" font-size="20" font-family="var(--font-display)" opacity="0.85">Distilled CS</text>
+
+          <!-- Node: Assess (top center) -->
+          <g class="hp-svg-node">
+            <rect x="145" y="64" width="106" height="44" rx="10" fill="var(--color-surface)" stroke="rgba(240,237,230,0.12)" stroke-width="1" />
+            <text x="198" y="88" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-primary)" font-size="22" font-family="var(--font-display)">Assess</text>
+          </g>
+
+          <!-- Node: Execute (bottom-right) -->
+          <g class="hp-svg-node">
+            <rect x="256" y="270" width="115" height="44" rx="10" fill="var(--color-surface)" stroke="rgba(240,237,230,0.12)" stroke-width="1" />
+            <text x="314" y="294" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-primary)" font-size="22" font-family="var(--font-display)">Execute</text>
+          </g>
+
+          <!-- Node: Transform (bottom-left) -->
+          <g class="hp-svg-node">
+            <rect x="18" y="270" width="130" height="44" rx="10" fill="var(--color-surface)" stroke="rgba(240,237,230,0.12)" stroke-width="1" />
+            <text x="83" y="294" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-primary)" font-size="22" font-family="var(--font-display)">Transform</text>
+          </g>
+        </svg>
       </div>
     </div>
   </section>
 
-  <!-- Section 2: The Problem -->
-  <section class="section-problem" id="why-distilled-cs">
+  <!-- Section 2: The Strategy Loop -->
+  <section class="hp-section hp-section-loop" id="strategy-loop">
     <div class="container">
-      <h2 class="section-headline scroll-reveal">Customer Success has a framework problem</h2>
-      <div class="problem-statements">
-        <p class="problem-statement scroll-reveal">
-          Sales has MEDDIC. Marketing has ABM. DevOps has DORA. <strong>What does CS have?</strong>
-        </p>
-        <p class="problem-statement scroll-reveal">
-          Every CS team reinvents the wheel — building health scores from scratch, guessing at benchmarks, and hoping their metrics are the right ones.
-        </p>
-        <p class="problem-statement scroll-reveal">
-          Existing frameworks are paywalled, vendor-locked, or too generic to be useful.
-        </p>
-        <p class="problem-statement scroll-reveal accent-text">
-          It's time for an open standard.
-        </p>
-        <p class="problem-statement scroll-reveal loop-intro">
-          Distilled CS gives you a repeatable system: assess where you stand, execute what matters, and transform your CS org — stage by stage.
-        </p>
-      </div>
-    </div>
-  </section>
+      <h2 class="hp-section-headline scroll-reveal">The Strategy Loop</h2>
+      <p class="hp-section-subheadline scroll-reveal">A continuous cycle of improvement — assess your current state, execute stage-appropriate actions, and transform your CS organisation over time.</p>
 
-  <!-- Section 3: The Strategy Loop -->
-  <section class="section-loop" id="strategy-loop">
-    <div class="container">
-      <h2 class="section-headline scroll-reveal">The CS Strategy Loop</h2>
-      <p class="section-subheadline scroll-reveal">A repeating cycle that drives continuous improvement — not a one-time exercise.</p>
-
-      <div class="loop-section-layout">
-        <!-- Loop diagram -->
-        <div class="loop-diagram-wrapper scroll-reveal">
+      <div class="hp-loop-section-layout">
+        <div class="hp-loop-diagram-wrapper scroll-reveal">
           <StrategyLoop size="lg" interactive={true} />
         </div>
 
-        <!-- Phase descriptions -->
-        <div class="loop-phases-detail">
+        <div class="hp-loop-phases-detail">
           {strategyLoop.phases.map((phase, i) => (
-            <div class="loop-phase-card scroll-reveal" style={`--reveal-delay: ${i * 0.1}s`}>
-              <span class="loop-phase-number">{String(i + 1).padStart(2, '0')}</span>
-              <div class="loop-phase-content">
-                <h3 class="loop-phase-title">{phase.label}</h3>
-                <p class="loop-phase-tagline">{phase.tagline}</p>
-                <p class="loop-phase-desc">{phase.description}</p>
+            <div class="hp-loop-phase-card scroll-reveal" style={`--reveal-delay: ${i * 0.1}s`}>
+              <span class="hp-loop-phase-number">{String(i + 1).padStart(2, '0')}</span>
+              <div class="hp-loop-phase-content">
+                <h3 class="hp-loop-phase-title">{phase.label}</h3>
+                <p class="hp-loop-phase-tagline">{phase.tagline}</p>
+                <p class="hp-loop-phase-desc">{phase.description}</p>
               </div>
             </div>
           ))}
@@ -128,39 +110,19 @@ const stageHooks: Record<string, string> = {
     </div>
   </section>
 
-  <!-- Section 3b: Principles (preview) -->
-  <section class="section-principles" id="principles">
+  <!-- Section 3: Maturity Stages -->
+  <section class="hp-section hp-section-stages" id="maturity-stages">
     <div class="container">
-      <h2 class="section-headline scroll-reveal">Built on seven guiding principles</h2>
-      <p class="section-subheadline scroll-reveal">The beliefs that shape every recommendation, metric, and benchmark in the framework.</p>
-      <div class="principles-preview-grid">
-        {principles.map((p, i) => (
-          <div class="principle-preview scroll-reveal" style={`--reveal-delay: ${i * 0.06}s`}>
-            <span class="principle-preview-number">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="principle-preview-title">{p.title}</h3>
-            <p class="principle-preview-summary">{p.summary}</p>
-          </div>
-        ))}
-      </div>
-      <div class="section-cta scroll-reveal">
-        <a href="/principles/" class="btn btn-secondary">Read all principles</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section 4: The Maturity Model (preview) -->
-  <section class="section-stages" id="maturity-stages">
-    <div class="container">
-      <h2 class="section-headline scroll-reveal">Four stages of CS maturity — The Distilled CS Framework</h2>
-      <p class="section-subheadline scroll-reveal">From reactive firefighting to predictive growth engine. Where does your team stand?</p>
-      <div class="stages-grid">
+      <h2 class="hp-section-headline scroll-reveal">Four stages of CS maturity</h2>
+      <p class="hp-section-subheadline scroll-reveal">A progression model from reactive operations to predictive, data-led customer success. The assessment determines where your team currently sits.</p>
+      <div class="hp-stages-grid">
         {stages.map((stage, i) => (
-          <div class="stage-card scroll-reveal" style={`--stage-color: ${stage.color}; --stage-delay: ${i * 0.1}s`}>
-            <div class="stage-color-bar" style={`background: ${stage.color}`}></div>
-            <div class="stage-card-content">
-              <span class="stage-label" style={`color: ${stage.color}`}>{stage.label}</span>
-              <span class="stage-subtitle">{stage.subtitle}</span>
-              <ul class="stage-chars">
+          <div class="hp-stage-card scroll-reveal" style={`--stage-color: ${stage.color}; --stage-delay: ${i * 0.1}s`}>
+            <div class="hp-stage-color-bar" style={`background: ${stage.color}`}></div>
+            <div class="hp-stage-card-content">
+              <span class="hp-stage-label" style={`color: ${stage.color}`}>{stage.label}</span>
+              <span class="hp-stage-subtitle">{stage.subtitle}</span>
+              <ul class="hp-stage-chars">
                 {stage.key_characteristics.slice(0, 3).map(char => (
                   <li>{char}</li>
                 ))}
@@ -169,322 +131,241 @@ const stageHooks: Record<string, string> = {
           </div>
         ))}
       </div>
-      <div class="section-cta scroll-reveal">
+      <div class="hp-section-cta scroll-reveal">
         <a href="/model/" class="btn btn-secondary">Explore the full maturity model</a>
       </div>
     </div>
   </section>
 
-  <!-- Section 5: Open and Vendor-Neutral -->
-  <section class="section-open" id="open-source">
+  <!-- Section 4: Principles -->
+  <section class="hp-section hp-section-principles" id="principles">
     <div class="container">
-      <div class="open-content scroll-reveal">
-        <h2 class="section-headline">Open source. Vendor neutral. Community driven.</h2>
-        <p class="open-body">
-          Distilled CS is licensed under CC BY-SA 4.0. No vendor lock-in, no paywall, no agenda.
-          Just like the FinOps Foundation standardized cloud cost management, Distilled CS aims to give
-          Customer Success a shared language and measurement framework.
+      <h2 class="hp-section-headline scroll-reveal">Built on seven guiding principles</h2>
+      <p class="hp-section-subheadline scroll-reveal">The beliefs that shape every recommendation, metric, and benchmark in the framework.</p>
+      <div class="hp-principles-grid">
+        {principles.map((p, i) => (
+          <div class="hp-principle-card scroll-reveal" style={`--reveal-delay: ${i * 0.06}s`}>
+            <span class="hp-principle-number">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="hp-principle-title">{p.title}</h3>
+            <p class="hp-principle-summary">{p.summary}</p>
+          </div>
+        ))}
+      </div>
+      <div class="hp-section-cta scroll-reveal">
+        <a href="/principles/" class="btn btn-secondary">Read all principles</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Open & Vendor-Neutral -->
+  <section class="hp-section hp-section-open" id="open-source">
+    <div class="container">
+      <div class="hp-open-content scroll-reveal">
+        <h2 class="hp-section-headline">Open source. Vendor neutral. Community driven.</h2>
+        <p class="hp-open-body">
+          Distilled CS is licensed under CC BY-SA 4.0. No vendor lock-in, no paywall, no hidden agenda. The framework is built to give Customer Success teams a shared language and measurement standard — regardless of the tools they use.
         </p>
-        <p class="open-body emphasis">Built by practitioners, for practitioners.</p>
+        <p class="hp-open-body hp-open-emphasis">Built by practitioners, for practitioners.</p>
         <a href="https://github.com/saneeshnp/distilled-cs" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Contribute on GitHub</a>
       </div>
     </div>
   </section>
 
   <!-- Section 6: Final CTA -->
-  <section class="section-final-cta" id="get-started">
+  <section class="hp-section hp-section-final-cta" id="get-started">
     <div class="container">
-      <div class="final-cta-inner scroll-reveal">
-        <h2 class="final-cta-headline">Ready to find out where your CS team stands?</h2>
+      <div class="hp-final-cta-inner scroll-reveal">
+        <h2 class="hp-final-cta-headline">Find out where your CS team stands</h2>
         <a href="/assess/" class="btn btn-primary btn-large">Take the Assessment</a>
       </div>
     </div>
   </section>
 
-  <!-- Preview Modal -->
-  <div class="preview-modal-overlay" id="preview-modal" role="dialog" aria-modal="true" aria-labelledby="preview-modal-title">
-    <div class="preview-modal">
-      <div class="preview-modal-icon" aria-hidden="true">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-      </div>
-      <h2 class="preview-modal-title" id="preview-modal-title">Early Preview</h2>
-      <p class="preview-modal-body">
-        This site is currently under active development. You're seeing an early preview — some features may be incomplete or change before the full launch.
-      </p>
-      <p class="preview-modal-sub">We'll be live soon. Thanks for your patience.</p>
-      <button class="preview-modal-btn" id="preview-modal-close" type="button">Got it</button>
-    </div>
-  </div>
-
 </BaseLayout>
 
 <style>
-  /* ── Hero ───────────────────────────────── */
-  .hero {
+  /* ══════════════════════════════════════════
+     HERO
+     ══════════════════════════════════════════ */
+  .hp-hero {
     position: relative;
-    height: 100vh;
-    height: 100dvh;
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 5rem 2rem 1.5rem;
+    padding: 3rem 1.5rem 4rem;
     overflow: hidden;
-    box-sizing: border-box;
+    background:
+      radial-gradient(ellipse at 50% 35%, rgba(245, 166, 35, 0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 80%, rgba(91, 154, 139, 0.03) 0%, transparent 50%),
+      var(--color-bg);
   }
 
-  #hero-bg-canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
+  .hp-hero-inner {
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    gap: 1.75rem;
+    gap: 3rem;
     width: 100%;
-    max-width: 80rem;
+    max-width: 1200px;
     margin-inline: auto;
-  }
-
-  /* ── Hero heading ── */
-  .hero-heading {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-
-  .hero-headline {
-    font-size: clamp(2rem, 4.5vw, 3.5rem);
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-  }
-
-  .hero-word {
-    display: inline-block;
-  }
-
-  .hero-word.accent {
-    color: var(--color-accent);
-  }
-
-  .hero-subtitle {
-    font-size: clamp(0.9375rem, 1.5vw, 1.125rem);
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-    max-width: 30rem;
-    margin-inline: auto;
-  }
-
-  /* ── Stage cards (all visible on desktop) ── */
-  .hero-stages {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    width: 100%;
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  @media (min-width: 640px) {
-    .hero-stages {
-      grid-template-columns: repeat(2, 1fr);
-    }
   }
 
   @media (min-width: 1024px) {
-    .hero-stages {
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
+    .hp-hero-inner {
+      flex-direction: row;
+      align-items: center;
+      gap: 4rem;
     }
   }
 
-  .hero-stage-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    padding: 1.125rem 1.125rem;
-    background: rgba(18, 18, 26, 0.6);
-    border: 1px solid var(--color-border);
-    border-radius: 0.75rem;
-    cursor: pointer;
-    overflow: hidden;
-    transition: border-color 0.4s ease, transform 0.3s ease, background 0.4s ease;
-    -webkit-tap-highlight-color: transparent;
-    font-family: var(--font-body);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-
-  .hero-stage-card:hover {
-    transform: translateY(-2px);
-    background: rgba(18, 18, 26, 0.8);
-  }
-
-  .hero-stage-card.active {
-    border-color: var(--stage-color);
-    background: rgba(18, 18, 26, 0.85);
-    transform: translateY(-3px);
-  }
-
-  .stage-card-glow {
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
+  /* ── Hero text column ── */
+  .hp-hero-text {
+    flex: 1;
     opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-    background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--stage-color) 12%, transparent), transparent 70%);
+    transform: translateY(24px);
+    max-width: 38rem;
   }
 
-  .hero-stage-card.active .stage-card-glow {
-    opacity: 1;
+  @media (min-width: 1024px) {
+    .hp-hero-text {
+      max-width: none;
+    }
   }
 
-  .stage-card-number {
-    font-family: var(--font-body);
-    font-size: 0.625rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--color-text-muted);
-    margin-bottom: 0.25rem;
-    opacity: 0.5;
-    transition: color 0.4s ease, opacity 0.4s ease;
-  }
-
-  .hero-stage-card.active .stage-card-number {
-    color: var(--stage-color);
-    opacity: 0.8;
-  }
-
-  .stage-card-name {
-    font-family: var(--font-display);
-    font-size: clamp(1.375rem, 2vw, 1.75rem);
-    color: var(--color-text-primary);
+  .hp-hero-headline {
+    font-size: clamp(1.625rem, 3.5vw, 2.5rem);
+    line-height: 1.25;
     letter-spacing: -0.02em;
-    line-height: 1.1;
-    margin-bottom: 0.375rem;
-    transition: color 0.4s ease;
+    margin-bottom: 1.25rem;
+    color: var(--color-text-primary);
   }
 
-  .hero-stage-card.active .stage-card-name {
-    color: var(--stage-color);
-  }
-
-  .stage-card-hook {
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-    line-height: 1.45;
-    transition: color 0.4s ease;
-  }
-
-  .hero-stage-card.active .stage-card-hook {
+  .hp-hero-sub {
+    font-size: clamp(0.9375rem, 1.3vw, 1.0625rem);
     color: var(--color-text-secondary);
-  }
-
-  /* ── Progress rail ── */
-  .hero-progress {
-    width: 100%;
+    line-height: 1.7;
+    margin-bottom: 2rem;
     max-width: 32rem;
-    opacity: 0;
-    transform: translateY(16px);
   }
 
-  .progress-track {
-    height: 2px;
-    background: var(--color-border);
-    border-radius: 1px;
-    margin-bottom: 0.5rem;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    width: 0%;
-    border-radius: 1px;
-    transition: width 0.5s ease, background 0.5s ease;
-  }
-
-  .progress-labels {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .progress-label {
-    font-family: var(--font-body);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-text-muted);
-    transition: color 0.3s ease;
-    cursor: default;
-  }
-
-  .progress-label.active {
-    color: var(--dot-color);
-  }
-
-  /* ── Hero CTAs ── */
-  .hero-ctas {
+  .hp-hero-ctas {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 1rem;
-    opacity: 0;
-    transform: translateY(16px);
   }
 
-  /* ── Hero entrance animations ── */
-  .hero.entered .hero-heading {
+  /* ── Hero visual column ── */
+  .hp-hero-visual {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(20px);
+    max-width: 420px;
+    width: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .hp-hero-visual {
+      max-width: 480px;
+    }
+  }
+
+  .hp-hero-svg {
+    width: 100%;
+    height: auto;
+  }
+
+  /* ── Orbital ring (decorative, rotates) ── */
+  .hp-orbital-group {
+    transform-origin: 200px 215px;
+    animation: hp-orbit-rotate 40s linear infinite;
+  }
+
+  @keyframes hp-orbit-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Flowing arrow animation ── */
+  .hp-flow-arrow {
+    stroke-dasharray: 12 8;
+    animation: hp-flow-dash 8s linear infinite;
+  }
+
+  .hp-flow-arrow--2 {
+    animation-delay: -2.66s;
+  }
+
+  .hp-flow-arrow--3 {
+    animation-delay: -5.33s;
+  }
+
+  @keyframes hp-flow-dash {
+    from { stroke-dashoffset: 0; }
+    to { stroke-dashoffset: -60; }
+  }
+
+  /* ── Hero entrance animation ── */
+  .hp-hero.entered .hp-hero-text {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 0.7s ease, transform 0.7s ease;
   }
 
-  .hero.entered .hero-stages {
+  .hp-hero.entered .hp-hero-visual {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 0.7s ease 0.25s, transform 0.7s ease 0.25s;
-  }
-
-  .hero.entered .hero-progress {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.6s ease 0.45s, transform 0.6s ease 0.45s;
-  }
-
-  .hero.entered .hero-ctas {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.6s ease 0.55s, transform 0.6s ease 0.55s;
+    transition: opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-heading, .hero-stages, .hero-progress, .hero-ctas {
+    .hp-hero-text,
+    .hp-hero-visual {
       opacity: 1 !important;
       transform: none !important;
       transition: none !important;
     }
-    .hero-stage-card {
-      transition: none !important;
+    .hp-orbital-group {
+      animation: none;
+    }
+    .hp-flow-arrow {
+      animation: none;
+      stroke-dasharray: none;
     }
   }
 
-  /* ── Buttons ────────────────────────────── */
+  /* ══════════════════════════════════════════
+     SHARED SECTION STYLES
+     ══════════════════════════════════════════ */
+  .hp-section {
+    padding: 8rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .hp-section-headline {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: 3rem;
+    max-width: 40rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hp-section-subheadline {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    margin-top: -2rem;
+    margin-bottom: 3rem;
+    max-width: 36rem;
+  }
+
+  .hp-section-cta {
+    margin-top: 3rem;
+    text-align: center;
+  }
+
+  /* ══════════════════════════════════════════
+     BUTTONS
+     ══════════════════════════════════════════ */
   .btn {
     display: inline-block;
     padding: 0.75rem 1.75rem;
@@ -526,50 +407,10 @@ const stageHooks: Record<string, string> = {
     font-size: 1.0625rem;
   }
 
-  /* ── Section: Problem ───────────────────── */
-  .section-problem {
-    padding: 8rem 0;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .section-headline {
-    font-size: clamp(1.75rem, 4vw, 2.75rem);
-    margin-bottom: 3rem;
-    max-width: 40rem;
-    letter-spacing: -0.02em;
-  }
-
-  .problem-statements {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    max-width: 40rem;
-  }
-
-  .problem-statement {
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: var(--color-text-secondary);
-  }
-
-  .problem-statement strong {
-    color: var(--color-text-primary);
-  }
-
-  .accent-text {
-    color: var(--color-accent) !important;
-    font-family: var(--font-display);
-    font-size: 1.5rem !important;
-    font-style: italic;
-  }
-
-  /* ── Section: Strategy Loop ──────────────── */
-  .section-loop {
-    padding: 8rem 0;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .loop-section-layout {
+  /* ══════════════════════════════════════════
+     SECTION: STRATEGY LOOP
+     ══════════════════════════════════════════ */
+  .hp-loop-section-layout {
     display: flex;
     flex-direction: column;
     gap: 3rem;
@@ -577,29 +418,29 @@ const stageHooks: Record<string, string> = {
   }
 
   @media (min-width: 768px) {
-    .loop-section-layout {
+    .hp-loop-section-layout {
       flex-direction: row;
       align-items: center;
       gap: 4rem;
     }
 
-    .loop-diagram-wrapper {
+    .hp-loop-diagram-wrapper {
       flex: 1;
       max-width: 420px;
     }
 
-    .loop-phases-detail {
+    .hp-loop-phases-detail {
       flex: 1;
     }
   }
 
-  .loop-phases-detail {
+  .hp-loop-phases-detail {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
   }
 
-  .loop-phase-card {
+  .hp-loop-phase-card {
     display: flex;
     gap: 1.25rem;
     padding: 1.25rem 1.5rem;
@@ -609,11 +450,11 @@ const stageHooks: Record<string, string> = {
     transition: border-color 0.25s ease-out;
   }
 
-  .loop-phase-card:hover {
+  .hp-loop-phase-card:hover {
     border-color: rgba(245, 166, 35, 0.2);
   }
 
-  .loop-phase-number {
+  .hp-loop-phase-number {
     font-family: var(--font-display);
     font-size: 1.5rem;
     color: var(--color-accent);
@@ -623,43 +464,34 @@ const stageHooks: Record<string, string> = {
     padding-top: 0.125rem;
   }
 
-  .loop-phase-content {
+  .hp-loop-phase-content {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
   }
 
-  .loop-phase-title {
+  .hp-loop-phase-title {
     font-size: 1.25rem;
     color: var(--color-text-primary);
   }
 
-  .loop-phase-tagline {
+  .hp-loop-phase-tagline {
     font-size: 0.875rem;
     color: var(--color-accent);
     font-weight: 500;
   }
 
-  .loop-phase-desc {
+  .hp-loop-phase-desc {
     font-size: 0.875rem;
     color: var(--color-text-secondary);
     line-height: 1.6;
     margin-top: 0.25rem;
   }
 
-  .loop-intro {
-    color: var(--color-text-secondary);
-    font-style: italic;
-    margin-top: 0.5rem;
-  }
-
-  /* ── Section: Principles preview ─────────── */
-  .section-principles {
-    padding: 8rem 0;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .principles-preview-grid {
+  /* ══════════════════════════════════════════
+     SECTION: PRINCIPLES
+     ══════════════════════════════════════════ */
+  .hp-principles-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -667,19 +499,19 @@ const stageHooks: Record<string, string> = {
   }
 
   @media (min-width: 640px) {
-    .principles-preview-grid {
+    .hp-principles-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (min-width: 1024px) {
-    .principles-preview-grid {
+    .hp-principles-grid {
       grid-template-columns: repeat(3, 1fr);
       gap: 1.25rem;
     }
   }
 
-  .principle-preview {
+  .hp-principle-card {
     padding: 1.5rem 1.25rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -687,12 +519,12 @@ const stageHooks: Record<string, string> = {
     transition: border-color 0.3s ease, transform 0.3s ease;
   }
 
-  .principle-preview:hover {
+  .hp-principle-card:hover {
     border-color: var(--color-border-hover);
     transform: translateY(-2px);
   }
 
-  .principle-preview-number {
+  .hp-principle-number {
     font-family: var(--font-body);
     font-size: 0.625rem;
     font-weight: 600;
@@ -703,7 +535,7 @@ const stageHooks: Record<string, string> = {
     margin-bottom: 0.75rem;
   }
 
-  .principle-preview-title {
+  .hp-principle-title {
     font-family: var(--font-display);
     font-size: 1.1875rem;
     color: var(--color-text-primary);
@@ -712,45 +544,34 @@ const stageHooks: Record<string, string> = {
     line-height: 1.2;
   }
 
-  .principle-preview-summary {
+  .hp-principle-summary {
     font-size: 0.8125rem;
     color: var(--color-text-secondary);
     line-height: 1.55;
   }
 
-  /* ── Section: Stages ────────────────────── */
-  .section-stages {
-    padding: 8rem 0;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .section-subheadline {
-    font-size: 1.0625rem;
-    color: var(--color-text-secondary);
-    margin-top: -2rem;
-    margin-bottom: 3rem;
-    max-width: 36rem;
-  }
-
-  .stages-grid {
+  /* ══════════════════════════════════════════
+     SECTION: STAGES
+     ══════════════════════════════════════════ */
+  .hp-stages-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
 
   @media (min-width: 768px) {
-    .stages-grid {
+    .hp-stages-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (min-width: 1024px) {
-    .stages-grid {
+    .hp-stages-grid {
       grid-template-columns: repeat(4, 1fr);
     }
   }
 
-  .stage-card {
+  .hp-stage-card {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.75rem;
@@ -758,34 +579,34 @@ const stageHooks: Record<string, string> = {
     transition: border-color 0.25s ease-out, transform 0.25s ease-out;
   }
 
-  .stage-card:hover {
+  .hp-stage-card:hover {
     border-color: var(--stage-color);
     transform: translateY(-2px);
   }
 
-  .stage-color-bar {
+  .hp-stage-color-bar {
     height: 3px;
   }
 
-  .stage-card-content {
+  .hp-stage-card-content {
     padding: 1.5rem;
   }
 
-  .stage-label {
+  .hp-stage-label {
     display: block;
     font-family: var(--font-display);
     font-size: 1.375rem;
     margin-bottom: 0.25rem;
   }
 
-  .stage-subtitle {
+  .hp-stage-subtitle {
     display: block;
     font-size: 0.8125rem;
     color: var(--color-text-muted);
     margin-bottom: 1rem;
   }
 
-  .stage-chars {
+  .hp-stage-chars {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -794,7 +615,7 @@ const stageHooks: Record<string, string> = {
     gap: 0.5rem;
   }
 
-  .stage-chars li {
+  .hp-stage-chars li {
     font-size: 0.8125rem;
     color: var(--color-text-secondary);
     line-height: 1.5;
@@ -802,7 +623,7 @@ const stageHooks: Record<string, string> = {
     position: relative;
   }
 
-  .stage-chars li::before {
+  .hp-stage-chars li::before {
     content: '';
     position: absolute;
     left: 0;
@@ -813,214 +634,74 @@ const stageHooks: Record<string, string> = {
     background: var(--stage-color);
   }
 
-  .section-cta {
-    margin-top: 3rem;
-    text-align: center;
-  }
-
-  /* ── Section: Open ──────────────────────── */
-  .section-open {
-    padding: 8rem 0;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .open-content {
+  /* ══════════════════════════════════════════
+     SECTION: OPEN SOURCE
+     ══════════════════════════════════════════ */
+  .hp-open-content {
     max-width: 36rem;
   }
 
-  .open-body {
+  .hp-open-body {
     font-size: 1.0625rem;
     color: var(--color-text-secondary);
     line-height: 1.7;
     margin-bottom: 1.5rem;
   }
 
-  .open-body.emphasis {
+  .hp-open-emphasis {
     color: var(--color-text-primary);
     font-family: var(--font-display);
     font-size: 1.25rem;
     font-style: italic;
   }
 
-  /* ── Section: Final CTA ─────────────────── */
-  .section-final-cta {
-    padding: 8rem 0;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .final-cta-inner {
+  /* ══════════════════════════════════════════
+     SECTION: FINAL CTA
+     ══════════════════════════════════════════ */
+  .hp-final-cta-inner {
     text-align: center;
   }
 
-  .final-cta-headline {
+  .hp-final-cta-headline {
     font-size: clamp(1.75rem, 4vw, 2.75rem);
     margin-bottom: 2rem;
     letter-spacing: -0.02em;
   }
 
-  /* ── Scroll reveal base ─────────────────── */
+  /* ══════════════════════════════════════════
+     SCROLL REVEAL
+     ══════════════════════════════════════════ */
   .scroll-reveal {
     opacity: 0;
     transform: translateY(24px);
   }
-
-  /* ── Preview Modal ─────────────────────── */
-  .preview-modal-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    padding: 1.5rem;
-    opacity: 0;
-    animation: modalFadeIn 0.35s ease forwards;
-  }
-
-  .preview-modal-overlay.hidden {
-    display: none;
-  }
-
-  .preview-modal-overlay.dismissing {
-    opacity: 0;
-    transition: opacity 0.25s ease;
-  }
-
-  @keyframes modalFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .preview-modal {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 1rem;
-    padding: 2.5rem 2rem 2rem;
-    max-width: 26rem;
-    width: 100%;
-    text-align: center;
-    transform: translateY(12px) scale(0.97);
-    animation: modalSlideIn 0.35s ease 0.05s forwards;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
-  }
-
-  @keyframes modalSlideIn {
-    from { transform: translateY(12px) scale(0.97); opacity: 0; }
-    to { transform: translateY(0) scale(1); opacity: 1; }
-  }
-
-  .preview-modal-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    background: rgba(245, 166, 35, 0.1);
-    color: var(--color-accent);
-    margin-bottom: 1.25rem;
-  }
-
-  .preview-modal-title {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    color: var(--color-text-primary);
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.02em;
-  }
-
-  .preview-modal-body {
-    font-size: 0.9375rem;
-    color: var(--color-text-secondary);
-    line-height: 1.65;
-    margin-bottom: 0.5rem;
-  }
-
-  .preview-modal-sub {
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-    font-style: italic;
-    margin-bottom: 1.75rem;
-  }
-
-  .preview-modal-btn {
-    display: inline-block;
-    padding: 0.625rem 2rem;
-    background: var(--color-accent);
-    color: var(--color-bg);
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
-  }
-
-  .preview-modal-btn:hover {
-    background: var(--color-accent-hover);
-    transform: translateY(-1px);
-  }
-
-  .preview-modal-btn:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .preview-modal-overlay { animation: none; opacity: 1; }
-    .preview-modal { animation: none; transform: none; opacity: 1; }
-    .preview-modal-overlay.dismissing { transition: none; }
-  }
 </style>
 
 <script>
-  // ── Preview modal (once per session) ──
-  const modal = document.getElementById('preview-modal')!;
-  const modalClose = document.getElementById('preview-modal-close')!;
-  try {
-    if (sessionStorage.getItem('distilledcs_preview_dismissed') === 'true') {
-      modal.classList.add('hidden');
-    }
-  } catch {
-    modal.classList.add('hidden');
-  }
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function dismissModal() {
-    modal.classList.add('dismissing');
-    try { sessionStorage.setItem('distilledcs_preview_dismissed', 'true'); } catch {}
-    setTimeout(() => modal.classList.add('hidden'), 250);
-  }
-
-  modalClose.addEventListener('click', dismissModal);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) dismissModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modal.classList.contains('hidden')) dismissModal();
+  // ── Hero entrance ──
+  const heroSection = document.getElementById('hero-section')!;
+  requestAnimationFrame(() => {
+    heroSection.classList.add('entered');
   });
 
   // ── Dynamic CTA for assessed users ──
   try {
     if (localStorage.getItem('distilledcs_completed') === 'true') {
-      const ctaBtn = document.getElementById('hero-cta-primary');
+      const ctaBtn = document.getElementById('hp-hero-cta-primary');
       if (ctaBtn) ctaBtn.textContent = 'View My Assessment';
     }
   } catch {}
 
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // ── Scroll-triggered reveals for sections below hero ──
+  // ── Scroll-triggered reveals ──
   if (!prefersReducedMotion) {
     const revealObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const el = entry.target as HTMLElement;
-            const delay = el.style.getPropertyValue('--stage-delay') || '0';
+            const delay = el.style.getPropertyValue('--reveal-delay') || el.style.getPropertyValue('--stage-delay') || '0';
             el.style.transition = `opacity 0.6s ease ${delay}, transform 0.6s ease ${delay}`;
             el.style.opacity = '1';
             el.style.transform = 'translateY(0)';
@@ -1036,263 +717,5 @@ const stageHooks: Record<string, string> = {
       (el as HTMLElement).style.opacity = '1';
       (el as HTMLElement).style.transform = 'none';
     });
-  }
-
-  // ── Hero entrance ──
-  const heroSection = document.getElementById('hero-section')!;
-  requestAnimationFrame(() => {
-    heroSection.classList.add('entered');
-  });
-
-  // ══════════════════════════════════════════
-  //  STAGE CARD CONTROLLER
-  // ══════════════════════════════════════════
-  const STAGE_COUNT = 4;
-  const AUTO_INTERVAL = 3500;
-  const RESUME_DELAY = 6000;
-
-  const cards = document.querySelectorAll<HTMLElement>('.hero-stage-card');
-  const labels = document.querySelectorAll<HTMLElement>('.progress-label');
-  const progressFill = document.getElementById('progress-fill')!;
-  const stagesEl = document.getElementById('hero-stages')!;
-
-  const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
-  let currentStage = 0;
-  let autoTimer: ReturnType<typeof setInterval> | null = null;
-  let resumeTimer: ReturnType<typeof setTimeout> | null = null;
-
-  function goToStage(idx: number) {
-    if (idx < 0 || idx >= STAGE_COUNT || idx === currentStage) return;
-    cards[currentStage].classList.remove('active');
-    labels[currentStage].classList.remove('active');
-
-    currentStage = idx;
-    cards[currentStage].classList.add('active');
-    labels[currentStage].classList.add('active');
-
-    // Progress fill
-    const pct = (currentStage / (STAGE_COUNT - 1)) * 100;
-    progressFill.style.width = `${pct}%`;
-    progressFill.style.background = stageColors[currentStage];
-  }
-
-  function nextStage() {
-    goToStage((currentStage + 1) % STAGE_COUNT);
-  }
-
-  function startAuto() {
-    stopAuto();
-    autoTimer = setInterval(nextStage, AUTO_INTERVAL);
-  }
-
-  function stopAuto() {
-    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
-    if (resumeTimer) { clearTimeout(resumeTimer); resumeTimer = null; }
-  }
-
-  function pauseAndResume() {
-    stopAuto();
-    resumeTimer = setTimeout(startAuto, RESUME_DELAY);
-  }
-
-  // ── Card clicks ──
-  cards.forEach((card, i) => {
-    card.addEventListener('click', () => {
-      goToStage(i);
-      pauseAndResume();
-    });
-  });
-
-  // ── Mobile swipe ──
-  let touchStartX = 0;
-  let touchStartY = 0;
-  stagesEl.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  }, { passive: true });
-
-  stagesEl.addEventListener('touchend', (e) => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      if (dx < 0 && currentStage < STAGE_COUNT - 1) goToStage(currentStage + 1);
-      else if (dx > 0 && currentStage > 0) goToStage(currentStage - 1);
-      pauseAndResume();
-    }
-  }, { passive: true });
-
-  // ── Start auto-cycle ──
-  startAuto();
-
-  // ══════════════════════════════════════════
-  //  BACKGROUND CANVAS — Geometric constellation network
-  // ══════════════════════════════════════════
-  if (!prefersReducedMotion) {
-    const bgCanvas = document.getElementById('hero-bg-canvas') as HTMLCanvasElement;
-    if (bgCanvas) {
-      const ctx = bgCanvas.getContext('2d')!;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const isMobile = window.innerWidth < 768;
-
-      function resize() {
-        const w = heroSection.offsetWidth;
-        const h = heroSection.offsetHeight;
-        bgCanvas.width = w * dpr;
-        bgCanvas.height = h * dpr;
-        bgCanvas.style.width = w + 'px';
-        bgCanvas.style.height = h + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      resize();
-      window.addEventListener('resize', resize);
-
-      // ── Constellation nodes ──
-      interface Node {
-        x: number; y: number;
-        baseX: number; baseY: number;
-        size: number;
-        alpha: number;
-        colorIdx: number;
-        phase: number;
-        speed: number;
-        drift: number;
-      }
-
-      const nodeCount = isMobile ? 40 : 80;
-      const nodes: Node[] = [];
-      const CONNECTION_DIST = isMobile ? 120 : 180;
-
-      for (let i = 0; i < nodeCount; i++) {
-        const x = Math.random() * heroSection.offsetWidth;
-        const y = Math.random() * heroSection.offsetHeight;
-        nodes.push({
-          x, y, baseX: x, baseY: y,
-          size: 0.8 + Math.random() * 2,
-          alpha: 0.08 + Math.random() * 0.2,
-          colorIdx: Math.floor(Math.random() * 4),
-          phase: Math.random() * Math.PI * 2,
-          speed: 0.2 + Math.random() * 0.4,
-          drift: 20 + Math.random() * 40,
-        });
-      }
-
-      // ── Horizontal grid lines ──
-      const gridLineCount = isMobile ? 4 : 7;
-      const gridLines: number[] = [];
-      for (let i = 0; i < gridLineCount; i++) {
-        gridLines.push((i + 1) / (gridLineCount + 1));
-      }
-
-      const rgbs = ['229,115,115', '255,183,77', '129,199,132', '100,181,246'];
-      let t = 0;
-      let mouseX = heroSection.offsetWidth * 0.5;
-      let mouseY = heroSection.offsetHeight * 0.5;
-
-      heroSection.addEventListener('mousemove', (e) => {
-        const rect = heroSection.getBoundingClientRect();
-        mouseX = e.clientX - rect.left;
-        mouseY = e.clientY - rect.top;
-      });
-
-      function drawBg() {
-        t += 0.004;
-        const W = heroSection.offsetWidth;
-        const H = heroSection.offsetHeight;
-        ctx.clearRect(0, 0, W, H);
-
-        // ── Ambient gradient glow (follows active stage color) ──
-        const gradColor = rgbs[currentStage];
-        const grd = ctx.createRadialGradient(W * 0.5, H * 0.4, 0, W * 0.5, H * 0.4, Math.max(W, H) * 0.8);
-        grd.addColorStop(0, `rgba(${gradColor}, 0.06)`);
-        grd.addColorStop(0.4, `rgba(${gradColor}, 0.02)`);
-        grd.addColorStop(1, 'rgba(10, 10, 15, 0)');
-        ctx.fillStyle = grd;
-        ctx.fillRect(0, 0, W, H);
-
-        // Secondary glow near mouse
-        const mouseGrd = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 250);
-        mouseGrd.addColorStop(0, `rgba(${gradColor}, 0.04)`);
-        mouseGrd.addColorStop(1, 'rgba(10, 10, 15, 0)');
-        ctx.fillStyle = mouseGrd;
-        ctx.fillRect(0, 0, W, H);
-
-        // ── Subtle horizontal grid lines ──
-        ctx.lineWidth = 0.5;
-        for (const ratio of gridLines) {
-          const y = H * ratio;
-          const wave = Math.sin(t * 0.5 + ratio * 10) * 3;
-          ctx.beginPath();
-          ctx.moveTo(0, y + wave);
-          // Draw as subtle wavy line
-          for (let x = 0; x <= W; x += 40) {
-            const wy = y + Math.sin(t * 0.3 + x * 0.005 + ratio * 5) * 4;
-            ctx.lineTo(x, wy);
-          }
-          ctx.strokeStyle = `rgba(${rgbs[currentStage]}, 0.03)`;
-          ctx.stroke();
-        }
-
-        // ── Move nodes ──
-        for (const n of nodes) {
-          n.x = n.baseX + Math.sin(t * n.speed + n.phase) * n.drift;
-          n.y = n.baseY + Math.cos(t * n.speed * 0.7 + n.phase) * n.drift * 0.5;
-
-          // Subtle mouse repel
-          const dx = n.x - mouseX;
-          const dy = n.y - mouseY;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 200) {
-            const force = (200 - dist) / 200 * 8;
-            n.x += (dx / dist) * force;
-            n.y += (dy / dist) * force;
-          }
-
-          // Wrap
-          if (n.x < -20) n.baseX += W + 40;
-          if (n.x > W + 20) n.baseX -= W + 40;
-          if (n.y < -20) n.baseY += H + 40;
-          if (n.y > H + 20) n.baseY -= H + 40;
-        }
-
-        // ── Draw connections ──
-        ctx.lineWidth = 0.5;
-        for (let i = 0; i < nodes.length; i++) {
-          for (let j = i + 1; j < nodes.length; j++) {
-            const dx = nodes[i].x - nodes[j].x;
-            const dy = nodes[i].y - nodes[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < CONNECTION_DIST) {
-              const alpha = (1 - dist / CONNECTION_DIST) * 0.08;
-              const cIdx = nodes[i].colorIdx;
-              ctx.beginPath();
-              ctx.moveTo(nodes[i].x, nodes[i].y);
-              ctx.lineTo(nodes[j].x, nodes[j].y);
-              ctx.strokeStyle = `rgba(${rgbs[cIdx]}, ${alpha})`;
-              ctx.stroke();
-            }
-          }
-        }
-
-        // ── Draw nodes ──
-        for (const n of nodes) {
-          const twinkle = n.alpha * (0.5 + Math.sin(t * 2 + n.phase) * 0.5);
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, n.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${rgbs[n.colorIdx]}, ${twinkle})`;
-          ctx.fill();
-
-          // Soft glow for larger nodes
-          if (n.size > 1.5) {
-            ctx.beginPath();
-            ctx.arc(n.x, n.y, n.size * 3, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${rgbs[n.colorIdx]}, ${twinkle * 0.15})`;
-            ctx.fill();
-          }
-        }
-
-        requestAnimationFrame(drawBg);
-      }
-      drawBg();
-    }
   }
 </script>
