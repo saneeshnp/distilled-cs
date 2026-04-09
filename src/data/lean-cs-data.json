@@ -8,6 +8,13 @@
   },
   "principles": [
     {
+      "id": "cs_is_a_culture",
+      "title": "Customer Success Is a Culture, Not Just a Department",
+      "summary": "CS fails in a silo. Embed it across every team that touches the customer.",
+      "description": "Customer outcomes depend on product, sales, marketing, and support — not just the CS team. When CS operates in isolation, it becomes a bottleneck: context gets lost in handoffs, insights never reach the people who can act on them, and the CS team ends up owning outcomes it can't fully control. The fix isn't better hand-off documents — it's making customer success a shared responsibility. Organizations that embed CS into deal reviews, QBRs, roadmap planning, and escalation workflows unlock compounding value. Account executives, solution engineers, and product managers should all internalize retention and expansion as their responsibility. The moment CS is excluded from the rhythm of the business, value realization drops and scaling becomes a headcount problem instead of a leverage problem.",
+      "icon": "people"
+    },
+    {
       "id": "outcomes_over_activities",
       "title": "Outcomes Over Activities",
       "summary": "Measure what customers achieve, not what your team does.",
@@ -34,13 +41,6 @@
       "summary": "Track fewer metrics, but act on them ruthlessly.",
       "description": "Dashboards with 30 metrics create the illusion of insight. Real maturity means identifying the 4-6 metrics that genuinely predict outcomes for your context, instrumenting them properly, and building workflows around them. It's better to act on one trustworthy signal than to stare at a dozen unreliable ones. Start with what you can measure today. Refine as you mature.",
       "icon": "chart"
-    },
-    {
-      "id": "cs_is_a_culture",
-      "title": "Customer Success Is a Culture, Not a Department",
-      "summary": "CS fails in a silo. Embed it across every team that touches the customer.",
-      "description": "Customer outcomes depend on product, sales, marketing, and support — not just the CS team. When CS operates in isolation, it becomes a bottleneck: context gets lost in handoffs, insights never reach the people who can act on them, and the CS team ends up owning outcomes it can't fully control. The fix isn't better hand-off documents — it's making customer success a shared responsibility. Organizations that embed CS into deal reviews, QBRs, roadmap planning, and escalation workflows unlock compounding value. Account executives, solution engineers, and product managers should all internalize retention and expansion as their responsibility. The moment CS is excluded from the rhythm of the business, value realization drops and scaling becomes a headcount problem instead of a leverage problem.",
-      "icon": "people"
     },
     {
       "id": "segment_then_scale",
@@ -2417,7 +2417,7 @@
           "Measuring CS solely on revenue without retention guardrails — expansion is meaningless if GRR is declining",
           "Not investing in CS operations to support the revenue motion — you need RevOps-grade infrastructure for pipeline, forecasting, and attribution"
         ],
-        "estimated_duration": "Ongoing — 8–12 weeks to establish, continuous refinement"
+        "estimated_duration": "8–12 weeks"
       },
       {
         "id": "fly-predictive-intelligence",
@@ -2439,7 +2439,7 @@
           "Over-automating without human oversight — models make mistakes, and customer relationships are too valuable for unchecked automation",
           "Hoarding customer intelligence within CS instead of sharing across the organization — the value multiplies when Product, Sales, and Marketing can act on it too"
         ],
-        "estimated_duration": "Ongoing — 10–16 weeks to establish, continuous refinement"
+        "estimated_duration": "10–16 weeks"
       },
       {
         "id": "fly-cs-culture-company-wide",
@@ -2461,7 +2461,7 @@
           "Making it a one-time initiative instead of an ongoing operating rhythm — culture requires reinforcement, not a workshop",
           "Losing CS team identity in the process — CS should drive the customer-centric culture, not dissolve into it"
         ],
-        "estimated_duration": "Ongoing — 12–16 weeks to establish foundations, continuous reinforcement"
+        "estimated_duration": "12–16 weeks"
       }
     ]
   },

@@ -3,10 +3,9 @@ const pathname = Astro.url.pathname;
 const isHome = pathname === '/';
 
 const homeSubLinks = [
-  { href: '/#why-distilled-cs', label: 'Why Distilled CS' },
   { href: '/#strategy-loop', label: 'The Strategy Loop' },
-  { href: '/#principles', label: 'Principles' },
   { href: '/#maturity-stages', label: 'Maturity Stages' },
+  { href: '/#principles', label: 'Principles' },
   { href: '/#open-source', label: 'Open Source' },
   { href: '/#get-started', label: 'Get Started' },
 ];
@@ -21,7 +20,7 @@ const navLinks = [
   { href: '/principles/', label: 'Principles' },
   { href: '/assess/', label: 'Assess' },
   { href: '/transform/', label: 'Transform' },
-  { href: '/blog/', label: 'Blog' },
+  { href: '/model/', label: 'Maturity Model' },
 ];
 
 const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbooks/') || pathname === '/metrics/' || pathname.startsWith('/metrics/') || pathname === '/checklist/';
@@ -30,7 +29,7 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
 <header class="header">
   <div class="container header-inner">
     <a href="/" class="logo">
-      <span class="logo-text">Distilled</span><span class="logo-accent">CS</span><span class="logo-beta">Beta</span>
+      <span class="logo-text">Distilled</span><span class="logo-accent">CS</span><span class="logo-beta">Beta-Preview</span>
     </a>
 
     <nav class="nav-desktop" aria-label="Main navigation">
@@ -113,14 +112,14 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
           </a>
         </li>
 
-        <!-- Blog -->
+        <!-- Maturity Model -->
         <li>
           <a
-            href="/blog/"
-            class:list={['nav-link', { active: pathname === '/blog/' || pathname.startsWith('/blog/') }]}
-            aria-current={pathname === '/blog/' ? 'page' : undefined}
+            href="/model/"
+            class:list={['nav-link', { active: pathname === '/model/' }]}
+            aria-current={pathname === '/model/' ? 'page' : undefined}
           >
-            Blog
+            Maturity Model
           </a>
         </li>
       </ul>
@@ -233,14 +232,14 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
         </a>
       </li>
 
-      <!-- Blog -->
+      <!-- Maturity Model -->
       <li>
         <a
-          href="/blog/"
-          class:list={['nav-link-mobile', { active: pathname === '/blog/' || pathname.startsWith('/blog/') }]}
-          aria-current={pathname === '/blog/' ? 'page' : undefined}
+          href="/model/"
+          class:list={['nav-link-mobile', { active: pathname === '/model/' }]}
+          aria-current={pathname === '/model/' ? 'page' : undefined}
         >
-          Blog
+          Maturity Model
         </a>
       </li>
     </ul>
