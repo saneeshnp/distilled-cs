@@ -204,12 +204,12 @@ const categoryLabels: Record<string, string> = {
     border-radius: 0.25rem;
   }
 
-  .cat-revenue { background: #F5A62320; color: #F5A623; }
-  .cat-retention { background: #E5737320; color: #E57373; }
-  .cat-onboarding { background: #81C78420; color: #81C784; }
-  .cat-health { background: #64B5F620; color: #64B5F6; }
-  .cat-sentiment { background: #CE93D820; color: #CE93D8; }
-  .cat-usage { background: #FFB74D20; color: #FFB74D; }
+  .cat-revenue { background: var(--color-accent-subtle); color: var(--color-accent); }
+  .cat-retention { background: color-mix(in srgb, var(--color-stage-crawl) 14%, transparent); color: var(--color-stage-crawl); }
+  .cat-onboarding { background: color-mix(in srgb, var(--color-stage-run) 14%, transparent); color: var(--color-stage-run); }
+  .cat-health { background: color-mix(in srgb, var(--color-stage-fly) 14%, transparent); color: var(--color-stage-fly); }
+  .cat-sentiment { background: color-mix(in srgb, #CE93D8 14%, transparent); color: #CE93D8; }
+  .cat-usage { background: color-mix(in srgb, var(--color-stage-walk) 14%, transparent); color: var(--color-stage-walk); }
 
   .metric-name {
     font-size: 1.0625rem;
@@ -234,9 +234,9 @@ const categoryLabels: Record<string, string> = {
     letter-spacing: 0.04em;
   }
 
-  :global(.priority-high) { background: #81C78425; color: #81C784; }
-  :global(.priority-medium) { background: #FFB74D25; color: #FFB74D; }
-  :global(.priority-low) { background: rgba(240,237,230,0.06); color: var(--color-text-muted); }
+  :global(.priority-high) { background: color-mix(in srgb, var(--color-stage-run) 18%, transparent); color: var(--color-stage-run); }
+  :global(.priority-medium) { background: color-mix(in srgb, var(--color-stage-walk) 18%, transparent); color: var(--color-stage-walk); }
+  :global(.priority-low) { background: color-mix(in srgb, var(--color-text-muted) 10%, transparent); color: var(--color-text-muted); }
 
   :global(.context-banner) {
     padding: 0.875rem 1.25rem;
@@ -246,13 +246,26 @@ const categoryLabels: Record<string, string> = {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    background: color-mix(in srgb, var(--stage-color, var(--color-accent)) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--stage-color, var(--color-accent)) 30%, transparent);
+  }
+
+  :global(.context-banner-dot) {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--stage-color, var(--color-accent));
+  }
+
+  :global(.context-banner-stage) {
+    color: var(--stage-color, var(--color-accent));
   }
 </style>
 
 <script>
   import { isAssessmentCompleted, getScores } from '../../scripts/context-manager.js';
 
-  const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
   const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
 
   // Category filtering
@@ -273,7 +286,6 @@ const categoryLabels: Record<string, string> = {
     const scores = getScores();
     if (scores && scores.stage) {
       const stage = scores.stage;
-      const color = stageColors[stage] || '#F5A623';
 
       // Show/hide assessed elements
       document.querySelectorAll('[data-show-if-assessed]').forEach(el => (el as HTMLElement).style.display = '');
@@ -282,9 +294,9 @@ const categoryLabels: Record<string, string> = {
       // Banner
       const banner = document.getElementById('metrics-context-banner');
       if (banner) {
-        banner.innerHTML = `<div class="context-banner" style="background:${color}10; border:1px solid ${color}30;">
-          <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;"></span>
-          Showing priorities for your stage: <strong style="color:${color}">${stageLabels[stage]}</strong>
+        banner.innerHTML = `<div class="context-banner stage-${stage}">
+          <span class="context-banner-dot"></span>
+          Showing priorities for your stage: <strong class="context-banner-stage">${stageLabels[stage]}</strong>
         </div>`;
       }
 

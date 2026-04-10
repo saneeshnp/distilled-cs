@@ -1,0 +1,119 @@
+---
+/*
+ * ThemeToggle
+ * ───────────
+ * Sun/moon button that toggles between light and dark mode.
+ * - Persists choice in localStorage under `distilledcs_theme`.
+ * - Theme is applied via `data-theme="dark"` attribute on <html>.
+ * - Light mode is the default (no attribute).
+ * - A FOUC-prevention script in BaseLayout.astro reads localStorage
+ *   before first paint so there is no flash on load.
+ * - Uses aria-pressed on a toggle button. The label flips based on
+ *   current theme so the button reads sensibly to screen readers.
+ */
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  id="theme-toggle"
+  aria-label="Switch to dark mode"
+  aria-pressed="false"
+  title="Toggle theme"
+>
+  <svg class="theme-icon theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4"></circle>
+    <path d="M12 2v2"></path>
+    <path d="M12 20v2"></path>
+    <path d="m4.93 4.93 1.41 1.41"></path>
+    <path d="m17.66 17.66 1.41 1.41"></path>
+    <path d="M2 12h2"></path>
+    <path d="M20 12h2"></path>
+    <path d="m6.34 17.66-1.41 1.41"></path>
+    <path d="m19.07 4.93-1.41 1.41"></path>
+  </svg>
+  <svg class="theme-icon theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    margin-left: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color 0.2s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out;
+  }
+
+  .theme-toggle:hover {
+    color: var(--color-accent);
+    border-color: var(--color-border-hover);
+    background-color: var(--color-surface-hover);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .theme-icon {
+    display: none;
+  }
+
+  /* Light mode: show moon (click to go dark) */
+  :root:not([data-theme="dark"]) .theme-icon-moon {
+    display: block;
+  }
+
+  /* Dark mode: show sun (click to go light) */
+  [data-theme="dark"] .theme-icon-sun {
+    display: block;
+  }
+</style>
+
+<script>
+  (function () {
+    const STORAGE_KEY = 'distilledcs_theme';
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.theme-toggle');
+    if (!buttons.length) return;
+
+    const syncButtons = (theme: 'light' | 'dark') => {
+      const isDark = theme === 'dark';
+      buttons.forEach((btn) => {
+        btn.setAttribute('aria-pressed', String(isDark));
+        btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      });
+    };
+
+    // Initial sync based on what the FOUC script (or absence) has set.
+    const initial: 'light' | 'dark' =
+      document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    syncButtons(initial);
+
+    const toggle = () => {
+      const current =
+        document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const next: 'light' | 'dark' = current === 'dark' ? 'light' : 'dark';
+      if (next === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+      try {
+        localStorage.setItem(STORAGE_KEY, next);
+      } catch (e) {}
+      syncButtons(next);
+    };
+
+    buttons.forEach((btn) => btn.addEventListener('click', toggle));
+  })();
+</script>

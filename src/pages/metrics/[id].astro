@@ -39,7 +39,6 @@ const segmentLabels: Record<string, string> = {
 
 const stageOrder = ['crawl', 'walk', 'run', 'fly'];
 const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
-const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
 
 // Health score components (only for health_score metric)
 const healthComponents = metric.health_score_components_by_stage || null;
@@ -111,10 +110,10 @@ for (const stageId of stageOrder) {
           const priority = metric.priority_by_stage[stageId];
           const why = metric.why_priority?.[stageId];
           return (
-            <div class="priority-stage-row" data-stage={stageId}>
+            <div class={`priority-stage-row stage-${stageId}`} data-stage={stageId}>
               <div class="priority-stage-header">
-                <span class="stage-dot" style={`background: ${stageColors[stageId]}`}></span>
-                <span class="stage-label-text" style={`color: ${stageColors[stageId]}`}>{stageLabels[stageId]}</span>
+                <span class="stage-dot"></span>
+                <span class="stage-label-text">{stageLabels[stageId]}</span>
                 <span class={`priority-pill priority-${priority}`}>{priority}</span>
               </div>
               {why && <p class="priority-why">{why}</p>}
@@ -162,10 +161,10 @@ for (const stageId of stageOrder) {
             const comp = healthComponents[stageId];
             if (!comp) return null;
             return (
-              <div class="health-stage-block" data-health-stage={stageId}>
+              <div class={`health-stage-block stage-${stageId}`} data-health-stage={stageId}>
                 <h3 class="health-stage-title">
-                  <span class="stage-dot" style={`background: ${stageColors[stageId]}`}></span>
-                  <span style={`color: ${stageColors[stageId]}`}>{stageLabels[stageId]}</span>
+                  <span class="stage-dot"></span>
+                  <span class="health-stage-label">{stageLabels[stageId]}</span>
                 </h3>
                 <div class="health-detail">
                   <h4>Recommended Inputs</h4>
@@ -206,8 +205,8 @@ for (const stageId of stageOrder) {
         <h2 class="section-heading">Used in Playbooks</h2>
         <div class="playbook-refs">
           {usedInPlaybooks.map(pb => (
-            <a href={`/playbooks/${pb.id}/`} class="playbook-ref-card" style={`--ref-color: ${stageColors[pb.stageId]};`}>
-              <span class="playbook-ref-badge" style={`background: ${stageColors[pb.stageId]}; color: #0a0a0f;`}>{stageLabels[pb.stageId]}</span>
+            <a href={`/playbooks/${pb.id}/`} class={`playbook-ref-card stage-${pb.stageId}`}>
+              <span class="playbook-ref-badge">{stageLabels[pb.stageId]}</span>
               <span class="playbook-ref-title">{pb.title}</span>
               <svg class="playbook-ref-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -270,12 +269,12 @@ for (const stageId of stageOrder) {
     margin-bottom: 0.75rem;
   }
 
-  .cat-revenue { background: #F5A62320; color: #F5A623; }
-  .cat-retention { background: #E5737320; color: #E57373; }
-  .cat-onboarding { background: #81C78420; color: #81C784; }
-  .cat-health { background: #64B5F620; color: #64B5F6; }
-  .cat-sentiment { background: #CE93D820; color: #CE93D8; }
-  .cat-usage { background: #FFB74D20; color: #FFB74D; }
+  .cat-revenue { background: var(--color-accent-subtle); color: var(--color-accent); }
+  .cat-retention { background: color-mix(in srgb, var(--color-stage-crawl) 14%, transparent); color: var(--color-stage-crawl); }
+  .cat-onboarding { background: color-mix(in srgb, var(--color-stage-run) 14%, transparent); color: var(--color-stage-run); }
+  .cat-health { background: color-mix(in srgb, var(--color-stage-fly) 14%, transparent); color: var(--color-stage-fly); }
+  .cat-sentiment { background: color-mix(in srgb, #CE93D8 14%, transparent); color: #CE93D8; }
+  .cat-usage { background: color-mix(in srgb, var(--color-stage-walk) 14%, transparent); color: var(--color-stage-walk); }
 
   .metric-title {
     font-size: clamp(1.5rem, 3.5vw, 2.25rem);
@@ -354,11 +353,17 @@ for (const stageId of stageOrder) {
     height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
+    background: var(--stage-color, var(--color-accent));
   }
 
   .stage-label-text {
     font-weight: 600;
     font-size: 0.875rem;
+    color: var(--stage-color, var(--color-text-primary));
+  }
+
+  .health-stage-label {
+    color: var(--stage-color, var(--color-text-primary));
   }
 
   .priority-pill {
@@ -371,9 +376,9 @@ for (const stageId of stageOrder) {
     margin-left: auto;
   }
 
-  .priority-high { background: #81C78425; color: #81C784; }
-  .priority-medium { background: #FFB74D25; color: #FFB74D; }
-  .priority-low { background: rgba(240,237,230,0.06); color: var(--color-text-muted); }
+  .priority-high { background: color-mix(in srgb, var(--color-stage-run) 18%, transparent); color: var(--color-stage-run); }
+  .priority-medium { background: color-mix(in srgb, var(--color-stage-walk) 18%, transparent); color: var(--color-stage-walk); }
+  .priority-low { background: color-mix(in srgb, var(--color-text-muted) 10%, transparent); color: var(--color-text-muted); }
 
   .priority-why {
     margin-top: 0.625rem;
@@ -590,7 +595,7 @@ for (const stageId of stageOrder) {
   }
 
   .playbook-ref-card:hover {
-    border-color: var(--ref-color, var(--color-accent));
+    border-color: var(--stage-color, var(--color-accent));
     background: var(--color-surface-hover);
   }
 
@@ -605,6 +610,45 @@ for (const stageId of stageOrder) {
     font-weight: 600;
     border-radius: 9999px;
     flex-shrink: 0;
+    background: var(--stage-color, var(--color-accent));
+    color: var(--color-on-stage);
+  }
+
+  :global(.contextual-panel-box) {
+    padding: 1.5rem;
+    border: 1px solid color-mix(in srgb, var(--stage-color, var(--color-accent)) 30%, transparent);
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--stage-color, var(--color-accent)) 8%, transparent);
+  }
+
+  :global(.contextual-panel-title) {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+
+  :global(.contextual-panel-row) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  :global(.contextual-panel-label) {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  :global(.contextual-panel-row .priority-pill) {
+    font-size: 0.75rem;
+  }
+
+  :global(.contextual-panel-why) {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0;
   }
 
   .playbook-ref-title {
@@ -622,7 +666,6 @@ for (const stageId of stageOrder) {
 <script>
   import { isAssessmentCompleted, getScores, getProfile } from '../../scripts/context-manager.js';
 
-  const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
   const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
 
   const panel = document.getElementById('contextual-panel');
@@ -633,7 +676,7 @@ for (const stageId of stageOrder) {
 
     if (scores && scores.stage && panel) {
       const stage = scores.stage;
-      const color = stageColors[stage];
+      panel.classList.add(`stage-${stage}`);
       const metricId = panel.getAttribute('data-metric-id');
 
       // Highlight user's stage row
@@ -667,13 +710,13 @@ for (const stageId of stageOrder) {
       const why = priorityRow?.querySelector('.priority-why')?.textContent?.trim() || '';
 
       panel.innerHTML = `
-        <div style="padding:1.5rem;border:1px solid ${color}30;border-radius:0.75rem;background:${color}06;">
-          <h2 style="font-family:var(--font-display);font-size:1.25rem;margin-bottom:1rem;color:var(--color-text-primary);">For your context</h2>
-          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
-            <span style="font-size:0.875rem;color:var(--color-text-secondary);">Priority at ${stageLabels[stage]}:</span>
-            <span class="priority-pill priority-${priority}" style="font-size:0.75rem;">${priority}</span>
+        <div class="contextual-panel-box">
+          <h2 class="contextual-panel-title">For your context</h2>
+          <div class="contextual-panel-row">
+            <span class="contextual-panel-label">Priority at ${stageLabels[stage]}:</span>
+            <span class="priority-pill priority-${priority}">${priority}</span>
           </div>
-          ${why ? `<p style="font-size:0.875rem;color:var(--color-text-secondary);line-height:1.6;margin-bottom:0;">${why}</p>` : ''}
+          ${why ? `<p class="contextual-panel-why">${why}</p>` : ''}
         </div>
       `;
     }

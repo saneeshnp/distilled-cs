@@ -9,7 +9,6 @@ const domains = frameworkData.assessment_domains.domains;
 
 const stageOrder = ['crawl', 'walk', 'run', 'fly'];
 const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
-const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
 const transitionKeys: Record<string, string> = {
   crawl: 'crawl_to_walk',
   walk: 'walk_to_run',
@@ -296,6 +295,13 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     height: 100%;
     border-radius: 4px;
     transition: width 0.6s ease-out;
+    background: var(--stage-color, var(--color-accent));
+  }
+
+  .fly-stage-copy {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
   }
 
   .domain-bar-score {
@@ -506,7 +512,6 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
 <script>
   const stageOrder = ['crawl', 'walk', 'run', 'fly'];
   const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
-  const stageColors = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
 
   const domainLabels = {
     segmentation_coverage: 'Segmentation & Coverage',
@@ -532,7 +537,6 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     if (completed === 'true' && scoresRaw) {
       const scores = JSON.parse(scoresRaw);
       const userStage = scores.stage;
-      const color = stageColors[userStage] || 'var(--color-accent)';
       const currentIdx = stageOrder.indexOf(userStage);
       const nextStage = currentIdx < 3 ? stageOrder[currentIdx + 1] : null;
 
@@ -540,12 +544,15 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
       document.querySelectorAll('[data-show-if-assessed]').forEach(el => el.style.display = '');
       document.querySelectorAll('[data-hide-if-assessed]').forEach(el => el.style.display = 'none');
 
-      // Stage card
+      // Apply stage class to the card so nested elements inherit --stage-color.
+      const stageCard = document.getElementById('dash-stage-card');
+      if (stageCard) stageCard.classList.add(`stage-${userStage}`);
+
+      // Stage card — class-based badge (picks up --stage-color and --color-on-stage).
       const badge = document.getElementById('dash-stage-badge');
       if (badge) {
         badge.textContent = stageLabels[userStage] || userStage;
-        badge.style.background = color;
-        badge.style.color = '#0a0a0f';
+        badge.classList.add('stage-badge', `stage-${userStage}`);
       }
       const scoreEl = document.getElementById('dash-score');
       if (scoreEl) scoreEl.textContent = `Score: ${scores.overallScore?.toFixed(2) || '—'}`;
@@ -582,10 +589,10 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
           const pct = ((score / 4) * 100).toFixed(1);
           const label = domainLabels[domId] || domId;
           html += `
-            <div class="domain-bar-row">
+            <div class="domain-bar-row stage-${userStage}">
               <span class="domain-bar-label">${label}</span>
               <div class="domain-bar-track">
-                <div class="domain-bar-fill" style="width: ${pct}%; background: ${color};"></div>
+                <div class="domain-bar-fill" style="width: ${pct}%;"></div>
               </div>
               <span class="domain-bar-score">${Number(score).toFixed(1)}</span>
             </div>
@@ -684,7 +691,6 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
         const trans = transitionData[transKey];
         if (trans) {
           const nextLabel = nextStage ? stageLabels[nextStage] : '';
-          const nextColor = nextStage ? stageColors[nextStage] : '';
           transHeading.textContent = `What changes when you move from ${stageLabels[userStage]} to ${nextLabel}`;
 
           let html = '';
@@ -698,7 +704,7 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
         transSection.innerHTML = `
           <h2 class="section-heading">You're at the highest maturity stage</h2>
           <div class="transition-block">
-            <p style="font-size:0.9375rem;color:var(--color-text-secondary);line-height:1.6;">
+            <p class="fly-stage-copy">
               At the Fly stage, the focus shifts to continuous optimization, industry leadership, and embedding CS as a company-wide culture.
               Re-assess periodically to ensure you're maintaining excellence across all domains.
             </p>

@@ -126,31 +126,9 @@ function renderStageIndicator(el) {
   const stageInfo = getMaturityStage(scores.overallScore);
   if (!stageInfo) return;
 
-  const stageColors = {
-    crawl: 'var(--color-stage-crawl)',
-    walk: 'var(--color-stage-walk)',
-    run: 'var(--color-stage-run)',
-    fly: 'var(--color-stage-fly)',
-  };
-
   el.innerHTML = `
-    <span style="
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      background: ${stageColors[scores.stage] || 'var(--color-accent)'};
-      color: var(--color-bg);
-      font-size: 0.8125rem;
-      font-weight: 500;
-    ">
-      <span style="
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: currentColor;
-      "></span>
+    <span class="stage-badge stage-${scores.stage}" style="display:inline-flex;align-items:center;gap:0.5rem;">
+      <span style="width:6px;height:6px;border-radius:50%;background:currentColor;"></span>
       ${stageInfo.label} (${scores.overallScore})
     </span>
   `;

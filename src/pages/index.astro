@@ -16,7 +16,7 @@ const principles = frameworkData.principles;
       <!-- Left column: Text -->
       <div class="hp-hero-text" id="hp-hero-text">
         <h1 class="hp-hero-headline">
-          An open framework to assess your Customer Success organization's maturity and focus on what matters.
+          An open framework to assess your organization's Customer Success maturity and focus on what matters.
         </h1>
         <p class="hp-hero-sub">
           Distilled CS provides a structured approach to customer success — with a maturity assessment, stage-specific playbooks, benchmarks, and an execution checklist. Open source and vendor neutral.
@@ -32,14 +32,14 @@ const principles = frameworkData.principles;
         <svg class="hp-hero-svg" viewBox="0 0 400 420" role="img" aria-label="Strategy Loop: Assess, Execute, Transform — a continuous improvement cycle">
           <defs>
             <radialGradient id="hp-center-glow" cx="50%" cy="52%" r="50%">
-              <stop offset="0%" stop-color="rgba(245,166,35,0.07)" />
-              <stop offset="100%" stop-color="rgba(245,166,35,0)" />
+              <stop offset="0%" style="stop-color: color-mix(in srgb, var(--color-accent) 7%, transparent);" />
+              <stop offset="100%" style="stop-color: color-mix(in srgb, var(--color-accent) 0%, transparent);" />
             </radialGradient>
           </defs>
 
           <!-- Decorative orbital rings -->
           <g class="hp-orbital-group">
-            <circle cx="200" cy="215" r="185" fill="none" stroke="rgba(245,166,35,0.06)" stroke-width="1" stroke-dasharray="4 8" />
+            <circle cx="200" cy="215" r="185" fill="none" style="stroke: color-mix(in srgb, var(--color-accent) 6%, transparent);" stroke-width="1" stroke-dasharray="4 8" />
             <circle cx="200" cy="215" r="168" fill="none" stroke="rgba(91,154,139,0.05)" stroke-width="0.5" stroke-dasharray="2 12" />
             <circle cx="200" cy="30" r="2.5" fill="var(--color-accent)" opacity="0.4" />
             <circle cx="385" cy="215" r="2" fill="var(--color-secondary)" opacity="0.35" />
@@ -98,11 +98,7 @@ const principles = frameworkData.principles;
           {strategyLoop.phases.map((phase, i) => (
             <div class="hp-loop-phase-card scroll-reveal" style={`--reveal-delay: ${i * 0.1}s`}>
               <span class="hp-loop-phase-number">{String(i + 1).padStart(2, '0')}</span>
-              <div class="hp-loop-phase-content">
-                <h3 class="hp-loop-phase-title">{phase.label}</h3>
-                <p class="hp-loop-phase-tagline">{phase.tagline}</p>
-                <p class="hp-loop-phase-desc">{phase.description}</p>
-              </div>
+              <p class="hp-loop-phase-desc">{phase.description}</p>
             </div>
           ))}
         </div>
@@ -117,10 +113,10 @@ const principles = frameworkData.principles;
       <p class="hp-section-subheadline scroll-reveal">A progression model from reactive operations to predictive, data-led customer success. The assessment determines where your team currently sits.</p>
       <div class="hp-stages-grid">
         {stages.map((stage, i) => (
-          <div class="hp-stage-card scroll-reveal" style={`--stage-color: ${stage.color}; --stage-delay: ${i * 0.1}s`}>
-            <div class="hp-stage-color-bar" style={`background: ${stage.color}`}></div>
+          <div class={`hp-stage-card scroll-reveal stage-${stage.id}`} style={`--stage-delay: ${i * 0.1}s`}>
+            <div class="hp-stage-color-bar"></div>
             <div class="hp-stage-card-content">
-              <span class="hp-stage-label" style={`color: ${stage.color}`}>{stage.label}</span>
+              <span class="hp-stage-label">{stage.label}</span>
               <span class="hp-stage-subtitle">{stage.subtitle}</span>
               <ul class="hp-stage-chars">
                 {stage.key_characteristics.slice(0, 3).map(char => (
@@ -193,9 +189,9 @@ const principles = frameworkData.principles;
       </div>
       <h2 class="preview-modal-title" id="preview-modal-title">Early Preview</h2>
       <p class="preview-modal-body">
-        This site is currently under active development. You're seeing an early preview — some features may be incomplete or change before the full launch.
+        Thanks for checking this out. This is an early preview, features may be incomplete or change before launch.
       </p>
-      <p class="preview-modal-sub">Content and recommendations may not be fully accurate at this stage.</p>
+      <p class="preview-modal-sub">DistilledCS</p>
       <button class="preview-modal-btn" id="preview-modal-close" type="button">Got it</button>
     </div>
   </div>
@@ -213,7 +209,7 @@ const principles = frameworkData.principles;
     padding: 3rem 1.5rem 4rem;
     overflow: hidden;
     background:
-      radial-gradient(ellipse at 50% 35%, rgba(245, 166, 35, 0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 35%, color-mix(in srgb, var(--color-accent) 4%, transparent) 0%, transparent 60%),
       radial-gradient(ellipse at 70% 80%, rgba(91, 154, 139, 0.03) 0%, transparent 50%),
       var(--color-bg);
   }
@@ -461,50 +457,30 @@ const principles = frameworkData.principles;
 
   .hp-loop-phase-card {
     display: flex;
+    align-items: flex-start;
     gap: 1.25rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 0.75rem;
-    transition: border-color 0.25s ease-out;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .hp-loop-phase-card:hover {
-    border-color: rgba(245, 166, 35, 0.2);
+  .hp-loop-phase-card:last-child {
+    border-bottom: none;
   }
 
   .hp-loop-phase-number {
     font-family: var(--font-display);
-    font-size: 1.5rem;
-    color: var(--color-accent);
-    opacity: 0.5;
-    flex-shrink: 0;
-    line-height: 1;
-    padding-top: 0.125rem;
-  }
-
-  .hp-loop-phase-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .hp-loop-phase-title {
     font-size: 1.25rem;
-    color: var(--color-text-primary);
-  }
-
-  .hp-loop-phase-tagline {
-    font-size: 0.875rem;
     color: var(--color-accent);
-    font-weight: 500;
+    opacity: 0.6;
+    flex-shrink: 0;
+    line-height: 1.4;
   }
 
   .hp-loop-phase-desc {
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     color: var(--color-text-secondary);
-    line-height: 1.6;
-    margin-top: 0.25rem;
+    line-height: 1.65;
+    margin: 0;
   }
 
   /* ══════════════════════════════════════════
@@ -605,6 +581,7 @@ const principles = frameworkData.principles;
 
   .hp-stage-color-bar {
     height: 3px;
+    background: var(--stage-color);
   }
 
   .hp-stage-card-content {
@@ -616,6 +593,7 @@ const principles = frameworkData.principles;
     font-family: var(--font-display);
     font-size: 1.375rem;
     margin-bottom: 0.25rem;
+    color: var(--stage-color);
   }
 
   .hp-stage-subtitle {
@@ -752,7 +730,7 @@ const principles = frameworkData.principles;
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
-    background: rgba(245, 166, 35, 0.1);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
     color: var(--color-accent);
     margin-bottom: 1.25rem;
   }

@@ -252,7 +252,6 @@
           1,
           1.7
         ],
-        "color": "#E57373",
         "description": "CS exists but operates mostly on instinct and firefighting. Customer engagement is inconsistent, metrics are sparse or manually tracked, and most effort goes into reacting to problems rather than preventing them.",
         "typical_profile": "Early-stage companies with under $5M ARR, or larger companies that have recently formed a CS function. Team size is usually 1–3 people wearing multiple hats.",
         "key_characteristics": [
@@ -304,7 +303,6 @@
           1.8,
           2.5
         ],
-        "color": "#FFB74D",
         "description": "CS has organized its data and customers, established basic processes, but hasn't fully operationalized them at scale. The team is moving from reactive to structured, with defined segments and some playbooks in place.",
         "typical_profile": "Companies with $5M–$20M ARR that have had a CS team for 1–3 years. Team size is 4–10 people with emerging specialization.",
         "key_characteristics": [
@@ -361,7 +359,6 @@
           2.6,
           3.3
         ],
-        "color": "#81C784",
         "description": "CS is data-driven and proactive. Playbooks govern the customer lifecycle, health scores trigger automated actions, and CS is a recognized revenue contributor. The team operates with discipline and consistency at scale.",
         "typical_profile": "Companies with $20M–$100M ARR that have had a CS team for 3+ years. Team size is 11–25 with dedicated CS Ops, possibly CS leadership at VP+ level.",
         "key_characteristics": [
@@ -419,7 +416,6 @@
           3.4,
           4
         ],
-        "color": "#64B5F6",
         "description": "CS is a strategic growth engine. Predictive analytics anticipate customer needs before they arise. CS influences product roadmap, drives expansion revenue, and is fully integrated into the company's go-to-market strategy.",
         "typical_profile": "Companies with $100M+ ARR with mature CS functions spanning 3+ years. Large teams with specialized roles, robust CS Ops, and C-suite representation.",
         "key_characteristics": [

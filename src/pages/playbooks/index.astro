@@ -8,7 +8,6 @@ const stages = frameworkData.maturity_stages.stages;
 
 const stageOrder = ['crawl', 'walk', 'run', 'fly'] as const;
 const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
-const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
 
 const allMetrics = frameworkData.metrics_directory.metrics;
 const metricLabels: Record<string, string> = {};
@@ -40,17 +39,16 @@ allMetrics.forEach((m: any) => { metricLabels[m.id] = m.name; });
     <!-- Playbooks by stage -->
     {stageOrder.map((stageId) => {
       const stagePlaybooks = playbooks[stageId];
-      const color = stageColors[stageId];
       return (
-        <section class="stage-section" id={`stage-${stageId}`} data-stage={stageId}>
+        <section class={`stage-section stage-${stageId}`} id={`stage-${stageId}`} data-stage={stageId}>
           <div class="stage-section-header">
-            <span class="stage-badge" style={`background: ${color}; color: #0a0a0f;`}>{stageLabels[stageId]}</span>
+            <span class={`stage-badge stage-${stageId}`}>{stageLabels[stageId]}</span>
             <span class="stage-section-label">Stage</span>
             <span class="stage-contextual-tag" data-stage-tag={stageId} style="display:none;"></span>
           </div>
           <div class="playbooks-grid">
             {stagePlaybooks.map((pb: any) => (
-              <a href={`/playbooks/${pb.id}/`} class="playbook-card" style={`--card-accent: ${color};`}>
+              <a href={`/playbooks/${pb.id}/`} class={`playbook-card stage-${stageId}`}>
                 <div class="playbook-card-header">
                   <h2 class="playbook-card-title">{pb.title}</h2>
                   <span class="playbook-duration">{pb.estimated_duration}</span>
@@ -168,19 +166,19 @@ allMetrics.forEach((m: any) => { metricLabels[m.id] = m.name; });
   /* Playbook cards grid */
   .playbooks-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
   }
 
   @media (min-width: 640px) {
     .playbooks-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
   @media (min-width: 1024px) {
     .playbooks-grid {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
@@ -194,12 +192,13 @@ allMetrics.forEach((m: any) => { metricLabels[m.id] = m.name; });
     border-radius: 0.75rem;
     text-decoration: none;
     transition: border-color 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
-    border-top: 3px solid var(--card-accent);
+    border-top: 3px solid var(--stage-color);
+    min-width: 0;
   }
 
   .playbook-card:hover {
-    border-color: rgba(245, 166, 35, 0.25);
-    border-top-color: var(--card-accent);
+    border-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
+    border-top-color: var(--stage-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
@@ -252,7 +251,8 @@ allMetrics.forEach((m: any) => { metricLabels[m.id] = m.name; });
     background: var(--color-accent-subtle);
     color: var(--color-accent);
     border-radius: 9999px;
-    white-space: nowrap;
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 
   .metric-pill-more {

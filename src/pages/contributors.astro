@@ -1,0 +1,382 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// To add a new contributor, just append an object to this array.
+// Roles: "Creator & Maintainer" | "Maintainer" | "Contributor"
+const contributors = [
+  {
+    name: 'Saneesh',
+    role: 'Creator & Maintainer',
+    bio: 'Customer Success practitioner. Started Distilled CS as an open, vendor-neutral way for CS teams to assess their maturity and figure out what to do next.',
+    initials: 'S',
+    links: {
+      website: 'https://saneesh.net',
+      github: 'https://github.com/saneeshnp',
+      linkedin: 'https://www.linkedin.com/in/saneesh-np/',
+    },
+  },
+];
+
+const maintainers = contributors.filter(c => c.role.includes('Maintainer'));
+const otherContributors = contributors.filter(c => !c.role.includes('Maintainer'));
+---
+
+<BaseLayout
+  title="Contributors"
+  description="The people behind Distilled CS — an open, vendor-neutral Customer Success Strategy & Maturity Framework."
+>
+  <div class="container contributors-page">
+
+    <!-- Header -->
+    <header class="contributors-header">
+      <p class="eyebrow">The people behind the framework</p>
+      <h1 class="page-title">Contributors</h1>
+      <p class="page-intro">
+        Distilled CS is an open, vendor-neutral framework built in the open. It exists because Customer Success deserves a shared language for strategy and maturity — one that isn't tied to any tool, vendor, or playbook-for-sale.
+      </p>
+    </header>
+
+    <!-- Maintainers -->
+    <section class="contributors-section">
+      <h2 class="section-heading">Maintainers</h2>
+      <div class="contributors-grid">
+        {maintainers.map(person => (
+          <article class="contributor-card">
+            <div class="contributor-avatar" aria-hidden="true">{person.initials}</div>
+            <div class="contributor-body">
+              <h3 class="contributor-name">{person.name}</h3>
+              <p class="contributor-role">{person.role}</p>
+              <p class="contributor-bio">{person.bio}</p>
+              <div class="contributor-links">
+                {person.links.website && (
+                  <a href={person.links.website} target="_blank" rel="noopener noreferrer" aria-label={`${person.name}'s website`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span>Website</span>
+                  </a>
+                )}
+                {person.links.github && (
+                  <a href={person.links.github} target="_blank" rel="noopener noreferrer" aria-label={`${person.name}'s GitHub`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.01c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.42-2.69 5.39-5.26 5.68.41.35.78 1.05.78 2.12v3.14c0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+                    <span>GitHub</span>
+                  </a>
+                )}
+                {person.links.linkedin && (
+                  <a href={person.links.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`${person.name}'s LinkedIn`}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+                    <span>LinkedIn</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Contributors -->
+    {otherContributors.length > 0 && (
+      <section class="contributors-section">
+        <h2 class="section-heading">Contributors</h2>
+        <div class="contributors-grid">
+          {otherContributors.map(person => (
+            <article class="contributor-card">
+              <div class="contributor-avatar" aria-hidden="true">{person.initials}</div>
+              <div class="contributor-body">
+                <h3 class="contributor-name">{person.name}</h3>
+                <p class="contributor-role">{person.role}</p>
+                <p class="contributor-bio">{person.bio}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- How to contribute -->
+    <section class="contribute-cta is-muted" aria-disabled="true">
+      <span class="coming-soon-tag">Coming soon</span>
+      <h2 class="contribute-heading">Want to contribute?</h2>
+      <p class="contribute-body">
+        Distilled CS gets better when practitioners share what works. Whether it's a new playbook, a metric refinement, a correction, or just feedback, contributions of any size will be welcome once the repository is public.
+      </p>
+      <ul class="contribute-list">
+        <li><strong>Open an issue</strong> to suggest a change, report a bug, or propose a new playbook or metric.</li>
+        <li><strong>Submit a pull request</strong> with edits to the framework data, content, or site.</li>
+        <li><strong>Share your experience</strong>, what worked, what didn't, and what's missing from your stage.</li>
+      </ul>
+      <div class="contribute-actions">
+        <span class="btn btn-primary is-disabled" aria-disabled="true">View on GitHub</span>
+        <span class="btn btn-secondary is-disabled" aria-disabled="true">Open an Issue</span>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .contributors-page {
+    padding-top: 3rem;
+    padding-bottom: 6rem;
+    max-width: 56rem;
+    margin-inline: auto;
+  }
+
+  /* ── Header ── */
+  .contributors-header {
+    margin-bottom: 4rem;
+  }
+
+  .eyebrow {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .page-intro {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    max-width: 42rem;
+  }
+
+  /* ── Sections ── */
+  .contributors-section {
+    margin-bottom: 4rem;
+  }
+
+  .section-heading {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .contributors-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .contributors-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ── Card ── */
+  .contributor-card {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    transition: border-color 0.2s ease-out, transform 0.2s ease-out;
+  }
+
+  .contributor-card:hover {
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+  }
+
+  .contributor-avatar {
+    flex-shrink: 0;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #d4891b 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-bg);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .contributor-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .contributor-name {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    margin: 0 0 0.125rem;
+    color: var(--color-text-primary);
+  }
+
+  .contributor-role {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    margin: 0 0 0.75rem;
+  }
+
+  .contributor-bio {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+  }
+
+  .contributor-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .contributor-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .contributor-links a:hover {
+    color: var(--color-text-primary);
+  }
+
+  .contributor-links svg {
+    flex-shrink: 0;
+  }
+
+  /* ── Contribute CTA ── */
+  .contribute-cta {
+    position: relative;
+    padding: 2.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+
+  .contribute-cta.is-muted {
+    opacity: 0.65;
+  }
+
+  .coming-soon-tag {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    margin-bottom: 1rem;
+  }
+
+  .btn.is-disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.5;
+    background: transparent;
+    color: var(--color-text-muted);
+    border-color: var(--color-border);
+  }
+
+  .contribute-heading {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .contribute-body {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+    max-width: 40rem;
+  }
+
+  .contribute-list {
+    list-style: none;
+    margin: 0 0 1.75rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .contribute-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .contribute-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+  }
+
+  .contribute-list strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .contribute-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.25s ease-out;
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+    color: var(--color-bg);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--color-text-secondary);
+    border-color: var(--color-border);
+  }
+
+  .btn-secondary:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-border-hover);
+    transform: translateY(-1px);
+  }
+</style>

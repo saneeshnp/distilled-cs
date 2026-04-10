@@ -2,23 +2,80 @@
 
 @import "tailwindcss";
 
+/*
+ * Theme tokens
+ * ──────────────
+ * Light mode is the default (no attribute on <html>).
+ * Dark mode activates via <html data-theme="dark">.
+ * The theme is persisted in localStorage under key "distilledcs_theme".
+ * A FOUC-prevention script in BaseLayout.astro sets the attribute before first paint.
+ */
+
 :root {
+  color-scheme: light;
+
   /* Background & Surfaces */
-  --color-bg: #0a0a0f;
-  --color-surface: #12121a;
-  --color-surface-hover: #1a1a26;
+  --color-bg: #FAFAF8;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F5F4F1;
+
+  /* Text */
+  --color-text-primary: #1a1a2e;
+  --color-text-secondary: #5a5768;
+  --color-text-muted: #9490a0;
+
+  /* Accent — deep teal (light mode) */
+  --color-accent: #2D6A5A;
+  --color-accent-hover: #358272;
+  --color-accent-subtle: rgba(45, 106, 90, 0.08);
+
+  /* Secondary — lighter teal */
+  --color-secondary: #4a8a7b;
+  --color-secondary-hover: #5b9a8b;
+
+  /* Status */
+  --color-success: #4CAF50;
+  --color-warning: #F5A623;
+  --color-danger: #E53935;
+
+  /* Maturity stage colors — Material 700 (saturated for white backgrounds) */
+  --color-stage-crawl: #D32F2F;
+  --color-stage-walk: #F57C00;
+  --color-stage-run: #388E3C;
+  --color-stage-fly: #1976D2;
+
+  /* Foreground color for text/icons sitting on a stage-colored background.
+     White in light mode (on deep Material 700), dark in dark mode (on soft pastels). */
+  --color-on-stage: #ffffff;
+
+  /* Typography (theme-independent) */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
+
+  /* Borders */
+  --color-border: rgba(26, 26, 46, 0.1);
+  --color-border-hover: rgba(26, 26, 46, 0.18);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Background & Surfaces */
+  --color-bg: #0f0f17;
+  --color-surface: #161622;
+  --color-surface-hover: #1e1e2e;
 
   /* Text */
   --color-text-primary: #f0ede6;
   --color-text-secondary: #a8a4a0;
   --color-text-muted: #6b6662;
 
-  /* Accent — warm amber/gold */
-  --color-accent: #F5A623;
-  --color-accent-hover: #f7b84a;
-  --color-accent-subtle: rgba(245, 166, 35, 0.12);
+  /* Accent — bright teal (dark mode) */
+  --color-accent: #4ECDC4;
+  --color-accent-hover: #6FE8E0;
+  --color-accent-subtle: rgba(78, 205, 196, 0.12);
 
-  /* Secondary — muted teal */
+  /* Secondary */
   --color-secondary: #5b9a8b;
   --color-secondary-hover: #6fb3a2;
 
@@ -27,19 +84,56 @@
   --color-warning: #FFB74D;
   --color-danger: #E57373;
 
-  /* Maturity stage colors (from JSON) */
+  /* Maturity stage colors — Material 300 (pastels for dark backgrounds) */
   --color-stage-crawl: #E57373;
   --color-stage-walk: #FFB74D;
   --color-stage-run: #81C784;
   --color-stage-fly: #64B5F6;
 
-  /* Typography */
-  --font-display: 'Instrument Serif', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
+  /* Foreground on stage bg — dark text on pastel stage colors in dark mode */
+  --color-on-stage: #0a0a0f;
 
   /* Borders */
   --color-border: rgba(240, 237, 230, 0.08);
   --color-border-hover: rgba(240, 237, 230, 0.15);
+}
+
+/*
+ * Stage utility classes
+ * ─────────────────────
+ * Apply `.stage-crawl` / `.stage-walk` / `.stage-run` / `.stage-fly` to any
+ * element that needs to pick up the current stage color. The class defines
+ * a single custom property `--stage-color` that scoped styles can reference
+ * via `var(--stage-color)`. Because the class points at theme-aware
+ * `--color-stage-*` variables, the stage color flips automatically when the
+ * theme toggles.
+ *
+ * Usage:
+ *   <span class="stage-crawl" style="color: var(--stage-color)">Crawl</span>
+ *   or from a scoped stylesheet:
+ *     .stage-dot { background: var(--stage-color); }
+ */
+.stage-crawl { --stage-color: var(--color-stage-crawl); }
+.stage-walk  { --stage-color: var(--color-stage-walk); }
+.stage-run   { --stage-color: var(--color-stage-run); }
+.stage-fly   { --stage-color: var(--color-stage-fly); }
+
+/*
+ * Stage badge base class.
+ * Combine with a `.stage-*` utility, e.g. `class="stage-badge stage-walk"`.
+ * Uses `--color-on-stage` for the foreground so contrast flips with the theme
+ * (white on saturated 700-weight in light mode, dark on pastel 300-weight in dark).
+ */
+.stage-badge {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  border-radius: 9999px;
+  background: var(--stage-color, var(--color-accent));
+  color: var(--color-on-stage);
+  line-height: 1.2;
 }
 
 /* Skip to content */
@@ -63,10 +157,14 @@
   color: var(--color-bg);
 }
 
-/* Preview banner */
+/* Preview banner.
+   Intentionally uses hardcoded red regardless of theme — this is a warning alert
+   that should read the same in both light and dark modes. Opaque background
+   ensures WCAG AA contrast (6.4:1 for white text on #b42828) without depending
+   on what the underlying page background is. */
 .preview-banner {
-  background: rgba(180, 40, 40, 0.65);
-  border-bottom: 1px solid rgba(229, 115, 115, 0.5);
+  background: #b42828;
+  border-bottom: 1px solid #d64545;
   position: relative;
   z-index: 1001;
 }
@@ -142,6 +240,9 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Smooth transition when toggling themes. Only background + color,
+     so individual components can still animate faster on hover. */
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 h1, h2, h3, h4, h5, h6 {

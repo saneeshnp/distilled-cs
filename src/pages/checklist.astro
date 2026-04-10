@@ -7,7 +7,6 @@ const stages = frameworkData.maturity_stages.stages;
 const playbooks = frameworkData.playbooks;
 const stageOrder = ['crawl', 'walk', 'run', 'fly'];
 
-const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
 const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
 ---
 
@@ -33,10 +32,10 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
       {stages.map(stage => {
         const stagePlaybooks = (playbooks as any)[stage.id] || [];
         return (
-          <div class="stage-checklist-block">
+          <div class={`stage-checklist-block stage-${stage.id}`}>
             <h2 class="stage-checklist-title">
-              <span class="stage-dot" style={`background: ${stageColors[stage.id]}`}></span>
-              <span style={`color: ${stageColors[stage.id]}`}>{stage.label}</span>
+              <span class="stage-dot"></span>
+              <span class="stage-checklist-label">{stage.label}</span>
               <span class="stage-checklist-subtitle">{stage.subtitle}</span>
             </h2>
             {stagePlaybooks.length > 0 && (
@@ -182,6 +181,11 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
     height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
+    background: var(--stage-color);
+  }
+
+  .stage-checklist-label {
+    color: var(--stage-color);
   }
 
   .stage-checklist-subtitle {
@@ -243,6 +247,7 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
   :global(.checklist-group-title) {
     font-family: var(--font-display);
     font-size: 1.25rem;
+    color: var(--stage-color);
   }
 
   :global(.checklist-group-count) {
@@ -262,6 +267,7 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
     height: 100%;
     border-radius: 2px;
     transition: width 0.3s ease-out;
+    background: var(--stage-color, var(--color-accent));
   }
 
   :global(.checklist-items) {
@@ -424,7 +430,7 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
     gap: 0.25rem;
     padding: 1rem 1.25rem;
     background: var(--color-accent-subtle);
-    border: 1px solid rgba(245, 166, 35, 0.2);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
     border-radius: 0.5rem;
     text-decoration: none;
     transition: border-color 0.2s, background-color 0.2s;
@@ -432,7 +438,7 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
 
   :global(.next-step-link:hover) {
     border-color: var(--color-accent);
-    background: rgba(245, 166, 35, 0.08);
+    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
   }
 
   :global(.next-step-label) {
@@ -456,7 +462,6 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
   const stages = frameworkData.maturity_stages.stages;
   const playbooks = frameworkData.playbooks as Record<string, any[]>;
   const stageOrder = ['crawl', 'walk', 'run', 'fly'];
-  const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
   const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
 
   const CHECKLIST_KEY = 'distilledcs_checklist';
@@ -485,7 +490,6 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
       // Build groups: Foundation (previous stage), Current, Next milestone
       interface ChecklistGroup {
         title: string;
-        color: string;
         stageId: string;
         items: { id: string; text: string; estimated_time?: string; why_it_matters?: string }[];
       }
@@ -505,7 +509,6 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
         const prevStage = stages[userIdx - 1];
         groups.push({
           title: `Foundation (${stageLabels[prevStage.id]} — should be done)`,
-          color: stageColors[prevStage.id],
           stageId: prevStage.id,
           items: mapActions(prevStage),
         });
@@ -514,7 +517,6 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
       const currentStage = stages[userIdx];
       groups.push({
         title: `Current Priorities (${stageLabels[currentStage.id]})`,
-        color: stageColors[currentStage.id],
         stageId: currentStage.id,
         items: mapActions(currentStage),
       });
@@ -523,7 +525,6 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
         const nextStage = stages[userIdx + 1];
         groups.push({
           title: `Next Milestone (${stageLabels[nextStage.id]})`,
-          color: stageColors[nextStage.id],
           stageId: nextStage.id,
           items: mapActions(nextStage),
         });
@@ -568,14 +569,14 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
             : '';
 
           html += `
-            <div class="checklist-group">
+            <div class="checklist-group stage-${group.stageId}">
               <div class="checklist-group-header">
-                <span class="checklist-group-title" style="color:${group.color}">${group.title}</span>
+                <span class="checklist-group-title">${group.title}</span>
                 <span class="checklist-group-count">${groupChecked}/${groupTotal}</span>
               </div>
               ${playbookLinksHtml}
               <div class="checklist-progress-bar">
-                <div class="checklist-progress-fill" style="width:${groupPct}%;background:${group.color}"></div>
+                <div class="checklist-progress-fill" style="width:${groupPct}%"></div>
               </div>
               <div class="checklist-items">
                 ${group.items.map(item => {

@@ -1,4 +1,6 @@
 ---
+import ThemeToggle from './ThemeToggle.astro';
+
 const pathname = Astro.url.pathname;
 const isHome = pathname === '/';
 
@@ -124,18 +126,22 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
         </li>
       </ul>
       <div class="stage-badge" id="nav-stage-badge" style="display:none;" aria-label="Your maturity stage"></div>
+      <ThemeToggle />
     </nav>
 
-    <button
-      class="mobile-toggle"
+    <div class="mobile-header-actions">
+      <ThemeToggle />
+      <button
+        class="mobile-toggle"
       id="mobile-menu-toggle"
       aria-label="Toggle navigation menu"
       aria-expanded="false"
     >
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
   </div>
 
   <nav class="nav-mobile" id="mobile-nav" aria-label="Mobile navigation" hidden>
@@ -251,7 +257,7 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: rgba(10, 10, 15, 0.85);
+    background-color: color-mix(in srgb, var(--color-bg) 85%, transparent);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--color-border);
   }
@@ -393,13 +399,17 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
     background-color: var(--color-surface-hover);
   }
 
-  .stage-badge {
+  /* The actual `.stage-badge` look (background/color/padding) lives in
+     global.css so it flips with the theme. Scoped rule only adds nav spacing. */
+  #nav-stage-badge {
     margin-left: 0.75rem;
-    padding: 0.25rem 0.625rem;
-    font-size: 0.75rem;
-    border-radius: 9999px;
-    font-family: var(--font-body);
-    font-weight: 500;
+  }
+
+  /* Mobile header actions: theme toggle + hamburger on small screens */
+  .mobile-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
   }
 
   /* Mobile toggle */
@@ -418,6 +428,9 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
       display: flex;
     }
     .mobile-toggle {
+      display: none;
+    }
+    .mobile-header-actions {
       display: none;
     }
   }
@@ -565,7 +578,7 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
     });
   });
 
-  // Show stage badge if assessment completed
+  // Show stage badge if assessment completed — class-based so colors flip with theme.
   try {
     const completed = localStorage.getItem('distilledcs_completed');
     const scoresRaw = localStorage.getItem('distilledcs_scores');
@@ -573,17 +586,10 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
       const scores = JSON.parse(scoresRaw);
       const badge = document.getElementById('nav-stage-badge');
       if (badge && scores.stage) {
-        const stageColors = {
-          crawl: 'var(--color-stage-crawl)',
-          walk: 'var(--color-stage-walk)',
-          run: 'var(--color-stage-run)',
-          fly: 'var(--color-stage-fly)',
-        };
         const label = scores.stage.charAt(0).toUpperCase() + scores.stage.slice(1);
         badge.textContent = label;
         badge.style.display = 'inline-block';
-        badge.style.backgroundColor = stageColors[scores.stage] || 'var(--color-accent)';
-        badge.style.color = '#0a0a0f';
+        badge.classList.add('stage-badge', `stage-${scores.stage}`);
       }
     }
   } catch {

@@ -364,12 +364,16 @@ const stages = frameworkData.maturity_stages.stages;
     font-size: 1.125rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
+    background: color-mix(in srgb, var(--stage-color) 14%, transparent);
+    color: var(--stage-color);
+    border: 1px solid color-mix(in srgb, var(--stage-color) 30%, transparent);
   }
 
   :global(.results-stage-name) {
     font-family: var(--font-display);
     font-size: 2.5rem;
     margin-bottom: 0.375rem;
+    color: var(--stage-color);
   }
 
   :global(.results-stage-subtitle) {
@@ -417,6 +421,7 @@ const stages = frameworkData.maturity_stages.stages;
   :global(.domain-score-bar) {
     height: 100%;
     border-radius: 4px;
+    background: var(--stage-color, var(--color-accent));
     transition: width 0.6s ease-out;
   }
 
@@ -435,6 +440,16 @@ const stages = frameworkData.maturity_stages.stages;
     font-size: 0.75rem;
     font-weight: 600;
     margin-left: 0.5rem;
+  }
+
+  :global(.highlight-strong) {
+    background: color-mix(in srgb, var(--color-stage-run) 18%, transparent);
+    color: var(--color-stage-run);
+  }
+
+  :global(.highlight-weak) {
+    background: color-mix(in srgb, var(--color-stage-crawl) 18%, transparent);
+    color: var(--color-stage-crawl);
   }
 
   :global(.priority-actions-list) {
@@ -547,13 +562,10 @@ const stages = frameworkData.maturity_stages.stages;
     const weakestId = sorted[sorted.length - 1][0];
     const weakest3 = sorted.slice(-3).reverse().map(([id]) => domains.find((d: any) => d.id === id));
 
-    const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
-    const color = stageColors[stageId] || '#F5A623';
-
     return `
-      <div class="results-header">
-        <div class="results-stage-badge" style="background: ${color}20; color: ${color}; border: 1px solid ${color}40;">Your Maturity Stage</div>
-        <h1 class="results-stage-name" style="color: ${color}">${stage?.label || stageId}</h1>
+      <div class="results-header stage-${stageId}">
+        <div class="results-stage-badge">Your Maturity Stage</div>
+        <h1 class="results-stage-name">${stage?.label || stageId}</h1>
         <p class="results-stage-subtitle">${stage?.subtitle || ''}</p>
         <p class="results-overall-score">Overall score: ${overallScore} / 4.0</p>
       </div>
@@ -563,17 +575,17 @@ const stages = frameworkData.maturity_stages.stages;
         ${sorted.map(([id, score]) => {
           const d = domains.find((dm: any) => dm.id === id);
           const pct = ((score / 4) * 100).toFixed(0);
-          const barColor = score >= 3.4 ? '#64B5F6' : score >= 2.6 ? '#81C784' : score >= 1.8 ? '#FFB74D' : '#E57373';
+          const barStage = score >= 3.4 ? 'fly' : score >= 2.6 ? 'run' : score >= 1.8 ? 'walk' : 'crawl';
           const isStrong = id === strongestId;
           const isWeak = id === weakestId;
-          return `<div class="domain-score-row">
+          return `<div class="domain-score-row stage-${barStage}">
             <span class="domain-score-label">
               ${d?.label || id}
-              ${isStrong ? '<span class="highlight-tag" style="background:#81C78430;color:#81C784;">Strongest</span>' : ''}
-              ${isWeak ? '<span class="highlight-tag" style="background:#E5737330;color:#E57373;">Needs focus</span>' : ''}
+              ${isStrong ? '<span class="highlight-tag highlight-strong">Strongest</span>' : ''}
+              ${isWeak ? '<span class="highlight-tag highlight-weak">Needs focus</span>' : ''}
             </span>
             <div class="domain-score-bar-wrap">
-              <div class="domain-score-bar" style="width:${pct}%;background:${barColor};"></div>
+              <div class="domain-score-bar" style="width:${pct}%"></div>
             </div>
             <span class="domain-score-value">${score}</span>
           </div>`;

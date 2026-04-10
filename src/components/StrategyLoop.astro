@@ -12,8 +12,6 @@ const phases = [
   { id: 'execute', label: 'Execute', tagline: 'Act on what matters', href: '/playbooks/', icon: 'rocket' },
   { id: 'transform', label: 'Transform', tagline: 'Measure, level up, repeat', href: '/transform/', icon: 'refresh' },
 ];
-
-const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
 ---
 
 <div class={`strategy-loop strategy-loop--${size}`} role="img" aria-label="Strategy Loop: Assess, Execute, Transform — a continuous improvement cycle for CS maturity">
@@ -40,14 +38,9 @@ const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
       <!-- Arc from Transform (bottom-left) to Assess (top) -->
       <path class="loop-arrow loop-arrow-3" d="M 70 290 A 140 140 0 0 1 175 85" fill="none" stroke={`url(#arrow-grad-${size})`} stroke-width="2" marker-end={`url(#arrow-${size})`} />
 
-      <!-- Center hub: maturity stage dots -->
+      <!-- Center hub: maturity label -->
       <g class="loop-hub">
-        {stageColors.map((color, i) => {
-          const cx = 190 + (i % 2) * 20;
-          const cy = 190 + Math.floor(i / 2) * 20;
-          return <circle cx={cx} cy={cy} r="5" fill={color} opacity="0.7" />;
-        })}
-        <text x="200" y="215" text-anchor="middle" fill="var(--color-text-muted)" font-size="9" font-family="var(--font-body)">CS Maturity</text>
+        <text x="200" y="208" text-anchor="middle" fill="var(--color-text-secondary)" font-size="22" font-weight="500" font-family="var(--font-display)" letter-spacing="0.5">CS Maturity</text>
       </g>
     </svg>
 
@@ -78,6 +71,39 @@ const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
             </div>
           )}
         </div>
+      );
+    })}
+  </div>
+
+  <!-- Desktop (sm wayfinding): Horizontal row layout -->
+  <div class="loop-row">
+    {phases.map((phase, i) => {
+      const isActive = activePhase === phase.id;
+      const cardClass = `loop-row-card ${isActive ? 'is-active' : ''}`;
+      const cardInner = (
+        <>
+          <span class="loop-row-number">{String(i + 1).padStart(2, '0')}</span>
+          <div class="loop-row-content">
+            <span class="loop-row-label">{phase.label}</span>
+            <span class="loop-row-tagline">{phase.tagline}</span>
+          </div>
+        </>
+      );
+      return (
+        <>
+          {interactive ? (
+            <a href={phase.href} class={cardClass} aria-label={`${phase.label}: ${phase.tagline}`}>{cardInner}</a>
+          ) : (
+            <div class={cardClass} aria-label={`${phase.label}: ${phase.tagline}`}>{cardInner}</div>
+          )}
+          {i < 2 && (
+            <span class="loop-row-arrow" aria-hidden="true">
+              <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
+                <path d="M1 6h20m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          )}
+        </>
       );
     })}
   </div>
@@ -137,19 +163,26 @@ const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
   }
 
   /* ── Size variants ── */
-  .strategy-loop--sm { max-width: 220px; margin: 0 auto; }
+  .strategy-loop--sm { max-width: 960px; margin: 0 auto; }
   .strategy-loop--md { max-width: 400px; margin: 0 auto; }
   .strategy-loop--lg { max-width: 520px; margin: 0 auto; }
 
-  /* ── Circular (desktop only) ── */
+  /* ── Circular (md/lg desktop only) ── */
   .loop-circular {
     display: none;
     position: relative;
     aspect-ratio: 1;
   }
 
+  /* ── Row layout (sm desktop only) ── */
+  .loop-row {
+    display: none;
+  }
+
   @media (min-width: 768px) {
-    .loop-circular { display: block; }
+    .strategy-loop--md .loop-circular,
+    .strategy-loop--lg .loop-circular { display: block; }
+    .strategy-loop--sm .loop-row { display: flex; }
     .loop-linear { display: none !important; }
   }
 
@@ -196,9 +229,9 @@ const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
   }
 
   a.loop-node-link:hover {
-    border-color: rgba(245, 166, 35, 0.3);
+    border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(245, 166, 35, 0.08);
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--color-accent) 8%, transparent);
   }
 
   a.loop-node-link:focus-visible {
@@ -230,8 +263,8 @@ const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
 
   /* Active phase pulse */
   .loop-node--active .loop-node-link {
-    border-color: rgba(245, 166, 35, 0.35);
-    box-shadow: 0 0 20px rgba(245, 166, 35, 0.1);
+    border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-accent) 10%, transparent);
   }
 
   .loop-node--active .loop-node-label {
@@ -239,8 +272,8 @@ const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
   }
 
   @keyframes subtle-pulse {
-    0%, 100% { box-shadow: 0 0 12px rgba(245, 166, 35, 0.08); }
-    50% { box-shadow: 0 0 24px rgba(245, 166, 35, 0.18); }
+    0%, 100% { box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent) 8%, transparent); }
+    50% { box-shadow: 0 0 24px color-mix(in srgb, var(--color-accent) 18%, transparent); }
   }
 
   .loop-node--active .loop-node-link {
@@ -273,6 +306,119 @@ const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
     font-size: 0.8125rem;
   }
 
+  /* ── Row layout (sm wayfinding) ── */
+  .loop-row {
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.875rem;
+    width: 100%;
+  }
+
+  .loop-row-card {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.875rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s ease-out, background-color 0.2s ease-out, transform 0.2s ease-out;
+  }
+
+  a.loop-row-card:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    transform: translateY(-1px);
+  }
+
+  a.loop-row-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .loop-row-number {
+    font-family: var(--font-display);
+    font-size: 1.625rem;
+    color: var(--color-text-muted);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .loop-row-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .loop-row-label {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+  }
+
+  .loop-row-tagline {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .loop-row-arrow {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-accent);
+    opacity: 0.55;
+    flex-shrink: 0;
+  }
+
+  .loop-row-arrow svg {
+    width: 32px;
+    height: 16px;
+  }
+
+  /* Active card: accent tint + blinking glow */
+  .loop-row-card.is-active {
+    border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+    background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+    animation: loop-row-pulse 2.6s ease-in-out infinite;
+  }
+
+  .loop-row-card.is-active .loop-row-number {
+    color: var(--color-accent);
+    opacity: 0.8;
+  }
+
+  .loop-row-card.is-active .loop-row-label {
+    color: var(--color-accent);
+  }
+
+  .loop-row-card.is-active .loop-row-tagline {
+    color: color-mix(in srgb, var(--color-accent) 75%, transparent);
+  }
+
+  @keyframes loop-row-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent) 15%, transparent), 0 0 10px color-mix(in srgb, var(--color-accent) 8%, transparent);
+    }
+    50% {
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent) 40%, transparent), 0 0 22px color-mix(in srgb, var(--color-accent) 22%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loop-row-card.is-active {
+      animation: none;
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent) 35%, transparent);
+    }
+  }
+
   /* ── Linear / Mobile ── */
   .loop-linear {
     display: flex;
@@ -297,7 +443,7 @@ const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
   }
 
   a.loop-linear-node:hover {
-    border-color: rgba(245, 166, 35, 0.3);
+    border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
   }
 
   a.loop-linear-node:focus-visible {
@@ -306,8 +452,8 @@ const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
   }
 
   .loop-linear-node--active {
-    border-color: rgba(245, 166, 35, 0.35);
-    box-shadow: 0 0 16px rgba(245, 166, 35, 0.08);
+    border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--color-accent) 8%, transparent);
   }
 
   .loop-linear-step {
@@ -364,23 +510,7 @@ const stageColors = ['#E57373', '#FFB74D', '#81C784', '#64B5F6'];
     opacity: 0.6;
   }
 
-  /* Size-specific for linear too */
-  .strategy-loop--sm .loop-linear-node {
-    padding: 0.625rem 1rem;
-    max-width: 240px;
-  }
-  .strategy-loop--sm .loop-linear-label {
-    font-size: 0.9375rem;
-  }
-  .strategy-loop--sm .loop-linear-tagline {
-    font-size: 0.75rem;
-  }
-  .strategy-loop--sm .loop-linear-step {
-    font-size: 1rem;
-  }
-  .strategy-loop--sm .loop-linear-connector svg {
-    height: 20px;
-  }
+  /* sm size keeps default linear sizing on mobile so the diagram reads clearly */
 </style>
 
 <script>

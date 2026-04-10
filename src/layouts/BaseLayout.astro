@@ -22,6 +22,20 @@ const pageTitle = title === 'Distilled CS' ? title : `${title} | Distilled CS`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* FOUC prevention: set data-theme attribute before first paint.
+        Runs inline in <head> before any stylesheet to avoid a flash of
+        light mode when the user has chosen dark. Light is the default,
+        so only explicit "dark" needs to flip the attribute. */}
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('distilledcs_theme');
+          if (stored === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
 

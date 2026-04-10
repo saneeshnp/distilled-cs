@@ -4,7 +4,6 @@ import frameworkData from '../../data/lean-cs-data.json';
 
 const stageOrder = ['crawl', 'walk', 'run', 'fly'];
 const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
-const stageColors: Record<string, string> = { crawl: '#E57373', walk: '#FFB74D', run: '#81C784', fly: '#64B5F6' };
 
 // Build flat list of all playbooks with stage info and ordering
 const allPlaybooks: any[] = [];
@@ -37,8 +36,9 @@ export function getStaticPaths() {
 
 const { playbook, stageId, prevPlaybook, nextPlaybook } = Astro.props;
 
-const color = stageColors[stageId];
 const stageLabel = stageLabels[stageId];
+const prevStageClass = prevPlaybook ? `stage-${prevPlaybook.stageId}` : '';
+const nextStageClass = nextPlaybook ? `stage-${nextPlaybook.stageId}` : '';
 
 // Resolve metric IDs to names and links
 const allMetrics = frameworkData.metrics_directory.metrics;
@@ -49,15 +49,15 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
 ---
 
 <BaseLayout title={playbook.title} description={playbook.objective}>
-  <div class="container playbook-detail-page">
+  <div class={`container playbook-detail-page stage-${stageId}`}>
 
     <!-- Back link -->
     <a href="/playbooks/" class="back-link">&larr; All Playbooks</a>
 
     <!-- Playbook header -->
-    <div class="playbook-header" style={`--stage-color: ${color};`}>
+    <div class={`playbook-header stage-${stageId}`}>
       <div class="playbook-header-top">
-        <span class="stage-badge" style={`background: ${color}; color: #0a0a0f;`}>{stageLabel}</span>
+        <span class={`stage-badge stage-${stageId}`}>{stageLabel}</span>
         <span class="playbook-duration-badge">{playbook.estimated_duration}</span>
       </div>
       <h1 class="playbook-title">{playbook.title}</h1>
@@ -78,7 +78,7 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
       <ol class="action-steps">
         {playbook.steps.map((step: string, i: number) => (
           <li class="action-step">
-            <span class="step-number" style={`color: ${color};`}>{String(i + 1).padStart(2, '0')}</span>
+            <span class="step-number">{String(i + 1).padStart(2, '0')}</span>
             <span class="step-text">{step}</span>
           </li>
         ))}
@@ -107,9 +107,9 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
         {playbook.common_pitfalls.map((pitfall: string) => (
           <li class="pitfall-item">
             <svg class="pitfall-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-              <circle cx="9" cy="9" r="8" stroke="#E57373" stroke-width="1.5"/>
-              <path d="M9 5.5v4" stroke="#E57373" stroke-width="1.5" stroke-linecap="round"/>
-              <circle cx="9" cy="12.5" r="0.75" fill="#E57373"/>
+              <circle cx="9" cy="9" r="8" style="stroke: var(--color-danger);" stroke-width="1.5"/>
+              <path d="M9 5.5v4" style="stroke: var(--color-danger);" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="9" cy="12.5" r="0.75" style="fill: var(--color-danger);"/>
             </svg>
             <span>{pitfall}</span>
           </li>
@@ -261,6 +261,7 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
     font-size: 1.25rem;
     flex-shrink: 0;
     line-height: 1.4;
+    color: var(--stage-color);
   }
 
   .step-text {
@@ -391,7 +392,7 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
     gap: 0.25rem;
     padding: 1rem 1.25rem;
     background: var(--color-accent-subtle);
-    border: 1px solid rgba(245, 166, 35, 0.2);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
     border-radius: 0.5rem;
     text-decoration: none;
     transition: border-color 0.2s, background-color 0.2s;
@@ -399,7 +400,7 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
 
   .next-step-link:hover {
     border-color: var(--color-accent);
-    background: rgba(245, 166, 35, 0.08);
+    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
   }
 
   .next-step-label {
