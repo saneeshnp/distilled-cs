@@ -65,6 +65,17 @@
     outline-offset: 2px;
   }
 
+  /* On touch devices, global.css enforces min-height: 44px on all buttons.
+     Without a matching min-width, the toggle becomes 36×44 — a vertical pill.
+     Bump to 44×44 so it stays a proper circle on mobile. */
+  @media (pointer: coarse) {
+    .theme-toggle {
+      width: 2.75rem;
+      height: 2.75rem;
+      min-width: 2.75rem;
+    }
+  }
+
   .theme-icon {
     display: none;
   }
@@ -75,7 +86,7 @@
   }
 
   /* Dark mode: show sun (click to go light) */
-  [data-theme="dark"] .theme-icon-sun {
+  :root[data-theme="dark"] .theme-icon-sun {
     display: block;
   }
 </style>
