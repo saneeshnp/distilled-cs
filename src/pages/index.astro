@@ -63,19 +63,19 @@ const principles = frameworkData.principles;
 
           <!-- Node: Assess (top center) -->
           <g class="hp-svg-node">
-            <rect x="145" y="64" width="106" height="44" rx="10" fill="var(--color-surface)" stroke="rgba(240,237,230,0.12)" stroke-width="1" />
+            <rect class="hp-svg-node-rect" x="145" y="64" width="106" height="44" rx="10" fill="var(--color-surface)" />
             <text x="198" y="88" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-primary)" font-size="22" font-family="var(--font-display)">Assess</text>
           </g>
 
           <!-- Node: Execute (bottom-right) -->
           <g class="hp-svg-node">
-            <rect x="256" y="270" width="115" height="44" rx="10" fill="var(--color-surface)" stroke="rgba(240,237,230,0.12)" stroke-width="1" />
+            <rect class="hp-svg-node-rect" x="256" y="270" width="115" height="44" rx="10" fill="var(--color-surface)" />
             <text x="314" y="294" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-primary)" font-size="22" font-family="var(--font-display)">Execute</text>
           </g>
 
           <!-- Node: Transform (bottom-left) -->
           <g class="hp-svg-node">
-            <rect x="18" y="270" width="130" height="44" rx="10" fill="var(--color-surface)" stroke="rgba(240,237,230,0.12)" stroke-width="1" />
+            <rect class="hp-svg-node-rect" x="18" y="270" width="130" height="44" rx="10" fill="var(--color-surface)" />
             <text x="83" y="294" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-primary)" font-size="22" font-family="var(--font-display)">Transform</text>
           </g>
         </svg>
@@ -202,16 +202,80 @@ const principles = frameworkData.principles;
   /* ══════════════════════════════════════════
      HERO
      ══════════════════════════════════════════ */
+  /* ──────────────────────────────────────────
+     HERO BACKGROUND
+     ──────────────────────────────────────────
+     Light mode: subtle diagonal line pattern layered over a soft neutral
+     radial glow — evokes clean daylight without any raster image.
+     Dark mode : night-sky gradient with 15 CSS-drawn stars, easing down
+     into a muted steel-blue at the base (no sunset / no orange).
+     Both are pure CSS — 0 KB, 0 network requests, theme-swaps instantly. */
   .hp-hero {
     position: relative;
     display: flex;
     align-items: center;
     padding: 3rem 1.5rem 4rem;
     overflow: hidden;
+    /* Light-mode layers (top → bottom of the background stack):
+       1. Diagonal line pattern (very faint, ~5% opacity, 28px spacing)
+       2. Soft neutral radial glow centered top for "daylight" feel
+       3. Accent-tinted ambient radial
+       4. Base off-white color */
     background:
-      radial-gradient(ellipse at 50% 35%, color-mix(in srgb, var(--color-accent) 4%, transparent) 0%, transparent 60%),
-      radial-gradient(ellipse at 70% 80%, rgba(91, 154, 139, 0.03) 0%, transparent 50%),
-      var(--color-bg);
+      repeating-linear-gradient(
+        135deg,
+        rgba(45, 106, 90, 0.05) 0 1px,
+        transparent 1px 28px
+      ),
+      radial-gradient(
+        ellipse 90% 70% at 50% -10%,
+        rgba(255, 255, 255, 0.6) 0%,
+        rgba(255, 255, 255, 0) 60%
+      ),
+      radial-gradient(
+        ellipse at 50% 40%,
+        color-mix(in srgb, var(--color-accent) 5%, transparent) 0%,
+        transparent 65%
+      ),
+      #fbfaf7;
+  }
+
+  /* Dark-mode override: night sky with stars, easing into muted steel-blue.
+     Top 0–45%:  near-black with faint greenish tint (deep night)
+     45–68%:     deep navy / indigo emerging
+     68–88%:     rising mid-blue
+     88–100%:    muted steel-blue at the base */
+  :root[data-theme="dark"] .hp-hero {
+    background:
+      /* Star-field: 15 dots at 2–3px, distributed across the upper ~45% of
+         the hero. Higher opacities so they read clearly against the dark sky. */
+      radial-gradient(2.5px 2.5px at  9%  7%, rgba(255,255,255,0.95), transparent 60%),
+      radial-gradient(3px 3px     at 24%  5%, rgba(255,255,255,0.9),  transparent 60%),
+      radial-gradient(3px 3px     at 38% 10%, rgba(255,255,255,0.95), transparent 60%),
+      radial-gradient(2.5px 2.5px at 52%  6%, rgba(255,255,255,0.85), transparent 60%),
+      radial-gradient(3px 3px     at 66% 14%, rgba(255,255,255,0.9),  transparent 60%),
+      radial-gradient(2.5px 2.5px at 80% 17%, rgba(255,255,255,0.85), transparent 60%),
+      radial-gradient(3px 3px     at 93% 11%, rgba(255,255,255,0.9),  transparent 60%),
+      radial-gradient(2.5px 2.5px at 16% 22%, rgba(255,255,255,0.8),  transparent 60%),
+      radial-gradient(3px 3px     at 34% 27%, rgba(255,255,255,0.85), transparent 60%),
+      radial-gradient(2px 2px     at 48% 20%, rgba(255,255,255,0.75), transparent 60%),
+      radial-gradient(2.5px 2.5px at 60% 32%, rgba(255,255,255,0.75), transparent 60%),
+      radial-gradient(3px 3px     at 74% 28%, rgba(255,255,255,0.85), transparent 60%),
+      radial-gradient(2.5px 2.5px at 87% 35%, rgba(255,255,255,0.7),  transparent 60%),
+      radial-gradient(2.5px 2.5px at 22% 40%, rgba(255,255,255,0.7),  transparent 60%),
+      radial-gradient(2px 2px     at 56% 43%, rgba(255,255,255,0.65), transparent 60%),
+      /* Main vertical sky gradient */
+      linear-gradient(
+        to bottom,
+        #0a0d0a  0%,
+        #0a0e0d 22%,
+        #0b1210 42%,
+        #0c1a22 55%,
+        #0f2a40 68%,
+        #163c5c 82%,
+        #1d4e6e 92%,
+        #22587a 100%
+      );
   }
 
   .hp-hero-inner {
@@ -300,6 +364,20 @@ const principles = frameworkData.principles;
   @keyframes hp-orbit-rotate {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+
+  /* ── SVG node box borders (theme-aware) ──
+     In light mode we use a darker, thicker stroke so the three boxes read
+     clearly against the cream hero background. In dark mode a faint light
+     stroke is enough since the surface fill already contrasts the sky. */
+  .hp-svg-node-rect {
+    stroke: rgba(26, 26, 46, 0.22);
+    stroke-width: 1.5;
+  }
+
+  :root[data-theme="dark"] .hp-svg-node-rect {
+    stroke: rgba(240, 237, 230, 0.15);
+    stroke-width: 1;
   }
 
   /* ── Flowing arrow animation ── */

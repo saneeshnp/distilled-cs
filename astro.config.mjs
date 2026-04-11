@@ -9,6 +9,7 @@ export default defineConfig({
   output: 'static',
   site: 'https://distilledcs.org',
   integrations: [sitemap()],
+  server: process.env.PORT ? { port: parseInt(process.env.PORT, 10) } : undefined,
   vite: {
     plugins: [tailwindcss()]
   }
