@@ -129,77 +129,85 @@
     size_1_3: '1–3 people', size_4_10: '4–10 people', size_11_25: '11–25 people', size_over_25: '25+ people',
   };
 
-  // Don't show on homepage
-  if (window.location.pathname !== '/' && isAssessmentCompleted()) {
+  function populateContextBar() {
+    if (window.location.pathname === '/' || !isAssessmentCompleted()) return;
+
     const scores = getScores();
     const profile = getProfile();
 
-    if (scores && scores.stage) {
-      const stage = scores.stage;
+    if (!scores || !scores.stage) return;
 
-      const companyName = profile?.company_name || '';
-      const arrLabel = optionLabels[profile?.company_arr] || '';
-      const segLabel = optionLabels[profile?.customer_segment] || '';
-      const sizeLabel = optionLabels[profile?.cs_team_size] || '';
+    const stage = scores.stage;
 
-      const bar = document.getElementById('context-bar');
-      const inner = document.getElementById('context-bar-inner');
+    const companyName = profile?.company_name || '';
+    const arrLabel = optionLabels[profile?.company_arr] || '';
+    const segLabel = optionLabels[profile?.customer_segment] || '';
+    const sizeLabel = optionLabels[profile?.cs_team_size] || '';
 
-      if (bar && inner) {
-        const profileParts = [arrLabel, segLabel, sizeLabel].filter(Boolean);
+    const bar = document.getElementById('context-bar');
+    const inner = document.getElementById('context-bar-inner');
 
-        // Determine current loop phase from URL
-        const path = window.location.pathname;
-        let loopPhase = '';
-        if (path.startsWith('/assess') || path.startsWith('/model')) {
-          loopPhase = 'Assess';
-        } else if (path.startsWith('/playbooks') || path.startsWith('/metrics') || path.startsWith('/checklist')) {
-          loopPhase = 'Execute';
-        } else if (path.startsWith('/transform')) {
-          loopPhase = 'Transform';
-        }
-        const phaseHtml = loopPhase
-          ? `<span class="context-bar-separator context-bar-detail">|</span><span class="context-bar-phase">${loopPhase}</span>`
-          : '';
+    if (!bar || !inner) return;
 
-        const companyHtml = companyName
-          ? `<span class="context-bar-company">${companyName}</span><span class="context-bar-separator context-bar-detail">|</span>`
-          : '';
+    const profileParts = [arrLabel, segLabel, sizeLabel].filter(Boolean);
 
-        inner.innerHTML = `
-          <div class="context-bar-profile">
-            ${companyHtml}
-            ${profileParts.map((part, i) => `<span class="context-bar-detail">${part}</span>${i < profileParts.length - 1 ? '<span class="context-bar-separator context-bar-detail">|</span>' : ''}`).join('')}
-            <span class="context-bar-stage stage-${stage}">
-              <span class="context-bar-dot"></span>
-              Stage: ${stageLabels[stage]}
-            </span>
-            ${phaseHtml}
-          </div>
-          <div class="context-bar-actions">
-            <a href="/assess/" class="context-bar-link" aria-label="Edit your assessment answers">Edit Assessment</a>
-            <button class="context-bar-dismiss" id="context-bar-dismiss" aria-label="Dismiss context bar" type="button">&times;</button>
-          </div>
-        `;
-
-        // Animate in
-        requestAnimationFrame(() => {
-          bar.classList.add('visible');
-        });
-
-        // Dismiss handler
-        document.getElementById('context-bar-dismiss')?.addEventListener('click', () => {
-          bar.classList.remove('visible');
-          try { sessionStorage.setItem('distilledcs_bar_dismissed', 'true'); } catch {}
-        });
-
-        // Check if dismissed this session
-        try {
-          if (sessionStorage.getItem('distilledcs_bar_dismissed') === 'true') {
-            bar.classList.remove('visible');
-          }
-        } catch {}
-      }
+    // Determine current loop phase from URL
+    const path = window.location.pathname;
+    let loopPhase = '';
+    if (path.startsWith('/assess') || path.startsWith('/model')) {
+      loopPhase = 'Assess';
+    } else if (path.startsWith('/playbooks') || path.startsWith('/metrics') || path.startsWith('/checklist')) {
+      loopPhase = 'Execute';
+    } else if (path.startsWith('/transform')) {
+      loopPhase = 'Transform';
     }
+    const phaseHtml = loopPhase
+      ? `<span class="context-bar-separator context-bar-detail">|</span><span class="context-bar-phase">${loopPhase}</span>`
+      : '';
+
+    const companyHtml = companyName
+      ? `<span class="context-bar-company">${companyName}</span><span class="context-bar-separator context-bar-detail">|</span>`
+      : '';
+
+    inner.innerHTML = `
+      <div class="context-bar-profile">
+        ${companyHtml}
+        ${profileParts.map((part, i) => `<span class="context-bar-detail">${part}</span>${i < profileParts.length - 1 ? '<span class="context-bar-separator context-bar-detail">|</span>' : ''}`).join('')}
+        <span class="context-bar-stage stage-${stage}">
+          <span class="context-bar-dot"></span>
+          Stage: ${stageLabels[stage]}
+        </span>
+        ${phaseHtml}
+      </div>
+      <div class="context-bar-actions">
+        <a href="/assess/" class="context-bar-link" aria-label="Edit your assessment answers">Edit Assessment</a>
+        <button class="context-bar-dismiss" id="context-bar-dismiss" aria-label="Dismiss context bar" type="button">&times;</button>
+      </div>
+    `;
+
+    // Animate in (clear any previous session dismissal on fresh save)
+    try { sessionStorage.removeItem('distilledcs_bar_dismissed'); } catch {}
+    requestAnimationFrame(() => {
+      bar.classList.add('visible');
+    });
+
+    // Dismiss handler
+    document.getElementById('context-bar-dismiss')?.addEventListener('click', () => {
+      bar.classList.remove('visible');
+      try { sessionStorage.setItem('distilledcs_bar_dismissed', 'true'); } catch {}
+    });
   }
+
+  // Initial population
+  populateContextBar();
+
+  // Check if dismissed this session (only on initial load, not after a fresh save)
+  try {
+    if (sessionStorage.getItem('distilledcs_bar_dismissed') === 'true') {
+      document.getElementById('context-bar')?.classList.remove('visible');
+    }
+  } catch {}
+
+  // Listen for assessment updates (e.g. Save & Finish without page reload)
+  window.addEventListener('distilledcs:updated', populateContextBar);
 </script>

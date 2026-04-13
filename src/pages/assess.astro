@@ -66,6 +66,7 @@ const stages = frameworkData.maturity_stages.stages;
 
       <div class="phase-nav">
         <button class="btn btn-primary" id="profile-next" disabled>Continue to Assessment</button>
+        <button class="btn btn-secondary save-finish-btn" type="button" style="display:none;">Save & Finish</button>
       </div>
     </section>
 
@@ -116,6 +117,7 @@ const stages = frameworkData.maturity_stages.stages;
                 ? <button class="btn btn-primary domain-next" data-target={dIdx + 1} type="button" disabled>Next Domain</button>
                 : <button class="btn btn-primary" id="finish-assessment" type="button" disabled>See Your Results</button>
               }
+              <button class="btn btn-secondary save-finish-btn" type="button" style="display:none;">Save & Finish</button>
             </div>
           </div>
         ))}
@@ -531,43 +533,80 @@ const stages = frameworkData.maturity_stages.stages;
     font-weight: 700;
   }
 
-  :global(.results-ctas) {
+  :global(.results-next-steps) {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background: var(--color-accent-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+
+  :global(.results-next-steps-title) {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+  }
+
+  :global(.results-next-steps-list) {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  :global(.results-next-steps-list li) {
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  :global(.results-next-steps-list li::before) {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  :global(.results-next-steps-list a) {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: color 0.2s ease-out;
+  }
+
+  :global(.results-next-steps-list a:hover) {
+    text-decoration: underline;
+  }
+
+  :global(.results-manage) {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
     justify-content: center;
   }
 
-  :global(.results-ctas .btn) {
+  :global(.results-manage .btn-manage) {
     display: inline-block;
-    padding: 0.75rem 1.75rem;
+    padding: 0.5rem 1.25rem;
     border-radius: 0.5rem;
-    font-size: 0.9375rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     font-family: var(--font-body);
-    text-decoration: none;
     cursor: pointer;
-    border: none;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-hover);
     transition: all 0.25s ease-out;
   }
 
-  :global(.results-ctas .btn-primary) {
-    background: var(--color-accent);
-    color: var(--color-bg);
-  }
-
-  :global(.results-ctas .btn-secondary) {
-    background: transparent;
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border-hover);
-  }
-
-  :global(.results-ctas .btn-retake) {
-    background: transparent;
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
-    font-size: 0.8125rem;
+  :global(.results-manage .btn-manage:hover) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
   }
 </style>
 
@@ -584,6 +623,7 @@ const stages = frameworkData.maturity_stages.stages;
   const profile: Record<string, string> = {};
   const responses: Record<string, number> = {};
   let currentDomainIdx = 0;
+  let isUpdating = false;
 
   const totalQuestions = contextParams.length + domains.reduce((s: number, d: any) => s + d.questions.length, 0);
 
@@ -598,7 +638,7 @@ const stages = frameworkData.maturity_stages.stages;
   const finishBtn = document.getElementById('finish-assessment');
 
   // ── Results HTML generator (reusable) ──
-  function generateResultsHTML(domainScores: Record<string, number>, overallScore: number, stageId: string, showUpdateBtn: boolean = false): string {
+  function generateResultsHTML(domainScores: Record<string, number>, overallScore: number, stageId: string): string {
     const stage = stages.find((s: any) => s.id === stageId);
     const sorted = Object.entries(domainScores).sort((a, b) => b[1] - a[1]);
     const strongestId = sorted[0][0];
@@ -654,22 +694,25 @@ const stages = frameworkData.maturity_stages.stages;
         </ol>
       </div>
 
-      <div class="results-ctas">
-        <a href="/playbooks/" class="btn btn-primary">Now Execute: View Your Playbooks</a>
-        <a href="/model/" class="btn btn-secondary">Explore the Maturity Model</a>
-        <a href="/metrics/" class="btn btn-secondary">See Your Metrics Priorities</a>
-        ${showUpdateBtn
-          ? '<button class="btn btn-retake" id="update-answers-btn" type="button">Update My Answers</button>'
-          : '<button class="btn btn-retake" id="retake-btn" type="button">Retake Assessment</button>'
-        }
+      <div class="results-next-steps">
+        <h2 class="results-next-steps-title">Personalized actions based on your score and CS maturity</h2>
+        <ul class="results-next-steps-list">
+          <li><a href="/playbooks/">View your playbooks to execute</a></li>
+          <li><a href="/model/">Explore the maturity model to see where you stand</a></li>
+          <li><a href="/metrics/">Understand your metric priorities</a></li>
+        </ul>
+      </div>
+      <div class="results-manage">
+        <button class="btn-manage" id="update-answers-btn" type="button">Update My Answers</button>
+        <button class="btn-manage" id="retake-btn" type="button">Clear &amp; Restart</button>
       </div>
     `;
   }
 
   // ── Show results screen ──
-  function showResults(domainScores: Record<string, number>, overallScore: number, stageId: string, isReturning: boolean = false) {
+  function showResults(domainScores: Record<string, number>, overallScore: number, stageId: string) {
     const resultsContent = document.getElementById('results-content');
-    if (resultsContent) resultsContent.innerHTML = generateResultsHTML(domainScores, overallScore, stageId, isReturning);
+    if (resultsContent) resultsContent.innerHTML = generateResultsHTML(domainScores, overallScore, stageId);
 
     phaseProfile.style.display = 'none';
     phaseAssessment.style.display = 'none';
@@ -678,8 +721,10 @@ const stages = frameworkData.maturity_stages.stages;
 
     // Bind retake/update handler
     document.getElementById('retake-btn')?.addEventListener('click', () => {
-      resetAll();
-      window.location.reload();
+      if (confirm('This will permanently clear your assessment results, company profile, and any progress. This cannot be undone. Continue?')) {
+        resetAll();
+        window.location.reload();
+      }
     });
 
     document.getElementById('update-answers-btn')?.addEventListener('click', () => {
@@ -729,10 +774,16 @@ const stages = frameworkData.maturity_stages.stages;
       }
     }
 
-    // Enable profile continue button if all answered
-    if (Object.keys(profile).length === contextParams.length) {
+    // Enable profile continue button if all context params answered
+    if (contextParams.every((p: any) => profile[p.id] !== undefined)) {
       profileNextBtn.removeAttribute('disabled');
     }
+
+    // Mark as update flow and reveal "Save & Finish" buttons
+    isUpdating = true;
+    document.querySelectorAll('.save-finish-btn').forEach(btn => {
+      (btn as HTMLElement).style.display = '';
+    });
 
     // Show profile phase
     phaseResults.style.display = 'none';
@@ -747,12 +798,13 @@ const stages = frameworkData.maturity_stages.stages;
   if (isAssessmentCompleted()) {
     const savedScores = getScores();
     if (savedScores && savedScores.domainScores && savedScores.overallScore && savedScores.stage) {
-      showResults(savedScores.domainScores, savedScores.overallScore, savedScores.stage, true);
+      showResults(savedScores.domainScores, savedScores.overallScore, savedScores.stage);
     }
   }
 
   function updateProgress() {
-    const answered = Object.keys(profile).length + Object.keys(responses).length;
+    const profileAnswered = contextParams.filter((p: any) => profile[p.id] !== undefined).length;
+    const answered = profileAnswered + Object.keys(responses).length;
     const pct = Math.round((answered / totalQuestions) * 100);
     if (progressBar) {
       progressBar.style.setProperty('--progress', pct + '%');
@@ -775,7 +827,7 @@ const stages = frameworkData.maturity_stages.stages;
       btn.setAttribute('aria-checked', 'true');
       profile[paramId] = value;
 
-      if (Object.keys(profile).length === contextParams.length) {
+      if (contextParams.every((p: any) => profile[p.id] !== undefined)) {
         profileNextBtn.removeAttribute('disabled');
       }
       updateProgress();
@@ -784,7 +836,7 @@ const stages = frameworkData.maturity_stages.stages;
 
   // ── Continue to assessment ──
   profileNextBtn?.addEventListener('click', () => {
-    if (Object.keys(profile).length < contextParams.length) return;
+    if (!contextParams.every((p: any) => profile[p.id] !== undefined)) return;
     phaseProfile.style.display = 'none';
     phaseAssessment.style.display = '';
     showDomain(0);
@@ -844,8 +896,8 @@ const stages = frameworkData.maturity_stages.stages;
     });
   });
 
-  // ── Finish & show results ──
-  finishBtn?.addEventListener('click', () => {
+  // ── Shared finish logic ──
+  function finishAndShowResults() {
     const domainScores = calculateAllDomainScores(responses);
     const overallScore = calculateOverallScore(domainScores);
     const stageId = determineStage(overallScore);
@@ -869,8 +921,20 @@ const stages = frameworkData.maturity_stages.stages;
     saveScores({ domainScores, overallScore, stage: stageId, responses, timestamp: new Date().toISOString() });
     setAssessmentCompleted(true);
 
-    showResults(domainScores, overallScore, stageId, false);
+    isUpdating = false;
+    showResults(domainScores, overallScore, stageId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Notify ContextBar to refresh with updated data
+    window.dispatchEvent(new CustomEvent('distilledcs:updated'));
+  }
+
+  // ── Finish & show results ──
+  finishBtn?.addEventListener('click', finishAndShowResults);
+
+  // ── Save & Finish (update flow shortcut) ──
+  document.querySelectorAll('.save-finish-btn').forEach(btn => {
+    btn.addEventListener('click', finishAndShowResults);
   });
 
   // Init progress (only if not showing results)
