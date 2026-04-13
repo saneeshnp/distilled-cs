@@ -17,5 +17,8 @@
     "astro": "^6.0.8",
     "gsap": "^3.14.2",
     "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "@playform/compress": "0.2.3"
   }
 }
