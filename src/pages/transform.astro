@@ -533,6 +533,9 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     const completed = localStorage.getItem('distilledcs_completed');
     const scoresRaw = localStorage.getItem('distilledcs_scores');
     const previousRaw = localStorage.getItem('distilledcs_previous_scores');
+    const profileRaw = localStorage.getItem('distilledcs_profile');
+    const userProfile = profileRaw ? JSON.parse(profileRaw) : {};
+    const companyName = userProfile?.company_name || '';
 
     if (completed === 'true' && scoresRaw) {
       const scores = JSON.parse(scoresRaw);
@@ -543,6 +546,12 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
       // Show assessed view, hide not-assessed
       document.querySelectorAll('[data-show-if-assessed]').forEach(el => el.style.display = '');
       document.querySelectorAll('[data-hide-if-assessed]').forEach(el => el.style.display = 'none');
+
+      // Personalize stage card label with company name
+      const stageLabelEl = document.querySelector('#dash-stage-card .dash-label');
+      if (stageLabelEl && companyName) {
+        stageLabelEl.textContent = `${companyName}'s Stage`;
+      }
 
       // Apply stage class to the card so nested elements inherit --stage-color.
       const stageCard = document.getElementById('dash-stage-card');

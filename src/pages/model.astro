@@ -535,7 +535,7 @@ const transitionMap: Record<string, string> = { crawl: 'crawl_to_walk', walk: 'w
 </style>
 
 <script>
-  import { isAssessmentCompleted, getScores } from '../scripts/context-manager.js';
+  import { isAssessmentCompleted, getScores, getProfile } from '../scripts/context-manager.js';
 
   const stageOrder = ['crawl', 'walk', 'run', 'fly'];
   const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
@@ -560,20 +560,23 @@ const transitionMap: Record<string, string> = { crawl: 'crawl_to_walk', walk: 'w
   // Contextual personalization
   if (isAssessmentCompleted()) {
     const scores = getScores();
+    const profile = getProfile();
     if (scores && scores.stage) {
       const userStage = scores.stage;
       const userStageIdx = stageOrder.indexOf(userStage);
+      const companyName = profile?.company_name || '';
 
       // Show assessed elements, hide CTA
       document.querySelectorAll('[data-show-if-assessed]').forEach(el => el.style.display = '');
       document.querySelectorAll('[data-hide-if-assessed]').forEach(el => el.style.display = 'none');
 
       // Populate user stage header — class carries the stage color.
+      const stagePrefix = companyName ? `${companyName}'s stage` : 'Your stage';
       const header = document.getElementById('user-stage-header');
       if (header) {
         header.innerHTML = `
           <div class="user-stage-banner stage-${userStage}">
-            <h1 class="user-stage-banner-title">Your stage: ${stageLabels[userStage]}</h1>
+            <h1 class="user-stage-banner-title">${stagePrefix}: ${stageLabels[userStage]}</h1>
             <p class="user-stage-banner-sub">${stageSubtitles[userStage]} &middot; Overall score: ${scores.overallScore} / 4.0</p>
           </div>
         `;

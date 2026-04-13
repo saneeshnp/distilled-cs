@@ -29,6 +29,20 @@ const stages = frameworkData.maturity_stages.stages;
       <p class="phase-subtitle">These don't affect your maturity score — they help us tailor benchmarks and recommendations to your context.</p>
 
       <div class="profile-form" id="profile-form">
+        <div class="profile-question company-name-field">
+          <h2 class="question-label" id="label-company-name">What's your company name?</h2>
+          <p class="company-name-hint">Optional — this personalizes your report and recommendations.</p>
+          <input
+            type="text"
+            id="company-name-input"
+            class="company-name-input"
+            placeholder="e.g. Acme Corp"
+            maxlength="100"
+            autocomplete="organization"
+            aria-labelledby="label-company-name"
+          />
+        </div>
+
         {contextParams.map((param, idx) => (
           <div class="profile-question" data-param-id={param.id} data-index={idx}>
             <h2 class="question-label" id={`label-${param.id}`}>{param.question}</h2>
@@ -183,6 +197,35 @@ const stages = frameworkData.maturity_stages.stages;
     font-size: 1rem;
     margin-bottom: 2.5rem;
     max-width: 32rem;
+  }
+
+  /* Company name field */
+  .company-name-hint {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .company-name-input {
+    width: 100%;
+    max-width: 24rem;
+    padding: 0.75rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    color: var(--color-text-primary);
+    font-size: 0.9375rem;
+    font-family: var(--font-body);
+    transition: border-color 0.2s ease-out;
+  }
+
+  .company-name-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .company-name-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
   }
 
   /* Profile questions */
@@ -562,9 +605,16 @@ const stages = frameworkData.maturity_stages.stages;
     const weakestId = sorted[sorted.length - 1][0];
     const weakest3 = sorted.slice(-3).reverse().map(([id]) => domains.find((d: any) => d.id === id));
 
+    // Personalize with company name if available
+    const savedProfile = getProfile();
+    const companyName = savedProfile?.company_name || '';
+    const stageBadgeText = companyName
+      ? `${companyName}'s Customer Success Maturity Stage`
+      : 'Your Maturity Stage';
+
     return `
       <div class="results-header stage-${stageId}">
-        <div class="results-stage-badge">Your Maturity Stage</div>
+        <div class="results-stage-badge">${stageBadgeText}</div>
         <h1 class="results-stage-name">${stage?.label || stageId}</h1>
         <p class="results-stage-subtitle">${stage?.subtitle || ''}</p>
         <p class="results-overall-score">Overall score: ${overallScore} / 4.0</p>
@@ -642,6 +692,12 @@ const stages = frameworkData.maturity_stages.stages;
     const savedScores = getScores();
     const savedProfile = getProfile();
     const savedResponses = savedScores?.responses || {};
+
+    // Pre-populate company name
+    if (savedProfile?.company_name) {
+      const companyInput = document.getElementById('company-name-input') as HTMLInputElement;
+      if (companyInput) companyInput.value = savedProfile.company_name;
+    }
 
     // Pre-populate profile state and UI
     if (savedProfile) {
@@ -797,6 +853,15 @@ const stages = frameworkData.maturity_stages.stages;
     // Save previous scores before overwriting (for re-assessment comparison)
     if (isAssessmentCompleted()) {
       savePreviousScores();
+    }
+
+    // Include company name in profile if provided
+    const companyInput = document.getElementById('company-name-input') as HTMLInputElement;
+    const companyName = companyInput?.value.trim();
+    if (companyName) {
+      profile['company_name'] = companyName;
+    } else {
+      delete profile['company_name'];
     }
 
     // Save to localStorage

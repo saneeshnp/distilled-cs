@@ -74,7 +74,7 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
         <li>
           <a
             href="/assess/"
-            class:list={['nav-link', { active: pathname === '/assess/' || pathname === '/model/' }]}
+            class:list={['nav-link', { active: pathname === '/assess/' }]}
             aria-current={pathname === '/assess/' ? 'page' : undefined}
           >
             Assess
@@ -191,7 +191,7 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
       <li>
         <a
           href="/assess/"
-          class:list={['nav-link-mobile', { active: pathname === '/assess/' || pathname === '/model/' }]}
+          class:list={['nav-link-mobile', { active: pathname === '/assess/' }]}
           aria-current={pathname === '/assess/' ? 'page' : undefined}
         >
           Assess

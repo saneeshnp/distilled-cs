@@ -42,6 +42,11 @@
     flex-wrap: wrap;
   }
 
+  :global(.context-bar-company) {
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
   :global(.context-bar-separator) {
     color: var(--color-text-muted);
   }
@@ -132,6 +137,7 @@
     if (scores && scores.stage) {
       const stage = scores.stage;
 
+      const companyName = profile?.company_name || '';
       const arrLabel = optionLabels[profile?.company_arr] || '';
       const segLabel = optionLabels[profile?.customer_segment] || '';
       const sizeLabel = optionLabels[profile?.cs_team_size] || '';
@@ -156,8 +162,13 @@
           ? `<span class="context-bar-separator context-bar-detail">|</span><span class="context-bar-phase">${loopPhase}</span>`
           : '';
 
+        const companyHtml = companyName
+          ? `<span class="context-bar-company">${companyName}</span><span class="context-bar-separator context-bar-detail">|</span>`
+          : '';
+
         inner.innerHTML = `
           <div class="context-bar-profile">
+            ${companyHtml}
             ${profileParts.map((part, i) => `<span class="context-bar-detail">${part}</span>${i < profileParts.length - 1 ? '<span class="context-bar-separator context-bar-detail">|</span>' : ''}`).join('')}
             <span class="context-bar-stage stage-${stage}">
               <span class="context-bar-dot"></span>
