@@ -10,7 +10,9 @@ export default defineConfig({
   output: 'static',
   site: 'https://distilledcs.org',
   integrations: [
-    sitemap(),
+    sitemap({
+      filter: (page) => !page.includes('/admin'),
+    }),
     compress({
       HTML: {
         "html-minifier-terser": {
