@@ -42,9 +42,7 @@ allMetrics.forEach((m: any) => { metricLabels[m.id] = m.name; });
       return (
         <section class={`stage-section stage-${stageId}`} id={`stage-${stageId}`} data-stage={stageId}>
           <div class="stage-section-header">
-            <span class={`stage-badge stage-${stageId}`}>{stageLabels[stageId]}</span>
-            <span class="stage-section-label">Stage</span>
-            <span class="stage-contextual-tag" data-stage-tag={stageId} style="display:none;"></span>
+            <span class={`stage-badge stage-${stageId}`} data-stage-badge={stageId}>{stageLabels[stageId]}</span>
           </div>
           <div class="playbooks-grid">
             {stagePlaybooks.map((pb: any) => (
@@ -148,19 +146,9 @@ allMetrics.forEach((m: any) => { metricLabels[m.id] = m.name; });
     font-family: var(--font-body);
   }
 
-  .stage-section-label {
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .stage-contextual-tag {
-    font-size: 0.75rem;
-    font-weight: 500;
-    padding: 0.2rem 0.625rem;
-    border-radius: 9999px;
-    border: 1px solid var(--color-border);
+  .stage-badge-suffix {
+    font-weight: 400;
+    opacity: 0.85;
   }
 
   /* Playbook cards grid */
@@ -262,8 +250,10 @@ allMetrics.forEach((m: any) => { metricLabels[m.id] = m.name; });
 
   /* Highlighted current stage */
   .stage-section.is-current {
-    border-left: 3px solid var(--color-accent);
-    padding-left: 1rem;
+    border: 3px solid var(--stage-color);
+    padding: 1rem;
+    background: color-mix(in srgb, var(--stage-color) 8%, transparent);
+    border-radius: 0.75rem;
   }
 </style>
 
@@ -292,19 +282,14 @@ allMetrics.forEach((m: any) => { metricLabels[m.id] = m.name; });
       document.querySelectorAll('[data-hide-if-assessed]').forEach(el => el.style.display = 'none');
       document.querySelectorAll('[data-show-if-assessed]').forEach(el => el.style.display = '');
 
-      // Tag stage sections
-      document.querySelectorAll('[data-stage-tag]').forEach(el => {
-        const stageId = el.getAttribute('data-stage-tag');
+      // Tag stage sections via badge
+      document.querySelectorAll('[data-stage-badge]').forEach(el => {
+        const stageId = el.getAttribute('data-stage-badge');
         if (stageId === userStage) {
-          el.textContent = 'Your Stage';
-          el.style.display = '';
-          el.style.color = 'var(--color-accent)';
-          el.style.borderColor = 'var(--color-accent)';
+          el.innerHTML = `${stageLabels[userStage]} <span class="stage-badge-suffix">· Your Current Stage</span>`;
           el.closest('.stage-section')?.classList.add('is-current');
         } else if (stageId === nextStage) {
-          el.textContent = 'Coming Next';
-          el.style.display = '';
-          el.style.color = 'var(--color-text-muted)';
+          el.innerHTML = `${stageLabels[nextStage]} <span class="stage-badge-suffix">· Your Next Stage</span>`;
         }
       });
 

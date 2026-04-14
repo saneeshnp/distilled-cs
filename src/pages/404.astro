@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page Not Found" description="The page you're looking for doesn't exist." noindex>
+
+  <div class="container not-found-page">
+
+    <div class="not-found-content">
+      <p class="not-found-code">404</p>
+      <h1 class="not-found-title">This page has churned ☹️</h1>
+      <p class="not-found-message">
+        Looks like this page didn't make it past onboarding or it does not exist. Let's get you back on track.
+      </p>
+      <div class="not-found-actions">
+        <a href="/" class="btn btn-primary">Go Home</a>
+        <a href="/model/" class="btn btn-secondary">Explore the Model</a>
+      </div>
+    </div>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+  .not-found-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 1.5rem;
+    min-height: 60vh;
+    gap: 3rem;
+  }
+
+  .not-found-code {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 12vw, 8rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-accent);
+    margin: 0;
+  }
+
+  .not-found-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0.25rem 0 0;
+  }
+
+  .not-found-message {
+    color: var(--color-text-secondary);
+    font-size: 1.125rem;
+    margin: 0.75rem 0 0;
+    max-width: 28rem;
+  }
+
+  .not-found-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  @media (min-width: 768px) {
+    .not-found-page {
+      padding: 6rem 2rem;
+    }
+  }
+</style>
