@@ -19,7 +19,7 @@ const principles = frameworkData.principles;
           An open framework to assess your organization's Customer Success maturity and focus on what matters.
         </h1>
         <p class="hp-hero-sub">
-          Distilled CS provides a structured approach to customer success — with a maturity assessment, stage-specific playbooks, benchmarks, and an execution checklist. Open source and vendor neutral.
+          With Distilled CS, you can quickly identify where your organization stands in its customer success journey, uncover what is missing from your strategy, and map out the exact next steps to elevate your CS team's impact.
         </p>
         <div class="hp-hero-ctas">
           <a href="/assess/" class="btn btn-primary" id="hp-hero-cta-primary" data-contextual="hero-cta">Take the Assessment</a>
@@ -83,30 +83,7 @@ const principles = frameworkData.principles;
     </div>
   </section>
 
-  <!-- Section 2: The Strategy Loop -->
-  <section class="hp-section hp-section-loop" id="strategy-loop">
-    <div class="container">
-      <h2 class="hp-section-headline scroll-reveal">The Strategy Loop</h2>
-      <p class="hp-section-subheadline scroll-reveal">A continuous cycle of improvement — assess your current state, execute stage-appropriate actions, and transform your CS organisation over time.</p>
-
-      <div class="hp-loop-section-layout">
-        <div class="hp-loop-diagram-wrapper scroll-reveal">
-          <StrategyLoop size="lg" interactive={true} />
-        </div>
-
-        <div class="hp-loop-phases-detail">
-          {strategyLoop.phases.map((phase, i) => (
-            <div class="hp-loop-phase-card scroll-reveal" style={`--reveal-delay: ${i * 0.1}s`}>
-              <span class="hp-loop-phase-number">{String(i + 1).padStart(2, '0')}</span>
-              <p class="hp-loop-phase-desc">{phase.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Section 3: Maturity Stages -->
+  <!-- Section 2: Maturity Stages -->
   <section class="hp-section hp-section-stages" id="maturity-stages">
     <div class="container">
       <h2 class="hp-section-headline scroll-reveal">The four stages of CS maturity</h2>
@@ -129,6 +106,29 @@ const principles = frameworkData.principles;
       </div>
       <div class="hp-section-cta scroll-reveal">
         <a href="/model/" class="btn btn-secondary">Explore the full maturity model</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: The Strategy Loop -->
+  <section class="hp-section hp-section-loop" id="strategy-loop">
+    <div class="container">
+      <h2 class="hp-section-headline scroll-reveal">The Strategy Loop</h2>
+      <p class="hp-section-subheadline scroll-reveal">A continuous cycle of improvement — assess your current state, execute stage-appropriate actions, and transform your CS organisation over time.</p>
+
+      <div class="hp-loop-section-layout">
+        <div class="hp-loop-diagram-wrapper scroll-reveal">
+          <StrategyLoop size="lg" interactive={true} />
+        </div>
+
+        <div class="hp-loop-phases-detail">
+          {strategyLoop.phases.map((phase, i) => (
+            <div class="hp-loop-phase-card scroll-reveal" style={`--reveal-delay: ${i * 0.1}s`}>
+              <span class="hp-loop-phase-number">{String(i + 1).padStart(2, '0')}</span>
+              <p class="hp-loop-phase-desc">{phase.description}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </section>
@@ -159,7 +159,7 @@ const principles = frameworkData.principles;
       <div class="hp-open-content scroll-reveal">
         <h2 class="hp-section-headline">Open source. Vendor neutral. Community driven.</h2>
         <p class="hp-open-body">
-          Distilled CS is licensed under CC BY-SA 4.0. No vendor lock-in, no paywall, no hidden agenda. The framework is built to give Customer Success teams a shared language and measurement standard — regardless of the tools they use.
+          Distilled CS is licensed under CC BY-SA 4.0, so it is open and accessible to everyone. There is no vendor lock-in and it is free to use. The framework is designed to give Customer Success teams and practitioners a shared language and a consistent way to measure where they stand, no matter which tools they use.
         </p>
         <p class="hp-open-body hp-open-emphasis">Built by practitioners, for practitioners.</p>
         <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Contribute on GitHub (Coming soon!)</a>
