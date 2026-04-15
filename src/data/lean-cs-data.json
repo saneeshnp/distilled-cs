@@ -15,6 +15,20 @@
       "icon": "people"
     },
     {
+      "id": "proactive_over_reactive",
+      "title": "Proactive Over Reactive",
+      "summary": "Intervene before customers disengage, not after they churn.",
+      "description": "Reactive CS waits for red flags — a missed renewal, a support escalation, a cancellation request. By then, the opportunity to influence the outcome has already passed. Maturing CS organizations build systems that surface risk early and trigger intervention before customers feel the pain. This means investing in health scoring, adoption monitoring, and lifecycle automation rather than firefighting.",
+      "icon": "shield"
+    },
+    {
+      "id": "segment_then_scale",
+      "title": "Segment, Then Scale",
+      "summary": "Not every customer needs a CSM. Build coverage models that match value.",
+      "description": "Applying the same touch model to every account is the fastest path to burnout or bloated headcount. High-value accounts need strategic, human-led engagement. Long-tail accounts need digital, automated journeys. The dividing line depends on your economics — and it will shift as you grow. The goal is not fewer CSMs or more CSMs; it's the right engagement for each segment at a cost the business can sustain.",
+      "icon": "layers"
+    },
+    {
       "id": "outcomes_over_activities",
       "title": "Outcomes Over Activities",
       "summary": "Measure what customers achieve, not what your team does.",
@@ -29,25 +43,11 @@
       "icon": "compass"
     },
     {
-      "id": "proactive_over_reactive",
-      "title": "Proactive Over Reactive",
-      "summary": "Intervene before customers disengage, not after they churn.",
-      "description": "Reactive CS waits for red flags — a missed renewal, a support escalation, a cancellation request. By then, the opportunity to influence the outcome has already passed. Maturing CS organizations build systems that surface risk early and trigger intervention before customers feel the pain. This means investing in health scoring, adoption monitoring, and lifecycle automation rather than firefighting.",
-      "icon": "shield"
-    },
-    {
       "id": "data_informed_not_data_paralyzed",
       "title": "Data-Informed, Not Data-Paralyzed",
       "summary": "Track fewer metrics, but act on them ruthlessly.",
       "description": "Dashboards with 30 metrics create the illusion of insight. Real maturity means identifying the 4-6 metrics that genuinely predict outcomes for your context, instrumenting them properly, and building workflows around them. It's better to act on one trustworthy signal than to stare at a dozen unreliable ones. Start with what you can measure today. Refine as you mature.",
       "icon": "chart"
-    },
-    {
-      "id": "segment_then_scale",
-      "title": "Segment, Then Scale",
-      "summary": "Not every customer needs a CSM. Build coverage models that match value.",
-      "description": "Applying the same touch model to every account is the fastest path to burnout or bloated headcount. High-value accounts need strategic, human-led engagement. Long-tail accounts need digital, automated journeys. The dividing line depends on your economics — and it will shift as you grow. The goal is not fewer CSMs or more CSMs; it's the right engagement for each segment at a cost the business can sustain.",
-      "icon": "layers"
     }
   ],
   "context_parameters": {

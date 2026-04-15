@@ -9,6 +9,7 @@ const contributors = [
     role: 'Creator & Maintainer',
     bio: 'Customer Success practitioner. Created Distilled CS as an open, vendor-neutral way for CS teams to assess their maturity and figure out what to do next.',
     initials: 'S',
+    image: '/images/saneesh-narikutty-pacha.jpg',
     links: {
       website: 'https://saneesh.net',
       github: 'https://github.com/saneeshnp',
@@ -42,7 +43,10 @@ const otherContributors = contributors.filter(c => !c.role.includes('Maintainer'
       <div class="contributors-grid">
         {maintainers.map(person => (
           <article class="contributor-card">
-            <div class="contributor-avatar" aria-hidden="true">{person.initials}</div>
+            {person.image
+              ? <img src={person.image} alt={`${person.name}, ${person.role} of Distilled CS`} class="contributor-avatar contributor-avatar--photo" />
+              : <div class="contributor-avatar" aria-hidden="true">{person.initials}</div>
+            }
             <div class="contributor-body">
               <h3 class="contributor-name">{person.name}</h3>
               <p class="contributor-role">{person.role}</p>
@@ -80,7 +84,10 @@ const otherContributors = contributors.filter(c => !c.role.includes('Maintainer'
         <div class="contributors-grid">
           {otherContributors.map(person => (
             <article class="contributor-card">
-              <div class="contributor-avatar" aria-hidden="true">{person.initials}</div>
+              {person.image
+                ? <img src={person.image} alt={person.name} class="contributor-avatar contributor-avatar--photo" />
+                : <div class="contributor-avatar" aria-hidden="true">{person.initials}</div>
+              }
               <div class="contributor-body">
                 <h3 class="contributor-name">{person.name}</h3>
                 <p class="contributor-role">{person.role}</p>
@@ -207,6 +214,11 @@ const otherContributors = contributors.filter(c => !c.role.includes('Maintainer'
     font-size: 1.125rem;
     font-weight: 600;
     letter-spacing: 0.02em;
+  }
+
+  .contributor-avatar--photo {
+    object-fit: cover;
+    background: none;
   }
 
   .contributor-body {
