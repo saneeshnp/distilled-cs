@@ -669,9 +669,15 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
           const scoreDelta = (scores.overallScore - (prev.overallScore || 0)).toFixed(2);
           const stageChanged = prev.stage !== userStage;
 
+          const prevIdx = stageOrder.indexOf(prev.stage);
+          const stageAdvanced = stageChanged && currentIdx > prevIdx;
+          const stageRegressed = stageChanged && currentIdx < prevIdx;
+
           let summaryHtml = '';
-          if (stageChanged) {
+          if (stageAdvanced) {
             summaryHtml = `<strong>You advanced from ${prevStageLabel} to ${currStageLabel}!</strong> Overall score changed by <strong>${scoreDelta >= 0 ? '+' : ''}${scoreDelta}</strong>.`;
+          } else if (stageRegressed) {
+            summaryHtml = `<strong>Your stage dropped from ${prevStageLabel} to ${currStageLabel}.</strong> Overall score changed by <strong>${scoreDelta}</strong>.`;
           } else {
             summaryHtml = `You're still in the <strong>${currStageLabel}</strong> stage. Overall score changed by <strong>${scoreDelta >= 0 ? '+' : ''}${scoreDelta}</strong>.`;
           }

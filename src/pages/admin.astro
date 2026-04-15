@@ -476,18 +476,30 @@ const sessionKeys = [
     company_name: 'Acme',
     company_arr: 'arr_5m_20m',
     customer_segment: 'seg_midmarket',
-    industry: 'b2b_saas',
-    product_complexity: 'moderate',
-    cs_tenure: '1_3yr',
+    industry_vertical: 'ind_b2b_saas',
+    product_complexity: 'complexity_moderate',
+    cs_team_age: 'age_1_3y',
     cs_team_size: 'size_4_10',
-    cs_ops: 'part_time',
+    cs_ops_exists: 'ops_partial',
   };
 
-  const presetResponses: Record<string, number> = {};
-  // We don't need real question IDs for presets; scores are what matter
+  // All 21 assessment question IDs (3 per domain, 7 domains)
+  const allQuestionIds = [
+    'sc_q1', 'sc_q2', 'sc_q3', // segmentation_coverage
+    'jl_q1', 'jl_q2', 'jl_q3', // journey_lifecycle
+    'hr_q1', 'hr_q2', 'hr_q3', // health_risk
+    'md_q1', 'md_q2', 'md_q3', // metrics_data
+    'ev_q1', 'ev_q2', 'ev_q3', // expansion_value
+    'os_q1', 'os_q2', 'os_q3', // org_strategy
+    'ca_q1', 'ca_q2', 'ca_q3', // cs_culture_alignment
+  ];
 
   function makeScores(stage: string, score: number) {
     const domainScore = score;
+    // Clamp to valid option range (1–4) for pre-populating answer buttons
+    const responseScore = Math.min(4, Math.max(1, Math.round(score)));
+    const responses: Record<string, number> = {};
+    allQuestionIds.forEach(id => { responses[id] = responseScore; });
     return {
       domainScores: {
         segmentation_coverage: domainScore,
@@ -500,7 +512,7 @@ const sessionKeys = [
       },
       overallScore: score,
       stage,
-      responses: {},
+      responses,
       timestamp: new Date().toISOString(),
     };
   }
