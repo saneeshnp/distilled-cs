@@ -794,11 +794,16 @@ const stages = frameworkData.maturity_stages.stages;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // ── Check if returning user → show results immediately ──
+  // ── Check if returning user → show results, or jump straight into update flow ──
   if (isAssessmentCompleted()) {
     const savedScores = getScores();
     if (savedScores && savedScores.domainScores && savedScores.overallScore && savedScores.stage) {
-      showResults(savedScores.domainScores, savedScores.overallScore, savedScores.stage);
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('mode') === 'update') {
+        startAssessmentWithPreviousAnswers();
+      } else {
+        showResults(savedScores.domainScores, savedScores.overallScore, savedScores.stage);
+      }
     }
   }
 
