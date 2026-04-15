@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const lastUpdated = 'April 2026';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="How Distilled CS handles your data. Short version: we don't collect any."
+>
+
+  <div class="container privacy-page">
+
+    <header class="page-header">
+      <p class="eyebrow">Last updated: {lastUpdated}</p>
+      <h1 class="page-title">Privacy Policy</h1>
+      <p class="page-subtitle">
+        The short version: Distilled CS does not collect, store, or transmit any personal data. Everything you enter stays on your device.
+      </p>
+    </header>
+
+    <div class="page-body">
+
+      <section class="content-section">
+        <h2>What we collect</h2>
+        <p>Nothing. Distilled CS does not operate servers that receive your data. There are no user accounts, no sign-up forms, and no analytics trackers embedded in the site.</p>
+      </section>
+
+      <section class="content-section">
+        <h2>Your assessment data</h2>
+        <p>
+          When you complete the maturity assessment, your answers, scores, company profile, and any optional company name you enter are saved exclusively in your browser's <strong>localStorage</strong>, a storage area that never leaves your device. We have no access to it, cannot read it, and it is not transmitted anywhere.
+        </p>
+        <p>
+          You can clear this data at any time from the assessment page using the "Clear &amp; Restart" option, or by clearing your browser's site data.
+        </p>
+      </section>
+
+      <section class="content-section">
+        <h2>Cookies</h2>
+        <p>
+          Distilled CS does not use tracking cookies or advertising cookies. Your theme preference and a few UI dismissal states (such as closing the preview banner) are stored in your browser's localStorage and sessionStorage. These are functional only and are never shared.
+        </p>
+      </section>
+
+      <section class="content-section">
+        <h2>Infrastructure</h2>
+        <p>
+          Distilled CS is served through <a href="https://www.cloudflare.com" target="_blank" rel="noopener noreferrer">Cloudflare</a>. As with any website, Cloudflare's infrastructure processes standard request metadata (such as IP addresses) for the purpose of routing and security. This is handled under <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare's own privacy policy</a>, which we have no control over. We do not receive or store any of this data ourselves.
+        </p>
+      </section>
+
+      <section class="content-section">
+        <h2>Third-party links</h2>
+        <p>
+          Some pages link out to external sites (GitHub, LinkedIn, and others). Once you leave Distilled CS, their privacy policies apply. We are not responsible for how those sites handle your data.
+        </p>
+      </section>
+
+      <section class="content-section">
+        <h2>Changes to this policy</h2>
+        <p>
+          If we ever introduce features that change how data is handled (such as analytics or a contact form), this policy will be updated before those changes go live, and the "last updated" date at the top will reflect that.
+        </p>
+      </section>
+
+      <section class="content-section">
+        <h2>Contact</h2>
+        <p>
+          Questions about this policy? Reach out via <a href="/contact/">the contact page</a>.
+        </p>
+      </section>
+
+    </div>
+  </div>
+
+</BaseLayout>
+
+<style>
+  .privacy-page {
+    padding-block: 3rem 5rem;
+    max-width: 42rem;
+    margin-inline: auto;
+  }
+
+  .page-header {
+    margin-bottom: 3rem;
+  }
+
+  .eyebrow {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    color: var(--color-text-primary);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.03em;
+  }
+
+  .page-subtitle {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    padding: 1rem 1.25rem;
+    background: var(--color-accent-subtle);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0 0.375rem 0.375rem 0;
+  }
+
+  .page-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .content-section h2 {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.625rem;
+    letter-spacing: -0.02em;
+  }
+
+  .content-section p {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin-bottom: 0.75rem;
+  }
+
+  .content-section p:last-child {
+    margin-bottom: 0;
+  }
+
+  .content-section strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .content-section a {
+    color: var(--color-accent);
+  }
+
+  .content-section a:hover {
+    color: var(--color-accent-hover);
+  }
+</style>
