@@ -657,11 +657,14 @@ const stages = frameworkData.maturity_stages.stages;
 
   /* ── Analyzing reveal ── */
   .phase-analyzing {
-    min-height: 60vh;
+    position: fixed;
+    inset: 0;
+    z-index: 60;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 3rem 1.5rem;
+    background: var(--color-bg);
   }
 
   .analyzing-inner {
@@ -690,6 +693,17 @@ const stages = frameworkData.maturity_stages.stages;
     height: 100%;
     background: var(--color-accent);
     border-radius: 999px;
+  }
+
+  .analyzing-progress-fill.is-running {
+    animation: analyzing-load 2.5s ease-out forwards;
+  }
+
+  @keyframes analyzing-load {
+    0%   { width: 0%; }
+    20%  { width: 22%; }
+    40%  { width: 22%; }
+    100% { width: 100%; }
   }
 </style>
 
@@ -1017,7 +1031,6 @@ const stages = frameworkData.maturity_stages.stages;
     isUpdating = false;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const showReveal = !wasUpdating && !reduceMotion;
 
     const finalize = () => {
       showResults(domainScores, overallScore, stageId);
@@ -1025,35 +1038,40 @@ const stages = frameworkData.maturity_stages.stages;
       window.dispatchEvent(new CustomEvent('distilledcs:updated'));
     };
 
-    if (showReveal) {
-      runAnalyzingReveal(finalize);
-    } else {
+    if (reduceMotion) {
       finalize();
+    } else if (wasUpdating) {
+      runAnalyzingReveal(finalize, { title: 'Updating your answers', duration: 1500 });
+    } else {
+      runAnalyzingReveal(finalize, { title: 'Processing your answers', duration: 2500 });
     }
   }
 
-  function runAnalyzingReveal(done: () => void) {
+  function runAnalyzingReveal(done: () => void, opts: { title: string; duration: number }) {
     const analyzing = document.getElementById('phase-analyzing') as HTMLElement;
     if (!analyzing) { done(); return; }
 
     (document.getElementById('phase-profile') as HTMLElement).style.display = 'none';
     (document.getElementById('phase-assessment') as HTMLElement).style.display = 'none';
+    (document.getElementById('phase-results') as HTMLElement).style.display = 'none';
+
+    const titleEl = analyzing.querySelector<HTMLElement>('.analyzing-title');
+    if (titleEl) titleEl.textContent = opts.title;
 
     analyzing.style.display = '';
+
     const fill = analyzing.querySelector<HTMLElement>('.analyzing-progress-fill');
     if (fill) {
-      fill.style.transition = 'none';
-      fill.style.width = '0%';
-      // Force reflow so the transition applies on next frame
+      fill.style.animationDuration = `${opts.duration}ms`;
+      fill.classList.remove('is-running');
       void fill.offsetWidth;
-      fill.style.transition = 'width 2.5s ease-out';
-      fill.style.width = '100%';
+      fill.classList.add('is-running');
     }
 
     setTimeout(() => {
       analyzing.style.display = 'none';
       done();
-    }, 2500);
+    }, opts.duration);
   }
 
   // ── Finish & show results ──

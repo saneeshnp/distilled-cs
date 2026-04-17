@@ -816,6 +816,34 @@ const contextualRecs = frameworkData.contextual_recommendations;
       opacity: 0.7;
     }
   }
+
+  /* ── Report footer ── */
+  .report-footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .report-footer p {
+    margin: 0 0 0.25rem;
+  }
+
+  .report-footer p:last-child {
+    margin-bottom: 0;
+  }
+
+  .report-footer a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .report-footer a:hover {
+    text-decoration: underline;
+  }
 </style>
 
 <script>
@@ -961,7 +989,37 @@ const contextualRecs = frameworkData.contextual_recommendations;
     // Transition guide only if not at Fly and transition data exists
     if (transition) sections.push(renderTransitionGuide(data, nextStage, transition));
 
+    // Footer — generation timestamp + link to re-assess
+    sections.push(renderFooter(data));
+
     el.innerHTML = sections.join('');
+  }
+
+  function renderFooter(data: ReportData): string {
+    const generated = formatDateTime(data.timestamp);
+    return `
+      <div class="report-footer">
+        <p>
+          This report was generated on
+          <a href="https://distilledcs.org" target="_blank" rel="noopener noreferrer">DistilledCS.org</a>${generated ? ` on ${generated}` : ''}.
+        </p>
+        <p>
+          For an updated report, please visit
+          <a href="/assess/">distilledcs.org/assess</a>.
+        </p>
+      </div>
+    `;
+  }
+
+  function formatDateTime(iso?: string): string {
+    if (!iso) return '';
+    try {
+      const d = new Date(iso);
+      return d.toLocaleString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric',
+        hour: 'numeric', minute: '2-digit'
+      });
+    } catch { return ''; }
   }
 
   // ── Section 1: Header ──
