@@ -124,6 +124,16 @@ const stages = frameworkData.maturity_stages.stages;
       </div>
     </section>
 
+    <!-- Analyzing overlay (shown briefly on first completion) -->
+    <section class="phase phase-analyzing" id="phase-analyzing" style="display:none;" aria-live="polite">
+      <div class="analyzing-inner">
+        <p class="analyzing-title">Processing your answers</p>
+        <div class="analyzing-progress" aria-hidden="true">
+          <div class="analyzing-progress-fill"></div>
+        </div>
+      </div>
+    </section>
+
     <!-- Phase 3: Results -->
     <section class="phase" id="phase-results" style="display:none;">
       <div id="results-content"></div>
@@ -609,21 +619,77 @@ const stages = frameworkData.maturity_stages.stages;
     color: var(--color-accent);
   }
 
-  :global(.results-report-link) {
+  :global(.results-report-cta) {
     text-align: center;
-    margin-top: 2rem;
+    margin-top: 2.5rem;
+    padding: 2rem 1.5rem;
+    background: var(--color-accent-subtle);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+    border-radius: 0.875rem;
   }
 
-  :global(.results-report-link a) {
-    color: var(--color-text-secondary);
+  :global(.results-report-btn) {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border: none;
+    border-radius: 0.5rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
     text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: color 0.2s ease-out;
+    transition: background-color 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
   }
 
-  :global(.results-report-link a:hover) {
-    color: var(--color-accent);
+  :global(.results-report-btn:hover) {
+    background: var(--color-accent-hover);
+    color: var(--color-bg);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--color-accent) 25%, transparent);
+  }
+
+  :global(.results-report-cta-sub) {
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  /* ── Analyzing reveal ── */
+  .phase-analyzing {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+  }
+
+  .analyzing-inner {
+    text-align: center;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .analyzing-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+    margin: 0 0 1.25rem;
+  }
+
+  .analyzing-progress {
+    width: 100%;
+    height: 4px;
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .analyzing-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 999px;
   }
 </style>
 
@@ -711,6 +777,10 @@ const stages = frameworkData.maturity_stages.stages;
         </ol>
       </div>
 
+      <div class="results-report-cta">
+        <a href="/cs-maturity-report/" class="results-report-btn">View Full Report &rarr;</a>
+        <p class="results-report-cta-sub">See your complete, personalized CS maturity report</p>
+      </div>
       <div class="results-next-steps">
         <h2 class="results-next-steps-title">Personalized actions based on your score and CS maturity</h2>
         <ul class="results-next-steps-list">
@@ -718,9 +788,6 @@ const stages = frameworkData.maturity_stages.stages;
           <li><a href="/model/">Explore the maturity model to see where you stand</a></li>
           <li><a href="/metrics/">Understand your metric priorities</a></li>
         </ul>
-      </div>
-      <div class="results-report-link">
-        <a href="/cs-maturity-report/">View Full Report &rarr;</a>
       </div>
       <div class="results-manage">
         <button class="btn-manage" id="update-answers-btn" type="button">Update My Answers</button>
@@ -946,12 +1013,47 @@ const stages = frameworkData.maturity_stages.stages;
     saveScores({ domainScores, overallScore, stage: stageId, responses, timestamp: new Date().toISOString() });
     setAssessmentCompleted(true);
 
+    const wasUpdating = isUpdating;
     isUpdating = false;
-    showResults(domainScores, overallScore, stageId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Notify ContextBar to refresh with updated data
-    window.dispatchEvent(new CustomEvent('distilledcs:updated'));
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const showReveal = !wasUpdating && !reduceMotion;
+
+    const finalize = () => {
+      showResults(domainScores, overallScore, stageId);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.dispatchEvent(new CustomEvent('distilledcs:updated'));
+    };
+
+    if (showReveal) {
+      runAnalyzingReveal(finalize);
+    } else {
+      finalize();
+    }
+  }
+
+  function runAnalyzingReveal(done: () => void) {
+    const analyzing = document.getElementById('phase-analyzing') as HTMLElement;
+    if (!analyzing) { done(); return; }
+
+    (document.getElementById('phase-profile') as HTMLElement).style.display = 'none';
+    (document.getElementById('phase-assessment') as HTMLElement).style.display = 'none';
+
+    analyzing.style.display = '';
+    const fill = analyzing.querySelector<HTMLElement>('.analyzing-progress-fill');
+    if (fill) {
+      fill.style.transition = 'none';
+      fill.style.width = '0%';
+      // Force reflow so the transition applies on next frame
+      void fill.offsetWidth;
+      fill.style.transition = 'width 2.5s ease-out';
+      fill.style.width = '100%';
+    }
+
+    setTimeout(() => {
+      analyzing.style.display = 'none';
+      done();
+    }, 2500);
   }
 
   // ── Finish & show results ──
