@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import StrategyLoop from '../components/StrategyLoop.astro';
 import frameworkData from '../data/lean-cs-data.json';
 
 const strategyLoop = frameworkData.strategy_loop;
@@ -87,12 +86,13 @@ const principles = frameworkData.principles;
   <section class="hp-section hp-section-stages" id="maturity-stages">
     <div class="container">
       <h2 class="hp-section-headline scroll-reveal">The four stages of CS maturity</h2>
-      <p class="hp-section-subheadline scroll-reveal">A progression model from reactive operations to predictive, data-led customer success. The assessment determines where your team currently sits.</p>
+      <p class="hp-section-subheadline scroll-reveal"> The assessment shows your team’s current customer success stage, so you can understand where you are and what to do next.</p>
       <div class="hp-stages-grid">
         {stages.map((stage, i) => (
           <div class={`hp-stage-card scroll-reveal stage-${stage.id}`} style={`--stage-delay: ${i * 0.1}s`}>
             <div class="hp-stage-color-bar"></div>
             <div class="hp-stage-card-content">
+              <span class="hp-stage-pill">Stage {i + 1}</span>
               <span class="hp-stage-label">{stage.label}</span>
               <span class="hp-stage-subtitle">{stage.subtitle}</span>
               <ul class="hp-stage-chars">
@@ -116,20 +116,17 @@ const principles = frameworkData.principles;
       <h2 class="hp-section-headline scroll-reveal">The Strategy Loop</h2>
       <p class="hp-section-subheadline scroll-reveal">A continuous cycle of improvement — assess your current state, execute stage-appropriate actions, and transform your CS organisation over time.</p>
 
-      <div class="hp-loop-section-layout">
-        <div class="hp-loop-diagram-wrapper scroll-reveal">
-          <StrategyLoop size="lg" interactive={true} />
-        </div>
-
-        <div class="hp-loop-phases-detail">
-          {strategyLoop.phases.map((phase, i) => (
-            <div class="hp-loop-phase-card scroll-reveal" style={`--reveal-delay: ${i * 0.1}s`}>
-              <span class="hp-loop-phase-number">{String(i + 1).padStart(2, '0')}</span>
+      <ol class="hp-loop-phases-detail">
+        {strategyLoop.phases.map((phase, i) => (
+          <li class="hp-loop-phase-row scroll-reveal" style={`--reveal-delay: ${i * 0.1}s`}>
+            <span class="hp-loop-phase-number">{String(i + 1).padStart(2, '0')}</span>
+            <div class="hp-loop-phase-body">
+              <h3 class="hp-loop-phase-title">{phase.label}</h3>
               <p class="hp-loop-phase-desc">{phase.description}</p>
             </div>
-          ))}
-        </div>
-      </div>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
@@ -503,61 +500,60 @@ const principles = frameworkData.principles;
   /* ══════════════════════════════════════════
      SECTION: STRATEGY LOOP
      ══════════════════════════════════════════ */
-  .hp-loop-section-layout {
+  .hp-loop-phases-detail {
+    list-style: none;
+    padding: 0;
+    margin: 2.5rem 0 0;
     display: flex;
     flex-direction: column;
-    gap: 3rem;
-    margin-top: 3rem;
+  }
+
+  .hp-loop-phase-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    column-gap: 1.25rem;
+    padding: 1.25rem 0;
+  }
+
+  .hp-loop-phase-row + .hp-loop-phase-row {
+    border-top: 1px dashed color-mix(in srgb, var(--color-accent) 25%, transparent);
   }
 
   @media (min-width: 768px) {
-    .hp-loop-section-layout {
-      flex-direction: row;
-      align-items: center;
-      gap: 4rem;
+    .hp-loop-phase-row {
+      grid-template-columns: 48px 1fr;
+      column-gap: 1.5rem;
+      padding: 1.25rem 0;
     }
-
-    .hp-loop-diagram-wrapper {
-      flex: 1;
-      max-width: 420px;
-    }
-
-    .hp-loop-phases-detail {
-      flex: 1;
-    }
-  }
-
-  .hp-loop-phases-detail {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .hp-loop-phase-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.25rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .hp-loop-phase-card:last-child {
-    border-bottom: none;
   }
 
   .hp-loop-phase-number {
     font-family: var(--font-display);
     font-size: 1.25rem;
     color: var(--color-accent);
-    opacity: 0.6;
-    flex-shrink: 0;
-    line-height: 1.4;
+    opacity: 0.7;
+    line-height: 1.3;
+  }
+
+  .hp-loop-phase-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .hp-loop-phase-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+    margin: 0;
+    line-height: 1.3;
   }
 
   .hp-loop-phase-desc {
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
-    line-height: 1.65;
+    line-height: 1.6;
     margin: 0;
   }
 
@@ -664,6 +660,21 @@ const principles = frameworkData.principles;
 
   .hp-stage-card-content {
     padding: 1.5rem;
+  }
+
+  .hp-stage-pill {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--stage-color);
+    background: color-mix(in srgb, var(--stage-color) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--stage-color) 45%, transparent);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
   }
 
   .hp-stage-label {
