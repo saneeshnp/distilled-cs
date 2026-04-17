@@ -608,6 +608,23 @@ const stages = frameworkData.maturity_stages.stages;
     border-color: var(--color-accent);
     color: var(--color-accent);
   }
+
+  :global(.results-report-link) {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  :global(.results-report-link a) {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s ease-out;
+  }
+
+  :global(.results-report-link a:hover) {
+    color: var(--color-accent);
+  }
 </style>
 
 <script>
@@ -701,6 +718,9 @@ const stages = frameworkData.maturity_stages.stages;
           <li><a href="/model/">Explore the maturity model to see where you stand</a></li>
           <li><a href="/metrics/">Understand your metric priorities</a></li>
         </ul>
+      </div>
+      <div class="results-report-link">
+        <a href="/cs-maturity-report/">View Full Report &rarr;</a>
       </div>
       <div class="results-manage">
         <button class="btn-manage" id="update-answers-btn" type="button">Update My Answers</button>

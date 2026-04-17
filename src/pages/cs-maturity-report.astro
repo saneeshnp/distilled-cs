@@ -1,0 +1,1256 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import frameworkData from '../data/lean-cs-data.json';
+
+const stages = frameworkData.maturity_stages.stages;
+const domains = frameworkData.assessment_domains.domains;
+const playbooks = frameworkData.playbooks;
+const metrics = frameworkData.metrics_directory.metrics;
+const stageTransitions = frameworkData.stage_transitions;
+const contextualRecs = frameworkData.contextual_recommendations;
+---
+
+<BaseLayout title="CS Maturity Report" description="Your personalized Customer Success maturity report with domain breakdown, priority actions, and recommended playbooks.">
+  <div class="container report-page">
+
+    <!-- ═══ Not-assessed fallback ═══ -->
+    <div id="report-not-assessed" data-hide-if-assessed>
+      <div class="not-assessed-content">
+        <h1 class="not-assessed-headline">Complete your assessment to unlock your report</h1>
+        <p class="not-assessed-body">
+          The CS Maturity Report consolidates your domain scores, priority actions, playbooks, and metric benchmarks into a single view you can download and share. Take the assessment first to generate your personalized report.
+        </p>
+        <a href="/assess/" class="btn btn-primary btn-large">Take the Assessment</a>
+      </div>
+    </div>
+
+    <!-- ═══ Report content (JS-populated) ═══ -->
+    <div id="report-assessed" data-show-if-assessed style="display:none;">
+
+      <!-- Report toolbar -->
+      <div class="report-toolbar">
+        <a href="/assess/" class="report-back-link">&larr; Back to Results</a>
+        <button type="button" class="report-download-btn" id="download-pdf-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4.5 1h5l3.5 3.5V13a2 2 0 0 1-2 2H4.5A1.5 1.5 0 0 1 3 13.5v-11A1.5 1.5 0 0 1 4.5 1z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9.5 1v3.5H13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Print / Save PDF
+        </button>
+      </div>
+
+      <!-- Beta notice -->
+      <div class="report-beta-notice" role="note">
+        <span class="report-beta-icon" aria-hidden="true">ℹ</span>
+        <span><strong>This report is in beta.</strong> Layout and print/PDF support are being actively refined. For best results, use a desktop browser.</span>
+      </div>
+
+      <!-- Report body — populated by JS -->
+      <div id="report-content"></div>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .report-page {
+    max-width: 56rem;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+    padding-bottom: 4rem;
+  }
+
+  /* ── Not-assessed fallback ── */
+  .not-assessed-content {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .not-assessed-headline {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .not-assessed-body {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    max-width: 32rem;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: all 0.2s ease-out;
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .btn-large {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+  }
+
+  /* ── Report toolbar ── */
+  .report-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .report-back-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s ease-out;
+  }
+
+  .report-back-link:hover {
+    color: var(--color-accent);
+  }
+
+  .report-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    cursor: pointer;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border: none;
+    transition: all 0.2s ease-out;
+  }
+
+  .report-download-btn:hover {
+    background: var(--color-accent-hover);
+  }
+
+  /* ── Beta notice ── */
+  .report-beta-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    background: var(--color-accent-subtle);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+  }
+
+  .report-beta-notice strong {
+    color: var(--color-text-primary);
+  }
+
+  .report-beta-icon {
+    flex-shrink: 0;
+    font-size: 0.875rem;
+    color: var(--color-accent);
+    line-height: 1.5;
+  }
+
+  @media print {
+    .report-download-btn,
+    .report-beta-notice {
+      display: none !important;
+    }
+  }
+</style>
+
+<style is:global>
+  /* ── Styles for JS-injected report content ── */
+
+  /* Section spacing */
+  .report-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .report-section-title {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    color: var(--color-text-primary);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* ── Section 1: Header ── */
+  .report-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding: 2rem 1.5rem;
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  .report-header .report-stage-label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  .report-header .report-stage-name {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    margin: 0.25rem 0;
+    color: var(--stage-color, var(--color-text-primary));
+  }
+
+  .report-header .report-stage-subtitle {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .report-header .report-score {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .report-header .report-date {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted, var(--color-text-secondary));
+    margin-top: 0.75rem;
+  }
+
+  /* ── Section 2: Executive Summary ── */
+  .report-summary-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.25rem;
+  }
+
+  .report-profile-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .report-profile-item {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+  }
+
+  .report-profile-item strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  /* ── Section 3: Domain Breakdown ── */
+  .report-domain-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .report-domain-row:last-child {
+    border-bottom: none;
+  }
+
+  .report-domain-label {
+    flex: 0 0 14rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 640px) {
+    .report-domain-row {
+      flex-wrap: wrap;
+    }
+    .report-domain-label {
+      flex: 1 1 100%;
+    }
+  }
+
+  .report-domain-tag {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .report-domain-tag-strong {
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+  }
+
+  .report-domain-tag-weak {
+    background: color-mix(in srgb, var(--color-warning) 15%, transparent);
+    color: var(--color-warning);
+  }
+
+  .report-domain-bar-wrap {
+    flex: 1;
+    height: 0.5rem;
+    background: var(--color-border);
+    border-radius: 999px;
+    overflow: hidden;
+    min-width: 6rem;
+  }
+
+  .report-domain-bar {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--stage-color, var(--color-accent));
+    transition: width 0.3s ease-out;
+  }
+
+  .report-domain-score {
+    flex: 0 0 3rem;
+    text-align: right;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .report-domain-delta {
+    flex: 0 0 3.5rem;
+    text-align: right;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .report-delta-up { color: #388E3C; }
+  .report-delta-down { color: #D32F2F; }
+  .report-delta-same { color: var(--color-text-secondary); }
+
+  :root[data-theme="dark"] .report-delta-up { color: #81C784; }
+  :root[data-theme="dark"] .report-delta-down { color: #E57373; }
+
+  /* ── Section 4: Priority Actions ── */
+  .report-actions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .report-action-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .report-action-num {
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .report-action-body {
+    flex: 1;
+  }
+
+  .report-action-text {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .report-action-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .report-action-time,
+  .report-action-why {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .report-action-time {
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  /* ── Section 5: Playbooks ── */
+  .report-playbooks-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .report-playbooks-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .report-playbook-card {
+    padding: 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    transition: border-color 0.2s ease-out;
+  }
+
+  .report-playbook-card:hover {
+    border-color: var(--color-accent);
+  }
+
+  .report-playbook-card.is-next-stage {
+    opacity: 0.55;
+  }
+
+  .report-playbook-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .report-playbook-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .report-playbook-title a:hover {
+    color: var(--color-accent);
+  }
+
+  .report-playbook-obj {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+
+  .report-playbook-duration {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .report-subsection-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin: 1.5rem 0 0.75rem;
+    font-family: var(--font-body);
+  }
+
+  /* Long company names — truncate in header */
+  .report-header .report-stage-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  /* ── Section 6: Metrics ── */
+  .report-metric-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .report-metric-group-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .report-metric-group-title .priority-dot {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+  }
+
+  .priority-dot-high { background: #D32F2F; }
+  .priority-dot-medium { background: #F57C00; }
+  .priority-dot-low { background: #9E9E9E; }
+
+  :root[data-theme="dark"] .priority-dot-high { background: #E57373; }
+  :root[data-theme="dark"] .priority-dot-medium { background: #FFB74D; }
+
+  .report-metric-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .report-metric-row:last-child {
+    border-bottom: none;
+  }
+
+  .report-metric-name {
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+  }
+
+  .report-metric-name a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .report-metric-name a:hover {
+    color: var(--color-accent);
+  }
+
+  .report-metric-benchmark {
+    flex: 0 0 auto;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    text-align: right;
+  }
+
+  /* ── Section 7: Maturity Model ── */
+  .report-stages-track {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .report-stages-track {
+      flex-direction: column;
+    }
+  }
+
+  .report-stage-card {
+    flex: 1;
+    min-width: 0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    transition: border-color 0.2s ease-out;
+  }
+
+  .report-stage-card.is-current {
+    border-color: var(--stage-color, var(--color-accent));
+    background: color-mix(in srgb, var(--stage-color, var(--color-accent)) 6%, var(--color-surface));
+  }
+
+  .report-stage-card-label {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .report-stage-card-subtitle {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  .report-stage-card-badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    background: var(--stage-color, var(--color-accent));
+    color: var(--color-on-stage, #fff);
+    margin-bottom: 0.75rem;
+  }
+
+  .report-stage-card-badge-completed {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .report-characteristics-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .report-characteristics-list li {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .report-characteristics-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--stage-color, var(--color-accent));
+  }
+
+  /* ── Section 8: Transition Guide ── */
+  .report-transition-columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .report-transition-columns {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  .report-transition-block {
+    padding: 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .report-transition-block-title {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+    margin: 0 0 0.75rem;
+  }
+
+  .report-transition-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .report-transition-list li {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .report-transition-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+  }
+
+  /* ══════════════════════════════════════════
+     @media print — Task 6
+     ══════════════════════════════════════════ */
+  @media print {
+    /* Hide navigation chrome */
+    header,
+    footer,
+    .context-bar,
+    .report-toolbar,
+    .report-download-btn,
+    .report-back-link {
+      display: none !important;
+    }
+
+    /* Force light-mode colors for print */
+    :root, :root[data-theme="dark"] {
+      --color-bg: #fff;
+      --color-surface: #f9fafb;
+      --color-text-primary: #1a1a1a;
+      --color-text-secondary: #555;
+      --color-text-muted: #777;
+      --color-border: #ddd;
+      --color-accent: #2D6A5A;
+      --color-accent-subtle: rgba(45, 106, 90, 0.08);
+      --color-on-stage: #fff;
+      color-scheme: light;
+    }
+
+    /* Stage colors — solid for print */
+    .stage-crawl { --stage-color: #D32F2F; }
+    .stage-walk  { --stage-color: #F57C00; }
+    .stage-run   { --stage-color: #388E3C; }
+    .stage-fly   { --stage-color: #1976D2; }
+
+    /* Full-width, no max-width constraint */
+    .report-page {
+      max-width: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* Remove decorative shadows and reduce borders */
+    .report-header,
+    .report-playbook-card,
+    .report-action-item,
+    .report-transition-block,
+    .report-stage-card,
+    .report-profile-row {
+      box-shadow: none !important;
+      border-color: #ddd !important;
+    }
+
+    /* Prevent sections and cards from splitting across pages */
+    .report-section {
+      break-inside: avoid;
+    }
+
+    .report-action-item,
+    .report-playbook-card,
+    .report-stage-card,
+    .report-transition-block {
+      break-inside: avoid;
+    }
+
+    /* Allow page breaks between major sections */
+    .report-section {
+      break-before: auto;
+    }
+
+    /* Domain bars — solid backgrounds, no gradients */
+    .report-domain-bar {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      background: var(--stage-color, #2D6A5A) !important;
+    }
+
+    .report-domain-bar-wrap {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      background: #eee !important;
+    }
+
+    /* Stage badges and priority dots — preserve colors */
+    .report-stage-card-badge,
+    .priority-dot,
+    .report-domain-tag {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* Ensure stage card current highlight shows */
+    .report-stage-card.is-current {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      border-color: var(--stage-color) !important;
+      background: rgba(45, 106, 90, 0.04) !important;
+    }
+
+    /* Links — show as plain text in print */
+    a {
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+
+    /* Next-stage playbooks — slightly dimmed but still readable */
+    .report-playbook-card.is-next-stage {
+      opacity: 0.7;
+    }
+  }
+</style>
+
+<script>
+  import { getProfile, getScores, isAssessmentCompleted } from '../scripts/context-manager.js';
+  import frameworkData from '../data/lean-cs-data.json';
+
+  const stages = (frameworkData as any).maturity_stages.stages;
+  const domains = (frameworkData as any).assessment_domains.domains;
+  const allPlaybooks = (frameworkData as any).playbooks;
+  const allMetrics = (frameworkData as any).metrics_directory.metrics;
+  const stageTransitions = (frameworkData as any).stage_transitions;
+  const contextParams = (frameworkData as any).context_parameters.parameters;
+
+  const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+  const domainLabels: Record<string, string> = {};
+  domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
+
+  // ── Toggle assessed/not-assessed views ──
+  const completed = isAssessmentCompleted();
+
+  if (completed) {
+    const reportData = getReportData();
+    if (reportData) {
+      document.querySelectorAll('[data-show-if-assessed]').forEach(el => (el as HTMLElement).style.display = '');
+      document.querySelectorAll('[data-hide-if-assessed]').forEach(el => (el as HTMLElement).style.display = 'none');
+      renderReport(reportData);
+    }
+    // If completed flag is set but data is corrupt/missing, fallback CTA stays visible
+  }
+
+  // ── Data layer ──
+  interface ReportData {
+    companyName: string;
+    profile: Record<string, string>;
+    domainScores: Record<string, number>;
+    overallScore: number;
+    stage: string;
+    responses: Record<string, number>;
+    timestamp: string;
+    previousScores: any | null;
+    checklistProgress: Record<string, boolean> | null;
+  }
+
+  function getReportData(): ReportData | null {
+    // Future: const urlData = parseURLParams(); if (urlData) return urlData;
+    return buildFromLocalStorage();
+  }
+
+  function buildFromLocalStorage(): ReportData | null {
+    const scores = getScores();
+    const profile = getProfile();
+    if (!scores || !scores.domainScores) return null;
+
+    let previousScores = null;
+    try {
+      const raw = localStorage.getItem('distilledcs_previous_scores');
+      if (raw) previousScores = JSON.parse(raw);
+    } catch {}
+
+    let checklistProgress = null;
+    try {
+      const raw = localStorage.getItem('distilledcs_checklist');
+      if (raw) checklistProgress = JSON.parse(raw);
+    } catch {}
+
+    return {
+      companyName: profile?.company_name || '',
+      profile: profile || {},
+      domainScores: scores.domainScores,
+      overallScore: scores.overallScore,
+      stage: scores.stage,
+      responses: scores.responses || {},
+      timestamp: scores.timestamp || '',
+      previousScores,
+      checklistProgress,
+    };
+  }
+
+  // ── Helpers ──
+  function getStageData(stageId: string) {
+    return stages.find((s: any) => s.id === stageId);
+  }
+
+  function getProfileLabel(paramId: string, optionId: string): string {
+    const param = contextParams.find((p: any) => p.id === paramId);
+    if (!param) return optionId;
+    const opt = param.options.find((o: any) => o.id === optionId);
+    return opt?.label || optionId;
+  }
+
+  function barStageClass(score: number): string {
+    if (score >= 3.4) return 'fly';
+    if (score >= 2.6) return 'run';
+    if (score >= 1.8) return 'walk';
+    return 'crawl';
+  }
+
+  function formatDate(iso: string): string {
+    if (!iso) return '';
+    try {
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    } catch { return ''; }
+  }
+
+  // ── Render ──
+  function renderReport(data: ReportData) {
+    const el = document.getElementById('report-content');
+    if (!el) return;
+
+    const stage = getStageData(data.stage);
+    const currentIdx = stageOrder.indexOf(data.stage);
+    const nextStageId = currentIdx < 3 ? stageOrder[currentIdx + 1] : null;
+    const nextStage = nextStageId ? getStageData(nextStageId) : null;
+    const transitionKey = nextStageId ? `${data.stage}_to_${nextStageId}` : null;
+    const transition = transitionKey ? (stageTransitions as any)[transitionKey] : null;
+
+    const sections: string[] = [];
+
+    // Header always renders (has fallbacks for missing stage)
+    sections.push(renderHeader(data, stage));
+
+    // Summary needs stage data
+    if (stage) sections.push(renderSummary(data, stage));
+
+    // Domain breakdown needs scores
+    if (data.domainScores && Object.keys(data.domainScores).length) {
+      sections.push(renderDomainBreakdown(data));
+    }
+
+    // Priority actions need stage data
+    if (stage) sections.push(renderPriorityActions(data, stage));
+
+    // Playbooks need a valid stage
+    if (data.stage) sections.push(renderPlaybooks(data, nextStageId));
+
+    // Metrics need a valid stage
+    if (data.stage) sections.push(renderMetrics(data));
+
+    // Maturity model always renders
+    sections.push(renderMaturityModel(data));
+
+    // Transition guide only if not at Fly and transition data exists
+    if (transition) sections.push(renderTransitionGuide(data, nextStage, transition));
+
+    el.innerHTML = sections.join('');
+  }
+
+  // ── Section 1: Header ──
+  function renderHeader(data: ReportData, stage: any): string {
+    const title = data.companyName
+      ? `${data.companyName}'s CS Maturity Report`
+      : 'Your CS Maturity Report';
+
+    return `
+      <div class="report-header stage-${data.stage}">
+        <div class="report-stage-label">${title}</div>
+        <h1 class="report-stage-name">${stage?.label || data.stage}</h1>
+        <p class="report-stage-subtitle">${stage?.subtitle || ''}</p>
+        <p class="report-score">Overall Score: ${data.overallScore.toFixed(2)} / 4.0</p>
+        ${data.timestamp ? `<p class="report-date">Assessment completed ${formatDate(data.timestamp)}</p>` : ''}
+      </div>
+    `;
+  }
+
+  // ── Section 2: Executive Summary ──
+  function renderSummary(data: ReportData, stage: any): string {
+    const profileItems: string[] = [];
+    const displayParams = [
+      { key: 'company_arr', label: 'ARR' },
+      { key: 'customer_segment', label: 'Segment' },
+      { key: 'cs_team_size', label: 'Team Size' },
+      { key: 'industry_vertical', label: 'Industry' },
+    ];
+
+    for (const p of displayParams) {
+      const val = data.profile[p.key];
+      if (val) {
+        profileItems.push(`<span class="report-profile-item"><strong>${p.label}:</strong> ${getProfileLabel(p.key, val)}</span>`);
+      }
+    }
+
+    return `
+      <div class="report-section">
+        <h2 class="report-section-title">Executive Summary</h2>
+        <p class="report-summary-text">For ${data.companyName || 'your company'}, ${stage?.description || ''}</p>
+        ${stage?.typical_profile ? `<p class="report-summary-text">${stage.typical_profile}</p>` : ''}
+        ${profileItems.length ? `<div class="report-profile-row">${profileItems.join('')}</div>` : ''}
+      </div>
+    `;
+  }
+
+  // ── Section 3: Domain Breakdown ──
+  function renderDomainBreakdown(data: ReportData): string {
+    const sorted = Object.entries(data.domainScores).sort((a, b) => b[1] - a[1]);
+    const strongestId = sorted[0]?.[0];
+    const weakestId = sorted[sorted.length - 1]?.[0];
+    const hasPrevious = data.previousScores?.domainScores;
+
+    const rows = sorted.map(([id, score]) => {
+      const pct = ((score / 4) * 100).toFixed(0);
+      const stageClass = barStageClass(score);
+      const isStrong = id === strongestId;
+      const isWeak = id === weakestId;
+
+      let deltaHtml = '';
+      if (hasPrevious && data.previousScores.domainScores[id] !== undefined) {
+        const prev = data.previousScores.domainScores[id];
+        const delta = score - prev;
+        if (Math.abs(delta) >= 0.05) {
+          const cls = delta > 0 ? 'report-delta-up' : 'report-delta-down';
+          const arrow = delta > 0 ? '&#9650;' : '&#9660;';
+          deltaHtml = `<span class="report-domain-delta ${cls}">${arrow} ${Math.abs(delta).toFixed(1)}</span>`;
+        } else {
+          deltaHtml = `<span class="report-domain-delta report-delta-same">—</span>`;
+        }
+      }
+
+      const label = domainLabels[id] || id;
+      return `
+        <div class="report-domain-row stage-${stageClass}" role="group" aria-label="${label}: ${score.toFixed(1)} out of 4.0">
+          <span class="report-domain-label">
+            ${label}
+            ${isStrong ? '<span class="report-domain-tag report-domain-tag-strong">Strongest</span>' : ''}
+            ${isWeak ? '<span class="report-domain-tag report-domain-tag-weak">Needs Focus</span>' : ''}
+          </span>
+          <div class="report-domain-bar-wrap" role="progressbar" aria-valuenow="${score.toFixed(1)}" aria-valuemin="0" aria-valuemax="4" aria-label="${label} score">
+            <div class="report-domain-bar" style="width:${pct}%"></div>
+          </div>
+          <span class="report-domain-score">${score.toFixed(1)}</span>
+          ${deltaHtml}
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="report-section">
+        <h2 class="report-section-title">Domain Breakdown</h2>
+        ${rows}
+      </div>
+    `;
+  }
+
+  // ── Section 4: Priority Actions ──
+  function renderPriorityActions(data: ReportData, stage: any): string {
+    const actions = stage?.priority_actions || [];
+    if (!actions.length) return '';
+
+    const items = actions.map((a: any, i: number) => {
+      const text = typeof a === 'string' ? a : a.text;
+      const time = typeof a === 'object' ? a.estimated_time : '';
+      const why = typeof a === 'object' ? a.why_it_matters : '';
+
+      return `
+        <li class="report-action-item">
+          <span class="report-action-num">${i + 1}</span>
+          <div class="report-action-body">
+            <div class="report-action-text">${text}</div>
+            <div class="report-action-meta">
+              ${time ? `<span class="report-action-time">${time}</span>` : ''}
+              ${why ? `<span class="report-action-why">${why}</span>` : ''}
+            </div>
+          </div>
+        </li>
+      `;
+    }).join('');
+
+    return `
+      <div class="report-section">
+        <h2 class="report-section-title">Priority Actions</h2>
+        <ol class="report-actions-list">${items}</ol>
+      </div>
+    `;
+  }
+
+  // ── Section 5: Playbooks ──
+  function renderPlaybooks(data: ReportData, nextStageId: string | null): string {
+    const currentPlaybooks = allPlaybooks[data.stage] || [];
+    const nextPlaybooks = nextStageId ? (allPlaybooks[nextStageId] || []) : [];
+
+    const renderCard = (pb: any, isNext: boolean) => `
+      <div class="report-playbook-card${isNext ? ' is-next-stage' : ''}">
+        <div class="report-playbook-title"><a href="/playbooks/${pb.id}/">${pb.title}</a></div>
+        <p class="report-playbook-obj">${pb.objective}</p>
+        <span class="report-playbook-duration">${pb.estimated_duration}</span>
+      </div>
+    `;
+
+    const currentCards = currentPlaybooks.map((pb: any) => renderCard(pb, false)).join('');
+    const nextCards = nextPlaybooks.length
+      ? `<h3 class="report-subsection-label">Coming Next</h3><div class="report-playbooks-grid">${nextPlaybooks.map((pb: any) => renderCard(pb, true)).join('')}</div>`
+      : '';
+
+    return `
+      <div class="report-section">
+        <h2 class="report-section-title">Recommended Playbooks</h2>
+        <div class="report-playbooks-grid">${currentCards}</div>
+        ${nextCards}
+      </div>
+    `;
+  }
+
+  // ── Section 6: Metrics ──
+  function renderMetrics(data: ReportData): string {
+    const segment = data.profile.customer_segment || '';
+
+    const grouped: Record<string, any[]> = { high: [], medium: [], low: [] };
+    for (const m of allMetrics) {
+      const priority = m.priority_by_stage?.[data.stage] || 'low';
+      grouped[priority] = grouped[priority] || [];
+      grouped[priority].push(m);
+    }
+
+    const renderGroup = (priority: string, label: string, metrics: any[]) => {
+      if (!metrics.length) return '';
+
+      const rows = metrics.map((m: any) => {
+        let benchmarkHtml = '';
+        if (priority === 'high' && segment && m.benchmarks_by_context?.[segment]) {
+          const b = m.benchmarks_by_context[segment];
+          benchmarkHtml = `<span class="report-metric-benchmark">Target: ${b.good || ''}</span>`;
+        }
+        return `
+          <div class="report-metric-row">
+            <span class="report-metric-name"><a href="/metrics/${m.id}/">${m.name}</a></span>
+            ${benchmarkHtml}
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="report-metric-group">
+          <h3 class="report-metric-group-title">
+            <span class="priority-dot priority-dot-${priority}"></span>
+            ${label} Priority
+          </h3>
+          ${rows}
+        </div>
+      `;
+    };
+
+    return `
+      <div class="report-section">
+        <h2 class="report-section-title">Metric Priorities</h2>
+        ${renderGroup('high', 'High', grouped.high)}
+        ${renderGroup('medium', 'Medium', grouped.medium)}
+        ${renderGroup('low', 'Low', grouped.low)}
+      </div>
+    `;
+  }
+
+  // ── Section 7: Maturity Model ──
+  function renderMaturityModel(data: ReportData): string {
+    const currentIdx = stageOrder.indexOf(data.stage);
+
+    const cards = stages.map((s: any) => {
+      const idx = stageOrder.indexOf(s.id);
+      const isCurrent = s.id === data.stage;
+      const isCompleted = idx < currentIdx;
+
+      const characteristics = s.key_characteristics?.length
+        ? `<ul class="report-characteristics-list">
+            ${s.key_characteristics.map((c: string) => `<li>${c}</li>`).join('')}
+          </ul>`
+        : '';
+
+      let badge = '';
+      if (isCurrent) {
+        badge = '<span class="report-stage-card-badge">You are here</span>';
+      } else if (isCompleted) {
+        badge = '<span class="report-stage-card-badge-completed">✓ Completed</span>';
+      }
+
+      return `
+        <div class="report-stage-card stage-${s.id}${isCurrent ? ' is-current' : ''}">
+          <div class="report-stage-card-label">${s.label}</div>
+          <div class="report-stage-card-subtitle">${s.subtitle}</div>
+          ${badge}
+          ${characteristics}
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="report-section">
+        <h2 class="report-section-title">Your CS Maturity Journey</h2>
+        <div class="report-stages-track">${cards}</div>
+      </div>
+    `;
+  }
+
+  // ── Print / Save as PDF (Task 7) ──
+  // Uses window.print() with @media print CSS (Task 6) instead of html2pdf.js.
+  // html2pdf.js was removed because html2canvas clones the entire document into
+  // iframes, which triggers cascading page loads with Astro's dev server/toolbar,
+  // crashes Vite HMR, and leaves the page unresponsive. window.print() is zero-
+  // dependency, works on all modern browsers (including iOS Safari 15+), and
+  // leverages the comprehensive @media print styles already defined above.
+  const downloadBtn = document.getElementById('download-pdf-btn');
+
+  if (downloadBtn) {
+    downloadBtn.addEventListener('click', () => {
+      window.print();
+    });
+  }
+
+  // ── Section 8: Transition Guide ──
+  function renderTransitionGuide(data: ReportData, nextStage: any, transition: any): string {
+    const title = nextStage
+      ? `Transition Guide: ${getStageData(data.stage)?.label} → ${nextStage.label}`
+      : 'Transition Guide';
+
+    const renderList = (items: string[]) =>
+      items?.length
+        ? `<ul class="report-transition-list">${items.map((t: string) => `<li>${t}</li>`).join('')}</ul>`
+        : '';
+
+    return `
+      <div class="report-section">
+        <h2 class="report-section-title">${title}</h2>
+        <div class="report-transition-columns">
+          <div class="report-transition-block">
+            <h3 class="report-transition-block-title">Trigger Signals</h3>
+            ${renderList(transition.trigger_signals)}
+          </div>
+          <div class="report-transition-block">
+            <h3 class="report-transition-block-title">Key Shifts</h3>
+            ${renderList(transition.key_shifts)}
+          </div>
+          <div class="report-transition-block">
+            <h3 class="report-transition-block-title">New Capabilities</h3>
+            ${renderList(transition.new_capabilities)}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+</script>
