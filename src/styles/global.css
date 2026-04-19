@@ -28,6 +28,7 @@
   --color-accent: #2D6A5A;
   --color-accent-hover: #358272;
   --color-accent-subtle: rgba(45, 106, 90, 0.08);
+  --color-on-accent: #ffffff;
 
   /* Secondary — lighter teal */
   --color-secondary: #4a8a7b;
@@ -74,6 +75,7 @@
   --color-accent: #4ECDC4;
   --color-accent-hover: #6FE8E0;
   --color-accent-subtle: rgba(78, 205, 196, 0.12);
+  --color-on-accent: #0f0f17;
 
   /* Secondary */
   --color-secondary: #5b9a8b;
