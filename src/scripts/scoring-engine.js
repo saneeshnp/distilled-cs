@@ -42,17 +42,18 @@ export function calculateOverallScore(domainScores) {
   return Math.round(avg * 100) / 100;
 }
 
-// Determine maturity stage from overall score
+// Determine maturity stage from overall score.
+// Stages are selected by the highest min threshold the score has passed.
+// score_range[1] is display-only (shown on the model page); not used for logic,
+// so scores between display ranges (e.g. 1.75) still map to a valid stage.
+// Assumes `stages` is ordered ascending by score_range[0].
 export function determineStage(overallScore) {
   if (typeof overallScore !== 'number') return null;
+  let chosen = stages[0];
   for (const stage of stages) {
-    const [min, max] = stage.score_range;
-    if (overallScore >= min && overallScore <= max) {
-      return stage.id;
-    }
+    if (overallScore >= stage.score_range[0]) chosen = stage;
   }
-  if (overallScore < 1.0) return stages[0].id;
-  return stages[stages.length - 1].id;
+  return chosen.id;
 }
 
 // Generate full assessment result object

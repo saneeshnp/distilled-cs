@@ -468,7 +468,7 @@
     ]
   },
   "assessment_domains": {
-    "description": "Seven capability domains, each with 3 questions scored 1–4. Domain average determines domain maturity. Overall average determines stage.",
+    "description": "Eight capability domains, each with 3 questions scored 1–4. Domain average determines domain maturity. Overall average determines stage.",
     "domains": [
       {
         "id": "segmentation_coverage",
@@ -990,6 +990,81 @@
               {
                 "score": 4,
                 "label": "Customer outcomes are a company-wide OKR; Sales, Product, and CS share accountability with aligned incentives"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ai_leverage",
+        "label": "AI Leverage in CS",
+        "icon": "cpu",
+        "description": "How CS teams apply AI to augment CSMs, predict risk, and orchestrate interventions — and whether they do so responsibly and at scale.",
+        "weight": 1,
+        "questions": [
+          {
+            "id": "ai_q1",
+            "question": "Which best describes the AI capabilities actively used in your CS workflows today?",
+            "options": [
+              {
+                "score": 1,
+                "label": "No AI beyond generic productivity tools like email autocomplete or spellcheck"
+              },
+              {
+                "score": 2,
+                "label": "CSMs use drafting and summarization copilots for emails, call notes, ticket summaries, and meeting prep"
+              },
+              {
+                "score": 3,
+                "label": "Predictive models (health scoring, churn risk, or expansion propensity) are in production and integrated into CSM workflows"
+              },
+              {
+                "score": 4,
+                "label": "Agentic AI takes bounded autonomous actions (tiered interventions, routing, self-serve resolution) with explicit human oversight and measured outcomes"
+              }
+            ]
+          },
+          {
+            "id": "ai_q2",
+            "question": "How well does your data foundation support AI in CS?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Customer data lives in silos across CRM, support, product analytics, and billing; no unified view exists"
+              },
+              {
+                "score": 2,
+                "label": "Core CS data is consolidated in a CS platform or data warehouse, but not feature-engineered for AI; most pulls are manual"
+              },
+              {
+                "score": 3,
+                "label": "A unified customer data layer feeds purpose-built features to AI models; product, support, sentiment, and billing signals flow in, and outputs flow back to CSM tools"
+              },
+              {
+                "score": 4,
+                "label": "Real-time multi-signal integration with continuous model retraining and feedback loops from CSM actions back into the models"
+              }
+            ]
+          },
+          {
+            "id": "ai_q3",
+            "question": "How mature is your governance, adoption, and measurement of AI in CS?",
+            "options": [
+              {
+                "score": 1,
+                "label": "Ad hoc use with no policy on AI tools, PII handling, or hallucination review; adoption varies by individual CSM"
+              },
+              {
+                "score": 2,
+                "label": "Written guidelines cover PII, prompt hygiene, and human-in-loop requirements; some CSMs use AI regularly, but adoption is uneven"
+              },
+              {
+                "score": 3,
+                "label": "Formal Responsible AI principles, CSM training, majority daily use, and measured impact on time saved, accuracy, and outcomes"
+              },
+              {
+                "score": 4,
+                "label": "AI impact is a tracked KPI tied to retention, expansion, and CSAT; model reviews, A/B tests of assisted vs. unassisted playbooks, and a governance committee are routine"
               }
             ]
           }
