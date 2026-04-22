@@ -498,19 +498,37 @@
             "options": [
               {
                 "score": 1,
-                "label": "We don't segment — all customers get a similar experience"
+                "label": "We don't segment — all customers get a similar experience",
+                "insight": "Your team treats every account the same, regardless of value, complexity, or growth potential.",
+                "next_step": "Start with one dimension: ARR. Separate your top 20% of accounts by ARR and give them a higher-touch engagement model. Even a rough split creates clarity on where CSM time goes."
               },
               {
                 "score": 2,
-                "label": "Basic segmentation by ARR or contract size"
+                "label": "Basic segmentation by ARR or contract size",
+                "insight": "You use ARR as a proxy for value — a reasonable start, but it misses risk and growth potential.",
+                "next_step": "Add a second dimension: usage intensity or strategic growth potential. A small account with deep product adoption often warrants more attention than a large account on auto-renewal."
               },
               {
                 "score": 3,
-                "label": "Multi-factor segmentation (ARR + complexity + strategic value + lifecycle stage)"
+                "label": "Multi-factor segmentation (ARR + complexity + strategic value + lifecycle stage)",
+                "insight": "You have four-dimensional segmentation — one of the more sophisticated coverage models in use.",
+                "next_step": "Validate that each segment drives a genuinely differentiated CS motion — different playbooks, onboarding tracks, and intervention thresholds — rather than just being a reporting lens.",
+                "next_step_by_segment": {
+                  "seg_enterprise": "Verify that strategic value scoring reflects exec-sponsor access and expansion runway, not just ACV. Re-score enterprise accounts annually.",
+                  "seg_midmarket": "In mid-market, lifecycle stage is your most actionable second dimension. Make sure renewal timing triggers proactive outreach, not reactive catch-up.",
+                  "seg_smb": "At SMB volumes, four dimensions can create more complexity than clarity. Pick two that drive automated triggers and keep the model lightweight."
+                }
               },
               {
                 "score": 4,
-                "label": "Dynamic segmentation that adjusts based on real-time signals and customer behavior"
+                "label": "Dynamic segmentation that adjusts based on real-time signals and customer behavior",
+                "insight": "Your segmentation responds to customer behavior in real time — a mature capability few teams have operationalized.",
+                "next_step": "Audit the signal quality: are the behavioral inputs clean, consistent, and acted upon? Dynamic segmentation is only as good as the triggers that power it.",
+                "next_step_by_segment": {
+                  "seg_enterprise": "Extend dynamic signals to exec engagement and business outcome tracking, not just product usage. Account health at enterprise scale is multi-dimensional.",
+                  "seg_midmarket": "Ensure both digital and human CS motions respond to segment changes — not just automated alerts but CSM routing adjustments too.",
+                  "seg_smb": "Use segment changes to trigger automated journey shifts, not manual CSM reviews. Human re-routing at SMB volumes won't scale."
+                }
               }
             ]
           },
@@ -520,19 +538,37 @@
             "options": [
               {
                 "score": 1,
-                "label": "Ad hoc — accounts are assigned without clear logic"
+                "label": "Ad hoc — accounts are assigned without clear logic",
+                "insight": "Account assignment is informal, which means CSM workload varies widely and coverage gaps stay invisible.",
+                "next_step": "Define one assignment rule today: group accounts by ARR band and set a rough target ratio (e.g., 1 CSM per $2M ARR in your top tier). Imperfect ratios beat no ratios."
               },
               {
                 "score": 2,
-                "label": "Basic tiering (high-touch vs. low-touch) with rough account distribution"
+                "label": "Basic tiering (high-touch vs. low-touch) with rough account distribution",
+                "insight": "You have a tiered model, but account loads are rough estimates rather than designed capacity.",
+                "next_step": "Document target account counts per CSM by tier. Calculate current actuals. Where you're over-ratio, build a case for either headcount or a shift to digital coverage."
               },
               {
                 "score": 3,
-                "label": "Defined engagement models per segment with documented playbooks per tier"
+                "label": "Defined engagement models per segment with documented playbooks per tier",
+                "insight": "Your assignment model is deliberate — each segment has a documented engagement approach.",
+                "next_step": "The gap at this level is usually enforcement: playbooks exist but aren't consistently run. Audit one tier's adherence before building out more tiers.",
+                "next_step_by_segment": {
+                  "seg_enterprise": "For enterprise, add an escalation path to your engagement model — which accounts get QBRs, who owns exec alignment, and what triggers a CSM handoff.",
+                  "seg_midmarket": "In mid-market, the engagement model should specify when to escalate from digital to human touch. Make that threshold explicit and track it.",
+                  "seg_smb": "At SMB, a documented playbook means a repeatable automated journey, not a CSM-managed cadence. Audit automation coverage, not call frequency."
+                }
               },
               {
                 "score": 4,
-                "label": "Data-driven assignment with capacity modeling, workload balancing, and regular optimization"
+                "label": "Data-driven assignment with capacity modeling, workload balancing, and regular optimization",
+                "insight": "You manage CSM capacity like a resource planning problem — few teams reach this level of operational discipline.",
+                "next_step": "Turn the capacity model into a hiring signal: when it consistently shows overload in a segment, that's the data point for your next headcount case.",
+                "next_step_by_segment": {
+                  "seg_enterprise": "Add outcome attribution to your capacity model — which assignments correlate with expansion and which with churn. Let results inform future assignment decisions.",
+                  "seg_midmarket": "Extend capacity modeling to digital touchpoints, not just CSM hours. A digital-first tier has real capacity limits too.",
+                  "seg_smb": "Run capacity modeling on your automation stack, not just human CSMs. Are your digital journeys keeping pace with account volume growth?"
+                }
               }
             ]
           },
@@ -542,19 +578,27 @@
             "options": [
               {
                 "score": 1,
-                "label": "No — we don't track this"
+                "label": "No — we don't track this",
+                "insight": "Without coverage ratios, CSM workload is invisible. You can't tell if you're under-resourced or over-stretched.",
+                "next_step": "Set one ratio target now: pick your highest-value segment and define a target account-to-CSM count. Track actuals for 30 days before refining."
               },
               {
                 "score": 2,
-                "label": "Informal guidelines (e.g., roughly 1 CSM per $2M ARR)"
+                "label": "Informal guidelines (e.g., roughly 1 CSM per $2M ARR)",
+                "insight": "You have a reference point for capacity, but informal guidelines shift as headcount and accounts change.",
+                "next_step": "Formalize the guideline into a documented ratio per segment. Include it in headcount planning so capacity conversations use the same baseline."
               },
               {
                 "score": 3,
-                "label": "Formal ratios based on segment, reviewed during planning cycles"
+                "label": "Formal ratios based on segment, reviewed during planning cycles",
+                "insight": "You have structured coverage ratios that feed your planning process — a solid operational foundation.",
+                "next_step": "Add a mid-year review trigger. Annual planning cycles miss the ratio drift that happens when accounts churn, grow, or shift segment mid-year."
               },
               {
                 "score": 4,
-                "label": "Ratios are regularly reviewed, adjusted based on journey complexity, and modeled against outcomes"
+                "label": "Ratios are regularly reviewed, adjusted based on journey complexity, and modeled against outcomes",
+                "insight": "Coverage ratios are a living model for you — adjusted by complexity and validated against retention outcomes.",
+                "next_step": "Publish ratio benchmarks internally so sales and support leaders understand how CS capacity is allocated and can flag when it's under pressure."
               }
             ]
           }
