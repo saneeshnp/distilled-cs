@@ -18,6 +18,7 @@ const categoryLabels: Record<string, string> = {
   health: 'Health',
   sentiment: 'Sentiment',
   usage: 'Usage',
+  ai: 'AI & Automation',
 };
 
 const allMetrics = frameworkData.metrics_directory.metrics;
@@ -275,6 +276,7 @@ for (const stageId of stageOrder) {
   .cat-health { background: color-mix(in srgb, var(--color-stage-fly) 14%, transparent); color: var(--color-stage-fly); }
   .cat-sentiment { background: color-mix(in srgb, #CE93D8 14%, transparent); color: #CE93D8; }
   .cat-usage { background: color-mix(in srgb, var(--color-stage-walk) 14%, transparent); color: var(--color-stage-walk); }
+  .cat-ai { background: color-mix(in srgb, #7986CB 14%, transparent); color: #7986CB; }
 
   .metric-title {
     font-size: clamp(1.5rem, 3.5vw, 2.25rem);

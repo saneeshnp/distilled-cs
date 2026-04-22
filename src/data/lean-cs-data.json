@@ -1,10 +1,10 @@
 {
   "meta": {
     "framework_name": "Distilled CS",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "A vendor-neutral, open customer success maturity framework with contextual guidance",
     "license": "CC BY-SA 4.0",
-    "last_updated": "2026-03-27"
+    "last_updated": "2026-04-22"
   },
   "principles": [
     {
@@ -292,6 +292,11 @@
             "text": "Get CS a seat at the table — establish regular syncs with Sales and Product teams",
             "estimated_time": "2–4 weeks",
             "why_it_matters": "Cross-functional alignment prevents handoff gaps and ensures customer feedback reaches the teams that can act on it."
+          },
+          {
+            "text": "Pilot AI call-summarization in your CSM workflow",
+            "estimated_time": "1–2 weeks",
+            "why_it_matters": "AI summarization reduces note-taking overhead and creates consistent post-call records, freeing time for actual customer work."
           }
         ]
       },
@@ -348,6 +353,11 @@
             "text": "Share customer health data with other teams — create a shared dashboard or Slack channel",
             "estimated_time": "1–2 weeks",
             "why_it_matters": "Transparent health data breaks down silos and enables Sales, Product, and Support to act on customer signals proactively."
+          },
+          {
+            "text": "Pilot an AI-driven health score alongside your rule-based one",
+            "estimated_time": "1–2 months",
+            "why_it_matters": "Running both models in parallel lets you validate ML predictions against real outcomes before fully replacing the rule-based approach."
           }
         ]
       },
@@ -405,6 +415,11 @@
             "text": "Formalize CS integration — include CS in product planning and structured sales handoffs, track customer outcomes cross-functionally",
             "estimated_time": "2–3 months",
             "why_it_matters": "Formal integration ensures customer outcomes are a shared responsibility, not just a CS team metric that other teams can ignore."
+          },
+          {
+            "text": "Establish a Responsible AI policy for CS — PII handling, human review requirements, and adoption tracking",
+            "estimated_time": "2–4 weeks",
+            "why_it_matters": "As AI tools spread across the CS team, a written policy prevents inconsistent use, protects customer data, and gives leadership visibility into what's working."
           }
         ]
       },
@@ -2130,6 +2145,148 @@
             "relevance": "Use to identify recurring escalation triggers in your accounts and build proactive mitigation plans."
           }
         ]
+      },
+      {
+        "id": "ai_assisted_resolution_rate",
+        "name": "AI-Assisted Resolution Rate",
+        "category": "ai",
+        "also_known_as": [
+          "AI Intervention Rate",
+          "AI-Touched Outcome Rate"
+        ],
+        "definition": "The percentage of CS-initiated interventions in a period where AI played a material role in the outcome — including drafting the response, surfacing the risk signal, generating the recommendation, or taking a bounded autonomous action. Measures how much of CS delivery is being augmented or automated by AI.",
+        "formula": "(CS interventions with documented AI involvement / Total CS interventions in period) × 100",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "low",
+          "run": "medium",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Don't measure this yet — you're still deciding whether to use AI tools at all. Tracking a metric for a capability you haven't adopted creates noise.",
+          "walk": "Start tracking informally once you have a pilot (call summarization, health scoring copilot). Establishes a baseline before scaling.",
+          "run": "Track formally. At this stage AI is embedded in multiple workflows — you need to know the coverage and whether AI-assisted interventions produce better retention outcomes.",
+          "fly": "This is a strategic KPI. At fly stage, AI-assisted resolution rate should tie directly to cost-to-serve efficiency and customer outcome quality. A/B test AI-assisted vs. unassisted interventions."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "20–40%",
+            "great": "40–65%",
+            "world_class": "65%+"
+          },
+          "seg_midmarket": {
+            "good": "15–35%",
+            "great": "35–60%",
+            "world_class": "60%+"
+          },
+          "seg_enterprise": {
+            "good": "10–25%",
+            "great": "25–50%",
+            "world_class": "50%+"
+          }
+        },
+        "common_mistakes": [
+          "Counting AI tool usage (e.g., CSM opened the copilot) instead of AI-materially-influenced outcomes — activity is not impact",
+          "Including interventions where AI was used but the output was completely rewritten — set a minimum threshold for 'material involvement'",
+          "Optimizing this metric without measuring outcome quality — a high rate with declining CSAT or GRR means AI is creating noise, not value",
+          "Not distinguishing between AI-drafted content, AI-surfaced signals, and autonomous AI actions — these have very different reliability profiles"
+        ],
+        "related_metrics": [
+          "health_score",
+          "escalation_rate",
+          "csm_ai_adoption_rate",
+          "nrr"
+        ],
+        "used_in_playbooks": [
+          "crawl-ai-copilots",
+          "walk-ai-health-scoring",
+          "run-ai-governance",
+          "fly-agentic-workflows"
+        ],
+        "audience": [
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Use to measure AI program ROI and set targets for expanding AI coverage across CS workflows."
+          },
+          {
+            "role": "CS Ops",
+            "relevance": "Track and report monthly. Own the definition of 'material AI involvement' and ensure consistent tagging across workflows."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Compare AI-assisted vs. unassisted outcomes by CSM and account segment to identify where AI adds the most value."
+          }
+        ]
+      },
+      {
+        "id": "csm_ai_adoption_rate",
+        "name": "CSM AI Adoption Rate",
+        "category": "ai",
+        "also_known_as": [
+          "AI Tool Adoption Rate",
+          "CSM AI Usage Rate"
+        ],
+        "definition": "The percentage of CSMs actively using approved AI tools in their weekly workflow. Measures team-wide AI adoption as a leading indicator of potential AI-driven productivity and outcome gains. 'Active use' means at least three documented AI-assisted interactions per week.",
+        "formula": "(CSMs with 3+ AI-assisted interactions in the week / Total active CSMs) × 100",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "medium",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Not worth tracking formally — you likely have one or two CSMs and adoption is a personal choice at this stage. Focus on piloting one use case first.",
+          "walk": "Start measuring once you've rolled out an AI tool to the team. Low adoption signals the tool isn't solving a real pain or CSMs need more support.",
+          "run": "High-priority input metric. If AI-assisted resolution rate is high but adoption rate is low, a small group is carrying the AI program — that's fragile and doesn't scale.",
+          "fly": "Adoption should be near-universal for approved use cases. Focus shifts to adoption quality (which workflows, what impact) rather than raw percentage."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "50–70%",
+            "great": "70–85%",
+            "world_class": "85%+"
+          },
+          "seg_midmarket": {
+            "good": "45–65%",
+            "great": "65–80%",
+            "world_class": "80%+"
+          },
+          "seg_enterprise": {
+            "good": "40–60%",
+            "great": "60–75%",
+            "world_class": "75%+"
+          }
+        },
+        "common_mistakes": [
+          "Measuring any AI tool usage instead of approved tools — shadow IT usage inflates the number while hiding compliance and PII risks",
+          "Setting adoption targets without removing barriers first — if the tool is slow, poorly integrated, or adds steps, forcing adoption just breeds resentment",
+          "Treating 100% adoption as the goal without checking whether AI is actually helping — compliance adoption is worse than no adoption",
+          "Not segmenting by CSM tenure — newer CSMs typically adopt AI faster; senior CSMs may need different use cases to see value"
+        ],
+        "related_metrics": [
+          "ai_assisted_resolution_rate",
+          "escalation_rate",
+          "health_score"
+        ],
+        "used_in_playbooks": [
+          "crawl-ai-copilots",
+          "run-ai-governance",
+          "fly-agentic-workflows"
+        ],
+        "audience": [
+          {
+            "role": "CS Manager",
+            "relevance": "Track weekly during rollout, monthly once stable. Low adoption in a specific team often signals a training or tooling fit issue."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Use as a leading indicator for AI program ROI. Adoption rate and resolution rate together tell the full story."
+          },
+          {
+            "role": "CS Ops",
+            "relevance": "Own the measurement methodology. Define 'active use' clearly, instrument it in your CS platform or HRIS, and report monthly."
+          }
+        ]
       }
     ]
   },
@@ -2243,7 +2400,7 @@
         "id": "assess",
         "label": "Assess",
         "tagline": "Know where you stand",
-        "description": "Score your CS maturity across 7 domains. Understand your strengths, gaps, and stage.",
+        "description": "Score your CS maturity across 8 domains. Understand your strengths, gaps, and stage.",
         "icon": "compass"
       },
       {
@@ -2329,6 +2486,28 @@
           "Not having a clear definition of 'done' — onboarding should have a measurable completion criteria, not just fade out"
         ],
         "estimated_duration": "3–4 weeks"
+      },
+      {
+        "id": "crawl-ai-copilots",
+        "title": "Introduce AI Copilots for CSM Productivity",
+        "objective": "Get CSMs using AI tools for call summarization, email drafting, and meeting prep to cut administrative overhead and reclaim time for customer work.",
+        "why": "Crawl-stage teams are lean — 1–3 CSMs doing everything. A significant portion of CSM time goes to notes, follow-up emails, and internal prep, not actual customer conversations. AI copilots handle the most repetitive writing tasks with minimal setup. The goal is not transformation — it's reclaiming two to four hours per week per CSM so they can cover more accounts or go deeper on at-risk ones.",
+        "steps": [
+          "Audit where CSMs spend time on admin: post-call notes, follow-up emails, QBR prep, internal status updates — pick the top two to three time sinks",
+          "Select one AI tool to pilot (your existing stack may already have one — Gong, Chorus, Salesforce Einstein, Copilot for M365, or a standalone like Otter.ai)",
+          "Run a two-week pilot with one or two CSMs: use AI for post-call summaries and one type of customer email",
+          "Define a human-review step — every AI-drafted output should be reviewed before sending to a customer",
+          "Capture time saved per week and qualitative feedback from the piloting CSMs",
+          "If the pilot shows value, roll out to the full team with a one-hour onboarding session on prompt hygiene and review practices",
+          "Document which use cases work well and which produce unreliable outputs — this becomes your first AI usage guide"
+        ],
+        "metrics_to_watch": ["ai_assisted_resolution_rate", "csm_ai_adoption_rate", "escalation_rate"],
+        "common_pitfalls": [
+          "Sending AI-generated emails without human review — hallucinations and wrong customer details erode trust fast",
+          "Piloting too many tools at once — pick one, prove value, then expand",
+          "Measuring adoption (did CSMs use it?) instead of impact (did it save time and maintain quality?)"
+        ],
+        "estimated_duration": "1–3 weeks"
       }
     ],
     "walk": [
@@ -2397,6 +2576,28 @@
           "Not tracking follow-up actions — a QBR that generates action items nobody completes is worse than no QBR"
         ],
         "estimated_duration": "4–6 weeks"
+      },
+      {
+        "id": "walk-ai-health-scoring",
+        "title": "Pilot Predictive Health Scoring",
+        "objective": "Run an ML-driven health score alongside your existing rule-based score to validate whether predictive signals improve at-risk detection before committing to a full migration.",
+        "why": "Rule-based health scores plateau. They find patterns you already know to look for. An ML model trained on historical churn and expansion data discovers non-obvious signal combinations — product usage sequences, support ticket patterns, stakeholder engagement gaps — that static thresholds miss. Walk-stage teams have enough historical data (12–18 months of customer outcomes) to run a meaningful pilot without a data science team.",
+        "steps": [
+          "Export 12–18 months of customer outcome data: which accounts churned, expanded, or stayed flat, with their health signals at the time",
+          "Identify 8–12 input features available in your CS platform or data warehouse: login frequency, feature breadth, support volume, stakeholder coverage, NPS, days since last CSM touchpoint",
+          "Use your CS platform's built-in AI scoring (Gainsight, ChurnZero, Vitally all have this) or a simple logistic regression in a spreadsheet/Python notebook",
+          "Run the predictive score in parallel with your existing rule-based score for 6–8 weeks without changing CSM workflows",
+          "Compare: which score flagged at-risk accounts earlier? Which produced more false positives?",
+          "If predictive outperforms rule-based, plan a migration — keep the rule-based score as a fallback for new accounts with insufficient history",
+          "Document which features had the highest predictive weight — this tells you what signals matter most for your customer base"
+        ],
+        "metrics_to_watch": ["health_score", "grr", "ai_assisted_resolution_rate", "escalation_rate"],
+        "common_pitfalls": [
+          "Replacing the rule-based score too quickly before validating accuracy — run both in parallel for at least two monthly cohorts",
+          "Using too few historical outcomes — fewer than 50 churned accounts makes the model unreliable",
+          "Ignoring new customers — predictive models need tenure to work, so new accounts should still use rule-based scoring as a baseline"
+        ],
+        "estimated_duration": "6–10 weeks"
       }
     ],
     "run": [
@@ -2465,6 +2666,28 @@
           "Pushing expansion on unhealthy accounts — trying to upsell a customer who's struggling with adoption destroys trust"
         ],
         "estimated_duration": "6–8 weeks"
+      },
+      {
+        "id": "run-ai-governance",
+        "title": "Operationalize AI Governance for CS",
+        "objective": "Establish a written Responsible AI policy for CS operations covering PII handling, human-review requirements, adoption standards, and impact measurement.",
+        "why": "Run-stage teams have CSMs experimenting with AI individually — different tools, different practices, inconsistent outcomes. Some are pasting customer data into public LLMs. Some are sending AI drafts without review. Without a governance layer, you accumulate risk as adoption grows. A clear policy isn't about slowing AI adoption — it's about scaling it safely and measuring whether it actually improves outcomes.",
+        "steps": [
+          "Audit current AI tool usage across the CS team: which tools, which use cases, how often, and what review practices CSMs follow today",
+          "Draft a PII policy: specify which customer data can be entered into AI tools, which tools are approved, and which are prohibited (e.g., no personal contact data into non-approved public LLMs)",
+          "Define human-review requirements by use case: customer-facing content requires CSM review before sending; internal summaries can be used as-is",
+          "Create a list of approved AI tools with their data processing terms verified by your legal or security team",
+          "Run a one-hour team training session covering: approved tools, PII rules, prompt hygiene, and how to catch hallucinations",
+          "Set an AI adoption baseline: what percentage of CSMs use AI tools weekly? Track this monthly going forward",
+          "Measure impact quarterly: time saved, accuracy of AI outputs, and whether AI-assisted interactions correlate with better customer outcomes"
+        ],
+        "metrics_to_watch": ["ai_assisted_resolution_rate", "csm_ai_adoption_rate", "health_score", "escalation_rate"],
+        "common_pitfalls": [
+          "Writing a policy and filing it away — governance only works if it's enforced and reviewed as tools evolve",
+          "Blocking all AI use in the name of safety — this pushes usage underground where you have even less visibility",
+          "Measuring AI governance by tool adoption alone — adoption without outcome measurement tells you nothing about whether AI is helping or hurting"
+        ],
+        "estimated_duration": "3–5 weeks"
       }
     ],
     "fly": [
@@ -2533,6 +2756,29 @@
           "Losing CS team identity in the process — CS should drive the customer-centric culture, not dissolve into it"
         ],
         "estimated_duration": "12–16 weeks"
+      },
+      {
+        "id": "fly-agentic-workflows",
+        "title": "Deploy Agentic Workflows with Bounded Autonomy",
+        "objective": "Move beyond AI-assisted CSM work to bounded autonomous actions — tiered interventions, risk routing, and self-serve resolution — with explicit human oversight and measured business outcomes.",
+        "why": "Fly-stage teams have validated AI across their CS workflows. The next step is AI that acts, not just advises. Agentic workflows handle routine decisions at a scale no human team can match: automatically routing critical accounts to senior CSMs, triggering playbooks when health scores drop, or resolving tier-one support inquiries without CSM involvement. The key is 'bounded' — well-defined scope, explicit escalation triggers, and outcome measurement baked in from day one.",
+        "steps": [
+          "Audit your current playbook triggers: which interventions are rule-based and repetitive? These are the first candidates for automation",
+          "Start with one bounded workflow — the most common high-confidence intervention (e.g., automatically assign a CSM to any account that drops below a health score threshold and has an upcoming renewal)",
+          "Define the escalation boundary explicitly: which account states require human decision-making versus automated action?",
+          "Build the workflow in your CS platform or automation layer, with every automated action logged and reviewable",
+          "Run the agentic workflow in 'shadow mode' for two to four weeks: it fires actions but a CSM approves each one before execution — this validates the logic before going autonomous",
+          "Move to autonomous execution only after shadow-mode accuracy exceeds your defined threshold (e.g., 90% of shadow actions would have been approved)",
+          "Track outcome metrics for AI-handled versus CSM-handled interventions: retention rates, response times, customer satisfaction — this is your business case for expanding scope",
+          "Establish a governance cadence: monthly review of agentic workflow performance, quarterly model reviews, and a clear rollback plan if outcomes degrade"
+        ],
+        "metrics_to_watch": ["ai_assisted_resolution_rate", "health_score", "nrr", "escalation_rate"],
+        "common_pitfalls": [
+          "Skipping shadow mode and going straight to autonomous — one bad automated action on an enterprise account is very expensive",
+          "Defining autonomy scope too broadly in v1 — start with one high-confidence, low-stakes workflow before expanding",
+          "Not measuring AI-handled versus human-handled outcomes — without a control group you can't prove (or disprove) that agentic workflows improve results"
+        ],
+        "estimated_duration": "12–20 weeks"
       }
     ]
   },
@@ -2543,20 +2789,23 @@
         "Basic customer segmentation is in place and being used to differentiate engagement",
         "At least one documented playbook exists (usually onboarding)",
         "CSMs are spending more time on proactive outreach than reactive firefighting",
-        "Leadership asks about CS metrics beyond just churn count"
+        "Leadership asks about CS metrics beyond just churn count",
+        "AI copilots have been piloted and most CSMs use them weekly for call summaries and email drafts"
       ],
       "key_shifts": [
         "From gut-feel to data-informed decisions: you start trusting health indicators over intuition",
         "From one-size-fits-all to segmented engagement: different customers get different treatment",
         "From individual heroics to repeatable processes: playbooks replace ad hoc actions",
-        "From tracking churn to tracking leading indicators: health scores, adoption, engagement"
+        "From tracking churn to tracking leading indicators: health scores, adoption, engagement",
+        "From no AI to AI-augmented CSMs: copilots reduce administrative work and free time for higher-value interactions"
       ],
       "new_capabilities": [
         "Health scoring enables proactive risk intervention",
         "Segmentation unlocks differentiated engagement models and resource planning",
         "Lifecycle journey maps create predictability across the full customer lifecycle",
         "QBR/EBR programs build executive relationships and surface expansion opportunities",
-        "CS begins contributing to retention narratives with data, not anecdotes"
+        "CS begins contributing to retention narratives with data, not anecdotes",
+        "AI copilots standardize first drafts and meeting summaries, cutting prep and follow-up time across the team"
       ],
       "risks": [
         "Tool overinvestment — buying a CS platform before your processes are defined leads to expensive shelfware",
@@ -2570,20 +2819,23 @@
         "Lifecycle journey maps exist and touchpoints are being followed consistently",
         "GRR has stabilized or improved over 2+ quarters using your current playbooks",
         "You're hitting CSM capacity limits — the current model won't scale to 2x accounts",
-        "Expansion revenue is happening but it's opportunistic, not systematic"
+        "Expansion revenue is happening but it's opportunistic, not systematic",
+        "AI-assisted health scoring has replaced or supplemented rule-based models with measurable accuracy improvements"
       ],
       "key_shifts": [
         "From human-led to human-plus-digital: automation handles the repeatable, humans handle the strategic",
         "From reactive risk management to predictive: you catch problems before they surface",
         "From cost center to revenue contributor: CS demonstrates measurable impact on expansion",
-        "From departmental function to cross-functional partner: CS insights influence product, sales, and marketing decisions"
+        "From departmental function to cross-functional partner: CS insights influence product, sales, and marketing decisions",
+        "From rule-based to ML-driven health scoring: predictions catch risk earlier with fewer false positives"
       ],
       "new_capabilities": [
         "Digital engagement allows coverage of 10x more accounts without proportional headcount",
         "Predictive churn models surface risk 30–60 days earlier than traditional health scores",
         "Formalized expansion motion creates a predictable CS-sourced pipeline",
         "Data infrastructure supports sophisticated segmentation, cohort analysis, and attribution",
-        "CS operations becomes a recognized function with dedicated resources"
+        "CS operations becomes a recognized function with dedicated resources",
+        "ML-driven health models identify at-risk accounts earlier and with higher accuracy than threshold-based rules"
       ],
       "risks": [
         "Over-automating high-touch accounts — digital engagement is for scale segments, not your top 20 accounts",
@@ -2597,20 +2849,23 @@
         "Predictive models are operational and CSMs trust and act on their outputs",
         "CS-sourced expansion is a meaningful, tracked revenue stream (not one-off wins)",
         "NRR consistently exceeds 110% and GRR exceeds 90% across segments",
-        "CS has a seat at the executive table and contributes to company strategy discussions"
+        "CS has a seat at the executive table and contributes to company strategy discussions",
+        "Agentic AI is handling bounded, autonomous interventions with governance oversight and measured outcomes"
       ],
       "key_shifts": [
         "From revenue contributor to revenue driver: CS owns NRR and has direct influence on pricing, packaging, and go-to-market",
         "From predictive to intelligent: models don't just predict risk, they recommend actions and anticipate needs",
         "From CS department to CS culture: customer success becomes a company-wide operating principle",
-        "From operational to strategic: CS leadership shapes company strategy, not just executes it"
+        "From operational to strategic: CS leadership shapes company strategy, not just executes it",
+        "From AI-augmented to AI-orchestrated: agentic systems execute bounded interventions autonomously, with humans overseeing outcomes rather than individual actions"
       ],
       "new_capabilities": [
         "Customer intelligence platform provides automated, actionable insights across the entire customer base",
         "CS-led revenue strategy influences product roadmap, pricing, and go-to-market decisions",
         "Every department has customer outcome metrics in their OKRs",
         "Advanced analytics (cohort analysis, LTV modeling, predictive expansion) run continuously and inform decisions in real-time",
-        "CS talent development pipeline produces future CS leaders and cross-functional customer advocates"
+        "CS talent development pipeline produces future CS leaders and cross-functional customer advocates",
+        "Agentic workflows handle high-volume, low-stakes interventions autonomously, freeing CSMs to focus on strategic and complex accounts"
       ],
       "risks": [
         "Losing customer advocacy in pursuit of revenue optimization — CS credibility depends on being the customer's champion",

@@ -324,6 +324,11 @@ const contextualRecs = frameworkData.contextual_recommendations;
     color: var(--color-warning);
   }
 
+  .report-domain-tag-new {
+    background: color-mix(in srgb, var(--color-text-muted) 15%, transparent);
+    color: var(--color-text-muted);
+  }
+
   .report-domain-bar-wrap {
     flex: 1;
     height: 0.5rem;
@@ -1080,15 +1085,19 @@ const contextualRecs = frameworkData.contextual_recommendations;
       const isWeak = id === weakestId;
 
       let deltaHtml = '';
-      if (hasPrevious && data.previousScores.domainScores[id] !== undefined) {
-        const prev = data.previousScores.domainScores[id];
-        const delta = score - prev;
-        if (Math.abs(delta) >= 0.05) {
-          const cls = delta > 0 ? 'report-delta-up' : 'report-delta-down';
-          const arrow = delta > 0 ? '&#9650;' : '&#9660;';
-          deltaHtml = `<span class="report-domain-delta ${cls}">${arrow} ${Math.abs(delta).toFixed(1)}</span>`;
+      if (hasPrevious) {
+        if (data.previousScores.domainScores[id] !== undefined) {
+          const prev = data.previousScores.domainScores[id];
+          const delta = score - prev;
+          if (Math.abs(delta) >= 0.05) {
+            const cls = delta > 0 ? 'report-delta-up' : 'report-delta-down';
+            const arrow = delta > 0 ? '&#9650;' : '&#9660;';
+            deltaHtml = `<span class="report-domain-delta ${cls}">${arrow} ${Math.abs(delta).toFixed(1)}</span>`;
+          } else {
+            deltaHtml = `<span class="report-domain-delta report-delta-same">—</span>`;
+          }
         } else {
-          deltaHtml = `<span class="report-domain-delta report-delta-same">—</span>`;
+          deltaHtml = `<span class="report-domain-delta"><span class="report-domain-tag report-domain-tag-new">New</span></span>`;
         }
       }
 

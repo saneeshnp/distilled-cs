@@ -483,7 +483,7 @@ const sessionKeys = [
     cs_ops_exists: 'ops_partial',
   };
 
-  // All 21 assessment question IDs (3 per domain, 7 domains)
+  // All 24 assessment question IDs (3 per domain, 8 domains)
   const allQuestionIds = [
     'sc_q1', 'sc_q2', 'sc_q3', // segmentation_coverage
     'jl_q1', 'jl_q2', 'jl_q3', // journey_lifecycle
@@ -492,6 +492,7 @@ const sessionKeys = [
     'ev_q1', 'ev_q2', 'ev_q3', // expansion_value
     'os_q1', 'os_q2', 'os_q3', // org_strategy
     'ca_q1', 'ca_q2', 'ca_q3', // cs_culture_alignment
+    'ai_use_case_depth', 'ai_data_foundation', 'ai_governance_adoption', // ai_leverage
   ];
 
   function makeScores(stage: string, score: number) {
@@ -509,6 +510,7 @@ const sessionKeys = [
         expansion_value: domainScore,
         org_strategy: domainScore,
         cs_culture_alignment: domainScore,
+        ai_leverage: domainScore,
       },
       overallScore: score,
       stage,

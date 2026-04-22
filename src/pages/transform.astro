@@ -558,6 +558,7 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     expansion_value: 'Expansion & Value',
     org_strategy: 'CS Organization & Strategy',
     cs_culture_alignment: 'CS Culture & Cross-Functional Alignment',
+    ai_leverage: 'AI Leverage in CS',
   };
 
   const transitionKeys = {
@@ -678,12 +679,12 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
             summaryHtml = `You're still in the <strong>${currStageLabel}</strong> stage. Overall score changed by <strong>${scoreDelta >= 0 ? '+' : ''}${scoreDelta}</strong>.`;
           }
 
-          // Find improved and declined domains
+          // Find improved and declined domains (skip domains new to this assessment)
           const improved = [];
           const declined = [];
           for (const [domId, score] of Object.entries(scores.domainScores)) {
-            const prevScore = prev.domainScores[domId] || 0;
-            const delta = score - prevScore;
+            if (prev.domainScores[domId] === undefined) continue;
+            const delta = score - prev.domainScores[domId];
             if (delta > 0.1) improved.push(domainLabels[domId] || domId);
             else if (delta < -0.1) declined.push(domainLabels[domId] || domId);
           }
@@ -696,14 +697,17 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
           // Domain-by-domain comparison
           let gridHtml = '';
           for (const [domId, score] of Object.entries(scores.domainScores)) {
-            const prevScore = prev.domainScores[domId] || 0;
-            const delta = score - prevScore;
             const label = domainLabels[domId] || domId;
             let deltaClass = 'delta-same';
             let deltaText = '—';
-            if (delta > 0.01) { deltaClass = 'delta-up'; deltaText = `+${delta.toFixed(2)} ↑`; }
-            else if (delta < -0.01) { deltaClass = 'delta-down'; deltaText = `${delta.toFixed(2)} ↓`; }
-            else { deltaText = 'No change'; }
+            if (prev.domainScores[domId] === undefined) {
+              deltaText = 'New';
+            } else {
+              const delta = score - prev.domainScores[domId];
+              if (delta > 0.01) { deltaClass = 'delta-up'; deltaText = `+${delta.toFixed(2)} ↑`; }
+              else if (delta < -0.01) { deltaClass = 'delta-down'; deltaText = `${delta.toFixed(2)} ↓`; }
+              else { deltaText = 'No change'; }
+            }
 
             gridHtml += `
               <div class="comparison-row">
