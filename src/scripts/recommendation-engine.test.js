@@ -145,6 +145,175 @@ for (const persona of personas) {
   console.log(`    ${highCount} high-priority, ${metrics.filter(m=>m.relevance==='medium').length} medium, ${metrics.filter(m=>m.relevance==='low').length} low`);
 }
 
+// ── Edge case: missing fragments (Task 9.1) ───────────────────────────────────
+// Simulates a "transition period" where the JSON has no insight/next_step on any
+// option. The engine should fall back cleanly to stage.priority_actions and
+// return 0 strengths rather than crashing or showing empty strings.
+console.log('\n── Edge case: all fragments missing ──');
+{
+  // Deep-clone frameworkData and strip all insight/next_step fields
+  const stripped = JSON.parse(JSON.stringify(frameworkData));
+  for (const domain of stripped.assessment_domains.domains) {
+    for (const question of domain.questions) {
+      for (const option of question.options) {
+        delete option.insight;
+        delete option.next_step;
+        delete option.next_step_by_segment;
+      }
+    }
+  }
+  const midWalkProfile = { customer_segment: 'seg_midmarket', company_arr: 'arr_5m_20m', cs_team_size: 'team_1_3' };
+  const midWalkResponses = {
+    sc_q1: 2, sc_q2: 3, sc_q3: 2,
+    jl_q1: 2, jl_q2: 2, jl_q3: 3,
+    hr_q1: 3, hr_q2: 2, hr_q3: 2,
+    md_q1: 2, md_q2: 3, md_q3: 2,
+    ev_q1: 2, ev_q2: 2, ev_q3: 2,
+    os_q1: 3, os_q2: 2, os_q3: 3,
+    ca_q1: 2, ca_q2: 2, ca_q3: 3,
+    ai_q1: 2, ai_q2: 2, ai_q3: 2,
+  };
+
+  const actions = composePriorityActions(midWalkProfile, midWalkResponses, stripped);
+  const strengths = composeStrengths(midWalkProfile, midWalkResponses, stripped);
+
+  check('actions: returns array even with no fragments', Array.isArray(actions));
+  check('actions: falls back to stage priority_actions (≥ 1)', actions.length >= 1, `got ${actions.length}`);
+  check('actions: all entries have non-empty body', actions.every(a => typeof a.body === 'string' && a.body.length > 0));
+  check('actions: fallback entry has null source_question_id', actions.some(a => a.source_question_id === null));
+  check('strengths: empty array when no insight fragments', strengths.length === 0, `got ${strengths.length}`);
+  console.log(`    actions=${actions.length} (stage fallback), strengths=${strengths.length}`);
+}
+
+// ── Edge case: caps enforced (Task 9.2) ──────────────────────────────────────
+// All score-4 except one score-1 → many strength candidates, few action candidates.
+// Engine must cap at ≤3 priority actions and ≤3 strengths.
+console.log('\n── Edge case: all score-4 except one score-1 ──');
+{
+  const nearFlyResponses = {
+    sc_q1: 4, sc_q2: 4, sc_q3: 4,
+    jl_q1: 4, jl_q2: 4, jl_q3: 4,
+    hr_q1: 4, hr_q2: 4, hr_q3: 4,
+    md_q1: 4, md_q2: 4, md_q3: 4,
+    ev_q1: 4, ev_q2: 4, ev_q3: 4,
+    os_q1: 4, os_q2: 4, os_q3: 4,
+    ca_q1: 4, ca_q2: 4, ca_q3: 4,
+    ai_q1: 1, ai_q2: 4, ai_q3: 4,  // one score-1 to drive a priority action
+  };
+  const actions = composePriorityActions({}, nearFlyResponses, frameworkData);
+  const strengths = composeStrengths({}, nearFlyResponses, frameworkData);
+
+  check('9.2: priority actions ≤ 3', actions.length <= 3, `got ${actions.length}`);
+  check('9.2: priority actions ≥ 1', actions.length >= 1, `got ${actions.length}`);
+  check('9.2: strengths ≤ 3', strengths.length <= 3, `got ${strengths.length}`);
+  check('9.2: strengths ≥ 2 (enough high scores)', strengths.length >= 2, `got ${strengths.length}`);
+  check('9.2: strengths from distinct domains', (() => {
+    const ids = strengths.map(s => s.source_question_id);
+    const domains = ids.map(id => id?.split('_')[0]);
+    return new Set(domains).size === domains.length;
+  })(), `strengths: ${strengths.map(s=>s.source_question_id).join(', ')}`);
+  console.log(`    actions=${actions.length}, strengths=${strengths.length}`);
+}
+
+// ── Edge case: missing customer_segment (Task 9.3) ───────────────────────────
+// Engine must use next_step only, not next_step_by_segment, and must not crash.
+console.log('\n── Edge case: missing customer_segment ──');
+{
+  const noSegmentProfile = { company_arr: 'arr_10_50m', cs_team_size: 'team_4_10' };
+  const midWalkResponses = {
+    sc_q1: 2, sc_q2: 3, sc_q3: 2,
+    jl_q1: 2, jl_q2: 2, jl_q3: 3,
+    hr_q1: 3, hr_q2: 2, hr_q3: 2,
+    md_q1: 2, md_q2: 3, md_q3: 2,
+    ev_q1: 2, ev_q2: 2, ev_q3: 2,
+    os_q1: 3, os_q2: 2, os_q3: 3,
+    ca_q1: 2, ca_q2: 2, ca_q3: 3,
+    ai_q1: 2, ai_q2: 2, ai_q3: 2,
+  };
+  const actions = composePriorityActions(noSegmentProfile, midWalkResponses, frameworkData);
+  const strengths = composeStrengths(noSegmentProfile, midWalkResponses, frameworkData);
+
+  check('9.3: actions returns array', Array.isArray(actions));
+  check('9.3: actions ≥ 1', actions.length >= 1, `got ${actions.length}`);
+  check('9.3: all action bodies are non-empty strings', actions.every(a => typeof a.body === 'string' && a.body.length > 0));
+  // Confirm no segment-specific text leaked in (sc_q1 score-2 has no next_step_by_segment, safe)
+  // Key check: no action body is undefined/null
+  check('9.3: no null/undefined bodies', actions.every(a => a.body != null));
+  check('9.3: strengths returns array', Array.isArray(strengths));
+  console.log(`    actions=${actions.length}, strengths=${strengths.length}`);
+  if (actions[0]) console.log(`    [0] ${actions[0].body.slice(0, 80)}…`);
+}
+
+// ── Edge case: response score has no matching JSON option (Task 9.4) ─────────
+// Simulates a saved response whose numeric score doesn't match any option in the
+// current JSON (e.g. old data with score=5, or a question removed from the JSON).
+// Engine must skip it and not crash.
+console.log('\n── Edge case: responses with unknown/out-of-range scores ──');
+{
+  const weirdResponses = {
+    sc_q1: 5,  // no option with score=5 exists
+    sc_q2: 0,  // no option with score=0 exists
+    sc_q3: 2,  // valid
+    jl_q1: 2, jl_q2: 2, jl_q3: 2,
+    hr_q1: 2, hr_q2: 2, hr_q3: 2,
+    md_q1: 2, md_q2: 2, md_q3: 2,
+    ev_q1: 2, ev_q2: 2, ev_q3: 2,
+    os_q1: 2, os_q2: 2, os_q3: 2,
+    ca_q1: 2, ca_q2: 2, ca_q3: 2,
+    ai_q1: 2, ai_q2: 2, ai_q3: 2,
+    nonexistent_q: 3,  // question ID not in JSON — silently ignored
+  };
+  let actions, strengths;
+  try {
+    actions = composePriorityActions({}, weirdResponses, frameworkData);
+    strengths = composeStrengths({}, weirdResponses, frameworkData);
+    check('9.4: no crash on unknown scores', true);
+  } catch (e) {
+    check('9.4: no crash on unknown scores', false, e.message);
+    actions = []; strengths = [];
+  }
+  check('9.4: actions returns array', Array.isArray(actions));
+  check('9.4: actions ≥ 1 (stage fallback fires)', actions.length >= 1, `got ${actions.length}`);
+  check('9.4: all action bodies non-empty', actions.every(a => typeof a.body === 'string' && a.body.length > 0));
+  check('9.4: strengths returns array', Array.isArray(strengths));
+  console.log(`    actions=${actions.length}, strengths=${strengths.length}`);
+}
+
+// ── Purity audit (Task 9.5) ───────────────────────────────────────────────────
+// Composition functions must be deterministic (same inputs → same outputs)
+// and must not mutate their input arguments.
+console.log('\n── Purity: determinism and no input mutation ──');
+{
+  const profile = { customer_segment: 'seg_enterprise', company_arr: 'arr_over_100m', cs_team_size: 'team_10plus' };
+  const responses = {
+    sc_q1: 4, sc_q2: 3, sc_q3: 4,
+    jl_q1: 4, jl_q2: 4, jl_q3: 3,
+    hr_q1: 4, hr_q2: 4, hr_q3: 4,
+    md_q1: 3, md_q2: 4, md_q3: 4,
+    ev_q1: 4, ev_q2: 3, ev_q3: 4,
+    os_q1: 4, os_q2: 4, os_q3: 4,
+    ca_q1: 4, ca_q2: 4, ca_q3: 4,
+    ai_q1: 1, ai_q2: 2, ai_q3: 3,
+  };
+
+  // Snapshot inputs before calling
+  const profileSnap = JSON.stringify(profile);
+  const responsesSnap = JSON.stringify(responses);
+  const dataSnap = JSON.stringify(frameworkData.meta); // spot-check: meta not mutated
+
+  const r1 = composePriorityActions(profile, responses, frameworkData);
+  const r2 = composePriorityActions(profile, responses, frameworkData);
+  const s1 = composeStrengths(profile, responses, frameworkData);
+  const s2 = composeStrengths(profile, responses, frameworkData);
+
+  check('9.5: composePriorityActions is deterministic', JSON.stringify(r1) === JSON.stringify(r2));
+  check('9.5: composeStrengths is deterministic', JSON.stringify(s1) === JSON.stringify(s2));
+  check('9.5: profile not mutated', JSON.stringify(profile) === profileSnap);
+  check('9.5: responses not mutated', JSON.stringify(responses) === responsesSnap);
+  check('9.5: frameworkData.meta not mutated', JSON.stringify(frameworkData.meta) === dataSnap);
+  console.log(`    actions run 1=${r1.length}, run 2=${r2.length} — identical: ${JSON.stringify(r1)===JSON.stringify(r2)}`);
+}
+
 // ── Summary ───────────────────────────────────────────────────────────────────
 console.log(`\n${'─'.repeat(50)}`);
 console.log(`${passed + failed} checks — ${passed} passed, ${failed} failed`);

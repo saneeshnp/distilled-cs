@@ -75,6 +75,22 @@ const sessionKeys = [
         <button class="preset-btn preset-run" id="preset-run" type="button">Run Stage</button>
         <button class="preset-btn preset-fly" id="preset-fly" type="button">Fly Stage</button>
         <button class="preset-btn" id="preset-no-company" type="button">Without Company Name</button>
+        <span class="presets-divider">Persona fixtures:</span>
+        <button class="preset-btn" id="preset-persona-crawl" type="button">Fresh Crawl (no profile)</button>
+        <button class="preset-btn preset-walk" id="preset-persona-walk" type="button">Mid-Walk (midmarket)</button>
+        <button class="preset-btn preset-fly" id="preset-persona-fly" type="button">High-Fly (enterprise)</button>
+      </div>
+    </section>
+
+    <!-- Recommendation Preview -->
+    <section class="debug-section">
+      <div class="section-heading-row">
+        <h2 class="section-heading">Recommendation Preview</h2>
+        <button class="key-btn" id="rec-refresh-btn" type="button">Refresh</button>
+      </div>
+      <p class="section-desc">Composed engine output for the current localStorage state. Updates automatically when presets change.</p>
+      <div id="rec-preview" class="rec-preview">
+        <p class="rec-placeholder">No assessment data. Apply a preset to see output.</p>
       </div>
     </section>
 
@@ -404,6 +420,109 @@ const sessionKeys = [
     margin-top: 0.5rem;
   }
 
+  /* Section heading row (heading + inline button) */
+  .section-heading-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-heading-row .section-heading {
+    margin-bottom: 0;
+  }
+
+  /* Persona divider label inside presets grid */
+  .presets-divider {
+    width: 100%;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-top: 0.25rem;
+  }
+
+  /* Recommendation preview section */
+  .rec-preview {
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+    padding: 1rem;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .rec-placeholder {
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .rec-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .rec-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .rec-group-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .rec-item {
+    padding: 0.5rem 0.75rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    margin-bottom: 0.375rem;
+  }
+
+  .rec-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .rec-item-label {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-size: 0.75rem;
+  }
+
+  .rec-item-body {
+    color: var(--color-text-secondary);
+    margin-top: 0.125rem;
+    font-size: 0.75rem;
+  }
+
+  .rec-item-meta {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    margin-top: 0.125rem;
+    font-style: italic;
+  }
+
+  .rec-stage-pill {
+    display: inline-block;
+    padding: 0.125rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .rec-empty-group {
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-size: 0.75rem;
+  }
+
   /* Bulk actions */
   .bulk-actions {
     display: flex;
@@ -458,6 +577,13 @@ const sessionKeys = [
 </style>
 
 <script>
+  import frameworkData from '../data/lean-cs-data.json';
+  import {
+    composePriorityActions,
+    composeStrengths,
+    composePlaybookRecommendations,
+  } from '../scripts/recommendation-engine.js';
+
   // ── Gate: require ?debug-enabled=true ──
   const debugEnabled = new URLSearchParams(window.location.search).get('debug-enabled') === 'true';
   const lockedEl = document.getElementById('debug-locked');
@@ -492,7 +618,7 @@ const sessionKeys = [
     'ev_q1', 'ev_q2', 'ev_q3', // expansion_value
     'os_q1', 'os_q2', 'os_q3', // org_strategy
     'ca_q1', 'ca_q2', 'ca_q3', // cs_culture_alignment
-    'ai_use_case_depth', 'ai_data_foundation', 'ai_governance_adoption', // ai_leverage
+    'ai_q1', 'ai_q2', 'ai_q3', // ai_leverage
   ];
 
   function makeScores(stage: string, score: number) {
@@ -526,6 +652,44 @@ const sessionKeys = [
     fly:   { profile: { ...presetProfile }, scores: makeScores('fly', 3.8) },
   };
 
+  // Persona fixtures — match the recommendation-engine.test.js personas exactly
+  // so the debug preview exercises the same paths as the test harness.
+  const personaPresets: Record<string, { profile: any; responses: Record<string, number>; stage: string }> = {
+    crawl: {
+      profile: {},
+      stage: 'crawl',
+      responses: Object.fromEntries(allQuestionIds.map(id => [id, 1])),
+    },
+    walk: {
+      profile: { customer_segment: 'seg_midmarket', company_arr: 'arr_5m_20m', cs_team_size: 'team_1_3' },
+      stage: 'walk',
+      responses: {
+        sc_q1:2, sc_q2:3, sc_q3:2,
+        jl_q1:2, jl_q2:2, jl_q3:3,
+        hr_q1:3, hr_q2:2, hr_q3:2,
+        md_q1:2, md_q2:3, md_q3:2,
+        ev_q1:2, ev_q2:2, ev_q3:2,
+        os_q1:3, os_q2:2, os_q3:3,
+        ca_q1:2, ca_q2:2, ca_q3:3,
+        ai_q1:2, ai_q2:2, ai_q3:2,
+      },
+    },
+    fly: {
+      profile: { customer_segment: 'seg_enterprise', company_arr: 'arr_over_100m', cs_team_size: 'team_10plus' },
+      stage: 'fly',
+      responses: {
+        sc_q1:4, sc_q2:4, sc_q3:4,
+        jl_q1:4, jl_q2:4, jl_q3:3,
+        hr_q1:4, hr_q2:4, hr_q3:4,
+        md_q1:3, md_q2:4, md_q3:4,
+        ev_q1:4, ev_q2:3, ev_q3:4,
+        os_q1:4, os_q2:4, os_q3:4,
+        ca_q1:4, ca_q2:4, ca_q3:4,
+        ai_q1:3, ai_q2:4, ai_q3:3,
+      },
+    },
+  };
+
   // ── Toast ──
   function showToast(message: string) {
     let toast = document.querySelector('.debug-toast') as HTMLElement;
@@ -537,6 +701,72 @@ const sessionKeys = [
     toast.textContent = message;
     toast.classList.add('visible');
     setTimeout(() => toast.classList.remove('visible'), 2000);
+  }
+
+  // ── Render recommendation preview (Task 10.1) ──
+  function renderRecommendationPreview() {
+    const container = document.getElementById('rec-preview');
+    if (!container) return;
+
+    try {
+      const scoresRaw = localStorage.getItem('distilledcs_scores');
+      const profileRaw = localStorage.getItem('distilledcs_profile');
+      if (!scoresRaw) {
+        container.innerHTML = '<p class="rec-placeholder">No assessment data. Apply a preset to see output.</p>';
+        return;
+      }
+      const scores = JSON.parse(scoresRaw);
+      const profile = profileRaw ? JSON.parse(profileRaw) : {};
+      const responses = scores.responses || {};
+
+      const allPlaybooks = (frameworkData as any).playbooks;
+      const actions = composePriorityActions(profile, responses, frameworkData as any);
+      const strengths = composeStrengths(profile, responses, frameworkData as any);
+      const playbooks = composePlaybookRecommendations(profile, responses, frameworkData as any, allPlaybooks);
+
+      const esc = (s: string) => s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+      const actionsHtml = actions.length
+        ? actions.map(a => `
+            <div class="rec-item">
+              <div class="rec-item-label">${esc(a.title || '(stage fallback)')}</div>
+              <div class="rec-item-body">${esc(a.body)}</div>
+              ${a.source_question_id ? `<div class="rec-item-meta">source: ${a.source_question_id} · score ${a.score_level}</div>` : '<div class="rec-item-meta">stage-level fallback</div>'}
+            </div>`).join('')
+        : '<p class="rec-empty-group">No actions composed.</p>';
+
+      const strengthsHtml = strengths.length
+        ? strengths.map(s => `
+            <div class="rec-item">
+              <div class="rec-item-body">${esc(s.body)}</div>
+              <div class="rec-item-meta">source: ${s.source_question_id}</div>
+            </div>`).join('')
+        : '<p class="rec-empty-group">No strengths (need ≥ 2 score-3+ answers with insight text).</p>';
+
+      const pbSummary = [
+        `Current stage: ${playbooks.currentStage.length}`,
+        `Strengthen weakest: ${playbooks.weakestDomain.length}`,
+        `Coming next: ${playbooks.comingNext.length}`,
+      ].map(t => `<div class="rec-item"><div class="rec-item-body">${t}</div></div>`).join('');
+
+      container.innerHTML = `
+        <div class="rec-stage-pill">Stage: ${scores.stage || '?'} · Score: ${scores.overallScore?.toFixed(2) ?? '—'}</div>
+        <div class="rec-group">
+          <div class="rec-group-title">Priority Actions (${actions.length})</div>
+          ${actionsHtml}
+        </div>
+        <div class="rec-group">
+          <div class="rec-group-title">Strengths (${strengths.length})</div>
+          ${strengthsHtml}
+        </div>
+        <div class="rec-group">
+          <div class="rec-group-title">Playbooks</div>
+          ${pbSummary}
+        </div>
+      `;
+    } catch (err) {
+      container.innerHTML = `<p class="rec-placeholder">Error: ${String(err)}</p>`;
+    }
   }
 
   // ── Refresh state overview ──
@@ -623,6 +853,29 @@ const sessionKeys = [
     showToast(`Set to ${stage.charAt(0).toUpperCase() + stage.slice(1)} stage`);
     refreshState();
     refreshKeyDisplays();
+    renderRecommendationPreview();
+  }
+
+  // ── Apply persona preset (Task 10.2) ──
+  function applyPersonaPreset(name: string) {
+    const persona = personaPresets[name];
+    if (!persona) return;
+    const domainScores: Record<string, number> = {};
+    const domains = (frameworkData as any).assessment_domains.domains;
+    for (const domain of domains) {
+      const qs = domain.questions.filter((q: any) => typeof persona.responses[q.id] === 'number');
+      if (qs.length === 0) continue;
+      domainScores[domain.id] = qs.reduce((s: number, q: any) => s + persona.responses[q.id], 0) / qs.length;
+    }
+    const overallScore = Object.values(domainScores).reduce((a: number, b) => a + (b as number), 0) / Object.keys(domainScores).length;
+    const scores = { domainScores, overallScore, stage: persona.stage, responses: persona.responses, timestamp: new Date().toISOString() };
+    localStorage.setItem('distilledcs_profile', JSON.stringify(persona.profile));
+    localStorage.setItem('distilledcs_scores', JSON.stringify(scores));
+    localStorage.setItem('distilledcs_completed', 'true');
+    showToast(`Persona: ${name}`);
+    refreshState();
+    refreshKeyDisplays();
+    renderRecommendationPreview();
   }
 
   // ── Preset buttons ──
@@ -633,12 +886,17 @@ const sessionKeys = [
     showToast('Cleared all state');
     refreshState();
     refreshKeyDisplays();
+    renderRecommendationPreview();
   });
 
   document.getElementById('preset-crawl')?.addEventListener('click', () => applyPreset('crawl'));
   document.getElementById('preset-walk')?.addEventListener('click', () => applyPreset('walk'));
   document.getElementById('preset-run')?.addEventListener('click', () => applyPreset('run'));
   document.getElementById('preset-fly')?.addEventListener('click', () => applyPreset('fly'));
+  document.getElementById('preset-persona-crawl')?.addEventListener('click', () => applyPersonaPreset('crawl'));
+  document.getElementById('preset-persona-walk')?.addEventListener('click', () => applyPersonaPreset('walk'));
+  document.getElementById('preset-persona-fly')?.addEventListener('click', () => applyPersonaPreset('fly'));
+  document.getElementById('rec-refresh-btn')?.addEventListener('click', renderRecommendationPreview);
 
   document.getElementById('preset-no-company')?.addEventListener('click', () => {
     try {
@@ -773,4 +1031,5 @@ const sessionKeys = [
   // ── Init ──
   refreshState();
   refreshKeyDisplays();
+  renderRecommendationPreview();
 </script>

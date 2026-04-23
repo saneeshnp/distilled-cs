@@ -800,8 +800,9 @@ const contextualRecs = frameworkData.contextual_recommendations;
       border-color: #ddd !important;
     }
 
-    /* Flatten strength accent border in print */
-    .report-strength-item {
+    /* Flatten accent borders in print */
+    .report-strength-item,
+    .report-playbook-card.is-weak-domain {
       border-left-color: #aaa !important;
       background: #f9f9f9 !important;
     }
@@ -1114,11 +1115,15 @@ const contextualRecs = frameworkData.contextual_recommendations;
       }
     }
 
+    const segment = data.profile?.customer_segment;
+    const teamSize = data.profile?.cs_team_size;
+    const profileSentence = frameworkData.executive_summary_templates?.[segment]?.[teamSize] ?? null;
+
     return `
       <div class="report-section">
         <h2 class="report-section-title">Executive Summary</h2>
         <p class="report-summary-text">For ${data.companyName || 'your company'}, ${stage?.description || ''}</p>
-        ${stage?.typical_profile ? `<p class="report-summary-text">${stage.typical_profile}</p>` : ''}
+        ${profileSentence ? `<p class="report-summary-text report-summary-profile">${profileSentence}</p>` : ''}
         ${profileItems.length ? `<div class="report-profile-row">${profileItems.join('')}</div>` : ''}
       </div>
     `;
