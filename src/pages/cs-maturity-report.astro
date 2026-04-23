@@ -429,6 +429,37 @@ const contextualRecs = frameworkData.contextual_recommendations;
     font-weight: 600;
   }
 
+  .report-action-source {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin-top: 0.375rem;
+    font-style: italic;
+  }
+
+  /* ── Section: Strengths ── */
+  .report-strengths-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .report-strength-item {
+    padding: 0.875rem 1.25rem;
+    background: var(--color-accent-subtle);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0.5rem;
+  }
+
+  .report-strength-body {
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+  }
+
   /* ── Section 5: Playbooks ── */
   .report-playbooks-grid {
     display: grid;
@@ -456,6 +487,10 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
   .report-playbook-card.is-next-stage {
     opacity: 0.55;
+  }
+
+  .report-playbook-card.is-weak-domain {
+    border-left: 3px solid var(--color-warning, #F5A623);
   }
 
   .report-playbook-title {
@@ -757,11 +792,18 @@ const contextualRecs = frameworkData.contextual_recommendations;
     .report-header,
     .report-playbook-card,
     .report-action-item,
+    .report-strength-item,
     .report-transition-block,
     .report-stage-card,
     .report-profile-row {
       box-shadow: none !important;
       border-color: #ddd !important;
+    }
+
+    /* Flatten strength accent border in print */
+    .report-strength-item {
+      border-left-color: #aaa !important;
+      background: #f9f9f9 !important;
     }
 
     /* Prevent sections and cards from splitting across pages */
@@ -770,6 +812,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     }
 
     .report-action-item,
+    .report-strength-item,
     .report-playbook-card,
     .report-stage-card,
     .report-transition-block {
@@ -854,6 +897,12 @@ const contextualRecs = frameworkData.contextual_recommendations;
 <script>
   import { getProfile, getScores, isAssessmentCompleted } from '../scripts/context-manager.js';
   import frameworkData from '../data/lean-cs-data.json';
+  import {
+    composePriorityActions,
+    composeStrengths,
+    composePlaybookRecommendations,
+    composeMetricPriorities,
+  } from '../scripts/recommendation-engine.js';
 
   const stages = (frameworkData as any).maturity_stages.stages;
   const domains = (frameworkData as any).assessment_domains.domains;
@@ -974,13 +1023,17 @@ const contextualRecs = frameworkData.contextual_recommendations;
     // Summary needs stage data
     if (stage) sections.push(renderSummary(data, stage));
 
+    // Strengths: response-composed, only renders when ≥ 2 high-score fragments exist
+    const strengthsHtml = renderStrengths(data);
+    if (strengthsHtml) sections.push(strengthsHtml);
+
     // Domain breakdown needs scores
     if (data.domainScores && Object.keys(data.domainScores).length) {
       sections.push(renderDomainBreakdown(data));
     }
 
-    // Priority actions need stage data
-    if (stage) sections.push(renderPriorityActions(data, stage));
+    // Priority actions: response-composed, falls back to stage actions gracefully
+    sections.push(renderPriorityActions(data));
 
     // Playbooks need a valid stage
     if (data.stage) sections.push(renderPlaybooks(data, nextStageId));
@@ -1038,7 +1091,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
         <div class="report-stage-label">${title}</div>
         <h1 class="report-stage-name">${stage?.label || data.stage}</h1>
         <p class="report-stage-subtitle">${stage?.subtitle || ''}</p>
-        <p class="report-score">Overall Score: ${data.overallScore.toFixed(2)} / 4.0</p>
+        <p class="report-score">Overall Score: ${typeof data.overallScore === 'number' ? data.overallScore.toFixed(2) + ' / 4.0' : '—'}</p>
         ${data.timestamp ? `<p class="report-date">Assessment completed ${formatDate(data.timestamp)}</p>` : ''}
       </div>
     `;
@@ -1127,24 +1180,25 @@ const contextualRecs = frameworkData.contextual_recommendations;
   }
 
   // ── Section 4: Priority Actions ──
-  function renderPriorityActions(data: ReportData, stage: any): string {
-    const actions = stage?.priority_actions || [];
+  function renderPriorityActions(data: ReportData): string {
+    const actions = composePriorityActions(data.profile as any, data.responses, frameworkData as any);
     if (!actions.length) return '';
 
     const items = actions.map((a: any, i: number) => {
-      const text = typeof a === 'string' ? a : a.text;
-      const time = typeof a === 'object' ? a.estimated_time : '';
-      const why = typeof a === 'object' ? a.why_it_matters : '';
+      const sourceHtml = a.source_question_id
+        ? `<div class="report-action-source">Based on your answer: ${a.title}</div>`
+        : '';
+      const timeHtml = a.estimated_time
+        ? `<span class="report-action-time">${a.estimated_time}</span>`
+        : '';
 
       return `
         <li class="report-action-item">
           <span class="report-action-num">${i + 1}</span>
           <div class="report-action-body">
-            <div class="report-action-text">${text}</div>
-            <div class="report-action-meta">
-              ${time ? `<span class="report-action-time">${time}</span>` : ''}
-              ${why ? `<span class="report-action-why">${why}</span>` : ''}
-            </div>
+            <div class="report-action-text">${a.body}</div>
+            ${timeHtml || sourceHtml ? `<div class="report-action-meta">${timeHtml}</div>` : ''}
+            ${sourceHtml}
           </div>
         </li>
       `;
@@ -1158,28 +1212,55 @@ const contextualRecs = frameworkData.contextual_recommendations;
     `;
   }
 
+  // ── Section: Strengths (response-composed, between Summary and Domain Breakdown) ──
+  function renderStrengths(data: ReportData): string {
+    const strengths = composeStrengths(data.profile as any, data.responses, frameworkData as any);
+    if (!strengths.length) return '';
+
+    const items = strengths.map((s: any) => `
+      <li class="report-strength-item">
+        <div class="report-strength-body">${s.body}</div>
+      </li>
+    `).join('');
+
+    return `
+      <div class="report-section">
+        <h2 class="report-section-title">What You're Doing Well</h2>
+        <ul class="report-strengths-list">${items}</ul>
+      </div>
+    `;
+  }
+
   // ── Section 5: Playbooks ──
   function renderPlaybooks(data: ReportData, nextStageId: string | null): string {
-    const currentPlaybooks = allPlaybooks[data.stage] || [];
-    const nextPlaybooks = nextStageId ? (allPlaybooks[nextStageId] || []) : [];
+    const { currentStage: currentPlaybooks, weakestDomain, comingNext: nextPlaybooks } =
+      composePlaybookRecommendations(data.profile as any, data.responses, frameworkData as any, allPlaybooks as any);
 
-    const renderCard = (pb: any, isNext: boolean) => `
-      <div class="report-playbook-card${isNext ? ' is-next-stage' : ''}">
+    const renderCard = (pb: any, modifier = '') => `
+      <div class="report-playbook-card${modifier}">
         <div class="report-playbook-title"><a href="/playbooks/${pb.id}/">${pb.title}</a></div>
         <p class="report-playbook-obj">${pb.objective}</p>
         <span class="report-playbook-duration">${pb.estimated_duration}</span>
       </div>
     `;
 
-    const currentCards = currentPlaybooks.map((pb: any) => renderCard(pb, false)).join('');
+    const currentCards = currentPlaybooks.map((pb: any) => renderCard(pb)).join('');
+
+    const weakestHtml = weakestDomain.length
+      ? `<h3 class="report-subsection-label">Strengthen Your Weakest Area</h3>
+         <div class="report-playbooks-grid">${weakestDomain.map((pb: any) => renderCard(pb, ' is-weak-domain')).join('')}</div>`
+      : '';
+
     const nextCards = nextPlaybooks.length
-      ? `<h3 class="report-subsection-label">Coming Next</h3><div class="report-playbooks-grid">${nextPlaybooks.map((pb: any) => renderCard(pb, true)).join('')}</div>`
+      ? `<h3 class="report-subsection-label">Coming Next</h3>
+         <div class="report-playbooks-grid">${nextPlaybooks.map((pb: any) => renderCard(pb, ' is-next-stage')).join('')}</div>`
       : '';
 
     return `
       <div class="report-section">
         <h2 class="report-section-title">Recommended Playbooks</h2>
         <div class="report-playbooks-grid">${currentCards}</div>
+        ${weakestHtml}
         ${nextCards}
       </div>
     `;
@@ -1187,24 +1268,20 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
   // ── Section 6: Metrics ──
   function renderMetrics(data: ReportData): string {
-    const segment = data.profile.customer_segment || '';
+    const annotated = composeMetricPriorities(data.profile as any, data.responses, frameworkData as any, allMetrics);
 
     const grouped: Record<string, any[]> = { high: [], medium: [], low: [] };
-    for (const m of allMetrics) {
-      const priority = m.priority_by_stage?.[data.stage] || 'low';
-      grouped[priority] = grouped[priority] || [];
-      grouped[priority].push(m);
+    for (const entry of annotated) {
+      (grouped[entry.relevance] = grouped[entry.relevance] || []).push(entry);
     }
 
-    const renderGroup = (priority: string, label: string, metrics: any[]) => {
-      if (!metrics.length) return '';
+    const renderGroup = (priority: string, label: string, entries: any[]) => {
+      if (!entries.length) return '';
 
-      const rows = metrics.map((m: any) => {
-        let benchmarkHtml = '';
-        if (priority === 'high' && segment && m.benchmarks_by_context?.[segment]) {
-          const b = m.benchmarks_by_context[segment];
-          benchmarkHtml = `<span class="report-metric-benchmark">Target: ${b.good || ''}</span>`;
-        }
+      const rows = entries.map(({ metric: m, segmentBenchmark: b }: any) => {
+        const benchmarkHtml = priority === 'high' && b?.good
+          ? `<span class="report-metric-benchmark">Target: ${b.good}</span>`
+          : '';
         return `
           <div class="report-metric-row">
             <span class="report-metric-name"><a href="/metrics/${m.id}/">${m.name}</a></span>
@@ -1227,9 +1304,9 @@ const contextualRecs = frameworkData.contextual_recommendations;
     return `
       <div class="report-section">
         <h2 class="report-section-title">Metric Priorities</h2>
-        ${renderGroup('high', 'High', grouped.high)}
-        ${renderGroup('medium', 'Medium', grouped.medium)}
-        ${renderGroup('low', 'Low', grouped.low)}
+        ${renderGroup('high', 'High', grouped.high || [])}
+        ${renderGroup('medium', 'Medium', grouped.medium || [])}
+        ${renderGroup('low', 'Low', grouped.low || [])}
       </div>
     `;
   }

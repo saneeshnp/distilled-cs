@@ -10,6 +10,7 @@ export function composePriorityActions(profile, responses, frameworkData) {
   const stage = _getUserStage(responses, frameworkData);
   const stageData = frameworkData.maturity_stages.stages.find(s => s.id === stage);
   const segment = profile?.customer_segment;
+  const deprioritize = _buildDeprioritizeSet(profile, frameworkData);
 
   const scoredEntries = [];
   for (const domain of domains) {
@@ -18,6 +19,8 @@ export function composePriorityActions(profile, responses, frameworkData) {
       if (typeof userScore !== 'number') continue;
       const option = question.options.find(o => o.score === userScore);
       if (!option?.next_step) continue;
+      // Skip options whose tags overlap with the user's profile deprioritize set
+      if (deprioritize.size > 0 && (option.tags ?? []).some(t => deprioritize.has(t))) continue;
       scoredEntries.push({ domain, question, option, userScore, segment });
     }
   }
@@ -40,10 +43,13 @@ export function composePriorityActions(profile, responses, frameworkData) {
     };
   });
 
-  // Add 1 stage-level action that isn't already represented
+  // Add 1 stage-level action that isn't already represented and isn't deprioritized
   if (stageData?.priority_actions?.length) {
     const usedBodies = new Set(actions.map(a => a.body));
-    const fallback = stageData.priority_actions.find(pa => !usedBodies.has(pa.text));
+    const fallback = stageData.priority_actions.find(pa =>
+      !usedBodies.has(pa.text) &&
+      !(deprioritize.size > 0 && (pa.tags ?? []).some(t => deprioritize.has(t)))
+    );
     if (fallback) {
       actions.push({
         title: fallback.text,
@@ -71,14 +77,26 @@ export function composeStrengths(profile, responses, frameworkData) {
       if (typeof userScore !== 'number' || userScore < 3) continue;
       const option = question.options.find(o => o.score === userScore);
       if (!option?.insight) continue;
-      highEntries.push({ score: userScore, body: option.insight, source_question_id: question.id });
+      highEntries.push({ score: userScore, body: option.insight, source_question_id: question.id, domain_id: domain.id });
     }
   }
 
   if (highEntries.length < 2) return [];
 
+  // Highest score first; stable — JSON domain order breaks ties
   highEntries.sort((a, b) => b.score - a.score);
-  return highEntries.slice(0, 3);
+
+  // At most 1 per domain so the section shows breadth, not just the user's best domain repeated
+  const seenDomains = new Set();
+  const result = [];
+  for (const entry of highEntries) {
+    if (seenDomains.has(entry.domain_id)) continue;
+    seenDomains.add(entry.domain_id);
+    result.push({ score: entry.score, body: entry.body, source_question_id: entry.source_question_id });
+    if (result.length === 3) break;
+  }
+
+  return result.length >= 2 ? result : [];
 }
 
 // Compose playbook recommendations into three groups:
@@ -145,6 +163,18 @@ export function composeMetricPriorities(profile, responses, frameworkData, allMe
 }
 
 // --- Private helpers ---
+
+// Builds a Set of deprioritize tag identifiers from all applicable profile dimensions.
+// Options or stage actions whose tags overlap this set are skipped in composePriorityActions.
+function _buildDeprioritizeSet(profile, frameworkData) {
+  const mods = frameworkData.profile_modifiers;
+  const set = new Set();
+  if (!mods || !profile) return set;
+  for (const tag of mods.customer_segment?.[profile.customer_segment]?.deprioritizes ?? []) set.add(tag);
+  for (const tag of mods.company_arr?.[profile.company_arr]?.deprioritizes ?? []) set.add(tag);
+  for (const tag of mods.cs_team_size?.[profile.cs_team_size]?.deprioritizes ?? []) set.add(tag);
+  return set;
+}
 
 function _getUserStage(responses, frameworkData) {
   const domains = frameworkData.assessment_domains.domains;
