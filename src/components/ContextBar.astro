@@ -154,9 +154,9 @@
     // Determine current loop phase from URL
     const path = window.location.pathname;
     let loopPhase = '';
-    if (path.startsWith('/assess') || path.startsWith('/model')) {
+    if (path.startsWith('/assess') || path.startsWith('/customer-success-maturity-model')) {
       loopPhase = 'Assess';
-    } else if (path.startsWith('/playbooks') || path.startsWith('/metrics') || path.startsWith('/checklist')) {
+    } else if (path.startsWith('/customer-success-playbooks') || path.startsWith('/customer-success-metrics') || path.startsWith('/checklist')) {
       loopPhase = 'Execute';
     } else if (path.startsWith('/transform')) {
       loopPhase = 'Transform';

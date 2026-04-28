@@ -8,9 +8,57 @@ const domains = frameworkData.assessment_domains.domains;
 const stages = frameworkData.maturity_stages.stages;
 ---
 
-<BaseLayout title="Assessment" description="Assess your Customer Success maturity across 8 domains in under 5 minutes.">
+<BaseLayout title="Customer Success Maturity Assessment" description="A 5-minute assessment of your customer success operation across 8 domains. Returns a stage rating, priority actions, and recommended playbooks.">
 
   <div class="container assess-page">
+
+    <!-- Static crawlable intro (hidden once user has completed the assessment) -->
+    <section class="assess-intro" data-hide-if-assessed aria-label="About the assessment">
+      <h1 class="assess-intro-headline">Customer Success Maturity Assessment</h1>
+      <p class="assess-intro-lede">
+        Find out where your customer success team stands on a four-stage maturity model, and get a prioritized set of actions to move up. Five minutes, and no signup required.
+      </p>
+
+      <div class="assess-intro-cta">
+        <button type="button" class="btn btn-primary assess-start-btn" id="assess-start-btn">
+          Start the Assessment
+        </button>
+        <span class="assess-intro-cta-hint">Or scroll for more details about how it works.</span>
+      </div>
+
+      <div class="assess-intro-body">
+        <h2>What the assessment measures</h2>
+        <p>
+          The assessment covers eight capability domains: segmentation, customer journey, proactive engagement, measurement, retention and expansion, cross-functional partnership, AI leverage, and team structure. Each domain has three questions scored from 1 to 4. Scores are averaged across domains to produce your overall maturity stage.
+        </p>
+
+        <h2>How scoring works</h2>
+        <p>
+          Each response option is a calibrated description of what a team at that level actually does, not a subjective self-rating. Picking option 2 on a segmentation question means "we segment by ARR but not much else." The stages map to score ranges:
+        </p>
+        <ul class="assess-intro-stages">
+          <li><strong>Crawl</strong> (1.0–1.7) — foundation building; reactive, inconsistent, founder-led.</li>
+          <li><strong>Walk</strong> (1.8–2.5) — an operating system is forming; segmented, measured, repeatable.</li>
+          <li><strong>Run</strong> (2.6–3.3) — scaled and predictable; outcomes tracked, plays automated.</li>
+          <li><strong>Fly</strong> (3.4–4.0) — predictive and proactive; leading indicators drive action.</li>
+        </ul>
+
+        <h2>What the profile questions do</h2>
+        <p>
+          The seven questions at the start (ARR, customer segment, team size, and others) do not affect your score. They set the lens for benchmarks and recommendations, so a fifty-person enterprise team gets different guidance than a two-person SMB team working on the same weakness.
+        </p>
+
+        <h2>What you get back</h2>
+        <p>
+          After submission you see a results summary with your stage, domain-by-domain scores, and immediate next steps. From there you can open the full <a href="/cs-maturity-report/">CS Maturity Report</a> with your executive summary, strengths, priority actions, recommended playbooks, and stage-specific metric priorities. Everything is stored in your browser, not on a server, so re-assessing later lets you track movement over time.
+        </p>
+
+        <h2>Who this is for</h2>
+        <p>
+          CS leaders, CS operations teams, and founders who want a stage-referenced read on where their customer success function stands. The output is most useful when paired with the framework's <a href="/customer-success-principles/">principles</a>, <a href="/customer-success-playbooks/">playbooks</a>, and <a href="/customer-success-metrics/">metrics</a>. The assessment is free, open-source, and vendor-neutral.
+        </p>
+      </div>
+    </section>
 
     <!-- Strategy Loop wayfinding -->
     <div class="assess-loop-indicator">
@@ -25,7 +73,7 @@ const stages = frameworkData.maturity_stages.stages;
 
     <!-- Phase 1: Context Profile -->
     <section class="phase" id="phase-profile">
-      <h1 class="phase-title">First, tell us about your company and team</h1>
+      <h2 class="phase-title">First, tell us about your company and team</h2>
       <p class="phase-subtitle">These don't affect your maturity score — they help us tailor benchmarks and recommendations to your context.</p>
 
       <div class="profile-form" id="profile-form">
@@ -154,6 +202,89 @@ const stages = frameworkData.maturity_stages.stages;
   .assess-loop-indicator {
     margin-bottom: 1.5rem;
     opacity: 0.8;
+  }
+
+  /* Static crawlable intro */
+  .assess-intro {
+    margin-bottom: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .assess-intro-headline {
+    font-family: var(--font-display, 'Instrument Serif', serif);
+    font-size: clamp(1.875rem, 4vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+    color: var(--color-text);
+  }
+
+  .assess-intro-lede {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 40rem;
+    margin: 0 0 2rem;
+  }
+
+  .assess-intro-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 0 2.5rem;
+  }
+
+  .assess-start-btn {
+    font-size: 1rem;
+    padding: 0.875rem 1.75rem;
+  }
+
+  .assess-intro-cta-hint {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  .assess-intro-body h2 {
+    font-family: var(--font-display, 'Instrument Serif', serif);
+    font-size: 1.375rem;
+    letter-spacing: -0.01em;
+    margin: 1.75rem 0 0.5rem;
+    color: var(--color-text);
+  }
+
+  .assess-intro-body p {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    margin: 0 0 0.75rem;
+  }
+
+  .assess-intro-body a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .assess-intro-stages {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 1rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .assess-intro-stages li {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-border);
+  }
+
+  .assess-intro-stages strong {
+    color: var(--color-text);
   }
 
   /* Progress bar */
@@ -734,6 +865,15 @@ const stages = frameworkData.maturity_stages.stages;
   const phaseResults = document.getElementById('phase-results') as HTMLElement;
   const profileNextBtn = document.getElementById('profile-next') as HTMLButtonElement;
   const finishBtn = document.getElementById('finish-assessment');
+  const assessIntro = document.querySelector('.assess-intro') as HTMLElement | null;
+  const assessStartBtn = document.getElementById('assess-start-btn');
+
+  // Hide the static intro on click so the form takes over the viewport without a route change.
+  // Crawlers still see the full intro in the initial HTML; this only affects the in-session view.
+  assessStartBtn?.addEventListener('click', () => {
+    if (assessIntro) assessIntro.style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
   // ── Results HTML generator (reusable) ──
   function generateResultsHTML(domainScores: Record<string, number>, overallScore: number, stageId: string): string {
@@ -753,7 +893,7 @@ const stages = frameworkData.maturity_stages.stages;
     return `
       <div class="results-header stage-${stageId}">
         <div class="results-stage-badge">${stageBadgeText}</div>
-        <h1 class="results-stage-name">${stage?.label || stageId}</h1>
+        <h2 class="results-stage-name">${stage?.label || stageId}</h2>
         <p class="results-stage-subtitle">${stage?.subtitle || ''}</p>
         <p class="results-overall-score">Overall score: ${overallScore} / 4.0</p>
       </div>
@@ -799,9 +939,9 @@ const stages = frameworkData.maturity_stages.stages;
       <div class="results-next-steps">
         <h2 class="results-next-steps-title">Personalized actions based on your score and CS maturity</h2>
         <ul class="results-next-steps-list">
-          <li><a href="/playbooks/">View your playbooks to execute</a></li>
-          <li><a href="/model/">Explore the maturity model to see where you stand</a></li>
-          <li><a href="/metrics/">Understand your metric priorities</a></li>
+          <li><a href="/customer-success-playbooks/">View your playbooks to execute</a></li>
+          <li><a href="/customer-success-maturity-model/">Explore the maturity model to see where you stand</a></li>
+          <li><a href="/customer-success-metrics/">Understand your metric priorities</a></li>
         </ul>
       </div>
       <div class="results-manage">
@@ -820,6 +960,9 @@ const stages = frameworkData.maturity_stages.stages;
     phaseAssessment.style.display = 'none';
     phaseResults.style.display = '';
     if (progressBarWrap) progressBarWrap.style.display = 'none';
+
+    // Hide the static SEO intro once the user has a completed assessment.
+    document.querySelectorAll<HTMLElement>('[data-hide-if-assessed]').forEach(el => { el.style.display = 'none'; });
 
     // Bind retake/update handler
     document.getElementById('retake-btn')?.addEventListener('click', () => {
@@ -944,6 +1087,10 @@ const stages = frameworkData.maturity_stages.stages;
   // ── Continue to assessment ──
   profileNextBtn?.addEventListener('click', () => {
     if (!contextParams.every((p: any) => profile[p.id] !== undefined)) return;
+    // Hide the intro now if the user reached this point by scrolling past it
+    // rather than clicking the Start button. Without this, scrollTo({top:0})
+    // dumps subsequent domain transitions at the top of the explainer copy.
+    if (assessIntro) assessIntro.style.display = 'none';
     phaseProfile.style.display = 'none';
     phaseAssessment.style.display = '';
     showDomain(0);

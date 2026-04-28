@@ -46,13 +46,46 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
   const found = allMetrics.find((m: any) => m.id === mId);
   return found ? { id: mId, name: found.name } : { id: mId, name: mId };
 });
+
+// Reverse-lookup: principles whose related_playbooks include this playbook
+const relatedPrinciples = (frameworkData.principles as any[])
+  .filter((p) => (p.related_playbooks || []).includes(playbook.id))
+  .map((p) => ({ slug: p.slug, title: p.title, summary: p.summary || p.description }));
+
+const siteUrl = 'https://distilledcs.org';
+const playbookUrl = `${siteUrl}/customer-success-playbooks/${playbook.id}/`;
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: playbook.title,
+  description: playbook.objective,
+  totalTime: playbook.estimated_duration,
+  url: playbookUrl,
+  step: (playbook.steps || []).map((text: string, i: number) => ({
+    '@type': 'HowToStep',
+    position: i + 1,
+    name: `Step ${i + 1}`,
+    text,
+  })),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+    { '@type': 'ListItem', position: 2, name: 'Playbooks', item: `${siteUrl}/customer-success-playbooks/` },
+    { '@type': 'ListItem', position: 3, name: playbook.title, item: playbookUrl },
+  ],
+};
 ---
 
-<BaseLayout title={playbook.title} description={playbook.objective}>
+<BaseLayout title={playbook.title} description={playbook.objective} structuredData={[howToSchema, breadcrumbSchema]}>
   <div class={`container playbook-detail-page stage-${stageId}`}>
 
     <!-- Back link -->
-    <a href="/playbooks/" class="back-link">&larr; All Playbooks</a>
+    <a href="/customer-success-playbooks/" class="back-link">&larr; All Playbooks</a>
 
     <!-- Playbook header -->
     <div class={`playbook-header stage-${stageId}`}>
@@ -90,7 +123,7 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
       <h2 class="section-heading">Metrics to Watch</h2>
       <div class="metrics-list">
         {metricsToWatch.map((m: any) => (
-          <a href={`/metrics/${m.id}/`} class="metric-link-card">
+          <a href={`/customer-success-metrics/${m.id}/`} class="metric-link-card">
             <span class="metric-link-name">{m.name}</span>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,6 +132,20 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
         ))}
       </div>
     </section>
+
+    {relatedPrinciples.length > 0 && (
+      <section class="playbook-section">
+        <h2 class="section-heading">Related Principles</h2>
+        <div class="principles-list">
+          {relatedPrinciples.map((p: any) => (
+            <a href={`/customer-success-principles/${p.slug}/`} class="principle-link-card">
+              <span class="principle-link-title">{p.title}</span>
+              <span class="principle-link-summary">{p.summary}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
 
     <!-- Common pitfalls -->
     <section class="playbook-section">
@@ -128,13 +175,13 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
     <!-- Prev/Next navigation -->
     <nav class="playbook-nav" aria-label="Playbook navigation">
       {prevPlaybook ? (
-        <a href={`/playbooks/${prevPlaybook.id}/`} class="playbook-nav-link prev">
+        <a href={`/customer-success-playbooks/${prevPlaybook.id}/`} class="playbook-nav-link prev">
           <span class="nav-direction">&larr; Previous</span>
           <span class="nav-title">{prevPlaybook.title}</span>
         </a>
       ) : <div></div>}
       {nextPlaybook ? (
-        <a href={`/playbooks/${nextPlaybook.id}/`} class="playbook-nav-link next">
+        <a href={`/customer-success-playbooks/${nextPlaybook.id}/`} class="playbook-nav-link next">
           <span class="nav-direction">Next &rarr;</span>
           <span class="nav-title">{nextPlaybook.title}</span>
         </a>
@@ -308,6 +355,42 @@ const metricsToWatch = (playbook.metrics_to_watch || []).map((mId: string) => {
   .metric-link-card svg {
     color: var(--color-text-muted);
     flex-shrink: 0;
+  }
+
+  /* Related principles */
+  .principles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .principle-link-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.875rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+
+  .principle-link-card:hover {
+    border-color: var(--color-accent);
+    background: var(--color-surface-hover);
+  }
+
+  .principle-link-title {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .principle-link-summary {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
   }
 
   /* Pitfalls */

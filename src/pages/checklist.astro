@@ -10,7 +10,7 @@ const stageOrder = ['crawl', 'walk', 'run', 'fly'];
 const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
 ---
 
-<BaseLayout title="Execution Checklist" description="Track your progress on priority actions from your stage playbooks.">
+<BaseLayout title="Execution Checklist" description="Track progress against the priority actions for your current maturity stage. Items map directly to playbooks and persist between visits.">
   <div class="container checklist-page">
 
     <!-- Strategy Loop wayfinding -->
@@ -29,6 +29,27 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
         <a href="/assess/" class="btn btn-primary">Take the Assessment</a>
       </div>
 
+      <div class="checklist-explainer">
+        <h2>How this checklist works</h2>
+        <p>
+          The execution checklist is the Execute half of the Distilled CS improvement loop. It turns stage-specific recommendations into a concrete list of actions you can complete in the order that best fits your team. The items below are drawn directly from each maturity stage's priority actions in the framework, grouped by stage so you can see both your current scope and what sits one stage ahead.
+        </p>
+
+        <h2>How items map to stages and playbooks</h2>
+        <p>
+          Each action belongs to a specific maturity stage (Crawl, Walk, Run, or Fly) and traces back to one or more playbooks. The "Related Playbooks" row under each stage links out to the full playbook pages, which cover the objective, step-by-step structure, metrics to watch, and common pitfalls. Crawl-stage items focus on establishing a baseline: a defined onboarding motion, a working health score, a QBR cadence for high-ARR accounts. Walk-stage items layer on segmentation and measurement. Run and Fly items move the team toward predictive and proactive operations.
+        </p>
+
+        <h2>Why the order matters</h2>
+        <p>
+          Stage order is not cosmetic. Crawl actions build the foundation that Walk plays assume you already have; Walk builds the measurement discipline that Run automates. Skipping ahead tends to produce tooling-rich, outcomes-poor motions. Take the <a href="/assess/">five-minute assessment</a> first to confirm which stage you are actually operating at, then work your current stage's list before pulling items from the next.
+        </p>
+
+        <p class="checklist-explainer-followups">
+          Related: the <a href="/customer-success-maturity-model/">customer success maturity model</a>, full <a href="/customer-success-playbooks/">playbook directory</a>, and stage-specific <a href="/customer-success-metrics/">metrics</a> to track alongside each action.
+        </p>
+      </div>
+
       {stages.map(stage => {
         const stagePlaybooks = (playbooks as any)[stage.id] || [];
         return (
@@ -42,7 +63,7 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
               <div class="related-playbooks-row">
                 <span class="related-label">Related Playbooks:</span>
                 {stagePlaybooks.map((pb: any) => (
-                  <a href={`/playbooks/${pb.id}/`} class="related-playbook-link">{pb.title}</a>
+                  <a href={`/customer-success-playbooks/${pb.id}/`} class="related-playbook-link">{pb.title}</a>
                 ))}
               </div>
             )}
@@ -79,6 +100,45 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
   .checklist-loop-indicator {
     margin-bottom: 1.5rem;
     opacity: 0.8;
+  }
+
+  /* SEO fallback explainer */
+  .checklist-explainer {
+    max-width: 40rem;
+    margin: 0 auto 3rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .checklist-explainer h2 {
+    font-family: var(--font-display, 'Instrument Serif', serif);
+    font-size: 1.375rem;
+    letter-spacing: -0.01em;
+    margin: 1.5rem 0 0.5rem;
+    color: var(--color-text);
+  }
+
+  .checklist-explainer h2:first-child {
+    margin-top: 0;
+  }
+
+  .checklist-explainer p {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    margin: 0 0 0.75rem;
+  }
+
+  .checklist-explainer a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .checklist-explainer-followups {
+    margin-top: 1.25rem !important;
+    font-size: 0.875rem !important;
   }
 
   /* Related playbooks row */
@@ -565,7 +625,7 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
 
           const groupPlaybooks = playbooks[group.stageId] || [];
           const playbookLinksHtml = groupPlaybooks.length > 0
-            ? `<div class="related-playbooks-row"><span class="related-label">Related Playbooks:</span>${groupPlaybooks.map((pb: any) => `<a href="/playbooks/${pb.id}/" class="related-playbook-link">${pb.title}</a>`).join('')}</div>`
+            ? `<div class="related-playbooks-row"><span class="related-label">Related Playbooks:</span>${groupPlaybooks.map((pb: any) => `<a href="/customer-success-playbooks/${pb.id}/" class="related-playbook-link">${pb.title}</a>`).join('')}</div>`
             : '';
 
           html += `

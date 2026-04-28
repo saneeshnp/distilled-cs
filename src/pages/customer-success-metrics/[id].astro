@@ -26,6 +26,11 @@ const relatedMetrics = (metric.related_metrics || [])
   .map((id: string) => allMetrics.find((m: any) => m.id === id))
   .filter(Boolean);
 
+// Reverse-lookup: principles whose related_metrics include this metric
+const relatedPrinciples = (frameworkData.principles as any[])
+  .filter((p) => (p.related_metrics || []).includes(metric.id))
+  .map((p) => ({ slug: p.slug, title: p.title, summary: p.summary || p.description }));
+
 const benchmarkEntries = Object.entries(metric.benchmarks_by_context || {});
 
 const segmentLabels: Record<string, string> = {
@@ -54,13 +59,26 @@ for (const stageId of stageOrder) {
     }
   }
 }
+
+const siteUrl = 'https://distilledcs.org';
+const metricUrl = `${siteUrl}/customer-success-metrics/${metric.id}/`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+    { '@type': 'ListItem', position: 2, name: 'Metrics', item: `${siteUrl}/customer-success-metrics/` },
+    { '@type': 'ListItem', position: 3, name: metric.name, item: metricUrl },
+  ],
+};
 ---
 
-<BaseLayout title={metric.name} description={metric.definition}>
+<BaseLayout title={metric.name} description={metric.definition} structuredData={[breadcrumbSchema]}>
   <div class="container metric-detail-page">
 
     <!-- Back link -->
-    <a href="/metrics/" class="back-link">&larr; All Metrics</a>
+    <a href="/customer-success-metrics/" class="back-link">&larr; All Metrics</a>
 
     <!-- Metric header -->
     <div class="metric-header">
@@ -206,12 +224,26 @@ for (const stageId of stageOrder) {
         <h2 class="section-heading">Used in Playbooks</h2>
         <div class="playbook-refs">
           {usedInPlaybooks.map(pb => (
-            <a href={`/playbooks/${pb.id}/`} class={`playbook-ref-card stage-${pb.stageId}`}>
+            <a href={`/customer-success-playbooks/${pb.id}/`} class={`playbook-ref-card stage-${pb.stageId}`}>
               <span class="playbook-ref-badge">{stageLabels[pb.stageId]}</span>
               <span class="playbook-ref-title">{pb.title}</span>
               <svg class="playbook-ref-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {relatedPrinciples.length > 0 && (
+      <section class="metric-section">
+        <h2 class="section-heading">Related Principles</h2>
+        <div class="related-principles-list">
+          {relatedPrinciples.map((p: any) => (
+            <a href={`/customer-success-principles/${p.slug}/`} class="related-principle-card">
+              <span class="related-principle-title">{p.title}</span>
+              <span class="related-principle-summary">{p.summary}</span>
             </a>
           ))}
         </div>
@@ -224,7 +256,7 @@ for (const stageId of stageOrder) {
         <h2 class="section-heading">Related Metrics</h2>
         <div class="related-grid">
           {relatedMetrics.map((rm: any) => (
-            <a href={`/metrics/${rm.id}/`} class="related-card">
+            <a href={`/customer-success-metrics/${rm.id}/`} class="related-card">
               <span class={`category-tag cat-${rm.category}`} style="font-size:0.625rem;">{categoryLabels[rm.category] || rm.category}</span>
               <span class="related-name">{rm.name}</span>
             </a>
@@ -547,6 +579,42 @@ for (const stageId of stageOrder) {
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
     line-height: 1.6;
+  }
+
+  /* Related principles */
+  .related-principles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .related-principle-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.875rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+
+  .related-principle-card:hover {
+    border-color: var(--color-accent);
+    background: var(--color-surface-hover);
+  }
+
+  .related-principle-title {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .related-principle-summary {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
   }
 
   /* Related metrics */

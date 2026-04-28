@@ -1,8 +1,9 @@
 # Distilled CS — distilledcs.org
-# Allow all search engines to crawl the full site
+# Allow all search engines to crawl the full site, except dev/debug tooling.
 
 User-agent: *
 Allow: /
+Disallow: /admin/
 
 # Sitemap
 Sitemap: https://distilledcs.org/sitemap-index.xml

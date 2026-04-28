@@ -1,0 +1,452 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import frameworkData from '../../data/lean-cs-data.json';
+
+export function getStaticPaths() {
+  return frameworkData.principles.map(principle => ({
+    params: { slug: principle.slug },
+    props: { principle },
+  }));
+}
+
+const { principle } = Astro.props as { principle: any };
+
+const iconSvgs: Record<string, string> = {
+  target: '<circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="20" cy="20" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="20" cy="20" r="2" fill="currentColor"/>',
+  compass: '<circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M14 26l4-10 10-4-4 10z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>',
+  shield: '<path d="M20 4L6 10v8c0 7.73 5.97 14.95 14 16 8.03-1.05 14-8.27 14-16v-8L20 4z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/><path d="M14 20l4 4 8-8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+  chart: '<path d="M6 30V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 30V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M22 30V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M30 30V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
+  people: '<circle cx="14" cy="12" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="26" cy="12" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M6 28c0-4.42 3.58-8 8-8 1.4 0 2.72.36 3.86 1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M18.14 21c1.14-.64 2.46-1 3.86-1 4.42 0 8 3.58 8 8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>',
+  layers: '<path d="M20 4L4 12l16 8 16-8L20 4z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/><path d="M4 20l16 8 16-8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 28l16 8 16-8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+};
+
+const stageOrder = ['crawl', 'walk', 'run', 'fly'] as const;
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+const stageSubtitles: Record<string, string> = {
+  crawl: 'Foundation building',
+  walk: 'Operating system forming',
+  run: 'Scaled and measurable',
+  fly: 'Predictive and proactive',
+};
+
+// Build playbook lookup
+const allPlaybooks: Record<string, any[]> = frameworkData.playbooks as any;
+const playbookById: Record<string, { id: string; title: string; stage: string }> = {};
+for (const stage of Object.keys(allPlaybooks)) {
+  for (const pb of allPlaybooks[stage]) {
+    playbookById[pb.id] = { id: pb.id, title: pb.title, stage };
+  }
+}
+
+const relatedPlaybooks = (principle.related_playbooks || [])
+  .map((id: string) => playbookById[id])
+  .filter(Boolean);
+
+const allMetrics = frameworkData.metrics_directory.metrics;
+const relatedMetrics = (principle.related_metrics || [])
+  .map((id: string) => allMetrics.find((m: any) => m.id === id))
+  .filter(Boolean);
+
+const relatedPrinciples = (principle.related_principles || [])
+  .map((id: string) => frameworkData.principles.find((p: any) => p.id === id))
+  .filter(Boolean);
+
+const siteUrl = 'https://distilledcs.org';
+const pageUrl = `${siteUrl}/customer-success-principles/${principle.slug}/`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+    { '@type': 'ListItem', position: 2, name: 'Principles', item: `${siteUrl}/customer-success-principles/` },
+    { '@type': 'ListItem', position: 3, name: principle.title, item: pageUrl },
+  ],
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: principle.title,
+  description: principle.meta_description || principle.summary,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+  author: { '@type': 'Organization', name: 'Distilled CS', url: siteUrl },
+  publisher: { '@type': 'Organization', name: 'Distilled CS', url: siteUrl, logo: { '@type': 'ImageObject', url: `${siteUrl}/favicon.svg` } },
+  keywords: principle.target_keyword,
+};
+---
+
+<BaseLayout
+  title={principle.title}
+  description={principle.meta_description || principle.summary}
+  structuredData={[breadcrumbSchema, articleSchema]}
+>
+  <div class="container principle-detail-page">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/customer-success-principles/">&larr; All Principles</a>
+    </nav>
+
+    <header class="principle-hero">
+      <div class="principle-icon" aria-hidden="true">
+        <svg width="48" height="48" viewBox="0 0 40 40" fill="none" set:html={iconSvgs[principle.icon] || ''} />
+      </div>
+      <h1 class="principle-hero-title">{principle.title}</h1>
+      <p class="principle-hero-summary">{principle.summary}</p>
+    </header>
+
+    <section class="principle-section">
+      <p class="principle-description">{principle.description}</p>
+    </section>
+
+    {principle.why_it_matters && (
+      <section class="principle-section">
+        <h2 class="section-heading">Why this matters</h2>
+        <p class="section-body">{principle.why_it_matters}</p>
+      </section>
+    )}
+
+    {principle.stage_manifestation && (
+      <section class="principle-section">
+        <h2 class="section-heading">How this shows up across maturity stages</h2>
+        <p class="section-lede">The same principle looks different at every stage. Calibrate the expectation to where the team actually is.</p>
+        <div class="stage-grid">
+          {stageOrder.map(stage => (
+            <article class={`stage-card stage-${stage}`}>
+              <div class="stage-card-header">
+                <span class="stage-badge">{stageLabels[stage]}</span>
+                <span class="stage-subtitle">{stageSubtitles[stage]}</span>
+              </div>
+              <p class="stage-body">{principle.stage_manifestation[stage]}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {(relatedPlaybooks.length > 0 || relatedMetrics.length > 0) && (
+      <section class="principle-section">
+        <h2 class="section-heading">Related playbooks and metrics</h2>
+        <p class="section-lede">Where this principle shows up in the rest of the framework.</p>
+        <div class="related-grid">
+          {relatedPlaybooks.length > 0 && (
+            <div class="related-column">
+              <h3 class="related-column-title">Playbooks</h3>
+              <ul class="related-list">
+                {relatedPlaybooks.map((pb: any) => (
+                  <li>
+                    <a href={`/customer-success-playbooks/${pb.id}/`} class="related-link">
+                      <span class={`stage-dot stage-${pb.stage}`} aria-hidden="true"></span>
+                      <span class="related-link-text">{pb.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {relatedMetrics.length > 0 && (
+            <div class="related-column">
+              <h3 class="related-column-title">Metrics</h3>
+              <ul class="related-list">
+                {relatedMetrics.map((m: any) => (
+                  <li>
+                    <a href={`/customer-success-metrics/${m.id}/`} class="related-link">
+                      <span class="related-link-text">{m.name}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    {relatedPrinciples.length > 0 && (
+      <section class="principle-section">
+        <h2 class="section-heading">Related principles</h2>
+        <div class="related-principles-row">
+          {relatedPrinciples.map((rp: any) => (
+            <a href={`/customer-success-principles/${rp.slug}/`} class="related-principle-card">
+              <strong>{rp.title}</strong>
+              <span>{rp.summary}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <section class="principle-cta">
+      <h2>Ready to see where your team stands?</h2>
+      <p>Take the five-minute assessment to see how your CS function scores across the eight maturity domains, with priority actions tailored to your stage.</p>
+      <div class="cta-buttons">
+        <a href="/assess/" class="btn btn-primary">Take the Assessment</a>
+        <a href="/customer-success-maturity-model/" class="btn btn-secondary">View the Maturity Model</a>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .principle-detail-page {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .breadcrumb {
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+  }
+
+  .breadcrumb a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-accent);
+  }
+
+  .principle-hero {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .principle-icon {
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+  }
+
+  .principle-hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem;
+    color: var(--color-text);
+  }
+
+  .principle-hero-summary {
+    font-size: 1.125rem;
+    line-height: 1.55;
+    color: var(--color-accent);
+    font-weight: 500;
+    margin: 0;
+    max-width: 40rem;
+  }
+
+  .principle-section {
+    margin-bottom: 2.75rem;
+  }
+
+  .section-heading {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.75rem;
+    color: var(--color-text);
+  }
+
+  .section-lede {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    margin: 0 0 1.25rem;
+    line-height: 1.55;
+  }
+
+  .section-body,
+  .principle-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* Stage grid */
+  .stage-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 720px) {
+    .stage-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .stage-card {
+    padding: 1.25rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--stage-color, var(--color-border));
+    border-radius: 0.5rem;
+  }
+
+  .stage-card-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stage-badge {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0.1875rem 0.5rem;
+    border-radius: 0.25rem;
+    background: var(--stage-color, var(--color-accent));
+    color: var(--color-on-stage, #fff);
+  }
+
+  .stage-subtitle {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .stage-body {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* Related grid */
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .related-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .related-column-title {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 0.75rem;
+  }
+
+  .related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .related-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    text-decoration: none;
+    color: var(--color-text);
+    font-size: 0.9375rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .related-link:hover {
+    border-color: var(--color-accent);
+    background: var(--color-surface-hover, var(--color-surface));
+  }
+
+  .related-link .stage-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--stage-color, var(--color-accent));
+    flex-shrink: 0;
+  }
+
+  /* Related principles */
+  .related-principles-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .related-principles-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .related-principle-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .related-principle-card:hover {
+    border-color: var(--color-accent);
+  }
+
+  .related-principle-card strong {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    color: var(--color-text);
+  }
+
+  .related-principle-card span {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  /* CTA */
+  .principle-cta {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    text-align: center;
+  }
+
+  .principle-cta h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem;
+    color: var(--color-text);
+  }
+
+  .principle-cta p {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 32rem;
+    margin: 0 auto 1.5rem;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>

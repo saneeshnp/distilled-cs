@@ -1,0 +1,347 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import frameworkData from '../../data/lean-cs-data.json';
+
+const principles = frameworkData.principles;
+
+const iconSvgs: Record<string, string> = {
+  target: '<circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="20" cy="20" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="20" cy="20" r="2" fill="currentColor"/>',
+  compass: '<circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M14 26l4-10 10-4-4 10z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/>',
+  shield: '<path d="M20 4L6 10v8c0 7.73 5.97 14.95 14 16 8.03-1.05 14-8.27 14-16v-8L20 4z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/><path d="M14 20l4 4 8-8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+  chart: '<path d="M6 30V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 30V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M22 30V18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M30 30V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
+  people: '<circle cx="14" cy="12" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="26" cy="12" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M6 28c0-4.42 3.58-8 8-8 1.4 0 2.72.36 3.86 1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M18.14 21c1.14-.64 2.46-1 3.86-1 4.42 0 8 3.58 8 8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>',
+  layers: '<path d="M20 4L4 12l16 8 16-8L20 4z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/><path d="M4 20l16 8 16-8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 28l16 8 16-8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
+  open: '<circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 20h24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20 5c-4 4-6 9-6 15s2 11 6 15" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M20 5c4 4 6 9 6 15s-2 11-6 15" stroke="currentColor" stroke-width="1.5" fill="none"/>',
+  culture: '<circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="20" cy="14" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="12" cy="24" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="28" cy="24" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M17 15.5L14 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M23 15.5L26 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 24h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
+};
+
+const faqItems = [
+  {
+    q: 'What are customer success principles?',
+    a: 'Customer success principles are the beliefs about how a CS organization should operate that sit underneath every tactic, metric, and playbook. They answer the why questions the team will keep encountering: should we be proactive or reactive, should we lead with outcomes or activity, should we segment or treat every account the same. Principles outlive specific plays and tools.',
+  },
+  {
+    q: 'Why do principles precede tactics?',
+    a: 'Tactics without a principle drift. Two CSMs facing the same risk decision will choose differently if they disagree on whether outcomes or activities matter more. Codifying the principle first lets tactics be debated on their merits rather than re-litigated every week.',
+  },
+  {
+    q: 'Are these principles universal across industries?',
+    a: 'The six principles here are written to apply to any B2B SaaS CS organization. Expression varies. "Segment then scale" at an enterprise vendor means named-account scoring and vertical plays. At a product-led SMB company it means usage-driven cohorts. The principle holds; the implementation depends on segment economics.',
+  },
+  {
+    q: 'How do principles show up in day-to-day CS work?',
+    a: 'They show up as the tie-breaker in trade-offs. Do we push a QBR date to accommodate a key stakeholder or run it with who is available? The outcomes-over-activities principle points to pushing. Do we add a new metric because leadership asked? The data-informed-not-data-paralyzed principle says audit what is already tracked first. Principles make trade-offs explicit.',
+  },
+  {
+    q: 'How were these six principles chosen?',
+    a: 'They were distilled from patterns observed across CS operating models that scale: what the teams that stay focused share, what the teams that scatter lack. The names and framing are intended to be memorable and operationally useful, not exhaustive. A seventh or eighth principle would be indulgence.',
+  },
+  {
+    q: 'Can a team adopt only some of them?',
+    a: 'Yes, and many teams start with three. The usual path is to pick the two or three that address the loudest current problem (proactive over reactive and outcomes over activities are the common first picks) and let the others join the vocabulary as the team matures.',
+  },
+  {
+    q: 'What is the difference between a principle and a value?',
+    a: 'Values describe how people treat each other. Principles describe how the work operates. "Integrity" is a value. "Outcomes over activities" is a principle. Values belong in the handbook; principles belong in the operating model.',
+  },
+  {
+    q: 'How do principles interact with metrics and playbooks?',
+    a: 'Principles tell you which metrics are worth watching and which playbooks are worth writing. A team that has adopted "segment then scale" will watch segment-level health and build segment-specific onboarding plays. A team without that principle will track one health score across the whole book and write one generic onboarding. The principle shapes the portfolio.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+
+<BaseLayout title="Customer Success Principles" description="The six customer success principles behind the Distilled CS framework: open, practical, and built for real CS teams making trade-off decisions." structuredData={[faqSchema]}>
+
+  <div class="container principles-page">
+
+    <header class="principles-header">
+      <h1 class="principles-title">Customer Success Principles</h1>
+      <p class="principles-subtitle">
+        The beliefs that shape the framework. They inform what we measure, how we recommend, and why we built this in the open.
+      </p>
+    </header>
+
+    <div class="principles-grid">
+      {principles.map((p, i) => (
+        <a
+          href={`/customer-success-principles/${p.slug}/`}
+          class="principle-card scroll-reveal"
+          style={`--reveal-delay: ${i * 0.08}s`}
+          id={p.id}
+        >
+          <div class="principle-number">{String(i + 1).padStart(2, '0')}</div>
+          <div class="principle-icon" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 40 40" fill="none" set:html={iconSvgs[p.icon] || ''} />
+          </div>
+          <h2 class="principle-title">{p.title}</h2>
+          <p class="principle-summary">{p.summary}</p>
+          <p class="principle-description">{p.description}</p>
+          <span class="principle-read-more" aria-hidden="true">Read more &rarr;</span>
+        </a>
+      ))}
+    </div>
+
+    <section class="pillar-intro">
+      <h2>How to use these principles</h2>
+      <p>Tactics accumulate: a scorecard that grew four new fields last quarter, a QBR template that works for two segments but not the third, an escalation path nobody can draw on a whiteboard. On their own they drift. A principle is the compass that keeps tactics pointed in the same direction when the team disagrees on a specific account, a specific metric movement, or a specific renewal risk.</p>
+      <p>Read the six above as tie-breakers. When two CSMs disagree on whether to run a QBR on the customer's timeline or the team's capacity, "outcomes over activities" settles it. When leadership asks for a new health metric, "data-informed, not data-paralyzed" settles whether to add it.</p>
+      <p>Each card links to a deeper page with the full definition, how it manifests across the four maturity stages, and the playbooks and metrics it connects to. Pick two or three to anchor on. Adopting all six at once is a signal that none are being taken seriously yet.</p>
+    </section>
+
+    <section class="pillar-faq">
+      <h2>Frequently asked questions</h2>
+      <div class="faq-list">
+        {faqItems.map(item => (
+          <details class="faq-item">
+            <summary class="faq-question">{item.q}</summary>
+            <p class="faq-answer">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="pillar-related">
+      <h2>Related topics</h2>
+      <div class="related-grid">
+        <a href="/customer-success-maturity-model/" class="related-card">
+          <h3>Maturity model</h3>
+          <p>Four stages of CS capability and how each principle shows up in each one.</p>
+        </a>
+        <a href="/customer-success-metrics/" class="related-card">
+          <h3>Metrics</h3>
+          <p>The signals each principle tells you are worth measuring.</p>
+        </a>
+        <a href="/customer-success-playbooks/" class="related-card">
+          <h3>Playbooks</h3>
+          <p>Stage-specific plays that operationalize the principles below.</p>
+        </a>
+        <a href="/assess/" class="related-card">
+          <h3>Assessment</h3>
+          <p>Score your team across eight domains mapped to these principles.</p>
+        </a>
+      </div>
+    </section>
+
+    <div class="principles-cta">
+      <p class="cta-text">These principles come to life in the assessment, the maturity model, and every metric recommendation.</p>
+      <div class="cta-buttons">
+        <a href="/assess/" class="btn btn-primary">Take the Assessment</a>
+        <a href="/customer-success-maturity-model/" class="btn btn-secondary">View the Maturity Model</a>
+      </div>
+    </div>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+  .principles-page {
+    padding-top: 3rem;
+    padding-bottom: 5rem;
+  }
+
+  .principles-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .principles-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+    letter-spacing: -0.03em;
+  }
+
+  .principles-subtitle {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    color: var(--color-text-secondary);
+    max-width: 38rem;
+    margin-inline: auto;
+    line-height: 1.6;
+  }
+
+  /* ── Grid ── */
+  .principles-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .principles-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.75rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .principles-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ── Card ── */
+  .principle-card {
+    position: relative;
+    padding: 2rem 1.75rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .principle-card:hover {
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+  }
+
+  .principle-read-more {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    letter-spacing: 0.02em;
+  }
+
+  .principle-number {
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--color-accent);
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  .principle-icon {
+    color: var(--color-accent);
+    margin-bottom: 1.25rem;
+  }
+
+  .principle-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .principle-summary {
+    font-size: 0.9375rem;
+    color: var(--color-accent);
+    font-weight: 500;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .principle-description {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ── Scroll reveal ── */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease var(--reveal-delay, 0s), transform 0.6s ease var(--reveal-delay, 0s);
+  }
+
+  .scroll-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Bottom CTA ── */
+  .principles-cta {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .cta-text {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+    max-width: 32rem;
+    margin-inline: auto;
+    line-height: 1.6;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Pillar content — left-anchored prose so width feels uniform with the cards/grid above */
+  .pillar-intro { max-width: 44rem; margin: 4rem 0 0; }
+  .pillar-intro h2 { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: -0.01em; margin-bottom: 0.75rem; color: var(--color-text-primary); }
+  .pillar-intro h3 { font-family: var(--font-display); font-size: 1.125rem; margin-top: 1.25rem; margin-bottom: 0.5rem; color: var(--color-text-primary); }
+  .pillar-intro p { font-size: 0.9375rem; line-height: 1.7; color: var(--color-text-secondary); margin-bottom: 0.875rem; }
+
+  .pillar-faq { margin: 4rem 0 0; max-width: 44rem; }
+  .pillar-faq h2 { font-family: var(--font-display); font-size: 1.75rem; letter-spacing: -0.02em; margin-bottom: 1.25rem; color: var(--color-text-primary); }
+  .faq-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .faq-item { padding: 1rem 1.25rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; }
+  .faq-question { font-weight: 500; font-size: 0.9375rem; color: var(--color-text-primary); cursor: pointer; list-style: none; }
+  .faq-question::-webkit-details-marker { display: none; }
+  .faq-question::after { content: '+'; float: right; color: var(--color-text-muted); font-weight: 400; }
+  .faq-item[open] .faq-question::after { content: '–'; }
+  .faq-answer { margin-top: 0.75rem; font-size: 0.9375rem; line-height: 1.65; color: var(--color-text-secondary); }
+
+  .pillar-related { margin-top: 4rem; }
+  .pillar-related h2 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-text-primary); text-align: center; }
+  .related-grid { display: grid; grid-template-columns: 1fr; gap: 0.875rem; }
+  @media (min-width: 640px) { .related-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .related-grid { grid-template-columns: repeat(4, 1fr); } }
+  .related-card { padding: 1rem 1.125rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; text-decoration: none; color: inherit; transition: border-color 0.2s, transform 0.2s; }
+  .related-card:hover { border-color: var(--color-accent); transform: translateY(-2px); color: inherit; }
+  .related-card h3 { font-family: var(--font-display); font-size: 1rem; margin-bottom: 0.375rem; color: var(--color-text-primary); }
+  .related-card p { font-size: 0.8125rem; line-height: 1.55; color: var(--color-text-muted); }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+</script>

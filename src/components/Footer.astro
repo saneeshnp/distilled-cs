@@ -8,14 +8,25 @@
         <span class="footer-logo">Distilled<span class="footer-logo-accent">CS</span></span>
         <p class="footer-tagline">The Open Customer Success Framework</p>
       </div>
-      <nav class="footer-links" aria-label="Footer navigation">
-        <a href="/assess/">Assess</a>
-        <a href="/playbooks/">Execute</a>
-        <a href="/transform/">Transform</a>
-        <a href="/contributors/">Contributors</a>
-        <a href="/about/">About</a>
-        <a href="https://github.com/saneeshnp/distilled-cs" target="_blank" rel="noopener noreferrer">GitHub</a>
-      </nav>
+      <div class="footer-columns">
+        <nav class="footer-col" aria-label="Framework">
+          <h2 class="footer-col-heading">Framework</h2>
+          <a href="/customer-success-principles/">Principles</a>
+          <a href="/customer-success-metrics/">Metrics</a>
+          <a href="/customer-success-playbooks/">Playbooks</a>
+          <a href="/customer-success-maturity-model/">Maturity Model</a>
+        </nav>
+        <nav class="footer-col" aria-label="Site">
+          <h2 class="footer-col-heading">Site</h2>
+          <a href="/assess/">Assess</a>
+          <a href="/transform/">Transform</a>
+          <a href="/checklist/">Checklist</a>
+          <a href="/glossary/">Glossary</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+          <a href="https://github.com/saneeshnp/distilled-cs" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </nav>
+      </div>
     </div>
     <div class="footer-bottom">
       <p class="footer-license">Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a></p>
@@ -67,18 +78,41 @@
     color: var(--color-text-muted);
   }
 
-  .footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.875rem 1.5rem;
+  .footer-columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem 2rem;
   }
 
-  .footer-links a {
+  @media (min-width: 640px) {
+    .footer-columns {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .footer-col-heading {
+    font-size: 0.75rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin: 0 0 0.25rem;
+  }
+
+  .footer-col a {
     font-size: 0.875rem;
     color: var(--color-text-secondary);
+    line-height: 1.4;
   }
 
-  .footer-links a:hover {
+  .footer-col a:hover {
     color: var(--color-text-primary);
   }
 

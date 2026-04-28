@@ -7,25 +7,73 @@ const stageOrder = ['crawl', 'walk', 'run', 'fly'];
 const stageTransitions = frameworkData.stage_transitions;
 const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
 const transitionMap: Record<string, string> = { crawl: 'crawl_to_walk', walk: 'walk_to_run', run: 'run_to_fly' };
+
+const faqItems = [
+  {
+    q: 'What is the customer success maturity model?',
+    a: 'A four-stage model that describes how CS organizations evolve from reactive firefighting to predictive, outcome-driven operations. The stages are Crawl, Walk, Run, and Fly. Each names the operating mode of the team, the metrics that matter at that level, and the plays that move the team forward.',
+  },
+  {
+    q: 'How do the four stages differ?',
+    a: 'Crawl is reactive and foundational: the team is saving what it can while standardizing onboarding and renewal. Walk is informed and structured: segmentation is real, health scoring exists, QBRs run reliably. Run is proactive and operationalized: leading indicators drive action, expansion is a motion. Fly is predictive and optimized: the team runs on forecast, not reaction, with AI assisting routine judgment.',
+  },
+  {
+    q: 'How do I know which stage I am in?',
+    a: 'The Distilled CS assessment scores eight domains and maps your overall score to a stage. If you have not completed it, a quick heuristic: if renewals surprise you, you are at Crawl. If you know which accounts are at risk but react late, you are at Walk. If you catch risk weeks in advance and expansion is a repeatable play, you are at Run. If forecasting is reliable and the team is automating the predictable work, you are at Fly.',
+  },
+  {
+    q: 'How long does it take to move between stages?',
+    a: 'Typically nine to eighteen months per transition, depending on company growth rate and how much the CS function is already instrumented. Crawl to Walk is the fastest when the team commits to consistent motions. Walk to Run is the longest because it requires a data layer that most teams underestimate. Run to Fly depends as much on the company as on CS.',
+  },
+  {
+    q: 'Can a CS team skip a stage?',
+    a: 'No. Stages are not arbitrary. Each layer depends on the capabilities built in the prior one. A team that skips to Run without Walk-stage segmentation and health scoring ends up running plays on accounts it cannot read. The work compounds.',
+  },
+  {
+    q: 'Is maturity the same across segments?',
+    a: 'The stages are, but the expression differs. A Run-stage enterprise team runs multi-stakeholder QBRs with outcome scorecards. A Run-stage SMB team runs automated usage-triggered nudges with human escalation. The principles match; the tooling and cadence shift with segment economics.',
+  },
+  {
+    q: 'What triggers a stage transition?',
+    a: 'A combination of outgrowing the current stage playbook (CSMs hit the ceiling of what reactive motion can achieve) and new pressure on the business (board expectations, new segment, scale). The transition guide on the transform page walks through the signals that mark each boundary.',
+  },
+  {
+    q: 'How does this compare to other CS frameworks?',
+    a: 'Most published CS frameworks focus on either metric taxonomies or operational checklists. The Distilled CS model connects a maturity stage to specific principles, metrics, and playbooks. It is open-source, vendor-neutral, and designed so the advice changes as the team matures, not just as its size grows.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
 ---
 
-<BaseLayout title="Maturity Model" description="Explore the four stages of Customer Success maturity: Crawl, Walk, Run, and Fly.">
+<BaseLayout title="Customer Success Maturity Model" description="The Customer Success Maturity Model: four stages (Crawl, Walk, Run, Fly) with characteristics, priority actions, and transition signals for each." structuredData={[faqSchema]}>
 
   <div class="container model-page">
 
     <!-- Assess phase intro -->
     <div class="assess-phase-intro">
       <p class="phase-context-label">Part of the <strong>Assess</strong> phase</p>
-      <p class="model-intro-copy">Understanding the maturity model is the foundation of your CS strategy. Know where you stand, then move to Execute.</p>
     </div>
+
+    <!-- Persistent H1 for SEO -->
+    <header class="model-header">
+      <h1 class="model-title">Customer Success Maturity Model</h1>
+      <p class="model-subtitle">The Distilled CS maturity model lets you place your CS organization on a four-stage scale (Crawl, Walk, Run, Fly) and shows the priority actions for moving up. It anchors the assessment, the recommended playbooks, and the metrics directory.</p>
+    </header>
 
     <!-- Contextual header — shown if assessed (populated by JS) -->
     <div class="user-stage-header" id="user-stage-header" data-show-if-assessed style="display:none;"></div>
 
     <!-- CTA for non-assessed users -->
     <div class="assess-cta" id="model-cta" data-hide-if-assessed>
-      <h1 class="model-title">The Distilled CS Maturity Model</h1>
-      <p class="model-subtitle">Four stages of Customer Success maturity — from reactive firefighting to predictive growth engine.</p>
       <a href="/assess/" class="btn btn-primary">Take the Assessment to see where you stand</a>
     </div>
 
@@ -115,12 +163,53 @@ const transitionMap: Record<string, string> = { crawl: 'crawl_to_walk', walk: 'w
       ))}
     </div>
 
+    <!-- Intro prose (moved below stages so users see the model first) -->
+    <section class="pillar-intro" data-hide-if-assessed>
+      <h2>Why a maturity model for customer success</h2>
+      <p>A maturity model gives the CS team a shared frame for what it is ready to do next, instead of arguing about tactics in the abstract. Principles that work at Crawl can misfire at Run. Metrics that matter at Fly are noise at Walk. Naming the stage lets the team match the advice to the reality of the organization.</p>
+      <p>The four stages above are ordered by capability, not by company size. A lean team at a Series A startup can operate at Run. A hundred-person CS org at a public company can still be stuck at Crawl if the motions are inconsistent. Stage is a description of the operating system, not a badge for the team.</p>
+    </section>
+
+    <section class="pillar-faq">
+      <h2>Frequently asked questions</h2>
+      <div class="faq-list">
+        {faqItems.map(item => (
+          <details class="faq-item">
+            <summary class="faq-question">{item.q}</summary>
+            <p class="faq-answer">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="pillar-related">
+      <h2>Related topics</h2>
+      <div class="related-grid">
+        <a href="/customer-success-principles/" class="related-card">
+          <h3>Principles</h3>
+          <p>The beliefs that inform which stage behavior is worth the climb.</p>
+        </a>
+        <a href="/customer-success-playbooks/" class="related-card">
+          <h3>Playbooks</h3>
+          <p>Stage-specific plays that move a team from one stage to the next.</p>
+        </a>
+        <a href="/customer-success-metrics/" class="related-card">
+          <h3>Metrics</h3>
+          <p>Which signals matter most at each stage, with segment benchmarks.</p>
+        </a>
+        <a href="/transform/" class="related-card">
+          <h3>Transform</h3>
+          <p>Track progress and spot the signals that mark a stage transition.</p>
+        </a>
+      </div>
+    </section>
+
     <!-- Bottom CTA: move to Execute -->
     <div class="model-bottom-cta">
       <h2 class="bottom-cta-headline">Ready to execute?</h2>
       <p class="bottom-cta-body">Now that you understand the maturity model, put it into action with stage-specific playbooks.</p>
       <div class="bottom-cta-links">
-        <a href="/playbooks/" class="btn btn-primary">View Your Playbooks</a>
+        <a href="/customer-success-playbooks/" class="btn btn-primary">View Your Playbooks</a>
         <a href="/assess/" class="btn btn-secondary" data-hide-if-assessed>Take the Assessment First</a>
       </div>
     </div>
@@ -532,6 +621,34 @@ const transitionMap: Record<string, string> = { crawl: 'crawl_to_walk', walk: 'w
     border-color: var(--color-border-hover);
     transform: translateY(-1px);
   }
+
+  /* Persistent header */
+  .model-header { margin-bottom: 1.5rem; }
+
+  /* Pillar content */
+  .pillar-intro { max-width: 44rem; margin-top: 4rem; }
+  .pillar-intro h2 { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: -0.01em; margin-bottom: 0.75rem; color: var(--color-text-primary); }
+  .pillar-intro h3 { font-family: var(--font-display); font-size: 1.125rem; margin-top: 1.25rem; margin-bottom: 0.5rem; color: var(--color-text-primary); }
+  .pillar-intro p { font-size: 0.9375rem; line-height: 1.7; color: var(--color-text-secondary); margin-bottom: 0.875rem; }
+
+  .pillar-faq { margin-top: 4rem; }
+  .pillar-faq h2 { font-family: var(--font-display); font-size: 1.75rem; letter-spacing: -0.02em; margin-bottom: 1.25rem; color: var(--color-text-primary); }
+  .faq-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .faq-item { padding: 1rem 1.25rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; }
+  .faq-question { font-weight: 500; font-size: 0.9375rem; color: var(--color-text-primary); cursor: pointer; list-style: none; }
+  .faq-question::-webkit-details-marker { display: none; }
+  .faq-question::after { content: '+'; float: right; color: var(--color-text-muted); font-weight: 400; }
+  .faq-item[open] .faq-question::after { content: '–'; }
+  .faq-answer { margin-top: 0.75rem; font-size: 0.9375rem; line-height: 1.65; color: var(--color-text-secondary); }
+
+  .pillar-related { margin-top: 3rem; }
+  .pillar-related h2 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-text-primary); }
+  .related-grid { display: grid; grid-template-columns: 1fr; gap: 0.875rem; }
+  @media (min-width: 640px) { .related-grid { grid-template-columns: repeat(2, 1fr); } }
+  .related-card { padding: 1rem 1.125rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; text-decoration: none; color: inherit; transition: border-color 0.2s, transform 0.2s; }
+  .related-card:hover { border-color: var(--color-accent); transform: translateY(-2px); color: inherit; }
+  .related-card h3 { font-family: var(--font-display); font-size: 1rem; margin-bottom: 0.375rem; color: var(--color-text-primary); }
+  .related-card p { font-size: 0.8125rem; line-height: 1.55; color: var(--color-text-muted); }
 </style>
 
 <script>
@@ -576,7 +693,7 @@ const transitionMap: Record<string, string> = { crawl: 'crawl_to_walk', walk: 'w
       if (header) {
         header.innerHTML = `
           <div class="user-stage-banner stage-${userStage}">
-            <h1 class="user-stage-banner-title">${stagePrefix}: ${stageLabels[userStage]}</h1>
+            <h2 class="user-stage-banner-title">${stagePrefix}: ${stageLabels[userStage]}</h2>
             <p class="user-stage-banner-sub">${stageSubtitles[userStage]} &middot; Overall score: ${scores.overallScore} / 4.0</p>
           </div>
         `;

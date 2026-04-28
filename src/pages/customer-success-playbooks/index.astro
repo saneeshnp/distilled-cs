@@ -1,0 +1,420 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import StrategyLoop from '../../components/StrategyLoop.astro';
+import frameworkData from '../../data/lean-cs-data.json';
+
+const playbooks = frameworkData.playbooks;
+const stages = frameworkData.maturity_stages.stages;
+
+const stageOrder = ['crawl', 'walk', 'run', 'fly'] as const;
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+
+const allMetrics = frameworkData.metrics_directory.metrics;
+const metricLabels: Record<string, string> = {};
+allMetrics.forEach((m: any) => { metricLabels[m.id] = m.name; });
+
+const faqItems = [
+  {
+    q: 'What is a customer success playbook?',
+    a: 'A playbook is a named, repeatable motion that a CS team runs against a specific trigger: a new customer kicks off, a health score drops, a renewal window opens. It codifies the objective, the steps, the metrics to watch, and the common pitfalls so the motion runs the same way whether the senior CSM or a brand-new hire picks it up.',
+  },
+  {
+    q: 'When should a CS team write a playbook?',
+    a: 'When a motion has been run successfully a few times and the team wants the outcome to be consistent across CSMs. Writing a playbook before the motion is proven tends to codify the wrong thing. Wait until the pattern is clear, then document it.',
+  },
+  {
+    q: 'How is a playbook different from a process document?',
+    a: 'A process describes how work flows between roles. A playbook is an operational guide for a specific customer outcome, triggered by a specific signal, with specific metrics attached. Processes live in the ops handbook; playbooks live in the CSM workflow.',
+  },
+  {
+    q: 'How many playbooks should a CS team have?',
+    a: 'Fewer than most teams think. At Crawl, three plays cover most of the day: onboarding, churn-risk response, and renewal. Walk adds segmentation and QBR plays. Run introduces expansion and advocacy plays. By Fly, the library still stays under fifteen active plays. More than that means something is being duplicated.',
+  },
+  {
+    q: 'Who owns a playbook once it ships?',
+    a: 'A named owner on the CS team. Playbooks need an accountable editor who reviews it after each quarter and decides whether it still reflects how the work is actually done. Unowned playbooks decay within two quarters.',
+  },
+  {
+    q: 'How do you know a playbook is working?',
+    a: 'The metrics listed in the playbook move in the right direction at the population level, not just in one heroic account. A new CSM running the playbook gets comparable outcomes to a tenured one. If the second test fails, the playbook is implicit tribal knowledge, not yet a playbook.',
+  },
+  {
+    q: 'Should playbooks be tailored by segment?',
+    a: 'Yes for enterprise vs. SMB, and often by product line. An enterprise onboarding motion is usually four to eight weeks with a structured joint plan. An SMB onboarding motion is two weeks, largely digital, and relies on in-product milestones. The template can be shared; the steps and timing should differ.',
+  },
+  {
+    q: 'When is it time to retire a playbook?',
+    a: 'When the trigger no longer fires, the underlying product flow has changed, or a newer play has absorbed it. Retired playbooks belong in an archive folder so institutional context survives, but the active library should only contain motions a CSM could be running this week.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+
+<BaseLayout title="Customer Success Playbooks" description="Stage-specific customer success playbooks for every maturity level: onboarding, renewal, expansion, churn response. Steps, metrics, and pitfalls." structuredData={[faqSchema]}>
+  <div class="container playbooks-page">
+
+    <!-- Strategy Loop wayfinding -->
+    <div class="playbooks-loop-indicator">
+      <StrategyLoop activePhase="execute" size="sm" interactive={false} />
+    </div>
+
+    <div class="page-header">
+      <h1 class="page-title">Customer Success Playbooks</h1>
+      <p class="page-subtitle">High-leverage strategic guides for each maturity stage. Each playbook gives you a clear objective, step-by-step actions, and the metrics to watch.</p>
+    </div>
+
+    <section class="pillar-intro" data-hide-if-assessed>
+      <h2>What a customer success playbook is for</h2>
+      <p>A customer success playbook turns a repeatable motion into something any CSM can run with the same outcome. It names the trigger (a new signup, a health drop, a renewal approaching), the objective, the ordered steps, the metrics that confirm it worked, and the pitfalls teams hit when they try it for the first time. Good playbooks compress tribal knowledge into operational instructions.</p>
+      <p>Playbooks should be written after a motion has been proven, not before. A team that codifies an onboarding flow on day one usually codifies the wrong thing. Run the motion two or three times, see what actually works, then write it down. That is also when the right metrics to attach become obvious.</p>
+      <h3>Playbooks by maturity stage</h3>
+      <p>This library groups playbooks by stage so the most relevant ones surface first. <strong>Crawl</strong> plays establish the basics: a reliable onboarding program, a consistent renewal motion, and a named response when a customer goes red. <strong>Walk</strong> introduces segmentation and QBRs at scale. <strong>Run</strong> operationalizes expansion, leading-indicator escalations, and advocacy. <strong>Fly</strong> plays are predictive and cross-functional, often involving product, finance, and AI-assisted workflows.</p>
+      <p>Each playbook carries an estimated duration, the metrics it moves, and links to the principles and domains it touches. If your team has completed the assessment, the library highlights your current stage and the one after it. If not, the bottom of each detail page explains how the playbook maps to a maturity path.</p>
+    </section>
+
+    <!-- Contextual banner for assessed users (JS-populated) -->
+    <div id="playbooks-context-banner" data-show-if-assessed style="display:none;" class="context-banner"></div>
+
+    <!-- CTA for non-assessed users -->
+    <div class="assess-cta-banner" data-hide-if-assessed>
+      <p>Take the assessment to see which playbooks are recommended for your stage.</p>
+      <a href="/assess/" class="cta-link">Take the Assessment &rarr;</a>
+    </div>
+
+    <!-- Playbooks by stage -->
+    {stageOrder.map((stageId) => {
+      const stagePlaybooks = playbooks[stageId];
+      return (
+        <section class={`stage-section stage-${stageId}`} id={`stage-${stageId}`} data-stage={stageId}>
+          <div class="stage-section-header">
+            <span class={`stage-badge stage-${stageId}`} data-stage-badge={stageId}>{stageLabels[stageId]}</span>
+          </div>
+          <div class="playbooks-grid">
+            {stagePlaybooks.map((pb: any) => (
+              <a href={`/customer-success-playbooks/${pb.id}/`} class={`playbook-card stage-${stageId}`}>
+                <div class="playbook-card-header">
+                  <h2 class="playbook-card-title">{pb.title}</h2>
+                  <span class="playbook-duration">{pb.estimated_duration}</span>
+                </div>
+                <p class="playbook-card-objective">{pb.objective}</p>
+                <div class="playbook-card-metrics">
+                  {pb.metrics_to_watch.slice(0, 3).map((mId: string) => (
+                    <span class="metric-pill">{metricLabels[mId] || mId}</span>
+                  ))}
+                  {pb.metrics_to_watch.length > 3 && (
+                    <span class="metric-pill metric-pill-more">+{pb.metrics_to_watch.length - 3}</span>
+                  )}
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      );
+    })}
+
+    <section class="pillar-faq">
+      <h2>Frequently asked questions</h2>
+      <div class="faq-list">
+        {faqItems.map(item => (
+          <details class="faq-item">
+            <summary class="faq-question">{item.q}</summary>
+            <p class="faq-answer">{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="pillar-related">
+      <h2>Related topics</h2>
+      <div class="related-grid">
+        <a href="/customer-success-principles/" class="related-card">
+          <h3>Principles</h3>
+          <p>The beliefs that determine which plays are worth writing.</p>
+        </a>
+        <a href="/customer-success-metrics/" class="related-card">
+          <h3>Metrics</h3>
+          <p>The signals each playbook is designed to move.</p>
+        </a>
+        <a href="/customer-success-maturity-model/" class="related-card">
+          <h3>Maturity model</h3>
+          <p>Where each stage's plays fit in the broader CS journey.</p>
+        </a>
+        <a href="/checklist/" class="related-card">
+          <h3>Execution checklist</h3>
+          <p>A stage-ordered list of actions that bundles these playbooks.</p>
+        </a>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .playbooks-page {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+  }
+
+  .playbooks-loop-indicator {
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .page-subtitle {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    max-width: 42rem;
+    line-height: 1.6;
+  }
+
+  /* CTA banners */
+  .assess-cta-banner,
+  .context-banner {
+    padding: 1rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .assess-cta-banner p,
+  .context-banner p {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+  }
+
+  .cta-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+
+  /* Stage sections */
+  .stage-section {
+    margin-bottom: 3rem;
+  }
+
+  .stage-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .stage-badge {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    font-family: var(--font-body);
+  }
+
+  .stage-badge-suffix {
+    font-weight: 400;
+    opacity: 0.85;
+  }
+
+  /* Playbook cards grid */
+  .playbooks-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .playbooks-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .playbooks-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .playbook-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: border-color 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    border-top: 3px solid var(--stage-color);
+    min-width: 0;
+  }
+
+  .playbook-card:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
+    border-top-color: var(--stage-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .playbook-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .playbook-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .playbook-card-title {
+    font-size: 1.0625rem;
+    color: var(--color-text-primary);
+    line-height: 1.35;
+  }
+
+  .playbook-duration {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.25rem;
+  }
+
+  .playbook-card-objective {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .playbook-card-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-top: auto;
+  }
+
+  .metric-pill {
+    font-size: 0.6875rem;
+    padding: 0.15rem 0.5rem;
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+    border-radius: 9999px;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .metric-pill-more {
+    background: var(--color-surface-hover);
+    color: var(--color-text-muted);
+  }
+
+  /* Highlighted current stage */
+  .stage-section.is-current {
+    border: 3px solid var(--stage-color);
+    padding: 1rem;
+    background: color-mix(in srgb, var(--stage-color) 8%, transparent);
+    border-radius: 0.75rem;
+  }
+
+  /* Pillar content */
+  .pillar-intro { max-width: 44rem; margin-bottom: 2.5rem; }
+  .pillar-intro h2 { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: -0.01em; margin-bottom: 0.75rem; color: var(--color-text-primary); }
+  .pillar-intro h3 { font-family: var(--font-display); font-size: 1.125rem; margin-top: 1.25rem; margin-bottom: 0.5rem; color: var(--color-text-primary); }
+  .pillar-intro p { font-size: 0.9375rem; line-height: 1.7; color: var(--color-text-secondary); margin-bottom: 0.875rem; }
+  .pillar-intro strong { color: var(--color-text-primary); }
+
+  .pillar-faq { margin-top: 4rem; max-width: 44rem; }
+  .pillar-faq h2 { font-family: var(--font-display); font-size: 1.75rem; letter-spacing: -0.02em; margin-bottom: 1.25rem; color: var(--color-text-primary); }
+  .faq-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .faq-item { padding: 1rem 1.25rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; }
+  .faq-question { font-weight: 500; font-size: 0.9375rem; color: var(--color-text-primary); cursor: pointer; list-style: none; }
+  .faq-question::-webkit-details-marker { display: none; }
+  .faq-question::after { content: '+'; float: right; color: var(--color-text-muted); font-weight: 400; }
+  .faq-item[open] .faq-question::after { content: '–'; }
+  .faq-answer { margin-top: 0.75rem; font-size: 0.9375rem; line-height: 1.65; color: var(--color-text-secondary); }
+
+  .pillar-related { margin-top: 4rem; }
+  .pillar-related h2 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-text-primary); }
+  .related-grid { display: grid; grid-template-columns: 1fr; gap: 0.875rem; }
+  @media (min-width: 640px) { .related-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .related-grid { grid-template-columns: repeat(4, 1fr); } }
+  .related-card { padding: 1rem 1.125rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 0.5rem; text-decoration: none; color: inherit; transition: border-color 0.2s, transform 0.2s; }
+  .related-card:hover { border-color: var(--color-accent); transform: translateY(-2px); color: inherit; }
+  .related-card h3 { font-family: var(--font-display); font-size: 1rem; margin-bottom: 0.375rem; color: var(--color-text-primary); }
+  .related-card p { font-size: 0.8125rem; line-height: 1.55; color: var(--color-text-muted); }
+</style>
+
+<script>
+  // Contextual: highlight user's current stage
+  try {
+    const completed = localStorage.getItem('distilledcs_completed');
+    const scoresRaw = localStorage.getItem('distilledcs_scores');
+
+    if (completed === 'true' && scoresRaw) {
+      const scores = JSON.parse(scoresRaw);
+      const userStage = scores.stage;
+      const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+      const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+      const currentIdx = stageOrder.indexOf(userStage);
+      const nextStage = currentIdx < 3 ? stageOrder[currentIdx + 1] : null;
+
+      // Show context banner
+      const banner = document.getElementById('playbooks-context-banner');
+      if (banner) {
+        banner.innerHTML = `<p>You're in the <strong>${stageLabels[userStage] || userStage}</strong> stage. Start with the playbooks below highlighted for your level.</p>`;
+        banner.style.display = '';
+      }
+
+      // Hide non-assessed CTA
+      document.querySelectorAll('[data-hide-if-assessed]').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('[data-show-if-assessed]').forEach(el => el.style.display = '');
+
+      // Tag stage sections via badge
+      document.querySelectorAll('[data-stage-badge]').forEach(el => {
+        const stageId = el.getAttribute('data-stage-badge');
+        if (stageId === userStage) {
+          el.innerHTML = `${stageLabels[userStage]} <span class="stage-badge-suffix">· Your Current Stage</span>`;
+          el.closest('.stage-section')?.classList.add('is-current');
+        } else if (stageId === nextStage) {
+          el.innerHTML = `${stageLabels[nextStage]} <span class="stage-badge-suffix">· Your Next Stage</span>`;
+        }
+      });
+
+      // Scroll the current stage into view prominence — move it first visually
+      const currentSection = document.querySelector(`[data-stage="${userStage}"]`);
+      if (currentSection) {
+        currentSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+</script>

@@ -10,7 +10,7 @@ const stageTransitions = frameworkData.stage_transitions;
 const contextualRecs = frameworkData.contextual_recommendations;
 ---
 
-<BaseLayout title="CS Maturity Report" description="Your personalized Customer Success maturity report with domain breakdown, priority actions, and recommended playbooks.">
+<BaseLayout title="CS Maturity Report" description="Your personalized Customer Success maturity report with domain breakdown, priority actions, and recommended playbooks." noindex={true}>
   <div class="container report-page">
 
     <!-- ═══ Not-assessed fallback ═══ -->
@@ -1243,7 +1243,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
     const renderCard = (pb: any, modifier = '') => `
       <div class="report-playbook-card${modifier}">
-        <div class="report-playbook-title"><a href="/playbooks/${pb.id}/">${pb.title}</a></div>
+        <div class="report-playbook-title"><a href="/customer-success-playbooks/${pb.id}/">${pb.title}</a></div>
         <p class="report-playbook-obj">${pb.objective}</p>
         <span class="report-playbook-duration">${pb.estimated_duration}</span>
       </div>
@@ -1289,7 +1289,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
           : '';
         return `
           <div class="report-metric-row">
-            <span class="report-metric-name"><a href="/metrics/${m.id}/">${m.name}</a></span>
+            <span class="report-metric-name"><a href="/customer-success-metrics/${m.id}/">${m.name}</a></span>
             ${benchmarkHtml}
           </div>
         `;

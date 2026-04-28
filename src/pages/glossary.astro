@@ -1,0 +1,611 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import frameworkData from '../data/lean-cs-data.json';
+
+const glossary = (frameworkData as any).glossary;
+const terms = (glossary.terms as any[]).slice().sort((a, b) =>
+  a.term.localeCompare(b.term, 'en', { sensitivity: 'base' })
+);
+
+// Group by first letter for the A–Z anchor nav.
+const byLetter: Record<string, any[]> = {};
+for (const t of terms) {
+  const ch = t.term[0].toUpperCase();
+  const key = /[A-Z]/.test(ch) ? ch : '#';
+  (byLetter[key] = byLetter[key] || []).push(t);
+}
+const letters = Object.keys(byLetter).sort();
+
+const siteUrl = 'https://distilledcs.org';
+const pageUrl = `${siteUrl}/glossary/`;
+
+// DefinedTerm JSON-LD per entry, plus a wrapping DefinedTermSet.
+const definedTermSetSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  '@id': pageUrl,
+  name: 'Customer Success Glossary',
+  description: glossary.description,
+  url: pageUrl,
+  hasDefinedTerm: terms.map((t) => ({
+    '@type': 'DefinedTerm',
+    '@id': `${pageUrl}#${t.slug}`,
+    name: t.term,
+    description: t.definition,
+    inDefinedTermSet: pageUrl,
+    ...(t.link ? { url: `${siteUrl}${t.link}` } : {}),
+  })),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+    { '@type': 'ListItem', position: 2, name: 'Glossary', item: pageUrl },
+  ],
+};
+
+const metaDescription = 'Plain-language definitions of customer success terminology used across the Distilled CS framework, with links to deep pages for each term.';
+---
+
+<BaseLayout
+  title="Customer Success Glossary"
+  description={metaDescription}
+  structuredData={[definedTermSetSchema, breadcrumbSchema]}
+>
+  <div class="container glossary-page">
+
+    <header class="glossary-header">
+      <p class="eyebrow">Reference</p>
+      <h1 class="page-title">Customer Success Glossary</h1>
+      <p class="page-intro">
+        {glossary.description}
+      </p>
+    </header>
+
+    <div class="glossary-search">
+      <label for="glossary-search-input" class="visually-hidden">Search terms</label>
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input
+          id="glossary-search-input"
+          type="search"
+          placeholder="Search terms (e.g. NRR, health score, QBR)"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="glossary-search-clear" type="button" class="search-clear" aria-label="Clear search" hidden>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <p id="glossary-search-status" class="search-status" aria-live="polite"></p>
+    </div>
+
+    <nav class="letter-nav" id="glossary-letter-nav" aria-label="Jump to letter">
+      {letters.map((l) => (
+        <a href={`#letter-${l}`}>{l}</a>
+      ))}
+    </nav>
+
+    <div class="glossary-body" id="glossary-body">
+      {letters.map((l) => (
+        <section class="letter-group" id={`letter-${l}`}>
+          <h2 class="letter-heading">{l}</h2>
+          <dl class="term-list">
+            {byLetter[l].map((t: any) => (
+              <div
+                class="term-entry"
+                id={t.slug}
+                data-term={t.term.toLowerCase()}
+                data-aliases={(t.aliases || []).join('|').toLowerCase()}
+                data-def={t.definition.toLowerCase()}
+              >
+                <dt class="term-name">
+                  <a href={`#${t.slug}`} class="term-anchor" aria-label={`Permalink to ${t.term}`}>
+                    {t.term}
+                  </a>
+                </dt>
+                {t.aliases && t.aliases.length > 0 && (
+                  <div class="term-aliases">
+                    {t.aliases.map((a: string) => (
+                      <span class="term-alias-pill">{a}</span>
+                    ))}
+                  </div>
+                )}
+                <dd class="term-def">
+                  <p>{t.definition}</p>
+                  {t.link && (
+                    <a href={t.link} class="term-link">Read the full page →</a>
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))}
+
+      <div id="glossary-search-results" class="search-results-list" hidden></div>
+
+      <div id="glossary-empty" class="glossary-empty" hidden>
+        <p class="empty-headline">No terms match your search.</p>
+        <p class="empty-body">
+          Think this term belongs in the glossary? <a href="/contact/">Suggest it via the contact page</a>.
+        </p>
+      </div>
+    </div>
+
+    <section class="glossary-footer-cta">
+      <h2 class="cta-heading">Missing a term?</h2>
+      <p>
+        The glossary covers the terminology used across this site. If you think a term should be here, open an issue on GitHub or share a suggestion via the <a href="/contact/">contact page</a>.
+      </p>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .glossary-page {
+    padding-block: 3rem 5rem;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .glossary-header {
+    margin-bottom: 2rem;
+  }
+
+  .eyebrow {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    color: var(--color-text-primary);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.03em;
+  }
+
+  .page-intro {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    max-width: 38rem;
+  }
+
+  /* Visually-hidden helper */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Search box (above A–Z nav, not sticky — A–Z handles persistent navigation) */
+  .glossary-search {
+    margin-bottom: 1.25rem;
+  }
+
+  .search-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 0.875rem;
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  #glossary-search-input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+    font-size: 0.9375rem;
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.625rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  #glossary-search-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  #glossary-search-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent);
+  }
+
+  /* Hide the native clear / search "X" — we provide our own */
+  #glossary-search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+  .search-clear {
+    position: absolute;
+    right: 0.625rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: 0;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  .search-clear:hover {
+    color: var(--color-text-primary);
+    background: var(--color-surface-hover);
+  }
+
+  .search-status {
+    margin: 0.625rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    min-height: 1rem;
+  }
+
+  /* A–Z nav (only sticky when search is inactive) */
+  .letter-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    padding: 0.75rem 1.25rem;
+    background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+    border: 1px solid var(--color-border);
+    border-radius: 0.625rem;
+    margin-bottom: 2.5rem;
+    position: sticky;
+    top: 4.5rem;
+    z-index: 5;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* When search is active, drop the A–Z entirely so results render as a flat list */
+  .letter-nav[hidden] {
+    display: none;
+  }
+
+  .letter-nav a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border-radius: 0.375rem;
+    transition: color 0.15s, background-color 0.15s;
+  }
+
+  .letter-nav a:hover {
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+  }
+
+  /* Letter sections */
+  .glossary-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .letter-group {
+    scroll-margin-top: 7rem;
+  }
+
+  .letter-heading {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--color-accent);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    letter-spacing: -0.02em;
+  }
+
+  /* Term entries */
+  .term-list {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .term-entry {
+    scroll-margin-top: 7rem;
+    padding: 1rem 1.125rem;
+    margin: 0 -1.125rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.15s;
+  }
+
+  .term-entry:hover {
+    background: var(--color-surface);
+  }
+
+  .term-entry:target {
+    background: var(--color-accent-subtle);
+  }
+
+  .term-name {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    color: var(--color-text-primary);
+    margin: 0 0 0.375rem;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  .term-anchor {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .term-anchor:hover {
+    color: var(--color-accent);
+  }
+
+  /* Aliases on their own line below the term — readable but visually subordinate */
+  .term-aliases {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .term-alias-pill {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    padding: 0.125rem 0.625rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    line-height: 1.5;
+  }
+
+  /* Hover-tint on the entry: alias pills should pop slightly so the surface
+     matches the entry's hover color, otherwise they vanish into the background. */
+  .term-entry:hover .term-alias-pill,
+  .term-entry:target .term-alias-pill {
+    background: var(--color-bg);
+  }
+
+  /* Flat list rendered while a search query is active */
+  .search-results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Empty state */
+  .glossary-empty {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border);
+    border-radius: 0.75rem;
+  }
+
+  .empty-headline {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem;
+  }
+
+  .empty-body {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .empty-body a {
+    color: var(--color-accent);
+  }
+
+  .term-def {
+    margin: 0;
+  }
+
+  .term-def p {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin: 0 0 0.5rem;
+  }
+
+  .term-link {
+    display: inline-block;
+    font-size: 0.8125rem;
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .term-link:hover {
+    color: var(--color-accent-hover);
+  }
+
+  /* Footer CTA */
+  .glossary-footer-cta {
+    margin-top: 4rem;
+    padding: 1.75rem 2rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+
+  .cta-heading {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.625rem;
+    letter-spacing: -0.02em;
+  }
+
+  .glossary-footer-cta p {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .glossary-footer-cta a {
+    color: var(--color-accent);
+  }
+</style>
+
+<script>
+  const input = document.getElementById('glossary-search-input') as HTMLInputElement | null;
+  const clearBtn = document.getElementById('glossary-search-clear') as HTMLButtonElement | null;
+  const status = document.getElementById('glossary-search-status') as HTMLElement | null;
+  const letterNav = document.getElementById('glossary-letter-nav') as HTMLElement | null;
+  const empty = document.getElementById('glossary-empty') as HTMLElement | null;
+  const results = document.getElementById('glossary-search-results') as HTMLElement | null;
+  const entries = Array.from(document.querySelectorAll<HTMLElement>('.term-entry'));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('.letter-group'));
+
+  // Snapshot each entry's original DOM position so we can restore exactly on reset.
+  // Map<entry, { parent, nextSibling }>
+  const home = new Map<HTMLElement, { parent: ParentNode; next: Node | null }>();
+  entries.forEach((el) => {
+    home.set(el, { parent: el.parentNode!, next: el.nextSibling });
+  });
+
+  /**
+   * Score an entry against a normalized query. Higher = more relevant.
+   *
+   * The scoring tiers prioritize matches in the term name (what the user is
+   * almost always looking for), then aliases, then the body of the definition.
+   * Within each tier, a "starts-with" hit beats a substring hit so "nrr" lands
+   * NRR before Logo Retention (which mentions NRR in passing).
+   */
+  function scoreEntry(el: HTMLElement, q: string): number {
+    const term = (el.dataset.term || '').trim();
+    const aliases = (el.dataset.aliases || '').trim();
+    const def = (el.dataset.def || '').trim();
+
+    // Aliases are stored pipe-joined and lowercased so we can detect
+    // "starts-with" against each alias individually without losing boundaries.
+    const aliasList = aliases ? aliases.split('|').filter(Boolean) : [];
+    const aliasBlob = aliases.replace(/\|/g, ' ');
+
+    let best = 0;
+    if (term === q) best = Math.max(best, 120);            // exact term name
+    else if (term.startsWith(q)) best = Math.max(best, 100); // term starts with query
+    else if (term.includes(q)) best = Math.max(best, 60);    // term contains query
+
+    for (const a of aliasList) {
+      if (a === q) best = Math.max(best, 90);
+      else if (a.startsWith(q)) best = Math.max(best, 40);
+    }
+    if (best < 25 && aliasBlob.includes(q)) best = Math.max(best, 25); // alias contains
+
+    if (best < 10 && def.includes(q)) best = 10;             // body match only
+
+    return best;
+  }
+
+  function applyFilter(raw: string) {
+    const q = raw.trim().toLowerCase();
+
+    if (!q) {
+      // Restore each entry to its original (parent, nextSibling) position so the
+      // alphabetical layout is preserved exactly.
+      entries.forEach((el) => {
+        const slot = home.get(el);
+        if (slot && el.parentNode !== slot.parent) {
+          slot.parent.insertBefore(el, slot.next);
+        }
+        el.hidden = false;
+      });
+      groups.forEach((g) => {
+        g.hidden = false;
+        const heading = g.querySelector<HTMLElement>('.letter-heading');
+        if (heading) heading.style.display = '';
+      });
+      results?.setAttribute('hidden', '');
+      if (results) results.replaceChildren();
+      letterNav?.removeAttribute('hidden');
+      if (empty) empty.hidden = true;
+      if (status) status.textContent = '';
+      clearBtn?.setAttribute('hidden', '');
+      return;
+    }
+
+    // Score every entry and collect the matches.
+    const ranked: Array<{ el: HTMLElement; score: number; term: string }> = [];
+    for (const el of entries) {
+      const s = scoreEntry(el, q);
+      if (s > 0) ranked.push({ el, score: s, term: (el.dataset.term || '') });
+    }
+
+    // Sort: score desc, then alphabetical for ties.
+    ranked.sort((a, b) => (b.score - a.score) || a.term.localeCompare(b.term));
+
+    // Hide every letter group while search is active — results live in a flat
+    // ranked container instead.
+    groups.forEach((g) => (g.hidden = true));
+
+    // Reorder matched entries into the results container.
+    if (results) {
+      results.replaceChildren();
+      for (const r of ranked) {
+        r.el.hidden = false;
+        results.appendChild(r.el);
+      }
+      results.hidden = ranked.length === 0;
+    }
+
+    letterNav?.setAttribute('hidden', '');
+    if (empty) empty.hidden = ranked.length > 0;
+    if (status) {
+      status.textContent =
+        ranked.length === 0
+          ? `No matches for "${raw.trim()}".`
+          : `${ranked.length} ${ranked.length === 1 ? 'match' : 'matches'} for "${raw.trim()}".`;
+    }
+    clearBtn?.removeAttribute('hidden');
+  }
+
+  function reset() {
+    if (!input) return;
+    input.value = '';
+    applyFilter('');
+    input.focus();
+  }
+
+  input?.addEventListener('input', () => applyFilter(input.value));
+  clearBtn?.addEventListener('click', reset);
+  // Esc clears
+  input?.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') reset();
+  });
+</script>

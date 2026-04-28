@@ -13,19 +13,19 @@ const homeSubLinks = [
 ];
 
 const executeSubLinks = [
-  { href: '/playbooks/', label: 'Playbooks' },
-  { href: '/metrics/', label: 'Metrics' },
+  { href: '/customer-success-playbooks/', label: 'Playbooks' },
+  { href: '/customer-success-metrics/', label: 'Metrics' },
   { href: '/checklist/', label: 'Checklist' },
 ];
 
 const navLinks = [
-  { href: '/principles/', label: 'Principles' },
+  { href: '/customer-success-principles/', label: 'Principles' },
   { href: '/assess/', label: 'Assess' },
   { href: '/transform/', label: 'Transform' },
-  { href: '/model/', label: 'Maturity Model' },
+  { href: '/customer-success-maturity-model/', label: 'Maturity Model' },
 ];
 
-const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbooks/') || pathname === '/metrics/' || pathname.startsWith('/metrics/') || pathname === '/checklist/';
+const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pathname.startsWith('/customer-success-metrics/') || pathname === '/checklist/';
 ---
 
 <header class="header">
@@ -62,9 +62,9 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
         <!-- Principles -->
         <li>
           <a
-            href="/principles/"
-            class:list={['nav-link', { active: pathname === '/principles/' }]}
-            aria-current={pathname === '/principles/' ? 'page' : undefined}
+            href="/customer-success-principles/"
+            class:list={['nav-link', { active: pathname === '/customer-success-principles/' }]}
+            aria-current={pathname === '/customer-success-principles/' ? 'page' : undefined}
           >
             Principles
           </a>
@@ -84,7 +84,7 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
         <!-- Execute dropdown -->
         <li class="nav-dropdown">
           <a
-            href="/playbooks/"
+            href="/customer-success-playbooks/"
             class:list={['nav-link nav-link-has-dropdown', { active: isExecutePage }]}
             aria-haspopup="true"
             aria-expanded="false"
@@ -117,9 +117,9 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
         <!-- Maturity Model -->
         <li>
           <a
-            href="/model/"
-            class:list={['nav-link', { active: pathname === '/model/' }]}
-            aria-current={pathname === '/model/' ? 'page' : undefined}
+            href="/customer-success-maturity-model/"
+            class:list={['nav-link', { active: pathname === '/customer-success-maturity-model/' }]}
+            aria-current={pathname === '/customer-success-maturity-model/' ? 'page' : undefined}
           >
             Maturity Model
           </a>
@@ -179,9 +179,9 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
       <!-- Principles -->
       <li>
         <a
-          href="/principles/"
-          class:list={['nav-link-mobile', { active: pathname === '/principles/' }]}
-          aria-current={pathname === '/principles/' ? 'page' : undefined}
+          href="/customer-success-principles/"
+          class:list={['nav-link-mobile', { active: pathname === '/customer-success-principles/' }]}
+          aria-current={pathname === '/customer-success-principles/' ? 'page' : undefined}
         >
           Principles
         </a>
@@ -202,7 +202,7 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
       <li class="mobile-dropdown">
         <div class="mobile-dropdown-header">
           <a
-            href="/playbooks/"
+            href="/customer-success-playbooks/"
             class:list={['nav-link-mobile', { active: isExecutePage }]}
           >
             Execute
@@ -241,9 +241,9 @@ const isExecutePage = pathname === '/playbooks/' || pathname.startsWith('/playbo
       <!-- Maturity Model -->
       <li>
         <a
-          href="/model/"
-          class:list={['nav-link-mobile', { active: pathname === '/model/' }]}
-          aria-current={pathname === '/model/' ? 'page' : undefined}
+          href="/customer-success-maturity-model/"
+          class:list={['nav-link-mobile', { active: pathname === '/customer-success-maturity-model/' }]}
+          aria-current={pathname === '/customer-success-maturity-model/' ? 'page' : undefined}
         >
           Maturity Model
         </a>

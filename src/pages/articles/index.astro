@@ -7,12 +7,12 @@ const posts = (await getCollection('blog'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<BaseLayout title="Blog" description="Insights on Customer Success maturity, frameworks, metrics, and best practices.">
+<BaseLayout title="Articles" description="Long-form articles on customer success strategy, maturity, and the operational decisions behind moving from one stage to the next.">
   <div class="container blog-index">
 
     <div class="page-header">
-      <h1 class="page-title">Blog</h1>
-      <p class="page-subtitle">Insights on Customer Success maturity, frameworks, and best practices.</p>
+      <h1 class="page-title">Articles</h1>
+      <p class="page-subtitle">Long-form writing on customer success strategy, maturity, and the operational decisions between stages.</p>
     </div>
 
     {posts.length > 0 ? (
@@ -25,7 +25,7 @@ const posts = (await getCollection('blog'))
           });
           return (
             <li>
-              <a href={`/blog/${post.id}/`} class="post-card">
+              <a href={`/articles/${post.id}/`} class="post-card">
                 <div class="post-meta">
                   <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
                   {post.data.tags && post.data.tags.length > 0 && (

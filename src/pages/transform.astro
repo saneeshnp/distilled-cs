@@ -19,7 +19,7 @@ const domainLabels: Record<string, string> = {};
 domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
 ---
 
-<BaseLayout title="Transform" description="Track your CS maturity progress. Re-assess to validate growth and level up to the next stage.">
+<BaseLayout title="Transform: Track CS Maturity Progress" description="Track CS maturity progress over time, re-assess to validate growth, and review the trigger signals for moving to the next stage.">
   <div class="container transform-page">
 
     <!-- Strategy Loop wayfinding -->
@@ -121,6 +121,27 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
           </div>
         </div>
         <a href="/assess/" class="btn btn-primary btn-large">Start with the Assessment</a>
+
+        <div class="transform-explainer">
+          <h2>What the Transform phase does</h2>
+          <p>
+            The Distilled CS framework runs on a continuous improvement loop: Assess, Execute, Transform. Transform is the closing step that turns one cycle into the next. Once you have a baseline and have worked through a round of stage-specific playbooks, Transform is where you measure whether the work moved the needle and decide when you are ready to operate at the next stage.
+          </p>
+
+          <h2>Re-assessment and stage transitions</h2>
+          <p>
+            Re-assessing uses the same eight-domain questionnaire you started with, but stored responses from your first pass are preloaded so you can edit only what has changed. When you submit, Transform renders a domain-by-domain delta against your previous scores. Stage transitions are treated as capability shifts, not score crossings. Each transition (Crawl to Walk, Walk to Run, Run to Fly) has a published list of trigger signals, key operational shifts, and new capabilities the next stage assumes you have. If most of those apply, you are ready. If only one or two do, re-assess in another quarter.
+          </p>
+
+          <h2>What a healthy cadence looks like</h2>
+          <p>
+            For teams in Crawl or Walk, quarterly re-assessment is about right. Foundational changes take 8 to 12 weeks to show up in the questionnaire. For Run and Fly teams, semiannual re-assessment avoids the noise of short-term fluctuations. Pair re-assessment with a QBR or annual planning cycle so the outputs feed directly into goals and staffing decisions rather than sitting in a browser tab.
+          </p>
+
+          <p class="transform-explainer-followups">
+            Related reading: the <a href="/customer-success-maturity-model/">customer success maturity model</a>, the <a href="/customer-success-principles/">six guiding principles</a>, and stage-specific <a href="/customer-success-playbooks/">playbooks</a> and <a href="/customer-success-metrics/">metrics</a>.
+          </p>
+        </div>
       </div>
     </div>
 
@@ -371,6 +392,45 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     color: var(--color-text-muted);
     margin-top: 0.125rem;
     line-height: 1.5;
+  }
+
+  /* Expanded explainer (SEO fallback prose) */
+  .transform-explainer {
+    max-width: 38rem;
+    margin: 3rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+    text-align: left;
+  }
+
+  .transform-explainer h2 {
+    font-family: var(--font-display, 'Instrument Serif', serif);
+    font-size: 1.375rem;
+    letter-spacing: -0.01em;
+    margin: 1.75rem 0 0.5rem;
+    color: var(--color-text);
+  }
+
+  .transform-explainer h2:first-child {
+    margin-top: 0;
+  }
+
+  .transform-explainer p {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    margin: 0 0 0.75rem;
+  }
+
+  .transform-explainer a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .transform-explainer-followups {
+    margin-top: 1.25rem !important;
+    font-size: 0.875rem !important;
   }
 
   /* ── Buttons ── */

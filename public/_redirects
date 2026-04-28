@@ -1,0 +1,19 @@
+# One-shot URL migration to keyword-rich paths (SEO_PLAN Task 0.7).
+# Cloudflare Pages syntax. 301 = permanent redirect.
+
+/principles/            /customer-success-principles/            301
+/principles             /customer-success-principles/            301
+/metrics/               /customer-success-metrics/               301
+/metrics                /customer-success-metrics/               301
+/metrics/:slug/         /customer-success-metrics/:slug/         301
+/metrics/:slug          /customer-success-metrics/:slug/         301
+/playbooks/             /customer-success-playbooks/             301
+/playbooks              /customer-success-playbooks/             301
+/playbooks/:slug/       /customer-success-playbooks/:slug/       301
+/playbooks/:slug        /customer-success-playbooks/:slug/       301
+/model/                 /customer-success-maturity-model/        301
+/model                  /customer-success-maturity-model/        301
+/blog/                  /articles/                               301
+/blog                   /articles/                               301
+/blog/:slug/            /articles/:slug/                         301
+/blog/:slug             /articles/:slug/                         301
