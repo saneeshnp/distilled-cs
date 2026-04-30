@@ -210,13 +210,37 @@ const contextualRecs = frameworkData.contextual_recommendations;
     border: 1px solid var(--color-border);
   }
 
-  .report-header .report-stage-label {
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .report-logo {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+    text-decoration: none;
     margin-bottom: 0.25rem;
+  }
+
+  .report-logo:hover {
+    color: var(--color-text-primary);
+  }
+
+  .report-logo-cs {
+    color: var(--color-accent);
+  }
+
+  .report-logo-url {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+    margin-bottom: 1.25rem;
+  }
+
+  .report-header-label {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.4;
   }
 
   .report-header .report-stage-name {
@@ -532,14 +556,6 @@ const contextualRecs = frameworkData.contextual_recommendations;
     font-family: var(--font-body);
   }
 
-  /* Long company names — truncate in header */
-  .report-header .report-stage-label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-  }
-
   /* ── Section 6: Metrics ── */
   .report-metric-group {
     margin-bottom: 1.25rem;
@@ -838,6 +854,22 @@ const contextualRecs = frameworkData.contextual_recommendations;
       background: #eee !important;
     }
 
+    /* Logo — force link colour and accent in print */
+    .report-logo {
+      color: #1a1a1a !important;
+      text-decoration: none !important;
+    }
+
+    .report-logo-cs {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color: #2D6A5A !important;
+    }
+
+    .report-logo-url {
+      color: #777 !important;
+    }
+
     /* Stage badges and priority dots — preserve colors */
     .report-stage-card-badge,
     .priority-dot,
@@ -1083,14 +1115,16 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
   // ── Section 1: Header ──
   function renderHeader(data: ReportData, stage: any): string {
-    const title = data.companyName
-      ? `${data.companyName}'s CS Maturity Report`
-      : 'Your CS Maturity Report';
+    const reportTitle = data.companyName
+      ? `CS Maturity Report and Recommendations for ${data.companyName}`
+      : 'CS Maturity Report and Recommendations';
 
     return `
       <div class="report-header stage-${data.stage}">
-        <div class="report-stage-label">${title}</div>
-        <h1 class="report-stage-name">${stage?.label || data.stage}</h1>
+        <a href="/" class="report-logo" aria-label="DistilledCS — go to homepage">Distilled<span class="report-logo-cs">CS</span></a>
+        <div class="report-logo-url">distilledcs.org</div>
+        <div class="report-header-label">${reportTitle}</div>
+        <h1 class="report-stage-name">Current CS Stage: ${stage?.label || data.stage}</h1>
         <p class="report-stage-subtitle">${stage?.subtitle || ''}</p>
         <p class="report-score">Overall Score: ${typeof data.overallScore === 'number' ? data.overallScore.toFixed(2) + ' / 4.0' : '—'}</p>
         ${data.timestamp ? `<p class="report-date">Assessment completed ${formatDate(data.timestamp)}</p>` : ''}
