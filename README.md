@@ -1,6 +1,6 @@
 # Distilled CS
 
-**The open Customer Success strategy engine.** Available at [distilledcs.org](https://distilledcs.org).
+**The open Customer Success strategy framework.** Available at [distilledcs.org](https://distilledcs.org).
 
 ---
 
@@ -34,7 +34,7 @@ Distilled CS is built around a **continuous improvement loop** — a repeatable 
           └──────→ (back to Assess)
 ```
 
-- **Assess** — Score your CS maturity across 7 capability domains. Understand your strengths, your gaps, and which maturity stage you're in.
+- **Assess** — Score your CS maturity across 8 capability domains. Understand your strengths, your gaps, and which maturity stage you're in.
 - **Execute** — Follow stage-specific strategy playbooks. Track the metrics that matter at your stage. Work through a prioritized execution checklist.
 - **Transform** — Measure your progress against your previous assessment. See what improved, what needs attention, and when you're ready to graduate to the next maturity stage.
 
@@ -51,9 +51,9 @@ The framework is anchored by a **4-stage maturity model** that describes how CS 
 | **Run** | Scalable / Predictive | Digital-led engagement scales the long tail. Predictive models identify churn risk early. CS contributes directly to expansion revenue. |
 | **Fly** | Strategic / Transformative | CS is a company-wide culture, not just a department. Predictive intelligence drives strategy. CS owns a revenue number and influences product direction. |
 
-Your maturity stage is determined by your scores across 7 domains — not by team size, ARR, or tenure. A 3-person team can be at Walk stage, and a 40-person team can still be at Crawl.
+Your maturity stage is determined by your scores across 8 domains — not by team size, ARR, or tenure. A 3-person team can be at Walk stage, and a 40-person team can still be at Crawl.
 
-## The 7 Capability Domains
+## The 8 Capability Domains
 
 The assessment evaluates your CS function across these domains:
 
@@ -64,6 +64,7 @@ The assessment evaluates your CS function across these domains:
 5. **Expansion & Value** — How you identify and drive growth within existing accounts
 6. **CS Organization & Strategy** — How CS is structured, resourced, and positioned within the company
 7. **CS Culture & Cross-Functional Alignment** — How deeply CS principles are embedded across the organization
+8. **AI Leverage in CS** — How your team is adopting AI to improve coverage, speed, and insight across CS operations
 
 Each domain is scored independently, giving you a nuanced view of where you're strong and where to focus.
 
@@ -80,15 +81,15 @@ Distilled CS adapts to your context. When you take the assessment, you provide y
 
 ## Strategy Playbooks
 
-The framework includes **12 strategy playbooks** — 3 for each maturity stage — covering the highest-leverage moves for that stage of growth:
+The framework includes **16 strategy playbooks** — 4 for each maturity stage — covering the highest-leverage moves for that stage of growth:
 
-**Crawl stage**: Establish a retention baseline, build your first customer segmentation, create a basic onboarding program
+**Crawl stage**: Establish a retention baseline, build your first customer segmentation, create a basic onboarding program, and set up foundational CS processes
 
-**Walk stage**: Implement health scoring, build lifecycle journey maps, operationalize QBR/EBR cadence
+**Walk stage**: Implement health scoring, build lifecycle journey maps, operationalize QBR/EBR cadence, and introduce proactive risk management
 
-**Run stage**: Scale with digital-led engagement, build predictive churn models, formalize expansion motion
+**Run stage**: Scale with digital-led engagement, build predictive churn models, formalize expansion motion, and operationalize data-driven segmentation
 
-**Fly stage**: CS-led revenue strategy, predictive customer intelligence, embed CS culture company-wide
+**Fly stage**: CS-led revenue strategy, predictive customer intelligence, embed CS culture company-wide, and drive strategic customer partnerships
 
 Each playbook includes a clear objective, a step-by-step action plan, the metrics to watch, common pitfalls to avoid, and an estimated duration.
 
@@ -96,16 +97,16 @@ Each playbook includes a clear objective, a step-by-step action plan, the metric
 
 Six principles underpin the entire framework:
 
-1. **Outcomes Over Activities** — Measure value delivered, not tasks completed
-2. **Context Drives Strategy** — Best practices without context are just guesses
-3. **Proactive Over Reactive** — Build systems that surface risk before customers feel pain
-4. **Data-Informed, Not Data-Paralyzed** — Act on one trustworthy signal rather than staring at a dozen unreliable ones
-5. **Customer Success Is a Culture, Not a Department** — CS outcomes require cross-functional alignment
-6. **Segment, Then Scale** — The right engagement for each segment at a cost the business can sustain
+1. **Customer Success Is a Culture, Not Just a Department** — CS outcomes require cross-functional alignment, not just a dedicated team
+2. **Proactive Over Reactive** — Build systems that surface risk before customers feel pain
+3. **Segment, Then Scale** — The right engagement for each segment at a cost the business can sustain
+4. **Outcomes Over Activities** — Measure value delivered, not tasks completed
+5. **Context Drives Strategy** — Best practices without context are just guesses
+6. **Data-Informed, Not Data-Paralyzed** — Act on one trustworthy signal rather than staring at a dozen unreliable ones
 
 ## Metrics Directory
 
-The framework tracks **16 CS metrics**, each with:
+The framework tracks **18 CS metrics**, each with:
 
 - A clear definition and formula
 - Priority level by maturity stage (what to focus on now vs. later)
@@ -113,17 +114,16 @@ The framework tracks **16 CS metrics**, each with:
 - Common measurement mistakes to avoid
 - Connections to the playbooks that reference them
 
-Metrics include: NRR, GRR, Logo Retention, Time to Value, Health Score, Expansion Revenue, CSAT, Adoption Rate, TTFV, Onboarding Completion, Product Adoption Depth, Stickiness Ratio, Expansion Rate, CAC Payback, CES, and Escalation Rate.
+Metrics include: NRR, GRR, Logo Retention, Time to Value, Health Score, Expansion Revenue, CSAT, Adoption Rate, TTFV, Onboarding Completion, Product Adoption Depth, Stickiness Ratio, Expansion Rate, CAC Payback, CES, Escalation Rate, and AI-leverage signals.
 
 ---
 
 ## Tech Stack
 
-- **[Astro 6](https://astro.build)** — Static site generator
+- **[Astro 6](https://astro.build)** — Core framework
 - **Tailwind CSS v4** — Utility-first styling
-- **Vanilla JavaScript** — No frontend frameworks (no React, no Vue)
-- **GSAP** — Homepage animations only
-- **Cloudflare Pages** — Static hosting
+- **Vanilla JavaScript** — No frontend frameworks (no React or Vue)
+- **Cloudflare Pages** — Hosting
 
 The site is fully static — no backend, no database, no API calls. All user data (assessment results, checklist progress) is stored locally in the browser via localStorage.
 
@@ -131,20 +131,11 @@ The site is fully static — no backend, no database, no API calls. All user dat
 
 All framework content — assessment questions, metrics, benchmarks, playbooks, stage definitions, and recommendations — lives in a single JSON file (`src/data/lean-cs-data.json`). This is the single source of truth. Pages read from this file at build time and at runtime for contextual overlays.
 
-For detailed technical documentation (project structure, architecture patterns, build commands, component APIs), see **[README.md](./README.md)**.
-
-## Getting Started
-
-```sh
-npm install
-npm run dev       # Start dev server at localhost:4321
-npm run build     # Build static site to dist/
-npm run preview   # Preview built site locally
-```
-
 ## Contributing
 
 Distilled CS is a community project. The framework content, assessment questions, benchmarks, and playbooks are all open for contribution and improvement. If you have experience building or leading CS teams, your perspective makes this better.
+
+Contributions are welcome via [GitHub Issues](https://github.com/saneeshnp/distilled-cs/issues) or through the [Distilled CS LinkedIn page](https://www.linkedin.com/company/distilled-cs/).
 
 ## License
 
