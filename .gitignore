@@ -33,3 +33,6 @@ pnpm-debug.log*
 /src/pages/index-preview.astro
 /public/images/cs-framework-stages.png
 /Distilled CS - Customer Success Framework.png
+
+# Personal social media post studio (not for publishing)
+/src/pages/studio.astro
