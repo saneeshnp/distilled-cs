@@ -159,69 +159,6 @@
   color: var(--color-bg);
 }
 
-/* Preview banner.
-   Intentionally uses hardcoded red regardless of theme — this is a warning alert
-   that should read the same in both light and dark modes. Opaque background
-   ensures WCAG AA contrast (6.4:1 for white text on #b42828) without depending
-   on what the underlying page background is. */
-.preview-banner {
-  background: #b42828;
-  border-bottom: 1px solid #d64545;
-  position: relative;
-  z-index: 1001;
-}
-
-.preview-banner.hidden {
-  display: none;
-}
-
-.preview-banner.dismissing {
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.preview-banner-inner {
-  max-width: 1200px;
-  margin-inline: auto;
-  padding: 0.5rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.preview-banner-icon {
-  flex-shrink: 0;
-  color: #ffcdd2;
-  opacity: 1;
-}
-
-.preview-banner-text {
-  font-size: 0.8125rem;
-  color: #fff;
-  line-height: 1.4;
-}
-
-.preview-banner-close {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  border: none;
-  border-radius: 0.25rem;
-  background: transparent;
-  color: #ffcdd2;
-  cursor: pointer;
-  margin-left: 0.5rem;
-  padding: 0;
-}
-
-.preview-banner-close:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.15);
-}
 
 /* Base reset & defaults */
 *,

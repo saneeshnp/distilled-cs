@@ -7,13 +7,11 @@ const storageKeys = [
   { key: 'distilledcs_completed', label: 'Completed', description: 'Whether assessment has been completed' },
   { key: 'distilledcs_checklist', label: 'Checklist', description: 'Execution checklist progress' },
   { key: 'distilledcs_previous_scores', label: 'Previous Scores', description: 'Saved before re-assessment for comparison' },
-  { key: 'distilledcs_preview_seen', label: 'Preview Seen', description: 'Homepage preview modal dismissed' },
   { key: 'distilledcs_theme', label: 'Theme', description: 'Light or dark mode preference' },
 ];
 
 const sessionKeys = [
   { key: 'distilledcs_bar_dismissed', label: 'Bar Dismissed', description: 'Context bar dismissed this session' },
-  { key: 'distilledcs_banner_dismissed', label: 'Banner Dismissed', description: 'Preview banner dismissed this session' },
 ];
 ---
 
@@ -806,11 +804,11 @@ const sessionKeys = [
   // ── Refresh key displays ──
   const storageKeys = [
     'distilledcs_profile', 'distilledcs_scores', 'distilledcs_completed',
-    'distilledcs_checklist', 'distilledcs_previous_scores', 'distilledcs_preview_seen',
+    'distilledcs_checklist', 'distilledcs_previous_scores',
     'distilledcs_theme',
   ];
 
-  const sessionKeysList = ['distilledcs_bar_dismissed', 'distilledcs_banner_dismissed'];
+  const sessionKeysList = ['distilledcs_bar_dismissed'];
 
   function refreshKeyDisplays() {
     for (const key of storageKeys) {
