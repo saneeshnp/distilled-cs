@@ -2943,6 +2943,72 @@
             "relevance": "Use CLV by cohort to assess whether your CS motions are extending customer lifespan and growing account value. Segment-level CLV trends reveal where your team's time has the highest leverage."
           }
         ]
+      },
+      {
+        "id": "nps",
+        "name": "Net Promoter Score (NPS)",
+        "category": "sentiment",
+        "also_known_as": [
+          "Relationship NPS",
+          "rNPS"
+        ],
+        "definition": "A measure of customer loyalty and likelihood to recommend, based on a single question: 'How likely are you to recommend us to a colleague or peer?' Scored 0–10, NPS splits respondents into Promoters (9–10), Passives (7–8), and Detractors (0–6). The result is a single score from -100 to +100.",
+        "formula": "% Promoters (9–10) − % Detractors (0–6)",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "medium",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Not a priority yet. You likely lack the survey volume for statistically meaningful results, and the real issue is whether customers are getting value at all. Start with CSAT at key touchpoints instead.",
+          "walk": "Start running quarterly relationship NPS surveys. The goal is building a baseline, not optimizing the score. Even basic detractor follow-up at this stage prevents preventable churn.",
+          "run": "NPS should be a core CS metric. Segment by ARR tier, cohort, and product line. Use detractor workflows to protect renewal pipeline; use promoter identification to feed expansion and reference programs.",
+          "fly": "NPS feeds executive reporting, cross-functional CX programs, and product roadmap influence. Integrate NPS trends with health score models and use predictive scoring to identify accounts likely to become detractors before they self-report."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "25–40",
+            "great": "40–55",
+            "world_class": "55+"
+          },
+          "seg_midmarket": {
+            "good": "30–45",
+            "great": "45–58",
+            "world_class": "58+"
+          },
+          "seg_enterprise": {
+            "good": "30–45",
+            "great": "45–60",
+            "world_class": "60+"
+          }
+        },
+        "common_mistakes": [
+          "Running NPS annually. Annual surveys are too lagging to be actionable for CSMs managing accounts in real time. Quarterly relationship surveys are the minimum cadence",
+          "Collecting NPS without a detractor follow-up workflow. NPS data that sits in a dashboard without triggering outreach is just vanity — detractors who don't hear back churn at higher rates",
+          "Conflating relationship NPS with transactional NPS. Relationship NPS (quarterly, account-wide) measures loyalty; transactional NPS (post-interaction) measures a specific experience. Don't blend the scores",
+          "Using NPS as a health score input before you have reliable survey frequency. Quarterly or less frequent responses add noise to health models rather than signal"
+        ],
+        "related_metrics": [
+          "csat",
+          "ces",
+          "health_score",
+          "logo_retention"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Follow up with detractors within 48 hours of a low score. Promoters are your best expansion and reference candidates — identify them and act on it."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Segment NPS by ARR tier, cohort, and CSM team to distinguish systemic issues from isolated account problems. NPS trend direction matters more than the absolute score."
+          },
+          {
+            "role": "CRO/CCO",
+            "relevance": "NPS is a leading indicator of renewal risk and expansion potential. Sustained NPS decline across a segment should trigger a strategic review, not just a CSM call."
+          }
+        ]
       }
     ]
   },
