@@ -2875,6 +2875,74 @@
             "relevance": "Own the measurement methodology. Define 'active use' clearly, instrument it in your CS platform or HRIS, and report monthly."
           }
         ]
+      },
+      {
+        "id": "clv",
+        "name": "Customer Lifetime Value (CLV)",
+        "category": "revenue",
+        "also_known_as": [
+          "LTV",
+          "CLTV",
+          "LCV",
+          "Customer LTV"
+        ],
+        "definition": "The total revenue a business expects to generate from a single customer account over the entire duration of the relationship. CLV is both a backward-looking measure of realized value and a forward-looking model for deciding which customers warrant deeper investment.",
+        "formula": "Average Annual Contract Value × Average Customer Lifespan (years)",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "low",
+          "run": "medium",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Too early to model reliably. You don't have enough retention history for CLV estimates to be accurate. Focus on keeping customers alive before projecting their value.",
+          "walk": "Useful as a strategic framing exercise, but don't optimize for it yet. Churn and expansion patterns aren't stable enough for CLV to drive decisions reliably.",
+          "run": "Start building CLV models by segment. Use them to justify CS headcount investment, inform tiering decisions, and prioritize accounts for high-touch coverage.",
+          "fly": "CLV should drive cross-functional resource allocation: sales targeting, product roadmap prioritization, and CS team structure. Predictive CLV models help surface at-risk high-value accounts before warning signs appear in health scores."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "3–5× ACV",
+            "great": "5–8× ACV",
+            "world_class": "8× ACV+"
+          },
+          "seg_midmarket": {
+            "good": "4–6× ACV",
+            "great": "6–10× ACV",
+            "world_class": "10× ACV+"
+          },
+          "seg_enterprise": {
+            "good": "5–8× ACV",
+            "great": "8–12× ACV",
+            "world_class": "12× ACV+"
+          }
+        },
+        "common_mistakes": [
+          "Using a single blended CLV number across all segments. SMB and Enterprise CLV are structurally different and should never be averaged together",
+          "Treating CLV as a finance-only metric. CS directly influences lifespan and expansion — CLV should live on the CS dashboard, not just the board deck",
+          "Confusing CLV with ARR. CLV accounts for the full customer relationship including expansion, contraction, and eventual churn; ARR is a point-in-time snapshot",
+          "Building CLV models before you have reliable churn data. Inaccurate retention inputs produce CLV estimates that mislead rather than inform"
+        ],
+        "related_metrics": [
+          "nrr",
+          "cac_payback",
+          "grr",
+          "expansion_revenue"
+        ],
+        "audience": [
+          {
+            "role": "CEO/Founder",
+            "relevance": "Use CLV to validate your growth model. If CLV is not meaningfully higher than CAC, scaling sales spend destroys value rather than creates it."
+          },
+          {
+            "role": "CRO/CCO",
+            "relevance": "CLV shapes how you segment customers, allocate CS resources, and set expansion targets. High-CLV segments deserve disproportionate investment."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Use CLV by cohort to assess whether your CS motions are extending customer lifespan and growing account value. Segment-level CLV trends reveal where your team's time has the highest leverage."
+          }
+        ]
       }
     ]
   },
