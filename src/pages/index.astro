@@ -26,56 +26,36 @@ const principles = frameworkData.principles;
         </div>
       </div>
 
-      <!-- Right column: Animated SVG loop — based on user-edited positions -->
+      <!-- Right column: Animated SVG loop — circular track + orbiting progress dashes that light up each node in turn -->
       <div class="hp-hero-visual" id="hp-hero-visual">
-        <svg class="hp-hero-svg" viewBox="0 0 400 420" role="img" aria-label="Strategy Loop: Assess, Execute, Transform — a continuous improvement cycle">
-          <defs>
-            <radialGradient id="hp-center-glow" cx="50%" cy="52%" r="50%">
-              <stop offset="0%" style="stop-color: color-mix(in srgb, var(--color-accent) 7%, transparent);" />
-              <stop offset="100%" style="stop-color: color-mix(in srgb, var(--color-accent) 0%, transparent);" />
-            </radialGradient>
-          </defs>
+        <svg class="hp-loop-svg" viewBox="0 0 720 720" role="img" aria-labelledby="hp-loop-title hp-loop-desc">
+          <title id="hp-loop-title">Strategy Loop: Assess, Execute, Transform</title>
+          <desc id="hp-loop-desc">A continuous improvement cycle. Assess flows to Execute, Execute flows to Transform, and Transform loops back to Assess.</desc>
 
-          <!-- Decorative orbital rings -->
-          <g class="hp-orbital-group">
-            <circle cx="200" cy="215" r="185" fill="none" style="stroke: color-mix(in srgb, var(--color-accent) 6%, transparent);" stroke-width="1" stroke-dasharray="4 8" />
-            <circle cx="200" cy="215" r="168" fill="none" stroke="rgba(91,154,139,0.05)" stroke-width="0.5" stroke-dasharray="2 12" />
-            <circle cx="200" cy="30" r="2.5" fill="var(--color-accent)" opacity="0.4" />
-            <circle cx="385" cy="215" r="2" fill="var(--color-secondary)" opacity="0.35" />
-            <circle cx="200" cy="400" r="2.5" fill="var(--color-accent)" opacity="0.3" />
-            <circle cx="15" cy="215" r="2" fill="var(--color-secondary)" opacity="0.35" />
-          </g>
+          <!-- Faint full-circle track -->
+          <path class="hp-loop-track" d="M 360 92 A 268 268 0 1 1 359.9 92" />
+          <!-- Three orbiting progress dashes (pathLength 300; 14 + 86 dasharray repeated three times keeps them evenly spaced) -->
+          <path class="hp-loop-progress" pathLength="300" d="M 360 92 A 268 268 0 1 1 359.9 92" />
 
-          <!-- Center glow -->
-          <circle cx="195" cy="223" r="85" fill="url(#hp-center-glow)" />
+          <!-- Center label — mirrors the site logo (Distilled + CS accent) -->
+          <text class="hp-loop-center" x="360" y="360"><tspan>Distilled</tspan><tspan class="hp-loop-center-accent">CS</tspan></text>
 
-          <!-- Flowing arrow arcs (bezier curves from user-edited SVG) -->
-          <!-- Arc 1: Assess → Execute -->
-          <path class="hp-flow-arrow hp-flow-arrow--1" d="M 239 94 C 309 117 349 191 327 262" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-opacity="0.4" />
-          <!-- Arc 2: Execute → Transform -->
-          <path class="hp-flow-arrow hp-flow-arrow--2" d="M 290 319 C 233 372 156 372 100 319" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-opacity="0.4" />
-          <!-- Arc 3: Transform → Assess -->
-          <path class="hp-flow-arrow hp-flow-arrow--3" d="M 64 261 C 42 191 81 116 152 93" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-opacity="0.4" />
-
-          <!-- Center label -->
-          <text x="197" y="222" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-secondary)" font-size="20" font-family="var(--font-display)" opacity="0.85">Distilled CS</text>
-
-          <!-- Node: Assess (top center) -->
-          <g class="hp-svg-node">
-            <rect class="hp-svg-node-rect" x="145" y="64" width="106" height="44" rx="10" fill="var(--color-surface)" />
-            <text x="198" y="88" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-primary)" font-size="22" font-family="var(--font-display)">Assess</text>
+          <!-- Node: Assess (top) -->
+          <g class="hp-loop-node hp-loop-node--assess">
+            <rect class="hp-loop-card" x="252" y="49" width="216" height="90" rx="10" />
+            <text class="hp-loop-label" x="360" y="94">Assess</text>
           </g>
 
           <!-- Node: Execute (bottom-right) -->
-          <g class="hp-svg-node">
-            <rect class="hp-svg-node-rect" x="256" y="270" width="115" height="44" rx="10" fill="var(--color-surface)" />
-            <text x="314" y="294" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-primary)" font-size="22" font-family="var(--font-display)">Execute</text>
+          <g class="hp-loop-node hp-loop-node--execute">
+            <rect class="hp-loop-card" x="484" y="455" width="196" height="90" rx="10" />
+            <text class="hp-loop-label" x="582" y="500">Execute</text>
           </g>
 
           <!-- Node: Transform (bottom-left) -->
-          <g class="hp-svg-node">
-            <rect class="hp-svg-node-rect" x="18" y="270" width="130" height="44" rx="10" fill="var(--color-surface)" />
-            <text x="83" y="294" text-anchor="middle" dominant-baseline="middle" fill="var(--color-text-primary)" font-size="22" font-family="var(--font-display)">Transform</text>
+          <g class="hp-loop-node hp-loop-node--transform">
+            <rect class="hp-loop-card" x="40" y="455" width="224" height="90" rx="10" />
+            <text class="hp-loop-label" x="152" y="500">Transform</text>
           </g>
         </svg>
       </div>
@@ -364,53 +344,101 @@ const principles = frameworkData.principles;
     }
   }
 
-  .hp-hero-svg {
+  /* ── Strategy Loop SVG ──
+     Single circular track. Three evenly-spaced dashes orbit it; each node
+     card briefly glows as the dash reaches its position on the perimeter. */
+  .hp-loop-svg {
+    --hp-loop-duration: 8.4s;
+    --hp-loop-card-shadow: drop-shadow(0 12px 18px rgba(26, 26, 46, 0.08));
+    --hp-loop-resting-stroke: var(--color-border);
     width: 100%;
     height: auto;
+    display: block;
+    overflow: visible;
   }
 
-  /* ── Orbital ring (decorative, rotates) ── */
-  .hp-orbital-group {
-    transform-origin: 200px 215px;
-    animation: hp-orbit-rotate 40s linear infinite;
+  :root[data-theme="dark"] .hp-loop-svg {
+    --hp-loop-card-shadow: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+    --hp-loop-resting-stroke: rgba(240, 237, 230, 0.28);
   }
 
-  @keyframes hp-orbit-rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+  .hp-loop-track {
+    fill: none;
+    stroke: var(--color-text-primary);
+    stroke-width: 16;
+    stroke-linecap: round;
+    opacity: 0.1;
   }
 
-  /* ── SVG node box borders (theme-aware) ──
-     In light mode we use a darker, thicker stroke so the three boxes read
-     clearly against the cream hero background. In dark mode a faint light
-     stroke is enough since the surface fill already contrasts the sky. */
-  .hp-svg-node-rect {
-    stroke: rgba(26, 26, 46, 0.22);
-    stroke-width: 1.5;
+  .hp-loop-progress {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 15;
+    stroke-linecap: round;
+    /* 14 + 86 = 100, repeated 3× across pathLength 300 — three evenly-spaced dashes */
+    stroke-dasharray: 14 86;
+    animation: hp-loop-orbit var(--hp-loop-duration) linear infinite;
   }
 
-  :root[data-theme="dark"] .hp-svg-node-rect {
-    stroke: rgba(240, 237, 230, 0.15);
-    stroke-width: 1;
-  }
-
-  /* ── Flowing arrow animation ── */
-  .hp-flow-arrow {
-    stroke-dasharray: 12 8;
-    animation: hp-flow-dash 8s linear infinite;
-  }
-
-  .hp-flow-arrow--2 {
-    animation-delay: -2.66s;
-  }
-
-  .hp-flow-arrow--3 {
-    animation-delay: -5.33s;
-  }
-
-  @keyframes hp-flow-dash {
+  @keyframes hp-loop-orbit {
     from { stroke-dashoffset: 0; }
-    to { stroke-dashoffset: -60; }
+    to { stroke-dashoffset: -300; }
+  }
+
+  /* Mirrors the site header logo — same display font, same accent split, scaled up. */
+  .hp-loop-center {
+    fill: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-size: 55px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    text-anchor: middle;
+    dominant-baseline: middle;
+  }
+
+  .hp-loop-center-accent {
+    fill: var(--color-accent);
+  }
+
+  .hp-loop-card {
+    fill: var(--color-surface);
+    stroke: var(--color-border);
+    stroke-width: 1.5;
+    color: var(--color-accent);
+    filter: var(--hp-loop-card-shadow);
+    animation: hp-loop-card-glow var(--hp-loop-duration) ease-in-out infinite;
+  }
+
+  .hp-loop-node--execute .hp-loop-card {
+    animation-delay: calc(var(--hp-loop-duration) / 3);
+  }
+
+  .hp-loop-node--transform .hp-loop-card {
+    animation-delay: calc(var(--hp-loop-duration) * 2 / 3);
+  }
+
+  /* Resting border softened (stroke-opacity 0.6) so the glow has somewhere to rise into. */
+  @keyframes hp-loop-card-glow {
+    0%, 28%, 100% {
+      stroke: var(--color-border);
+      stroke-opacity: 0.6;
+      filter: var(--hp-loop-card-shadow);
+    }
+    10% {
+      stroke: currentColor;
+      stroke-opacity: 1;
+      filter: drop-shadow(0 0 16px currentColor);
+    }
+  }
+
+  .hp-loop-label {
+    fill: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: 38px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    text-anchor: middle;
+    dominant-baseline: middle;
   }
 
   /* ── Hero entrance animation ── */
@@ -433,12 +461,12 @@ const principles = frameworkData.principles;
       transform: none !important;
       transition: none !important;
     }
-    .hp-orbital-group {
+    .hp-loop-progress,
+    .hp-loop-card {
       animation: none;
     }
-    .hp-flow-arrow {
-      animation: none;
-      stroke-dasharray: none;
+    .hp-loop-card {
+      stroke: var(--color-border);
     }
   }
 
