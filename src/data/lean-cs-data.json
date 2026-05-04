@@ -1721,7 +1721,8 @@
         "related_metrics": [
           "grr",
           "expansion_revenue",
-          "logo_retention"
+          "logo_retention",
+          "csql"
         ],
         "audience": [
           {
@@ -2081,7 +2082,8 @@
         "related_metrics": [
           "nrr",
           "adoption_rate",
-          "health_score"
+          "health_score",
+          "csql"
         ],
         "audience": [
           {
@@ -2532,7 +2534,8 @@
         "related_metrics": [
           "nrr",
           "expansion_revenue",
-          "product_adoption_depth"
+          "product_adoption_depth",
+          "csql"
         ],
         "audience": [
           {
@@ -3200,6 +3203,78 @@
           {
             "role": "CRO/CCO",
             "relevance": "ACV mix across the portfolio signals whether CS capacity investment is aligned to revenue concentration. If 20% of accounts represent 80% of ACV, coverage and risk management should reflect that asymmetry."
+          }
+        ]
+      },
+      {
+        "id": "csql",
+        "name": "Customer Success Qualified Leads (CSQLs)",
+        "category": "revenue",
+        "also_known_as": [
+          "CS-Sourced Pipeline",
+          "CS-Qualified Opportunities",
+          "Customer Success Qualified Opportunities (CSQOs)"
+        ],
+        "definition": "A CS-identified expansion or upsell opportunity that meets agreed qualification criteria (product fit, usage signals, stakeholder buy-in, budget) and is handed to Sales as a qualified lead. CSQLs measure how reliably CS converts customer relationship intelligence into incremental pipeline, and they are the bridge between adoption work and revenue outcomes. Unlike Marketing Qualified Leads, CSQLs originate from inside the installed base and rely on CSM judgement about timing, fit, and account readiness.",
+        "formula": "Count of CSQLs accepted by Sales in period. Secondary measure: CSQL conversion rate = (Closed-won CSQLs / Total CSQLs accepted) × 100",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "low",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "Skip this metric for now. CSQLs require a stable retention base and a working CS-to-Sales handoff, neither of which is in place at this stage. Focus on adoption and renewal first.",
+          "walk": "Begin informally tracking CS-sourced expansion ideas, but do not formalise targets. Use the data to identify which usage and relationship signals tend to precede genuine expansion.",
+          "run": "CSQLs should be a formal metric with shared qualification criteria between CS and Sales, a documented handoff process, and weekly or monthly reporting on volume and conversion.",
+          "fly": "CSQL volume and conversion rate become forecastable inputs to the expansion pipeline. Track by CSM, segment, and source signal to refine qualification criteria and tune CS comp around quality, not just volume."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "2-4 CSQLs per CSM per quarter, 20-30% conversion",
+            "great": "4-7 per quarter, 30-40% conversion",
+            "world_class": "7+ per quarter, 40%+ conversion"
+          },
+          "seg_midmarket": {
+            "good": "3-5 CSQLs per CSM per quarter, 25-35% conversion",
+            "great": "5-8 per quarter, 35-45% conversion",
+            "world_class": "8+ per quarter, 45%+ conversion"
+          },
+          "seg_enterprise": {
+            "good": "1-3 CSQLs per CSM per quarter, 30-40% conversion",
+            "great": "3-5 per quarter, 40-55% conversion",
+            "world_class": "5+ per quarter, 55%+ conversion"
+          }
+        },
+        "common_mistakes": [
+          "No shared qualification definition with Sales. CS submits leads, Sales rejects them as unqualified, and trust between the teams erodes",
+          "Counting any usage uptick or positive signal as a CSQL. Without budget, stakeholder, and timing checks, conversion rates collapse and pipeline becomes noisy",
+          "Comping CSMs on CSQL volume alone. This incentivises low-quality submissions; tie at least part of the incentive to closed-won conversion or CSQL acceptance rate",
+          "No closed-loop reporting back to CS. If CSMs never learn which CSQLs converted and why, the qualification criteria never improve",
+          "Treating CSQLs as the only expansion path. Some accounts expand product-led or via direct Sales outreach; CSQLs should complement those motions, not replace them"
+        ],
+        "related_metrics": [
+          "expansion_rate",
+          "expansion_revenue",
+          "nrr",
+          "product_adoption_depth"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Know the qualification checklist cold and use it to filter your own account observations before submitting. A high acceptance rate is more valuable to your reputation with Sales than raw CSQL volume."
+          },
+          {
+            "role": "CS Manager",
+            "relevance": "Track CSQL volume and conversion by CSM to identify coaching opportunities. Look for patterns in which usage and relationship signals consistently produce closed-won outcomes."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Own the qualification criteria jointly with Sales leadership and review them quarterly. CSQL conversion rate is the single best signal of whether CS and Sales are operationally aligned on expansion."
+          },
+          {
+            "role": "CRO/CCO",
+            "relevance": "Use CSQL contribution to total expansion pipeline as a measure of CS revenue impact. If CS-sourced pipeline converts at higher rates than other sources, it justifies further investment in CS capacity."
           }
         ]
       }

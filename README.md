@@ -106,7 +106,7 @@ Six principles underpin the entire framework:
 
 ## Metrics Directory
 
-The framework tracks **23 CS metrics**, each with:
+The framework tracks **24 CS metrics**, each with:
 
 - A clear definition and formula
 - Priority level by maturity stage (what to focus on now vs. later)
@@ -114,7 +114,7 @@ The framework tracks **23 CS metrics**, each with:
 - Common measurement mistakes to avoid
 - Connections to the playbooks that reference them
 
-Metrics include: NRR, GRR, Logo Retention, Time to Value, Health Score, Expansion Revenue, CSAT, Adoption Rate, TTFV, Onboarding Completion, Product Adoption Depth, Stickiness Ratio, Expansion Rate, CAC Payback, CES, Escalation Rate, and AI-leverage signals.
+Metrics include: NRR, GRR, Logo Retention, Time to Value, Health Score, Expansion Revenue, CSAT, Adoption Rate, TTFV, Onboarding Completion, Product Adoption Depth, Stickiness Ratio, Expansion Rate, CAC Payback, CES, Escalation Rate, CSQLs, and AI-leverage signals.
 
 ---
 
