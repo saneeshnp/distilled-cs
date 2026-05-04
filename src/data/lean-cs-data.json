@@ -3009,6 +3009,199 @@
             "relevance": "NPS is a leading indicator of renewal risk and expansion potential. Sustained NPS decline across a segment should trigger a strategic review, not just a CSM call."
           }
         ]
+      },
+      {
+        "id": "arr",
+        "name": "Annual Recurring Revenue (ARR)",
+        "category": "revenue",
+        "definition": "The total annualized recurring revenue from all active customers. ARR represents the predictable revenue a business expects to earn from its current customer base over a year. For customer success teams, ARR is the core revenue base they help maintain and grow. They focus on retaining this revenue and expanding it within the customers they manage. Many teams also track managed ARR, which is the portion of ARR tied to the accounts they directly own, giving a clearer view of their impact.",
+        "formula": "Sum of all active subscription values annualized (MRR × 12 for monthly billing)",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "medium",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "ARR visibility is useful for sizing the problem, but without GRR and logo retention under control, ARR growth will mask underlying churn risk. Focus on retention fundamentals before optimizing for ARR growth.",
+          "walk": "Begin tracking ARR by segment and cohort. CS should be able to report the ARR at risk and the ARR protected each quarter as a measure of team impact.",
+          "run": "ARR is a core reporting metric for CS. Segment-level ARR trends, ARR at risk, and ARR influenced by CS motions should feed directly into QBRs and board reporting.",
+          "fly": "CS is a revenue function at this stage. ARR forecasting, cohort ARR analysis, and expansion ARR pipeline should be owned or co-owned by CS leadership."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "15–25% net ARR growth from existing customers annually",
+            "great": "25–40%",
+            "world_class": "40%+"
+          },
+          "seg_midmarket": {
+            "good": "20–30% net ARR growth from existing customers annually",
+            "great": "30–45%",
+            "world_class": "45%+"
+          },
+          "seg_enterprise": {
+            "good": "15–25% net ARR growth from existing customers annually",
+            "great": "25–35%",
+            "world_class": "35%+"
+          }
+        },
+        "common_mistakes": [
+          "Tracking total company ARR without segmenting by CS-managed accounts — without that split, you can't measure CS's actual impact on the revenue base",
+          "Confusing ARR with revenue recognised in the P&L. ARR is contracted recurring revenue, not cash collected or revenue recognised under accounting standards",
+          "Using ARR as a standalone metric without pairing it with NRR or GRR. Absolute ARR can grow while the quality of the base deteriorates through logo churn masked by large expansions",
+          "Conflating company ARR with CS-managed ARR. The portion your team owns differs from the total, and reporting the wrong number overstates or understates CS's footprint"
+        ],
+        "related_metrics": [
+          "mrr",
+          "acv",
+          "nrr",
+          "grr",
+          "expansion_revenue",
+          "clv"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "Know the ARR of every account in your book. ARR tier drives prioritisation — higher ARR accounts typically warrant more proactive engagement and faster escalation response."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Report ARR at risk, ARR protected, and expansion ARR each quarter. ARR segmented by health tier shows where the revenue base is most vulnerable."
+          },
+          {
+            "role": "CRO/CCO",
+            "relevance": "ARR is the board-level measure of CS's stewardship of the revenue base. Tie CS headcount and investment decisions to managed ARR ratios."
+          }
+        ]
+      },
+      {
+        "id": "mrr",
+        "name": "Monthly Recurring Revenue (MRR)",
+        "category": "revenue",
+        "definition": "The total recurring revenue from all active customers, measured on a monthly basis. MRR represents the predictable revenue a business expects to earn each month from its current customer base. For customer success teams, MRR is useful for tracking short-term changes, especially in monthly billing cycles or high-velocity customer segments. Many teams also track managed MRR, which is the portion of MRR tied to the accounts they directly handle, giving a more detailed view of their impact.",
+        "formula": "Sum of all active subscription values on a monthly basis (ARR ÷ 12 for annual contracts)",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "medium",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "MRR reporting adds little value before your retention fundamentals are in place. Focus on understanding why customers churn before optimizing the revenue cadence you report at.",
+          "walk": "Start tracking MRR movement in four categories: new, expansion, contraction, and churned. Even basic monthly visibility into contraction MRR will surface at-risk accounts earlier than renewal-date monitoring alone.",
+          "run": "MRR movement analysis should be a standard CS leadership metric. Contraction MRR trending upward is an early warning sign before logo churn hits. Use it to trigger proactive playbooks.",
+          "fly": "For businesses with monthly billing or high-velocity SMB segments, MRR is more actionable than ARR for in-quarter decisions. Integrate MRR trends with health score models and expansion forecasting."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "1–2% net MRR growth from existing customers month-over-month",
+            "great": "2–3%",
+            "world_class": "3%+"
+          },
+          "seg_midmarket": {
+            "good": "1.5–2.5% net MRR growth from existing customers month-over-month",
+            "great": "2.5–3.5%",
+            "world_class": "3.5%+"
+          },
+          "seg_enterprise": {
+            "good": "1–2% net MRR growth from existing customers month-over-month",
+            "great": "2–3%",
+            "world_class": "3%+"
+          }
+        },
+        "common_mistakes": [
+          "Mixing annual and monthly contracts in MRR calculations without normalising — an annual contract must be divided by 12, not counted at full value in the month it closes",
+          "Tracking total MRR without breaking it into movement categories (new, expansion, contraction, churned). Without the breakdown, you can't tell whether changes are CS-driven or acquisition-driven",
+          "Treating MRR and ARR as interchangeable when billing models differ. Usage-based or seasonal components cause MRR to fluctuate in ways that annual figures smooth over — know which is more representative for your business",
+          "Conflating company MRR with CS-managed MRR. The portion your team owns is what CS performance should be measured against, not the total company figure"
+        ],
+        "related_metrics": [
+          "arr",
+          "nrr",
+          "grr",
+          "expansion_revenue",
+          "clv"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "MRR per account is a quick proxy for prioritisation. Contraction MRR — downgrades or seat reductions — is often the first financial signal of an at-risk account, showing up before the renewal conversation begins."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Track MRR movement by category monthly. Contraction MRR trending upward is an early warning sign before logo churn appears in the numbers. Segment by cohort and CSM to find where the pressure is concentrated."
+          },
+          {
+            "role": "CRO/CCO",
+            "relevance": "MRR provides the highest-frequency view of CS's revenue impact. For monthly-billing or high-velocity SMB businesses, MRR is more actionable than ARR for in-quarter course corrections."
+          }
+        ]
+      },
+      {
+        "id": "acv",
+        "name": "Annual Contract Value (ACV)",
+        "category": "revenue",
+        "also_known_as": [
+          "Annual Deal Value"
+        ],
+        "definition": "The average annualized value of a customer contract, including all contracted fees — recurring, professional services, and implementation. Unlike ARR, which counts only recurring revenue across the full customer base, ACV is a per-contract metric used to size individual deals and compare them across cohorts or segments. CS teams use ACV to prioritise accounts, calibrate coverage models, and set expectations for the depth of engagement each account warrants.",
+        "formula": "Total contract value ÷ contract length in years (for multi-year deals), or total annual fees for single-year contracts",
+        "priority_by_stage": {
+          "crawl": "low",
+          "walk": "medium",
+          "run": "high",
+          "fly": "high"
+        },
+        "why_priority": {
+          "crawl": "ACV awareness is useful for rough account prioritisation, but without a defined coverage model, it's hard to act on. Focus on understanding which accounts are at risk before optimising around deal size.",
+          "walk": "Use ACV to begin segmenting your book and calibrating CSM coverage ratios. High-ACV accounts typically warrant dedicated CSMs; lower ACV accounts may suit pooled or digital-led models.",
+          "run": "ACV should inform your coverage model, QBR cadence, and escalation thresholds. Segment your CS team's activities and capacity planning directly against ACV tiers.",
+          "fly": "ACV feeds into CS capacity modelling, expansion forecasting, and board-level reporting on portfolio composition. Segment ACV trends by cohort and product line to identify where deals are growing or compressing over time."
+        },
+        "benchmarks_by_context": {
+          "seg_smb": {
+            "good": "$3,000–$15,000 ACV",
+            "great": "$15,000–$30,000",
+            "world_class": "$30,000+"
+          },
+          "seg_midmarket": {
+            "good": "$20,000–$60,000 ACV",
+            "great": "$60,000–$120,000",
+            "world_class": "$120,000+"
+          },
+          "seg_enterprise": {
+            "good": "$100,000–$250,000 ACV",
+            "great": "$250,000–$500,000",
+            "world_class": "$500,000+"
+          }
+        },
+        "common_mistakes": [
+          "Conflating ACV with ARR. ACV is a per-contract metric that can include non-recurring fees; ARR is a portfolio metric counting only recurring revenue. Using them interchangeably distorts both coverage planning and board reporting",
+          "Building coverage models on headcount alone without anchoring to ACV tiers. A CSM managing 50 accounts at $5K ACV has a fundamentally different job to one managing 20 accounts at $100K ACV",
+          "Calculating ACV inconsistently across teams — some include professional services, others exclude them. Standardise the definition before using ACV for cross-team benchmarking or capacity planning",
+          "Ignoring ACV compression over time. If average ACV is declining across cohorts, it may signal a shift in your customer profile or pricing that CS needs to flag to leadership before it affects NRR"
+        ],
+        "related_metrics": [
+          "arr",
+          "mrr",
+          "nrr",
+          "clv",
+          "cac_payback"
+        ],
+        "audience": [
+          {
+            "role": "CSM",
+            "relevance": "ACV is the clearest signal of how much time and effort an account should receive. Know the ACV tier of every account in your book and use it to set expectations for engagement depth and response time."
+          },
+          {
+            "role": "VP/Director of CS",
+            "relevance": "Use ACV to build and defend your coverage model. CSM-to-account ratios, QBR cadence, and pooled vs. dedicated coverage decisions should all be anchored to ACV tiers, not headcount instinct."
+          },
+          {
+            "role": "CRO/CCO",
+            "relevance": "ACV mix across the portfolio signals whether CS capacity investment is aligned to revenue concentration. If 20% of accounts represent 80% of ACV, coverage and risk management should reflect that asymmetry."
+          }
+        ]
       }
     ]
   },

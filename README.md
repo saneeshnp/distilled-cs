@@ -106,7 +106,7 @@ Six principles underpin the entire framework:
 
 ## Metrics Directory
 
-The framework tracks **20 CS metrics**, each with:
+The framework tracks **23 CS metrics**, each with:
 
 - A clear definition and formula
 - Priority level by maturity stage (what to focus on now vs. later)
