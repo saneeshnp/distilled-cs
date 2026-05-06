@@ -290,6 +290,26 @@ const faqSchema = {
   :global(.user-stage-banner-sub) {
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
+    margin-bottom: 1.25rem;
+  }
+
+  :global(.btn-stage-jump) {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.4rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    cursor: pointer;
+    border: 1px solid color-mix(in srgb, var(--stage-color) 50%, transparent);
+    background: color-mix(in srgb, var(--stage-color) 12%, transparent);
+    color: var(--stage-color);
+    transition: background 0.2s ease-out, border-color 0.2s ease-out;
+  }
+
+  :global(.btn-stage-jump:hover) {
+    background: color-mix(in srgb, var(--stage-color) 20%, transparent);
+    border-color: color-mix(in srgb, var(--stage-color) 70%, transparent);
   }
 
   /* ── Stages progression ── */
@@ -301,6 +321,7 @@ const faqSchema = {
   .stage-section {
     position: relative;
     transition: opacity 0.3s ease-out;
+    scroll-margin-top: 5rem;
   }
 
   .stage-section.dimmed {
@@ -695,8 +716,12 @@ const faqSchema = {
           <div class="user-stage-banner stage-${userStage}">
             <h2 class="user-stage-banner-title">${stagePrefix}: ${stageLabels[userStage]}</h2>
             <p class="user-stage-banner-sub">${stageSubtitles[userStage]} &middot; Overall score: ${scores.overallScore} / 4.0</p>
+            <button class="btn btn-stage-jump" id="jump-to-stage">View my stage's characteristics</button>
           </div>
         `;
+        document.getElementById('jump-to-stage')?.addEventListener('click', () => {
+          document.getElementById(`stage-${userStage}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
       }
 
       // Add badges and visual states to stage sections
@@ -720,13 +745,6 @@ const faqSchema = {
         }
       });
 
-      // Scroll to current stage
-      const currentEl = document.getElementById(`stage-${userStage}`);
-      if (currentEl) {
-        setTimeout(() => {
-          currentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 400);
-      }
     }
   }
 </script>
