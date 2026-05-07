@@ -509,7 +509,7 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
   .domain-bar-fill {
     height: 100%;
     border-radius: 3px;
-    transition: width 0.6s ease-out;
+    transition: width 0.8s ease-out;
     background: var(--stage-color, var(--color-accent));
   }
 
@@ -602,6 +602,7 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
 
 <script>
   import { toDisplayScore } from '../scripts/scoring-engine.js';
+  import { animateDomainBars } from '../scripts/animate-domain-bars.js';
 
   const stageOrder = ['crawl', 'walk', 'run'];
   const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
@@ -703,6 +704,13 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
           `;
         }
         domainBarsEl.innerHTML = html;
+
+        animateDomainBars({
+          container: domainBarsEl,
+          rowSelector: '.domain-bar-row',
+          fillSelector: '.domain-bar-fill',
+          valueSelector: '.domain-bar-score',
+        });
       }
 
       // Previous assessment comparison

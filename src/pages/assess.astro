@@ -608,7 +608,7 @@ const stages = frameworkData.maturity_stages.stages;
     height: 100%;
     border-radius: 4px;
     background: var(--stage-color, var(--color-accent));
-    transition: width 0.6s ease-out;
+    transition: width 0.8s ease-out;
   }
 
   :global(.domain-score-value) {
@@ -841,6 +841,7 @@ const stages = frameworkData.maturity_stages.stages;
 <script>
   import { saveProfile, saveScores, setAssessmentCompleted, resetAll, isAssessmentCompleted, getScores, getProfile, savePreviousScores } from '../scripts/context-manager.js';
   import { calculateAllDomainScores, calculateOverallScore, determineStage, toDisplayScore } from '../scripts/scoring-engine.js';
+  import { animateDomainBars } from '../scripts/animate-domain-bars.js';
   import frameworkData from '../data/lean-cs-data.json';
 
   const contextParams = frameworkData.context_parameters.parameters;
@@ -962,6 +963,15 @@ const stages = frameworkData.maturity_stages.stages;
 
     // Hide the static SEO intro once the user has a completed assessment.
     document.querySelectorAll<HTMLElement>('[data-hide-if-assessed]').forEach(el => { el.style.display = 'none'; });
+
+    if (resultsContent) {
+      animateDomainBars({
+        container: resultsContent,
+        rowSelector: '.domain-score-row',
+        fillSelector: '.domain-score-bar',
+        valueSelector: '.domain-score-value',
+      });
+    }
 
     // Bind retake/update handler
     document.getElementById('retake-btn')?.addEventListener('click', () => {

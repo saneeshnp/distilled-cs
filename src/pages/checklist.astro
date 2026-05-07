@@ -477,7 +477,7 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
     height: 100%;
     background: var(--color-accent);
     border-radius: 3px;
-    transition: width 0.3s ease-out;
+    transition: width 0.8s ease-out;
   }
 
   :global(.next-step-cta) {
@@ -517,6 +517,7 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
 
 <script>
   import { isAssessmentCompleted, getScores } from '../scripts/context-manager.js';
+  import { animateDomainBars } from '../scripts/animate-domain-bars.js';
   import frameworkData from '../data/lean-cs-data.json';
 
   const stages = frameworkData.maturity_stages.stages;
@@ -592,6 +593,7 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
 
       const allItems = groups.flatMap(g => g.items);
       let checklist = getChecklist();
+      let isFirstRender = true;
 
       function render() {
         const container = document.getElementById('checklist-assessed');
@@ -675,6 +677,16 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
         }
 
         container.innerHTML = html;
+
+        if (isFirstRender) {
+          isFirstRender = false;
+          animateDomainBars({
+            container,
+            rowSelector: '.overall-progress',
+            fillSelector: '.overall-progress-fill',
+            valueSelector: '.overall-progress-pct',
+          });
+        }
 
         // Attach click handlers
         container.querySelectorAll('.checklist-item').forEach(el => {
