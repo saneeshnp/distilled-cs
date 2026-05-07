@@ -80,8 +80,6 @@ function migrateFromLeanCS() {
   }
 }
 
-// One-time migration: rewrite stage: "fly" to stage: "run" in stored scores.
-// Fly users are top-tier; Run is the new top after the 3-stage collapse.
 function migrateFlyStagesToRun() {
   try {
     for (const key of [SCORES_KEY, PREVIOUS_SCORES_KEY]) {

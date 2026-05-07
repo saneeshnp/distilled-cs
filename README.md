@@ -42,14 +42,13 @@ The loop is designed to be repeated. Each cycle moves your team closer to the ne
 
 ## The Maturity Model
 
-The framework is anchored by a **4-stage maturity model** that describes how CS functions evolve:
+The framework is anchored by a **3-stage maturity model** that describes how CS functions evolve:
 
 | Stage | Profile | What it looks like |
 |-------|---------|-------------------|
 | **Crawl** | Reactive / Foundational | CS exists but runs on instinct and firefighting. Metrics are sparse, engagement is inconsistent, and most effort goes into reacting to problems. |
 | **Walk** | Structured / Proactive | Processes are documented, health scoring is in place, and the team has moved from reactive to proactive. Segmentation and lifecycle management are emerging. |
-| **Run** | Scalable / Predictive | Digital-led engagement scales the long tail. Predictive models identify churn risk early. CS contributes directly to expansion revenue. |
-| **Fly** | Strategic / Transformative | CS is a company-wide culture, not just a department. Predictive intelligence drives strategy. CS owns a revenue number and influences product direction. |
+| **Run** | Scalable / Predictive | Digital-led engagement scales the long tail. Predictive models identify churn risk early. CS contributes directly to expansion revenue. Predictive intelligence and AI-assisted workflows drive proactive operations. |
 
 Your maturity stage is determined by your scores across 8 domains — not by team size, ARR, or tenure. A 3-person team can be at Walk stage, and a 40-person team can still be at Crawl.
 
@@ -81,15 +80,13 @@ Distilled CS adapts to your context. When you take the assessment, you provide y
 
 ## Strategy Playbooks
 
-The framework includes **16 strategy playbooks** — 4 for each maturity stage — covering the highest-leverage moves for that stage of growth:
+The framework includes **14 strategy playbooks** across three maturity stages, covering the highest-leverage moves for each stage of growth:
 
-**Crawl stage**: Establish a retention baseline, build your first customer segmentation, create a basic onboarding program, and set up foundational CS processes
+**Crawl stage** (4 playbooks): Establish a retention baseline, build your first customer segmentation, create a basic onboarding program, and set up foundational CS processes
 
-**Walk stage**: Implement health scoring, build lifecycle journey maps, operationalize QBR/EBR cadence, and introduce proactive risk management
+**Walk stage** (4 playbooks): Implement health scoring, build lifecycle journey maps, operationalize QBR/EBR cadence, and introduce proactive risk management
 
-**Run stage**: Scale with digital-led engagement, build predictive churn models, formalize expansion motion, and operationalize data-driven segmentation
-
-**Fly stage**: CS-led revenue strategy, predictive customer intelligence, embed CS culture company-wide, and drive strategic customer partnerships
+**Run stage** (6 playbooks): Scale with digital-led engagement, build predictive churn models, formalize expansion motion, operationalize AI-assisted workflows, and drive CS-led revenue strategy
 
 Each playbook includes a clear objective, a step-by-step action plan, the metrics to watch, common pitfalls to avoid, and an estimated duration.
 

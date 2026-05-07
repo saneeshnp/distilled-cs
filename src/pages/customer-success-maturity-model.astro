@@ -102,7 +102,7 @@ const faqSchema = {
               </div>
             </div>
             <div class="stage-header-right">
-              <span class="stage-score-range">{stage.score_range[0]} – {stage.score_range[1]}</span>
+              <span class="stage-score-range">{stage.score_range[0] * 2.5} – {stage.score_range[1] * 2.5}</span>
               <span class="stage-badge-slot" data-stage-badge={stage.id}></span>
               <svg class="stage-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
@@ -674,6 +674,7 @@ const faqSchema = {
 
 <script>
   import { isAssessmentCompleted, getScores, getProfile } from '../scripts/context-manager.js';
+  import { toDisplayScore } from '../scripts/scoring-engine.js';
 
   const stageOrder = ['crawl', 'walk', 'run'];
   const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
@@ -714,7 +715,7 @@ const faqSchema = {
         header.innerHTML = `
           <div class="user-stage-banner stage-${userStage}">
             <h2 class="user-stage-banner-title">${stagePrefix}: ${stageLabels[userStage]}</h2>
-            <p class="user-stage-banner-sub">${stageSubtitles[userStage]} &middot; Overall score: ${scores.overallScore} / 4.0</p>
+            <p class="user-stage-banner-sub">${stageSubtitles[userStage]} &middot; Overall score: ${toDisplayScore(scores.overallScore)} / 10</p>
             <button class="btn btn-stage-jump" id="jump-to-stage">View my stage's characteristics</button>
           </div>
         `;

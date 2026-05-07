@@ -840,7 +840,7 @@ const stages = frameworkData.maturity_stages.stages;
 
 <script>
   import { saveProfile, saveScores, setAssessmentCompleted, resetAll, isAssessmentCompleted, getScores, getProfile, savePreviousScores } from '../scripts/context-manager.js';
-  import { calculateAllDomainScores, calculateOverallScore, determineStage } from '../scripts/scoring-engine.js';
+  import { calculateAllDomainScores, calculateOverallScore, determineStage, toDisplayScore } from '../scripts/scoring-engine.js';
   import frameworkData from '../data/lean-cs-data.json';
 
   const contextParams = frameworkData.context_parameters.parameters;
@@ -894,7 +894,7 @@ const stages = frameworkData.maturity_stages.stages;
         <div class="results-stage-badge">${stageBadgeText}</div>
         <h2 class="results-stage-name">${stage?.label || stageId}</h2>
         <p class="results-stage-subtitle">${stage?.subtitle || ''}</p>
-        <p class="results-overall-score">Overall score: ${overallScore} / 4.0</p>
+        <p class="results-overall-score">Overall score: ${toDisplayScore(overallScore)} / 10</p>
       </div>
 
       <div class="results-section">
@@ -914,7 +914,7 @@ const stages = frameworkData.maturity_stages.stages;
             <div class="domain-score-bar-wrap">
               <div class="domain-score-bar" style="width:${pct}%"></div>
             </div>
-            <span class="domain-score-value">${score}</span>
+            <span class="domain-score-value">${toDisplayScore(score)}</span>
           </div>`;
         }).join('')}
       </div>

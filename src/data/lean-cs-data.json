@@ -44,7 +44,7 @@
       "description": "Reactive CS waits for red flags: a missed renewal, a support escalation, a cancellation request. By then, the opportunity to influence the outcome has already passed. Maturing CS organizations build systems that surface risk early and trigger intervention before customers feel the pain. This means investing in health scoring, adoption monitoring, and lifecycle automation rather than firefighting.",
       "icon": "shield",
       "target_keyword": "proactive customer success",
-      "meta_description": "Proactive customer success means leading indicators drive action before the customer surfaces a problem. How the principle evolves from Crawl through Fly.",
+      "meta_description": "Proactive customer success means leading indicators drive action before the customer surfaces a problem. How the principle evolves from Crawl through Run.",
       "why_it_matters": "Reactive CS is a tax on the business that grows with customer count. Tickets, escalations, and save calls consume CSM time that could have been spent preventing the churn signal that triggered them. The point of going proactive is not eliminating reactive work; it is changing the ratio. When leading indicators like usage drops, stalled adoption, or executive turnover trigger plays before the customer surfaces a problem, the CSM becomes a trusted advisor rather than a support ticket router.",
       "stage_manifestation": {
         "crawl": "Most CS work is triggered by the customer: renewal looming, executive change, escalation ticket. The team knows which accounts are in trouble only after things go wrong. There is no shared definition of \"risk\"; it lives in individual CSM heads. Book-of-business reviews happen weekly or monthly and mostly look backward.",
@@ -134,7 +134,7 @@
       "description": "There is no universal CS playbook. A 3-person team managing 200 SMB accounts operates fundamentally differently from a 40-person team with enterprise logos. Stage of growth, customer segment, team size, and product complexity all shape which practices matter most and which benchmarks to target. Every recommendation in this framework adapts to your context, because best practices without context are just guesses.",
       "icon": "compass",
       "target_keyword": "context-driven customer success",
-      "meta_description": "Context-driven customer success calibrates plays to team stage, segment, and operating constraints. How context shapes strategy at Crawl, Walk, Run, and Fly.",
+      "meta_description": "Context-driven customer success calibrates plays to team stage, segment, and operating constraints. How context shapes strategy at Crawl, Walk, and Run.",
       "why_it_matters": "A CS playbook that works for an SMB with a four-person CS team fails when pasted into a 30-person enterprise CS org, and vice versa. What matters is not the specific play; it is whether the play is calibrated to the team's stage, segment, and operating constraints. \"Best practice\" without context is the fastest way to spend a quarter on a motion that was never going to fit. The framework's stage-plus-profile model exists because the same domain-level gap needs a different response at a two-person SMB team than it does at a fifty-person mid-market team.",
       "stage_manifestation": {
         "crawl": "The team borrows plays from whatever CS content it reads: vendor blogs, conference talks, whatever the last leadership hire did at their previous company. Fit-to-context is a lucky accident. Strategy is a synonym for \"whatever the CSM lead thinks will work this quarter.\" Playbooks exist only as vibes.",
@@ -512,7 +512,7 @@
           4.0
         ],
         "description": "CS is data-driven and proactive. Playbooks govern the customer lifecycle, health scores trigger automated actions, and CS is a recognized revenue contributor. The team operates with discipline and consistency at scale. Continued improvement within Run is the ongoing work: refining predictive models, scaling AI-assisted workflows, and deepening cross-functional influence.",
-        "typical_profile": "Companies with $20M–$100M ARR that have had a CS team for 3+ years. Team size is 11–25 with dedicated CS Ops, possibly CS leadership at VP+ level.",
+        "typical_profile": "Companies with $20M–$100M+ ARR that have had a CS team for 3+ years. Team size is 11–25 with dedicated CS Ops, possibly CS leadership at VP+ level.",
         "key_characteristics": [
           "Multi-dimensional health scores with automated alerts and triggers",
           "Comprehensive playbooks for all lifecycle stages",
@@ -2688,7 +2688,7 @@
           "crawl-ai-copilots",
           "walk-ai-health-scoring",
           "run-ai-governance",
-          "fly-agentic-workflows"
+          "run-agentic-workflows"
         ],
         "audience": [
           {
@@ -2756,7 +2756,7 @@
         "used_in_playbooks": [
           "crawl-ai-copilots",
           "run-ai-governance",
-          "fly-agentic-workflows"
+          "run-agentic-workflows"
         ],
         "audience": [
           {
@@ -4016,9 +4016,9 @@
         "link": "/customer-success-metrics/expansion_rate/"
       },
       {
-        "term": "Fly Stage",
-        "slug": "fly-stage",
-        "definition": "The fourth stage of CS maturity. Customer outcomes are predicted, automation handles low-stakes work, and CS shapes company strategy rather than reacting to it. Risks shift from execution to complacency.",
+        "term": "Run Stage",
+        "slug": "run-stage",
+        "definition": "The third and top stage of CS maturity. Customer outcomes are tracked and predicted, expansion is a repeatable motion, and AI-assisted workflows are in practice. The ongoing discipline is continued improvement within this stage.",
         "link": "/customer-success-maturity-model/"
       },
       {
@@ -4042,7 +4042,7 @@
       {
         "term": "Maturity Stage",
         "slug": "maturity-stage",
-        "definition": "One of four levels (Crawl, Walk, Run, Fly) describing where a CS organization stands across structure, process, data, and impact. Stage governs which playbooks and metrics to prioritize.",
+        "definition": "One of three levels (Crawl, Walk, Run) describing where a CS organization stands across structure, process, data, and impact. Stage governs which playbooks and metrics to prioritize.",
         "link": "/customer-success-maturity-model/"
       },
       {

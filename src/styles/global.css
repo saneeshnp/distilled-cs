@@ -43,7 +43,6 @@
   --color-stage-crawl: #D32F2F;
   --color-stage-walk: #F57C00;
   --color-stage-run: #388E3C;
-  --color-stage-fly: #1976D2;
 
   /* Category color for Health metrics (independent of stage tokens) */
   --color-category-health: #1976D2;
@@ -93,7 +92,6 @@
   --color-stage-crawl: #E57373;
   --color-stage-walk: #FFB74D;
   --color-stage-run: #81C784;
-  --color-stage-fly: #64B5F6;
 
   /* Category color for Health metrics (independent of stage tokens) */
   --color-category-health: #64B5F6;
@@ -109,7 +107,7 @@
 /*
  * Stage utility classes
  * ─────────────────────
- * Apply `.stage-crawl` / `.stage-walk` / `.stage-run` / `.stage-fly` to any
+ * Apply `.stage-crawl` / `.stage-walk` / `.stage-run` to any
  * element that needs to pick up the current stage color. The class defines
  * a single custom property `--stage-color` that scoped styles can reference
  * via `var(--stage-color)`. Because the class points at theme-aware
@@ -124,7 +122,6 @@
 .stage-crawl { --stage-color: var(--color-stage-crawl); }
 .stage-walk  { --stage-color: var(--color-stage-walk); }
 .stage-run   { --stage-color: var(--color-stage-run); }
-.stage-fly   { --stage-color: var(--color-stage-fly); }
 
 /*
  * Stage badge base class.
