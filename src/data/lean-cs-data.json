@@ -506,12 +506,12 @@
       {
         "id": "run",
         "label": "Run",
-        "subtitle": "Proactive / Operationalized",
+        "subtitle": "Predictive / Operationalized",
         "score_range": [
           3.0,
           4.0
         ],
-        "description": "CS is data-driven and proactive. Playbooks govern the customer lifecycle, health scores trigger automated actions, and CS is a recognized revenue contributor. The team operates with discipline and consistency at scale. Continued improvement within Run is the ongoing work: refining predictive models, scaling AI-assisted workflows, and deepening cross-functional influence.",
+        "description": "CS is data-driven and predictive. Playbooks govern the customer lifecycle, health scores trigger automated actions, and CS is a recognized revenue contributor. The team operates with discipline and consistency at scale. Continued improvement within Run is the ongoing work: refining predictive models, scaling AI-assisted workflows, and deepening cross-functional influence.",
         "typical_profile": "Companies with $20M–$100M+ ARR that have had a CS team for 3+ years. Team size is 11–25 with dedicated CS Ops, possibly CS leadership at VP+ level.",
         "key_characteristics": [
           "Multi-dimensional health scores with automated alerts and triggers",
