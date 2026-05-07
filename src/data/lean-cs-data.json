@@ -20,13 +20,11 @@
       "stage_manifestation": {
         "crawl": "CS is a new or single-person function. The founder or a senior CSM is the voice of the customer in every meeting. There is no formal ritual for sales, product, or support to share what they are hearing. Escalations happen in Slack; QBRs are ad hoc. The culture lives in individual habits, not in the operating system.",
         "walk": "CS has a seat in deal reviews and an agreed handoff from sales. Product gets synthesized customer feedback monthly rather than raw tickets. Support knows which accounts are strategic and escalates accordingly. The culture is starting to be written down: a shared glossary for health, churn risk, and strategic accounts.",
-        "run": "Retention and expansion goals show up on revenue, product, and support dashboards, not just CS. Cross-functional pods (CSM, PM, sales) run jointly against named account plans. Product roadmaps reference adoption gaps from CS. Comp plans reinforce shared ownership: expansion is a sales-plus-CS outcome, churn is everyone's problem.",
-        "fly": "Customer outcomes are a board-level narrative. Every function runs against leading indicators of customer health, not just their own KPIs. New hires across engineering, sales, marketing, and support are onboarded with the customer lifecycle as context, not just their team's workflow. CS is in the room because the room does not make decisions without it."
+        "run": "Retention and expansion goals show up on revenue, product, and support dashboards, not just CS. Cross-functional pods (CSM, PM, sales) run jointly against named account plans. Product roadmaps reference adoption gaps from CS. Comp plans reinforce shared ownership: expansion is a sales-plus-CS outcome, churn is everyone's problem. Customer health becomes a board-level leading indicator and a shared KPI across product, sales, and support, not a metric CS reports in isolation. New hire onboarding across every department includes the customer lifecycle and the organization's definition of a successful customer."
       },
       "related_playbooks": [
         "crawl-onboarding-program",
-        "walk-qbr-ebr-cadence",
-        "fly-cs-culture-company-wide"
+        "walk-qbr-ebr-cadence"
       ],
       "related_metrics": [
         "nrr",
@@ -51,8 +49,7 @@
       "stage_manifestation": {
         "crawl": "Most CS work is triggered by the customer: renewal looming, executive change, escalation ticket. The team knows which accounts are in trouble only after things go wrong. There is no shared definition of \"risk\"; it lives in individual CSM heads. Book-of-business reviews happen weekly or monthly and mostly look backward.",
         "walk": "A simple health score is live and scored manually on a regular cadence. Specific signals (logins dropped, executive sponsor changed, onboarding stalled) trigger defined plays. CSMs still spend most of their week reacting, but the team can now name three to five leading indicators that precede churn and is building the habit of watching them.",
-        "run": "Health scoring is instrumented and automated. Risk plays trigger from data rather than from CSM intuition. The team tracks the accuracy of its leading indicators and adjusts thresholds quarterly. Proactive outreach is scheduled into the calendar as deliberately as renewal calls. The reactive-to-proactive ratio is a tracked metric the team optimizes against.",
-        "fly": "Predictive models across usage, sentiment, and product signal drive the book of business. A CSM's morning queue is ranked by risk and expansion probability rather than by ticket age. Customer success operates on leading indicators the customer has not surfaced yet. Reactive work still exists but is an exception, not the default mode."
+        "run": "Health scoring is instrumented and automated. Risk plays trigger from data rather than from CSM intuition. The team tracks the accuracy of its leading indicators and adjusts thresholds quarterly. Proactive outreach is scheduled into the calendar as deliberately as renewal calls. The reactive-to-proactive ratio is a tracked metric the team optimizes against."
       },
       "related_playbooks": [
         "walk-health-scoring",
@@ -82,8 +79,7 @@
       "stage_manifestation": {
         "crawl": "All customers get roughly the same motion, usually whatever the first CSM did for the earliest accounts. Segmentation discussions happen as ARR-band slides in strategy decks but do not translate into who CSMs call, what templates get used, or which renewals get joint planning. Coverage is determined by CSM workload, not customer economics.",
         "walk": "Customers are grouped into two or three tiers (high-touch, tech-touch, digital) based on a combination of ARR and strategic intent. Each tier has a defined cadence, onboarding path, and renewal playbook. CSM book-of-business loading respects the tiers. The edges are still blurry and judgment calls are common, but the principle is in force.",
-        "run": "Segmentation is multi-factor: ARR, product usage, industry complexity, and growth potential combine into a coverage model. High-touch accounts get named CSMs with expansion targets. Tech-touch gets pooled CSMs and structured digital content. Digital-only accounts run on in-product guidance with exception-based human escalation. The model is revisited semiannually against retention and expansion outcomes.",
-        "fly": "Segmentation is dynamic. An account's tier can change mid-year based on expansion signal, adoption depth, or risk profile, and the coverage model follows automatically. Customer-facing teams trust the segmentation because they built it; finance trusts it because margin per segment is modeled and reviewed. Scaling CS becomes a question of optimizing the mix, not adding CSMs."
+        "run": "Segmentation is multi-factor: ARR, product usage, industry complexity, and growth potential combine into a coverage model. High-touch accounts get named CSMs with expansion targets. Tech-touch gets pooled CSMs and structured digital content. Digital-only accounts run on in-product guidance with exception-based human escalation. The model is revisited semiannually against retention and expansion outcomes. As data infrastructure matures, some teams move toward dynamic segmentation: accounts shift tiers based on live signals (expansion propensity, adoption depth, risk score) rather than waiting for the next scheduled review."
       },
       "related_playbooks": [
         "crawl-customer-segmentation",
@@ -113,13 +109,12 @@
       "stage_manifestation": {
         "crawl": "Success is measured by what CSMs do: number of calls, emails, QBRs scheduled. The team has no shared definition of what a \"successful\" customer looks like beyond \"not churned yet.\" Customer goals are mentioned at kickoff but rarely tracked against. Activity dashboards are what CS leaders show during executive reviews.",
         "walk": "Each customer segment has a defined success outcome: completed onboarding, reached time-to-value, adopted core features. CSMs track progress toward these outcomes in addition to activities. Review rhythms (QBRs, internal reviews) start with \"where is the customer against their stated outcomes\" rather than \"what did we do this quarter.\"",
-        "run": "Outcome attainment is a primary CS KPI. Compensation, promotion, and team-level planning reference outcome metrics rather than activity counts. Plays are designed around outcomes to move, not boxes to check. Activities are still tracked for capacity planning but are not the scorecard.",
-        "fly": "CS is measured in the customer's business outcomes, not the team's workflow outputs. Account plans state the customer's business result (revenue protected, expansion unlocked, retention risk mitigated) as the primary success measure. Internal language matches: a \"good quarter\" means the customers hit their goals, not that the team stayed busy."
+        "run": "Outcome attainment is a primary CS KPI. Compensation, promotion, and team-level planning reference outcome metrics rather than activity counts. Plays are designed around outcomes to move, not boxes to check. Activities are still tracked for capacity planning but are not the scorecard. Account plans at this level anchor on the customer's business outcome as the primary measure: revenue protected, efficiency gained, risk mitigated. A productive quarter means the customer hit their goal, not that the team stayed busy."
       },
       "related_playbooks": [
         "walk-qbr-ebr-cadence",
         "run-expansion-motion",
-        "fly-cs-revenue-strategy"
+        "run-cs-revenue-strategy"
       ],
       "related_metrics": [
         "time_to_value",
@@ -144,8 +139,7 @@
       "stage_manifestation": {
         "crawl": "The team borrows plays from whatever CS content it reads: vendor blogs, conference talks, whatever the last leadership hire did at their previous company. Fit-to-context is a lucky accident. Strategy is a synonym for \"whatever the CSM lead thinks will work this quarter.\" Playbooks exist only as vibes.",
         "walk": "The team distinguishes its plays by segment at minimum (high-touch vs. tech-touch). There is a shared awareness that a Fortune 500 customer and a fifteen-person startup should not get the same onboarding journey. Strategy documents reference the team's own constraints (headcount, tooling, data maturity) rather than importing a template whole.",
-        "run": "Plays are explicitly calibrated to the team's stage and the customer's profile. New initiatives include a \"why now, why us\" section that names the operating context. The team stops adopting practices because they worked elsewhere and starts adopting them because they match the current state of the business.",
-        "fly": "Strategy is continuously context-aware. The team runs experiments, reads its own data, and promotes practices based on outcomes in its environment rather than on authority or precedent. Playbooks are updated as the business changes (new segments, new product motions, new AI capabilities) rather than treated as a fixed library."
+        "run": "Plays are explicitly calibrated to the team's stage and the customer's profile. New initiatives include a \"why now, why us\" section that names the operating context. The team stops adopting practices because they worked elsewhere and starts adopting them because they match the current state of the business. Run teams also update their playbooks based on their own outcomes data. If a play consistently underperforms for a specific segment or motion, it gets revised. Strategy becomes self-correcting rather than treated as a fixed library."
       },
       "related_playbooks": [
         "crawl-customer-segmentation",
@@ -175,13 +169,11 @@
       "stage_manifestation": {
         "crawl": "Data is spreadsheet-based and often incomplete. Customer conversations happen with gut-feel inputs; the CSM knows the customer is at risk because they feel it, not because a signal surfaced it. The team is aware this is a problem but has not yet built the instrumentation to fix it.",
         "walk": "Core customer attributes (ARR, contract end date, primary contact, adoption state) are consistently captured. A simple health score with three to five signals scored manually informs the weekly risk review. The team has resisted the temptation to build a 30-factor model before it has evidence the five-factor one is predictive.",
-        "run": "Data flows automatically from product, billing, and support into a single CS platform. Health scores are backtested against churn and expansion outcomes and tuned quarterly. Dashboards are pruned aggressively: if nobody opens it or acts on it, it gets cut. The team has a governance process for adding new metrics rather than accumulating them.",
-        "fly": "Predictive models for churn, expansion, and adoption are in production and understood by CSMs, not just data teams. The team can explain what a model is flagging and why; they can override it with judgment when the context calls for it. The organization trusts the data enough to act on it and is disciplined enough to keep the signal-to-noise ratio high."
+        "run": "Data flows automatically from product, billing, and support into a single CS platform. Health scores are backtested against churn and expansion outcomes and tuned quarterly. Dashboards are pruned aggressively: if nobody opens it or acts on it, it gets cut. The team has a governance process for adding new metrics rather than accumulating them. When predictive models come online, the operational discipline is ensuring CSMs can reason about them: understanding what a model is flagging, explaining it in customer terms when relevant, and overriding it when the human context calls for it. Trust in the data and judgment over the data need to develop together."
       },
       "related_playbooks": [
         "walk-health-scoring",
-        "run-predictive-churn",
-        "fly-predictive-intelligence"
+        "run-predictive-churn"
       ],
       "related_metrics": [
         "health_score",
@@ -386,15 +378,15 @@
     ]
   },
   "maturity_stages": {
-    "description": "Four maturity stages mapped to score ranges. Derived from capability assessment scores.",
+    "description": "Three maturity stages mapped to score ranges. Derived from capability assessment scores.",
     "stages": [
       {
         "id": "crawl",
         "label": "Crawl",
         "subtitle": "Reactive / Foundational",
         "score_range": [
-          1,
-          1.7
+          1.0,
+          2.0
         ],
         "description": "CS exists but operates mostly on instinct and firefighting. Customer engagement is inconsistent, metrics are sparse or manually tracked, and most effort goes into reacting to problems rather than preventing them.",
         "typical_profile": "Early-stage companies with under $5M ARR, or larger companies that have recently formed a CS function. Team size is usually 1–3 people wearing multiple hats.",
@@ -449,8 +441,8 @@
         "label": "Walk",
         "subtitle": "Informed / Structured",
         "score_range": [
-          1.8,
-          2.5
+          2.0,
+          3.0
         ],
         "description": "CS has organized its data and customers, established basic processes, but hasn't fully operationalized them at scale. The team is moving from reactive to structured, with defined segments and some playbooks in place.",
         "typical_profile": "Companies with $5M–$20M ARR that have had a CS team for 1–3 years. Team size is 4–10 people with emerging specialization.",
@@ -516,10 +508,10 @@
         "label": "Run",
         "subtitle": "Proactive / Operationalized",
         "score_range": [
-          2.6,
-          3.3
+          3.0,
+          4.0
         ],
-        "description": "CS is data-driven and proactive. Playbooks govern the customer lifecycle, health scores trigger automated actions, and CS is a recognized revenue contributor. The team operates with discipline and consistency at scale.",
+        "description": "CS is data-driven and proactive. Playbooks govern the customer lifecycle, health scores trigger automated actions, and CS is a recognized revenue contributor. The team operates with discipline and consistency at scale. Continued improvement within Run is the ongoing work: refining predictive models, scaling AI-assisted workflows, and deepening cross-functional influence.",
         "typical_profile": "Companies with $20M–$100M ARR that have had a CS team for 3+ years. Team size is 11–25 with dedicated CS Ops, possibly CS leadership at VP+ level.",
         "key_characteristics": [
           "Multi-dimensional health scores with automated alerts and triggers",
@@ -528,7 +520,8 @@
           "CS actively identifies and drives expansion opportunities",
           "Dedicated CS platform in use (Gainsight, ChurnZero, Vitally, etc.)",
           "CS metrics are part of company-level reporting and board updates",
-          "Formal career paths and development programs for the CS team"
+          "Formal career paths and development programs for the CS team",
+          "Customer advocacy programs convert satisfied accounts into expansion and referral opportunities"
         ],
         "priority_actions": [
           {
@@ -573,63 +566,11 @@
             "text": "Establish a Responsible AI policy for CS: PII handling, human review requirements, and adoption tracking",
             "estimated_time": "2–4 weeks",
             "why_it_matters": "As AI tools spread across the CS team, a written policy prevents inconsistent use, protects customer data, and gives leadership visibility into what's working."
-          }
-        ]
-      },
-      {
-        "id": "fly",
-        "label": "Fly",
-        "subtitle": "Predictive / Optimized",
-        "score_range": [
-          3.4,
-          4
-        ],
-        "description": "CS is a strategic growth engine. Predictive analytics anticipate customer needs before they arise. CS influences product roadmap, drives expansion revenue, and is fully integrated into the company's go-to-market strategy.",
-        "typical_profile": "Companies with $100M+ ARR with mature CS functions spanning 3+ years. Large teams with specialized roles, robust CS Ops, and C-suite representation.",
-        "key_characteristics": [
-          "Predictive health scoring with machine learning models",
-          "CS influences product roadmap based on customer outcome data",
-          "Expansion revenue is a primary CS metric with shared ownership",
-          "Digital and human CS motions are seamlessly integrated",
-          "Customer advocacy programs are mature and measurable",
-          "CS cost-to-serve is optimized and well-understood",
-          "CS may be partially or fully monetized"
-        ],
-        "priority_actions": [
-          {
-            "text": "Optimize cost-to-serve ratios while maintaining outcomes",
-            "estimated_time": "2–3 months",
-            "why_it_matters": "Optimized cost-to-serve proves CS is scalable and protects the function's budget during belt-tightening."
           },
           {
-            "text": "Build advanced customer advocacy and referral programs",
+            "text": "Build customer advocacy and referral programs to convert your healthiest accounts into a measurable expansion and referral channel",
             "estimated_time": "1–2 months",
-            "why_it_matters": "Advocacy programs turn your happiest customers into a measurable acquisition channel with lower CAC than outbound."
-          },
-          {
-            "text": "Implement AI-driven automation for risk and opportunity detection",
-            "estimated_time": "3–6 months",
-            "why_it_matters": "AI automation surfaces signals at a scale no human team can match, catching risks and opportunities across thousands of accounts."
-          },
-          {
-            "text": "Develop industry-specific CS playbooks",
-            "estimated_time": "1–2 months",
-            "why_it_matters": "Industry-specific playbooks let CSMs speak the customer's language and deliver value frameworks tailored to their vertical."
-          },
-          {
-            "text": "Pioneer thought leadership and contribute to CS industry standards",
-            "estimated_time": "3–6 months",
-            "why_it_matters": "Thought leadership positions your company as a CS leader, attracting top talent and building trust with prospects."
-          },
-          {
-            "text": "Explore platform-level customer success (embed success into the product)",
-            "estimated_time": "3–6 months",
-            "why_it_matters": "Product-embedded success scales infinitely by guiding every user toward value without requiring CSM intervention."
-          },
-          {
-            "text": "Embed CS culture company-wide: customer outcomes become a shared OKR with aligned incentives across Sales, Product, and CS",
-            "estimated_time": "3–6 months",
-            "why_it_matters": "When customer outcomes are everyone's OKR, the entire organization pulls toward retention and expansion, not just CS."
+            "why_it_matters": "Advocacy programs turn happy customers into an acquisition channel with lower CAC than outbound sales, while reinforcing the outcomes CS already drives."
           }
         ]
       }
@@ -1687,14 +1628,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "medium",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Focus on GRR first. You need to stop the bleeding before optimizing for growth. NRR is noise when your churn fundamentals aren't solid.",
           "walk": "Start tracking NRR alongside GRR. Use it to build the case for CS as a revenue function, but don't optimize for it yet.",
-          "run": "NRR should be a primary CS metric. Your expansion motions and risk management should directly influence this number.",
-          "fly": "NRR is a board-level metric. Focus on predictive modeling and cohort-level NRR analysis to drive strategic decisions."
+          "run": "NRR should be a primary CS metric. Your expansion motions and risk management should directly influence this number."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -1752,14 +1691,12 @@
         "priority_by_stage": {
           "crawl": "high",
           "walk": "high",
-          "run": "high",
-          "fly": "medium"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "This is your most important metric. If GRR is low, nothing else matters; you're losing the foundation.",
           "walk": "GRR remains critical. Your playbooks and health scores should be directly aimed at improving this number.",
-          "run": "GRR should be stable and high. Now focus on understanding GRR by cohort and segment to find hidden weaknesses.",
-          "fly": "GRR should be consistently strong. Shift attention to optimizing cost-to-retain and identifying structural churn vs. preventable churn."
+          "run": "GRR should be stable and high. Now focus on understanding GRR by cohort and segment to find hidden weaknesses."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -1820,14 +1757,12 @@
         "priority_by_stage": {
           "crawl": "high",
           "walk": "high",
-          "run": "medium",
-          "fly": "medium"
+          "run": "medium"
         },
         "why_priority": {
           "crawl": "Track this alongside GRR. It's the simplest retention metric and tells you the raw reality of how many customers are leaving.",
           "walk": "Segment logo retention by tier and cohort. Patterns here drive your risk management playbooks.",
-          "run": "Logo retention should be stable. Focus on understanding which segments and cohorts deviate and why.",
-          "fly": "Logo retention is a hygiene metric at this stage. The strategic focus shifts to revenue retention and expansion."
+          "run": "Logo retention should be stable. Focus on understanding which segments and cohorts deviate and why."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -1885,14 +1820,12 @@
         "priority_by_stage": {
           "crawl": "medium",
           "walk": "high",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Start by defining what 'value' means for your product. Even an informal TTV target is better than nothing.",
           "walk": "Define TTV formally by segment. This becomes the north star for your onboarding playbook.",
-          "run": "TTV should be tracked, benchmarked, and actively optimized. Correlate TTV with first-year retention to prove its impact.",
-          "fly": "TTV is a leading indicator for everything downstream. Predictive models should use TTV as a primary input."
+          "run": "TTV should be tracked, benchmarked, and actively optimized. Correlate TTV with first-year retention to prove its impact."
         },
         "benchmarks_by_context": {
           "complexity_low": {
@@ -1949,14 +1882,12 @@
         "priority_by_stage": {
           "crawl": "medium",
           "walk": "high",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Start simple. Even a 3-color RAG status (red/amber/green) based on 3 signals is better than nothing. Don't over-engineer it.",
           "walk": "Build a real health score with 5–7 weighted inputs. The key is consistency: every CSM should assess health the same way.",
-          "run": "Health scores should be automated and trigger workflows. Focus on predictive accuracy: does your score actually predict churn?",
-          "fly": "Health scoring should be ML-enhanced, validated against outcomes, and continuously calibrated."
+          "run": "Health scores should be automated and trigger workflows. Focus on predictive accuracy: does your score actually predict churn?"
         },
         "health_score_components_by_stage": {
           "crawl": {
@@ -1990,17 +1921,6 @@
             ],
             "scoring_method": "Automated composite score with trend indicators and automated alerts at threshold crossings",
             "what_to_skip": "Don't rely solely on automated scores. Keep a CSM override mechanism for qualitative signals the data can't capture."
-          },
-          "fly": {
-            "recommended_inputs": [
-              "All Run-stage inputs plus: Predictive churn probability",
-              "Customer effort score trends",
-              "Product usage relative to peer cohort",
-              "Advocacy and referral activity",
-              "Multi-product adoption depth"
-            ],
-            "scoring_method": "ML-driven predictive health with cohort benchmarking, anomaly detection, and confidence intervals",
-            "what_to_skip": "Don't black-box the model. CSMs need to understand why the score is what it is, or they won't trust it."
           }
         },
         "common_mistakes": [
@@ -2047,14 +1967,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "medium",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Don't focus here yet. Retain first, expand later. Premature expansion focus can damage customer trust.",
           "walk": "Start tracking expansion informally. Identify which customers expanded and why, then look for patterns.",
-          "run": "Expansion should be a formal CS metric with defined processes for identifying and advancing opportunities.",
-          "fly": "Expansion revenue should be predictable and forecastable. CS should have a pipeline of expansion opportunities."
+          "run": "Expansion should be a formal CS metric with defined processes for identifying and advancing opportunities."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -2112,14 +2030,12 @@
         "priority_by_stage": {
           "crawl": "medium",
           "walk": "medium",
-          "run": "medium",
-          "fly": "low"
+          "run": "medium"
         },
         "why_priority": {
           "crawl": "Useful as a quick pulse check, especially post-onboarding. Easy to implement.",
           "walk": "Track CSAT at key lifecycle touchpoints. Use it as one input to health scores.",
-          "run": "CSAT is useful but limited. Supplement with CES and outcome-based metrics.",
-          "fly": "CSAT should be one of many sentiment inputs, not a primary strategic metric."
+          "run": "CSAT is useful but limited. Supplement with CES and outcome-based metrics."
         },
         "benchmarks_by_context": {
           "_default": {
@@ -2167,14 +2083,12 @@
         "priority_by_stage": {
           "crawl": "medium",
           "walk": "high",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Start with the basics: are customers logging in? How often? Even crude usage data is valuable.",
           "walk": "Move beyond logins to feature-level adoption. Define what 'healthy adoption' looks like for each segment.",
-          "run": "Adoption should be a leading indicator in your health score. Correlate adoption patterns with retention outcomes.",
-          "fly": "Adoption analytics should be sophisticated: cohort comparisons, adoption velocity, and predictive adoption modeling."
+          "run": "Adoption should be a leading indicator in your health score. Correlate adoption patterns with retention outcomes."
         },
         "benchmarks_by_context": {
           "complexity_low": {
@@ -2235,14 +2149,12 @@
         "priority_by_stage": {
           "crawl": "medium",
           "walk": "high",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Define what 'first value' means for your product. Even a rough milestone is better than no milestone.",
           "walk": "Track TTFV by segment and optimize your onboarding to hit it faster. Faster TTFV = better first-year retention.",
-          "run": "TTFV should be a leading KPI with segment-specific targets. Automate milestone tracking and alert on delays.",
-          "fly": "Predict TTFV at deal close based on customer profile. Use it as an input to health scoring and expansion readiness."
+          "run": "TTFV should be a leading KPI with segment-specific targets. Automate milestone tracking and alert on delays."
         },
         "benchmarks_by_context": {
           "complexity_low": {
@@ -2300,14 +2212,12 @@
         "priority_by_stage": {
           "crawl": "medium",
           "walk": "high",
-          "run": "high",
-          "fly": "medium"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "First, define what 'complete onboarding' means. Document your onboarding steps before you can measure completion.",
           "walk": "Track completion rate and identify where customers get stuck. This is the foundation for onboarding optimization.",
-          "run": "Segment-specific completion targets should exist. Correlate completion rate with first-year retention to prove impact.",
-          "fly": "Onboarding should be highly optimized. Focus on reducing time-to-completion while maintaining quality."
+          "run": "Segment-specific completion targets should exist. Correlate completion rate with first-year retention to prove impact."
         },
         "benchmarks_by_context": {
           "complexity_low": {
@@ -2365,14 +2275,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "medium",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Track basic product usage first (logins, active users). Feature-level tracking can wait.",
           "walk": "Define what 'active use' means for each key feature. Start tracking adoption depth for top-tier accounts.",
-          "run": "Adoption depth should be a health score input and expansion indicator. Low depth = at-risk; high depth = expansion-ready.",
-          "fly": "Use adoption depth for predictive modeling. Identify features that most predict retention and steer customers toward them."
+          "run": "Adoption depth should be a health score input and expansion indicator. Low depth = at-risk; high depth = expansion-ready."
         },
         "benchmarks_by_context": {
           "complexity_low": {
@@ -2434,14 +2342,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "medium",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Track basic MAU first. DAU/MAU ratio requires reliable daily usage data you may not have yet.",
           "walk": "Start tracking DAU/MAU for your core product. Use it as a leading indicator alongside health scores.",
-          "run": "DAU/MAU should be tracked by segment and product area. Use it to identify products/features with strongest stickiness.",
-          "fly": "Model stickiness trends to predict retention and expansion. Benchmark against best-in-class products."
+          "run": "DAU/MAU should be tracked by segment and product area. Use it to identify products/features with strongest stickiness."
         },
         "benchmarks_by_context": {
           "complexity_low": {
@@ -2499,14 +2405,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "low",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Don’t focus on expansion yet. Retain first; pushing expansion before customers have value damages trust.",
           "walk": "Begin tracking which accounts expanded and why. Look for patterns but don’t formalize expansion targets yet.",
-          "run": "Expansion rate should be a formal metric. CS should have defined processes for identifying and qualifying expansion opportunities.",
-          "fly": "Expansion should be predictable and forecastable. CS should have a pipeline with conversion rates and cycle time metrics."
+          "run": "Expansion rate should be a formal metric. CS should have defined processes for identifying and qualifying expansion opportunities."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -2565,14 +2469,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "low",
-          "run": "medium",
-          "fly": "high"
+          "run": "medium"
         },
         "why_priority": {
           "crawl": "Not a CS metric at this stage. Focus on retention fundamentals before worrying about unit economics.",
           "walk": "Awareness only. Understanding CAC payback helps CS leaders make the case for investment in customer retention.",
-          "run": "Track CAC payback by segment. CS’s impact on retention directly affects payback: shorter churn means faster payback.",
-          "fly": "CAC payback should be optimized cross-functionally. CS should influence sales targeting and customer qualification."
+          "run": "Track CAC payback by segment. CS’s impact on retention directly affects payback: shorter churn means faster payback."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -2630,14 +2532,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "low",
-          "run": "medium",
-          "fly": "high"
+          "run": "medium"
         },
         "why_priority": {
           "crawl": "Not a priority yet. CSAT is easier to implement and gives you a basic sentiment baseline.",
           "walk": "Consider adding CES to post-interaction surveys (after support tickets, after onboarding). It’s more actionable than CSAT.",
-          "run": "CES should supplement CSAT as a health score input. High-effort experiences are strong churn predictors.",
-          "fly": "CES should drive process optimization across the entire customer journey. Map effort hotspots and systematically reduce them."
+          "run": "CES should supplement CSAT as a health score input. High-effort experiences are strong churn predictors."
         },
         "benchmarks_by_context": {
           "_default": {
@@ -2685,14 +2585,12 @@
         "priority_by_stage": {
           "crawl": "medium",
           "walk": "medium",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Track escalations informally. At this stage, every escalation is a learning opportunity about your product and processes.",
           "walk": "Define what constitutes an escalation vs. a normal support issue. Start categorizing escalation types and root causes.",
-          "run": "Escalation rate should be tracked formally with trend analysis. Use root cause data to drive product and process improvements.",
-          "fly": "Escalation patterns should feed into predictive models. The goal is fewer escalations through better proactive risk detection."
+          "run": "Escalation rate should be tracked formally with trend analysis. Use root cause data to drive product and process improvements."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -2750,14 +2648,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "low",
-          "run": "medium",
-          "fly": "high"
+          "run": "medium"
         },
         "why_priority": {
           "crawl": "Don't measure this yet. You're still deciding whether to use AI tools at all, and tracking a metric for a capability you haven't adopted creates noise.",
           "walk": "Start tracking informally once you have a pilot (call summarization, health scoring copilot). Establishes a baseline before scaling.",
-          "run": "Track formally. At this stage AI is embedded in multiple workflows, so you need to know the coverage and whether AI-assisted interventions produce better retention outcomes.",
-          "fly": "This is a strategic KPI. At fly stage, AI-assisted resolution rate should tie directly to cost-to-serve efficiency and customer outcome quality. A/B test AI-assisted vs. unassisted interventions."
+          "run": "Track formally. At this stage AI is embedded in multiple workflows, so you need to know the coverage and whether AI-assisted interventions produce better retention outcomes."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -2822,14 +2718,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "medium",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Not worth tracking formally. You likely have one or two CSMs and adoption is a personal choice at this stage. Focus on piloting one use case first.",
           "walk": "Start measuring once you've rolled out an AI tool to the team. Low adoption signals the tool isn't solving a real pain or CSMs need more support.",
-          "run": "High-priority input metric. If AI-assisted resolution rate is high but adoption rate is low, a small group is carrying the AI program; that's fragile and doesn't scale.",
-          "fly": "Adoption should be near-universal for approved use cases. Focus shifts to adoption quality (which workflows, what impact) rather than raw percentage."
+          "run": "High-priority input metric. If AI-assisted resolution rate is high but adoption rate is low, a small group is carrying the AI program; that's fragile and doesn't scale."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -2894,14 +2788,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "low",
-          "run": "medium",
-          "fly": "high"
+          "run": "medium"
         },
         "why_priority": {
           "crawl": "Too early to model reliably. You don't have enough retention history for CLV estimates to be accurate. Focus on keeping customers alive before projecting their value.",
           "walk": "Useful as a strategic framing exercise, but don't optimize for it yet. Churn and expansion patterns aren't stable enough for CLV to drive decisions reliably.",
-          "run": "Start building CLV models by segment. Use them to justify CS headcount investment, inform tiering decisions, and prioritize accounts for high-touch coverage.",
-          "fly": "CLV should drive cross-functional resource allocation: sales targeting, product roadmap prioritization, and CS team structure. Predictive CLV models help surface at-risk high-value accounts before warning signs appear in health scores."
+          "run": "Start building CLV models by segment. Use them to justify CS headcount investment, inform tiering decisions, and prioritize accounts for high-touch coverage."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -2960,14 +2852,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "medium",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Not a priority yet. You likely lack the survey volume for statistically meaningful results, and the real issue is whether customers are getting value at all. Start with CSAT at key touchpoints instead.",
           "walk": "Start running quarterly relationship NPS surveys. The goal is building a baseline, not optimizing the score. Even basic detractor follow-up at this stage prevents preventable churn.",
-          "run": "NPS should be a core CS metric. Segment by ARR tier, cohort, and product line. Use detractor workflows to protect renewal pipeline; use promoter identification to feed expansion and reference programs.",
-          "fly": "NPS feeds executive reporting, cross-functional CX programs, and product roadmap influence. Integrate NPS trends with health score models and use predictive scoring to identify accounts likely to become detractors before they self-report."
+          "run": "NPS should be a core CS metric. Segment by ARR tier, cohort, and product line. Use detractor workflows to protect renewal pipeline; use promoter identification to feed expansion and reference programs."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -3022,14 +2912,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "medium",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "ARR visibility is useful for sizing the problem, but without GRR and logo retention under control, ARR growth will mask underlying churn risk. Focus on retention fundamentals before optimizing for ARR growth.",
           "walk": "Begin tracking ARR by segment and cohort. CS should be able to report the ARR at risk and the ARR protected each quarter as a measure of team impact.",
-          "run": "ARR is a core reporting metric for CS. Segment-level ARR trends, ARR at risk, and ARR influenced by CS motions should feed directly into QBRs and board reporting.",
-          "fly": "CS is a revenue function at this stage. ARR forecasting, cohort ARR analysis, and expansion ARR pipeline should be owned or co-owned by CS leadership."
+          "run": "ARR is a core reporting metric for CS. Segment-level ARR trends, ARR at risk, and ARR influenced by CS motions should feed directly into QBRs and board reporting."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -3086,14 +2974,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "medium",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "MRR reporting adds little value before your retention fundamentals are in place. Focus on understanding why customers churn before optimizing the revenue cadence you report at.",
           "walk": "Start tracking MRR movement in four categories: new, expansion, contraction, and churned. Even basic monthly visibility into contraction MRR will surface at-risk accounts earlier than renewal-date monitoring alone.",
-          "run": "MRR movement analysis should be a standard CS leadership metric. Contraction MRR trending upward is an early warning sign before logo churn hits. Use it to trigger proactive playbooks.",
-          "fly": "For businesses with monthly billing or high-velocity SMB segments, MRR is more actionable than ARR for in-quarter decisions. Integrate MRR trends with health score models and expansion forecasting."
+          "run": "MRR movement analysis should be a standard CS leadership metric. Contraction MRR trending upward is an early warning sign before logo churn hits. Use it to trigger proactive playbooks."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -3152,14 +3038,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "medium",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "ACV awareness is useful for rough account prioritisation, but without a defined coverage model, it's hard to act on. Focus on understanding which accounts are at risk before optimising around deal size.",
           "walk": "Use ACV to begin segmenting your book and calibrating CSM coverage ratios. High-ACV accounts typically warrant dedicated CSMs; lower ACV accounts may suit pooled or digital-led models.",
-          "run": "ACV should inform your coverage model, QBR cadence, and escalation thresholds. Segment your CS team's activities and capacity planning directly against ACV tiers.",
-          "fly": "ACV feeds into CS capacity modelling, expansion forecasting, and board-level reporting on portfolio composition. Segment ACV trends by cohort and product line to identify where deals are growing or compressing over time."
+          "run": "ACV should inform your coverage model, QBR cadence, and escalation thresholds. Segment your CS team's activities and capacity planning directly against ACV tiers."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -3220,14 +3104,12 @@
         "priority_by_stage": {
           "crawl": "low",
           "walk": "low",
-          "run": "high",
-          "fly": "high"
+          "run": "high"
         },
         "why_priority": {
           "crawl": "Skip this metric for now. CSQLs require a stable retention base and a working CS-to-Sales handoff, neither of which is in place at this stage. Focus on adoption and renewal first.",
           "walk": "Begin informally tracking CS-sourced expansion ideas, but do not formalise targets. Use the data to identify which usage and relationship signals tend to precede genuine expansion.",
-          "run": "CSQLs should be a formal metric with shared qualification criteria between CS and Sales, a documented handoff process, and weekly or monthly reporting on volume and conversion.",
-          "fly": "CSQL volume and conversion rate become forecastable inputs to the expansion pipeline. Track by CSM, segment, and source signal to refine qualification criteria and tune CS comp around quality, not just volume."
+          "run": "CSQLs should be a formal metric with shared qualification criteria between CS and Sales, a documented handoff process, and weekly or monthly reporting on volume and conversion."
         },
         "benchmarks_by_context": {
           "seg_smb": {
@@ -3531,29 +3413,12 @@
           "Cohort NRR",
           "Customer effort score",
           "CS ROI / cost-to-serve",
-          "Advocacy metrics"
-        ],
-        "skip_for_now": [
-          "ML-driven predictions (unless you have the data infrastructure)",
-          "CS revenue attribution models"
-        ]
-      },
-      "fly": {
-        "must_track": [
-          "All Run metrics plus: Predictive churn probability",
+          "Advocacy metrics",
+          "Predictive churn probability (once predictive models are in production)",
           "Customer lifetime value",
-          "CS cost-to-serve by segment",
-          "Expansion pipeline and conversion",
-          "Cohort analysis across all key metrics",
-          "Advocacy and referral metrics"
+          "CS-attributed revenue (once revenue strategy is formalized)"
         ],
-        "nice_to_have": [
-          "Net promoter score (relationship, not transactional)",
-          "CS-attributed revenue"
-        ],
-        "skip_for_now": [
-          "Nothing. At this stage you should be tracking everything relevant and focusing on optimization"
-        ]
+        "skip_for_now": []
       }
     }
   },
@@ -3830,30 +3695,33 @@
       },
       {
         "id": "run-predictive-churn",
-        "title": "Build Predictive Churn Models",
-        "objective": "Move from reactive risk identification to predictive churn modeling that surfaces at-risk accounts before traditional signals appear.",
-        "why": "At the run stage, your health score catches known risk patterns. But predictive modeling catches the unknown: the accounts that look healthy on the surface but match historical churn profiles. This is the shift from 'we react to red accounts' to 'we prevent accounts from turning red.' It requires data maturity, which run-stage teams finally have.",
+        "title": "Build a Predictive Customer Intelligence Model",
+        "objective": "Build an intelligence layer that moves from predicting churn to anticipating the full range of customer signals: churn risk, expansion readiness, advocacy likelihood, and stakeholder changes.",
+        "why": "Run-stage teams have the data volume and operational maturity to move beyond reactive health scoring into genuine predictive intelligence. This means not just predicting churn, but predicting expansion readiness, identifying advocacy candidates, and surfacing stakeholder risk, all automatically. The first step is building the churn model; the destination is a model-ranked work queue that tells every CSM exactly where to focus.",
         "steps": [
+          "Consolidate your customer data sources into a unified view: product usage, support, billing, CRM, engagement, and sentiment. This is the foundation every model needs.",
           "Aggregate your historical churn data: which accounts churned, when, and what their engagement patterns looked like in the 90 days before churn",
           "Identify predictive features: usage decline velocity, support ticket sentiment, stakeholder departure, login frequency drops, feature abandonment",
-          "Build a baseline model. Even a logistic regression on 5–7 features outperforms gut feel",
-          "Validate the model against historical data: what's the false positive rate? False negative rate?",
-          "Integrate predictions into CSM workflows: surface predicted-risk accounts in daily/weekly reports",
-          "Create intervention playbooks specifically for predicted-risk accounts (distinct from confirmed-risk playbooks)",
+          "Build a baseline churn model. Even a logistic regression on 5–7 features outperforms gut feel",
+          "Validate the model against historical data: what is the false positive rate? False negative rate?",
+          "Extend to multi-type prediction once your churn model is validated: expansion propensity, advocacy likelihood, and stakeholder departure risk add compounding value with the same data infrastructure",
+          "Build an automated insight delivery layer: CSMs receive a prioritized, model-ranked intervention list each day, not raw dashboards or data exports",
+          "Create intervention playbooks for each prediction type: predicted-churn accounts get different plays than predicted-expansion accounts",
           "Track model accuracy quarterly and retrain as your customer base and product evolve"
         ],
         "metrics_to_watch": [
           "health_score",
+          "nrr",
           "grr",
-          "logo_retention",
-          "escalation_rate"
+          "expansion_revenue",
+          "logo_retention"
         ],
         "common_pitfalls": [
-          "Over-engineering the first model. A simple model you act on beats a sophisticated model that sits in a notebook",
-          "Not validating against holdout data. In-sample accuracy is meaningless if the model doesn't generalize",
-          "Alerting CSMs on every prediction without confidence thresholds. Too many false positives cause alert fatigue"
+          "Building models before consolidating data. Model quality is bounded by data quality: incomplete signals produce unreliable predictions.",
+          "Over-automating without human oversight. Models make mistakes on edge cases. Keep CSMs in the loop for high-stakes decisions.",
+          "Treating the churn model as the finish line. Churn prediction is the entry point. The goal is a full intelligence layer across all customer signals."
         ],
-        "estimated_duration": "6–10 weeks"
+        "estimated_duration": "10–16 weeks"
       },
       {
         "id": "run-expansion-motion",
@@ -3908,14 +3776,12 @@
           "Measuring AI governance by tool adoption alone. Adoption without outcome measurement tells you nothing about whether AI is helping or hurting"
         ],
         "estimated_duration": "3–5 weeks"
-      }
-    ],
-    "fly": [
+      },
       {
-        "id": "fly-cs-revenue-strategy",
+        "id": "run-cs-revenue-strategy",
         "title": "CS-Led Revenue Strategy",
-        "objective": "Position CS as a strategic revenue engine with ownership of net revenue retention, expansion pipeline, and customer lifetime value optimization.",
-        "why": "At the fly stage, CS isn't just supporting retention; it's driving revenue. The best CS organizations own NRR as their north star and have direct influence on pricing, packaging, and go-to-market strategy. This playbook formalizes that shift: CS moves from a post-sale function to a strategic pillar of the revenue organization.",
+        "objective": "Formalize CS ownership of net revenue retention and build the infrastructure to identify, forecast, and drive expansion at scale.",
+        "why": "Run-stage teams have the data and process foundation to shift CS from a retention function to a revenue engine. NRR becomes the primary scorecard, CS gains direct input into pricing and packaging decisions, and expansion is managed as a pipeline, not a side effect of renewal calls. This playbook formalizes that shift.",
         "steps": [
           "Establish NRR as the primary CS metric with board-level visibility and quarterly targets by segment",
           "Build a CS revenue model: forecast expansion, contraction, and churn by cohort and segment",
@@ -3936,70 +3802,14 @@
           "Measuring CS solely on revenue without retention guardrails. Expansion is meaningless if GRR is declining",
           "Not investing in CS operations to support the revenue motion. You need RevOps-grade infrastructure for pipeline, forecasting, and attribution"
         ],
-        "estimated_duration": "8–12 weeks"
+        "estimated_duration": "8–12 weeks",
+        "stage": "run"
       },
       {
-        "id": "fly-predictive-intelligence",
-        "title": "Predictive Customer Intelligence",
-        "objective": "Build an intelligence layer that anticipates customer needs, automates insight delivery, and enables proactive intervention at scale.",
-        "why": "Fly-stage organizations have the data volume, infrastructure, and operational maturity to move beyond reactive and even predictive models into genuine customer intelligence. This means not just predicting churn, but predicting expansion readiness, identifying product-market fit signals, surfacing cross-sell timing, and anticipating stakeholder changes, all automatically.",
-        "steps": [
-          "Consolidate all customer data sources into a unified customer data platform: product usage, support, billing, CRM, engagement, sentiment",
-          "Build ML models for multiple prediction types: churn risk, expansion propensity, advocacy likelihood, stakeholder risk",
-          "Create an automated insight delivery system: CSMs receive prioritized, actionable intelligence daily, not raw data",
-          "Implement natural language processing on support tickets, call transcripts, and survey responses for sentiment trends",
-          "Build segment-level intelligence dashboards for CS leadership: cohort health, adoption trends, revenue forecasts",
-          "Establish a feedback loop where CSM actions inform model retraining. The system gets smarter as the team uses it",
-          "Publish customer intelligence insights to Product, Marketing, and Sales teams. CS becomes the organization's customer knowledge hub"
-        ],
-        "metrics_to_watch": [
-          "health_score",
-          "nrr",
-          "grr",
-          "expansion_revenue",
-          "logo_retention"
-        ],
-        "common_pitfalls": [
-          "Building intelligence capabilities without the data infrastructure to support them: garbage in, garbage out",
-          "Over-automating without human oversight. Models make mistakes, and customer relationships are too valuable for unchecked automation",
-          "Hoarding customer intelligence within CS instead of sharing across the organization. The value multiplies when Product, Sales, and Marketing can act on it too"
-        ],
-        "estimated_duration": "10–16 weeks"
-      },
-      {
-        "id": "fly-cs-culture-company-wide",
-        "title": "Embed CS Culture Company-Wide",
-        "objective": "Make customer success a company-wide operating principle, not a departmental function: every team owns customer outcomes.",
-        "why": "The final evolution of CS maturity is when customer success stops being a team and becomes a culture. Fly-stage organizations embed customer outcomes into every department's OKRs, every product decision, every sales conversation. When engineering cares about adoption, when marketing cares about expansion, when finance cares about LTV, that's when CS scales beyond headcount.",
-        "steps": [
-          "Establish customer outcome metrics in every department's OKRs: Product owns adoption, Sales owns time-to-value, Support owns resolution impact on health",
-          "Create a cross-functional customer council that meets monthly: CS, Product, Sales, Marketing, Engineering leadership review customer health trends and act on them",
-          "Build a 'voice of customer' program that systematically routes customer feedback to the teams that can act on it",
-          "Embed customer success training in new hire onboarding for all departments. Everyone should understand the lifecycle, maturity model, and their role in it",
-          "Establish customer-centric decision frameworks: feature prioritization weighted by retention impact, marketing campaigns measured by expansion influence",
-          "Create shared dashboards and reporting that give every team visibility into customer health, adoption, and outcomes",
-          "Publish an annual 'State of the Customer' report internally: a data-driven narrative on customer health, trends, risks, and opportunities"
-        ],
-        "metrics_to_watch": [
-          "nrr",
-          "grr",
-          "csat",
-          "ces",
-          "health_score",
-          "adoption_rate"
-        ],
-        "common_pitfalls": [
-          "Mandating culture change top-down without executive buy-in. It needs to be championed by the CEO, not just the VP of CS",
-          "Making it a one-time initiative instead of an ongoing operating rhythm. Culture requires reinforcement, not a workshop",
-          "Losing CS team identity in the process. CS should drive the customer-centric culture, not dissolve into it"
-        ],
-        "estimated_duration": "12–16 weeks"
-      },
-      {
-        "id": "fly-agentic-workflows",
+        "id": "run-agentic-workflows",
         "title": "Deploy Agentic Workflows with Bounded Autonomy",
         "objective": "Move beyond AI-assisted CSM work to bounded autonomous actions (tiered interventions, risk routing, and self-serve resolution) with explicit human oversight and measured business outcomes.",
-        "why": "Fly-stage teams have validated AI across their CS workflows. The next step is AI that acts, not just advises. Agentic workflows handle routine decisions at a scale no human team can match: automatically routing critical accounts to senior CSMs, triggering playbooks when health scores drop, or resolving tier-one support inquiries without CSM involvement. The key word is 'bounded': well-defined scope, explicit escalation triggers, and outcome measurement baked in from day one.",
+        "why": "Run-stage teams have validated AI across core CS workflows. The next step is AI that acts, not just advises. Agentic workflows handle routine decisions at a scale no human team can match: automatically routing critical accounts to senior CSMs, triggering playbooks when health scores drop, or resolving tier-one support inquiries without CSM involvement. The key word is \"bounded\": well-defined scope, explicit escalation triggers, and outcome measurement baked in from day one.",
         "steps": [
           "Audit your current playbook triggers: which interventions are rule-based and repetitive? These are the first candidates for automation",
           "Start with one bounded workflow: the most common high-confidence intervention (e.g., automatically assign a CSM to any account that drops below a health score threshold and has an upcoming renewal)",
@@ -4021,7 +3831,8 @@
           "Defining autonomy scope too broadly in v1. Start with one high-confidence, low-stakes workflow before expanding",
           "Not measuring AI-handled versus human-handled outcomes. Without a control group you can't prove (or disprove) that agentic workflows improve results"
         ],
-        "estimated_duration": "12–20 weeks"
+        "estimated_duration": "12–20 weeks",
+        "stage": "run"
       }
     ]
   },
@@ -4085,36 +3896,6 @@
         "Expansion pressure without retention guardrails. If CSMs chase upsells while GRR declines, you're robbing Peter to pay Paul",
         "Model complexity without interpretability: a churn model nobody understands won't change behavior"
       ]
-    },
-    "run_to_fly": {
-      "trigger_signals": [
-        "Digital engagement is handling 60%+ of your customer base effectively",
-        "Predictive models are operational and CSMs trust and act on their outputs",
-        "CS-sourced expansion is a meaningful, tracked revenue stream (not one-off wins)",
-        "NRR consistently exceeds 110% and GRR exceeds 90% across segments",
-        "CS has a seat at the executive table and contributes to company strategy discussions",
-        "Agentic AI is handling bounded, autonomous interventions with governance oversight and measured outcomes"
-      ],
-      "key_shifts": [
-        "From revenue contributor to revenue driver: CS owns NRR and has direct influence on pricing, packaging, and go-to-market",
-        "From predictive to intelligent: models don't just predict risk, they recommend actions and anticipate needs",
-        "From CS department to CS culture: customer success becomes a company-wide operating principle",
-        "From operational to strategic: CS leadership shapes company strategy, not just executes it",
-        "From AI-augmented to AI-orchestrated: agentic systems execute bounded interventions autonomously, with humans overseeing outcomes rather than individual actions"
-      ],
-      "new_capabilities": [
-        "Customer intelligence platform provides automated, actionable insights across the entire customer base",
-        "CS-led revenue strategy influences product roadmap, pricing, and go-to-market decisions",
-        "Every department has customer outcome metrics in their OKRs",
-        "Advanced analytics (cohort analysis, LTV modeling, predictive expansion) run continuously and inform decisions in real-time",
-        "CS talent development pipeline produces future CS leaders and cross-functional customer advocates",
-        "Agentic workflows handle high-volume, low-stakes interventions autonomously, freeing CSMs to focus on strategic and complex accounts"
-      ],
-      "risks": [
-        "Losing customer advocacy in pursuit of revenue optimization. CS credibility depends on being the customer's champion",
-        "Technology dependence without human judgment: AI and automation are tools, not replacements for relationship intelligence",
-        "Complacency: fly-stage organizations can become bureaucratic and slow, losing the customer intimacy that got them there"
-      ]
     }
   },
   "glossary": {
@@ -4123,7 +3904,9 @@
       {
         "term": "Adoption Rate",
         "slug": "adoption-rate",
-        "aliases": ["Product Adoption Rate"],
+        "aliases": [
+          "Product Adoption Rate"
+        ],
         "definition": "The percentage of provisioned users or accounts that actively use a product within a defined window. A core indicator that the customer is realizing value, not just paying for access.",
         "link": "/customer-success-metrics/adoption_rate/"
       },
@@ -4153,27 +3936,35 @@
       {
         "term": "CSAT",
         "slug": "csat",
-        "aliases": ["Customer Satisfaction Score"],
+        "aliases": [
+          "Customer Satisfaction Score"
+        ],
         "definition": "A short post-interaction survey measuring how satisfied a customer was with a specific touchpoint. Useful for spotting service quality drift; weak as a leading indicator of retention.",
         "link": "/customer-success-metrics/csat/"
       },
       {
         "term": "CES",
         "slug": "ces",
-        "aliases": ["Customer Effort Score"],
+        "aliases": [
+          "Customer Effort Score"
+        ],
         "definition": "A survey item asking how much effort it took to get something done with the product or with support. Lower effort correlates more strongly with loyalty than satisfaction does.",
         "link": "/customer-success-metrics/ces/"
       },
       {
         "term": "CSM",
         "slug": "csm",
-        "aliases": ["Customer Success Manager"],
+        "aliases": [
+          "Customer Success Manager"
+        ],
         "definition": "The role responsible for a portfolio of customer accounts after the initial sale. The job is value realization, retention, and expansion, in that order."
       },
       {
         "term": "CS Operations",
         "slug": "cs-ops",
-        "aliases": ["CS Ops"],
+        "aliases": [
+          "CS Ops"
+        ],
         "definition": "The function that builds and maintains the systems CS runs on: tooling, segmentation, health scores, reporting, playbook tracking. Emerges as a distinct role in the walk and run stages."
       },
       {
@@ -4185,7 +3976,9 @@
       {
         "term": "Customer Health Score",
         "slug": "health-score",
-        "aliases": ["Health Score"],
+        "aliases": [
+          "Health Score"
+        ],
         "definition": "A composite indicator that combines product usage, engagement, support signals, and other inputs into a single risk-or-strength rating per account. Useful for prioritization, not as the only retention metric.",
         "link": "/customer-success-metrics/health_score/"
       },
@@ -4198,7 +3991,9 @@
       {
         "term": "DAU/MAU Ratio",
         "slug": "dau-mau",
-        "aliases": ["Stickiness Ratio"],
+        "aliases": [
+          "Stickiness Ratio"
+        ],
         "definition": "Daily active users divided by monthly active users. A coarse stickiness measure; higher means the product is part of the user's daily routine. Less meaningful for products with naturally infrequent usage.",
         "link": "/customer-success-metrics/stickiness_ratio/"
       },
@@ -4229,14 +4024,18 @@
       {
         "term": "GRR",
         "slug": "grr",
-        "aliases": ["Gross Revenue Retention"],
+        "aliases": [
+          "Gross Revenue Retention"
+        ],
         "definition": "Recurring revenue retained from existing customers, excluding expansion. Caps at 100%. Tells you how leaky your bucket is before any growth is layered on top.",
         "link": "/customer-success-metrics/grr/"
       },
       {
         "term": "Logo Retention",
         "slug": "logo-retention",
-        "aliases": ["Customer Retention Rate"],
+        "aliases": [
+          "Customer Retention Rate"
+        ],
         "definition": "The percentage of customers retained over a period, ignoring deal size. A counterweight to revenue retention: a healthy NRR with falling logo retention often hides concentration risk.",
         "link": "/customer-success-metrics/logo_retention/"
       },
@@ -4249,7 +4048,11 @@
       {
         "term": "NRR",
         "slug": "nrr",
-        "aliases": ["Net Revenue Retention", "Net Dollar Retention", "NDR"],
+        "aliases": [
+          "Net Revenue Retention",
+          "Net Dollar Retention",
+          "NDR"
+        ],
         "definition": "Recurring revenue retained from existing customers including expansion, net of churn and contraction. The single most-quoted CS health metric for SaaS. Above 100% means existing customers are growing faster than they are leaving.",
         "link": "/customer-success-metrics/nrr/"
       },
@@ -4279,7 +4082,11 @@
       {
         "term": "QBR",
         "slug": "qbr",
-        "aliases": ["Quarterly Business Review", "EBR", "Executive Business Review"],
+        "aliases": [
+          "Quarterly Business Review",
+          "EBR",
+          "Executive Business Review"
+        ],
         "definition": "A scheduled review with a customer covering value delivered, outcomes achieved, and the path forward. Quarterly is conventional; the right cadence depends on segment and contract size."
       },
       {
@@ -4291,14 +4098,18 @@
       {
         "term": "Time to Value",
         "slug": "ttv",
-        "aliases": ["TTV"],
+        "aliases": [
+          "TTV"
+        ],
         "definition": "The elapsed time from contract signature to the customer reaching the outcome they bought the product for. Different from time to first login or time to onboarding completion, both of which are easier to measure but mean less.",
         "link": "/customer-success-metrics/time_to_value/"
       },
       {
         "term": "Time to First Value",
         "slug": "ttfv",
-        "aliases": ["TTFV"],
+        "aliases": [
+          "TTFV"
+        ],
         "definition": "The elapsed time from contract signature to the customer experiencing a first meaningful value moment, ahead of full outcome realization. A useful early signal in long onboarding cycles.",
         "link": "/customer-success-metrics/ttfv/"
       },

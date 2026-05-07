@@ -45,6 +45,9 @@
   --color-stage-run: #388E3C;
   --color-stage-fly: #1976D2;
 
+  /* Category color for Health metrics (independent of stage tokens) */
+  --color-category-health: #1976D2;
+
   /* Foreground color for text/icons sitting on a stage-colored background.
      White in light mode (on deep Material 700), dark in dark mode (on soft pastels). */
   --color-on-stage: #ffffff;
@@ -91,6 +94,9 @@
   --color-stage-walk: #FFB74D;
   --color-stage-run: #81C784;
   --color-stage-fly: #64B5F6;
+
+  /* Category color for Health metrics (independent of stage tokens) */
+  --color-category-health: #64B5F6;
 
   /* Foreground on stage bg — dark text on pastel stage colors in dark mode */
   --color-on-stage: #0a0a0f;

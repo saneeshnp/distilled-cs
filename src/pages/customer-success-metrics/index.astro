@@ -111,9 +111,9 @@ const faqSchema = {
     <section class="pillar-intro" data-hide-if-assessed>
       <h2>What customer success metrics actually measure</h2>
       <p>Customer success metrics quantify how a customer is moving toward their outcomes and how likely they are to stay, expand, or churn. They fall into a few families: revenue (NRR, GRR, expansion), retention (logo churn, gross retention), onboarding (time to first value, activation rate), health (composite score, usage, sentiment), and increasingly AI-leverage signals as automation enters the stack. Each metric answers a specific operational question. Used together, they tell the story of the customer relationship.</p>
-      <p>The right metrics depend on where the team is in its maturity journey. A Crawl-stage team tracking predictive churn probability before it has a clean onboarding funnel is measuring the wrong thing first. A Fly-stage team still reporting only logo churn is leaving insight on the table. Each metric page below carries a priority-by-stage rating so the directory re-sorts once you complete the assessment.</p>
+      <p>The right metrics depend on where the team is in its maturity journey. A Crawl-stage team tracking predictive churn probability before it has a clean onboarding funnel is measuring the wrong thing first. A Run-stage team still reporting only logo churn is leaving significant insight on the table. Each metric page below carries a priority-by-stage rating so the directory re-sorts once you complete the assessment.</p>
       <h3>How to choose metrics at each stage</h3>
-      <p>At <strong>Crawl</strong>, focus on foundational signals: onboarding completion, logo retention, and gross retention. The priority is a reliable source of truth before layering complexity. At <strong>Walk</strong>, introduce net revenue retention and a basic health score. At <strong>Run</strong>, operationalize expansion metrics, leading indicators of churn, and cohort analysis by segment. At <strong>Fly</strong>, predictive metrics, AI-assisted churn scoring, and outcome attribution become table stakes.</p>
+      <p>At <strong>Crawl</strong>, focus on foundational signals: onboarding completion, logo retention, and gross retention. The priority is a reliable source of truth before layering complexity. At <strong>Walk</strong>, introduce net revenue retention and a basic health score. At <strong>Run</strong>, operationalize expansion metrics, leading indicators of churn, cohort analysis by segment, and predictive signals including AI-assisted churn scoring and outcome attribution.</p>
       <p>Two rules cut across every stage. Fewer metrics reviewed with discipline beat many tracked loosely. Pick the three or four that drive the most decisions and instrument them reliably before adding a fifth. And benchmarks must match segment and ARR band. A 110% NRR is strong for a down-market SMB book and weak for an enterprise motion with large expansion headroom. The segment benchmarks on each metric page reflect that.</p>
     </section>
 
@@ -142,7 +142,7 @@ const faqSchema = {
         </a>
         <a href="/customer-success-maturity-model/" class="related-card">
           <h3>Maturity model</h3>
-          <p>The four stages that set priority on each metric.</p>
+          <p>The three stages that set priority on each metric.</p>
         </a>
         <a href="/assess/" class="related-card">
           <h3>Take the assessment</h3>
@@ -297,7 +297,7 @@ const faqSchema = {
   .cat-revenue { background: var(--color-accent-subtle); color: var(--color-accent); }
   .cat-retention { background: color-mix(in srgb, var(--color-stage-crawl) 14%, transparent); color: var(--color-stage-crawl); }
   .cat-onboarding { background: color-mix(in srgb, var(--color-stage-run) 14%, transparent); color: var(--color-stage-run); }
-  .cat-health { background: color-mix(in srgb, var(--color-stage-fly) 14%, transparent); color: var(--color-stage-fly); }
+  .cat-health { background: color-mix(in srgb, var(--color-category-health) 14%, transparent); color: var(--color-category-health); }
   .cat-sentiment { background: color-mix(in srgb, #CE93D8 14%, transparent); color: #CE93D8; }
   .cat-usage { background: color-mix(in srgb, var(--color-stage-walk) 14%, transparent); color: var(--color-stage-walk); }
   .cat-ai { background: color-mix(in srgb, #7986CB 14%, transparent); color: #7986CB; }
@@ -481,7 +481,7 @@ const faqSchema = {
 <script>
   import { isAssessmentCompleted, getScores } from '../../scripts/context-manager.js';
 
-  const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+  const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 
   // Category filtering
   document.querySelectorAll('.filter-btn').forEach(btn => {

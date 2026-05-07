@@ -7,12 +7,11 @@ const stageTransitions = frameworkData.stage_transitions;
 const stages = frameworkData.maturity_stages.stages;
 const domains = frameworkData.assessment_domains.domains;
 
-const stageOrder = ['crawl', 'walk', 'run', 'fly'];
-const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+const stageOrder = ['crawl', 'walk', 'run'];
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 const transitionKeys: Record<string, string> = {
   crawl: 'crawl_to_walk',
   walk: 'walk_to_run',
-  run: 'run_to_fly',
 };
 
 const domainLabels: Record<string, string> = {};
@@ -130,12 +129,12 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
 
           <h2>Re-assessment and stage transitions</h2>
           <p>
-            Re-assessing uses the same eight-domain questionnaire you started with, but stored responses from your first pass are preloaded so you can edit only what has changed. When you submit, Transform renders a domain-by-domain delta against your previous scores. Stage transitions are treated as capability shifts, not score crossings. Each transition (Crawl to Walk, Walk to Run, Run to Fly) has a published list of trigger signals, key operational shifts, and new capabilities the next stage assumes you have. If most of those apply, you are ready. If only one or two do, re-assess in another quarter.
+            Re-assessing uses the same eight-domain questionnaire you started with, but stored responses from your first pass are preloaded so you can edit only what has changed. When you submit, Transform renders a domain-by-domain delta against your previous scores. Stage transitions are treated as capability shifts, not score crossings. Each transition (Crawl to Walk, Walk to Run) has a published list of trigger signals, key operational shifts, and new capabilities the next stage assumes you have. If most of those apply, you are ready. If only one or two do, re-assess in another quarter.
           </p>
 
           <h2>What a healthy cadence looks like</h2>
           <p>
-            For teams in Crawl or Walk, quarterly re-assessment is about right. Foundational changes take 8 to 12 weeks to show up in the questionnaire. For Run and Fly teams, semiannual re-assessment avoids the noise of short-term fluctuations. Pair re-assessment with a QBR or annual planning cycle so the outputs feed directly into goals and staffing decisions rather than sitting in a browser tab.
+            For teams in Crawl or Walk, quarterly re-assessment is about right. Foundational changes take 8 to 12 weeks to show up in the questionnaire. For Run teams, semiannual re-assessment avoids the noise of short-term fluctuations. Pair re-assessment with a QBR or annual planning cycle so the outputs feed directly into goals and staffing decisions rather than sitting in a browser tab.
           </p>
 
           <p class="transform-explainer-followups">
@@ -514,11 +513,6 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     background: var(--stage-color, var(--color-accent));
   }
 
-  .fly-stage-copy {
-    font-size: 0.9375rem;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-  }
 
   /* ── Comparison rows (JS-generated) ── */
   .comparison-row {
@@ -607,8 +601,8 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
 </style>
 
 <script>
-  const stageOrder = ['crawl', 'walk', 'run', 'fly'];
-  const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+  const stageOrder = ['crawl', 'walk', 'run'];
+  const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 
   const domainLabels = {
     segmentation_coverage: 'Segmentation & Coverage',
@@ -624,7 +618,6 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
   const transitionKeys = {
     crawl: 'crawl_to_walk',
     walk: 'walk_to_run',
-    run: 'run_to_fly',
   };
 
   try {
@@ -639,7 +632,7 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
       const scores = JSON.parse(scoresRaw);
       const userStage = scores.stage;
       const currentIdx = stageOrder.indexOf(userStage);
-      const nextStage = currentIdx < 3 ? stageOrder[currentIdx + 1] : null;
+      const nextStage = currentIdx < 2 ? stageOrder[currentIdx + 1] : null;
 
       // Show assessed view, hide not-assessed
       document.querySelectorAll('[data-show-if-assessed]').forEach(el => el.style.display = '');
@@ -799,11 +792,6 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
             key_shifts: ["From human-led to human-plus-digital", "From reactive risk management to predictive", "From cost center to revenue contributor", "From departmental function to cross-functional partner"],
             new_capabilities: ["Digital engagement allows 10x account coverage", "Predictive churn models surface risk 30-60 days earlier", "Formalized expansion motion creates predictable pipeline", "CS operations becomes a recognized function"],
           },
-          run_to_fly: {
-            trigger_signals: ["Digital engagement handles 60%+ of your customer base", "Predictive models are operational and trusted", "CS-sourced expansion is a meaningful revenue stream", "NRR consistently exceeds 110% and GRR exceeds 90%", "CS has a seat at the executive table"],
-            key_shifts: ["From revenue contributor to revenue driver", "From predictive to intelligent", "From CS department to CS culture", "From operational to strategic"],
-            new_capabilities: ["Customer intelligence provides automated, actionable insights", "CS-led revenue strategy influences company decisions", "Every department has customer outcome metrics in their OKRs", "Advanced analytics run continuously and inform decisions"],
-          },
         };
 
         const trans = transitionData[transKey];
@@ -824,15 +812,12 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
           html += `<div class="transition-block"><div class="transition-block-icon">${iconStar}</div><h3>New capabilities you'll unlock</h3><ul>${trans.new_capabilities.map(s => `<li>${s}</li>`).join('')}</ul></div>`;
           transContent.innerHTML = html;
         }
-      } else if (transSection && userStage === 'fly') {
-        // Fly stage — no next transition
+      } else if (transSection && userStage === 'run') {
+        // Run is the top stage — no next transition
         transSection.innerHTML = `
-          <h2 class="section-heading">You're at the highest maturity stage</h2>
+          <h2 class="section-heading">You're at the Run stage</h2>
           <div class="transition-block">
-            <p class="fly-stage-copy">
-              At the Fly stage, the focus shifts to continuous optimization, industry leadership, and embedding CS as a company-wide culture.
-              Re-assess periodically to ensure you're maintaining excellence across all domains.
-            </p>
+            <p>Run is the destination stage. The work here is continuous refinement: sharpening predictive models, expanding AI-assisted workflows, and deepening cross-functional alignment. Re-assess semiannually to track domain-level progress and set priorities for the next cycle.</p>
           </div>
         `;
       }

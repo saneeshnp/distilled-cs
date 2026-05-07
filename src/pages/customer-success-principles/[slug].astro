@@ -20,13 +20,12 @@ const iconSvgs: Record<string, string> = {
   layers: '<path d="M20 4L4 12l16 8 16-8L20 4z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/><path d="M4 20l16 8 16-8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 28l16 8 16-8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
 };
 
-const stageOrder = ['crawl', 'walk', 'run', 'fly'] as const;
-const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+const stageOrder = ['crawl', 'walk', 'run'] as const;
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 const stageSubtitles: Record<string, string> = {
   crawl: 'Foundation building',
   walk: 'Operating system forming',
   run: 'Scaled and measurable',
-  fly: 'Predictive and proactive',
 };
 
 // Build playbook lookup

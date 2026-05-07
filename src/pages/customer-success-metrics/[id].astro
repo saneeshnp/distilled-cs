@@ -43,8 +43,8 @@ const segmentLabels: Record<string, string> = {
   _default: 'All Segments',
 };
 
-const stageOrder = ['crawl', 'walk', 'run', 'fly'];
-const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+const stageOrder = ['crawl', 'walk', 'run'];
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 
 // Health score components (only for health_score metric)
 const healthComponents = metric.health_score_components_by_stage || null;
@@ -305,7 +305,7 @@ const breadcrumbSchema = {
   .cat-revenue { background: var(--color-accent-subtle); color: var(--color-accent); }
   .cat-retention { background: color-mix(in srgb, var(--color-stage-crawl) 14%, transparent); color: var(--color-stage-crawl); }
   .cat-onboarding { background: color-mix(in srgb, var(--color-stage-run) 14%, transparent); color: var(--color-stage-run); }
-  .cat-health { background: color-mix(in srgb, var(--color-stage-fly) 14%, transparent); color: var(--color-stage-fly); }
+  .cat-health { background: color-mix(in srgb, var(--color-category-health) 14%, transparent); color: var(--color-category-health); }
   .cat-sentiment { background: color-mix(in srgb, #CE93D8 14%, transparent); color: #CE93D8; }
   .cat-usage { background: color-mix(in srgb, var(--color-stage-walk) 14%, transparent); color: var(--color-stage-walk); }
   .cat-ai { background: color-mix(in srgb, #7986CB 14%, transparent); color: #7986CB; }
@@ -736,7 +736,7 @@ const breadcrumbSchema = {
 <script>
   import { isAssessmentCompleted, getScores, getProfile } from '../../scripts/context-manager.js';
 
-  const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+  const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 
   const panel = document.getElementById('contextual-panel');
 

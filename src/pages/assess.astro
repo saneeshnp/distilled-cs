@@ -16,7 +16,7 @@ const stages = frameworkData.maturity_stages.stages;
     <section class="assess-intro" data-hide-if-assessed aria-label="About the assessment">
       <h1 class="assess-intro-headline">Customer Success Maturity Assessment</h1>
       <p class="assess-intro-lede">
-        Find out where your customer success team stands on a four-stage maturity model, and get a prioritized set of actions to move up. Five minutes, and no signup required.
+        Find out where your customer success team stands on a three-stage maturity model, and get a prioritized set of actions to move up. Five minutes, and no signup required.
       </p>
 
       <div class="assess-intro-cta">
@@ -37,10 +37,9 @@ const stages = frameworkData.maturity_stages.stages;
           Each response option is a calibrated description of what a team at that level actually does, not a subjective self-rating. Picking option 2 on a segmentation question means "we segment by ARR but not much else." The stages map to score ranges:
         </p>
         <ul class="assess-intro-stages">
-          <li><strong>Crawl</strong> (1.0–1.7) — foundation building; reactive, inconsistent, founder-led.</li>
-          <li><strong>Walk</strong> (1.8–2.5) — an operating system is forming; segmented, measured, repeatable.</li>
-          <li><strong>Run</strong> (2.6–3.3) — scaled and predictable; outcomes tracked, plays automated.</li>
-          <li><strong>Fly</strong> (3.4–4.0) — predictive and proactive; leading indicators drive action.</li>
+          <li><strong>Crawl</strong> (2.5–5.0) — foundation building; reactive, inconsistent, founder-led.</li>
+          <li><strong>Walk</strong> (5.0–7.5) — an operating system is forming; segmented, measured, repeatable.</li>
+          <li><strong>Run</strong> (7.5–10.0) — scaled and predictable; outcomes tracked, plays automated.</li>
         </ul>
 
         <h2>What the profile questions do</h2>
@@ -903,7 +902,7 @@ const stages = frameworkData.maturity_stages.stages;
         ${sorted.map(([id, score]) => {
           const d = domains.find((dm: any) => dm.id === id);
           const pct = ((score / 4) * 100).toFixed(0);
-          const barStage = score >= 3.4 ? 'fly' : score >= 2.6 ? 'run' : score >= 1.8 ? 'walk' : 'crawl';
+          const barStage = determineStage(score) ?? 'crawl';
           const isStrong = id === strongestId;
           const isWeak = id === weakestId;
           return `<div class="domain-score-row stage-${barStage}">

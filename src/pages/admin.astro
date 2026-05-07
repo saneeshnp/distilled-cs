@@ -71,12 +71,10 @@ const sessionKeys = [
         <button class="preset-btn preset-crawl" id="preset-crawl" type="button">Crawl Stage</button>
         <button class="preset-btn preset-walk" id="preset-walk" type="button">Walk Stage</button>
         <button class="preset-btn preset-run" id="preset-run" type="button">Run Stage</button>
-        <button class="preset-btn preset-fly" id="preset-fly" type="button">Fly Stage</button>
         <button class="preset-btn" id="preset-no-company" type="button">Without Company Name</button>
         <span class="presets-divider">Persona fixtures:</span>
         <button class="preset-btn" id="preset-persona-crawl" type="button">Fresh Crawl (no profile)</button>
         <button class="preset-btn preset-walk" id="preset-persona-walk" type="button">Mid-Walk (midmarket)</button>
-        <button class="preset-btn preset-fly" id="preset-persona-fly" type="button">High-Fly (enterprise)</button>
       </div>
     </section>
 
@@ -279,8 +277,6 @@ const sessionKeys = [
   .preset-crawl { border-color: var(--color-stage-crawl); color: var(--color-stage-crawl); }
   .preset-walk { border-color: var(--color-stage-walk); color: var(--color-stage-walk); }
   .preset-run { border-color: var(--color-stage-run); color: var(--color-stage-run); }
-  .preset-fly { border-color: var(--color-stage-fly); color: var(--color-stage-fly); }
-
   /* Key editor */
   .keys-list {
     display: flex;
@@ -647,7 +643,6 @@ const sessionKeys = [
     crawl: { profile: { ...presetProfile }, scores: makeScores('crawl', 1.4) },
     walk:  { profile: { ...presetProfile }, scores: makeScores('walk', 2.2) },
     run:   { profile: { ...presetProfile }, scores: makeScores('run', 3.0) },
-    fly:   { profile: { ...presetProfile }, scores: makeScores('fly', 3.8) },
   };
 
   // Persona fixtures — match the recommendation-engine.test.js personas exactly
@@ -670,20 +665,6 @@ const sessionKeys = [
         os_q1:3, os_q2:2, os_q3:3,
         ca_q1:2, ca_q2:2, ca_q3:3,
         ai_q1:2, ai_q2:2, ai_q3:2,
-      },
-    },
-    fly: {
-      profile: { customer_segment: 'seg_enterprise', company_arr: 'arr_over_100m', cs_team_size: 'team_10plus' },
-      stage: 'fly',
-      responses: {
-        sc_q1:4, sc_q2:4, sc_q3:4,
-        jl_q1:4, jl_q2:4, jl_q3:3,
-        hr_q1:4, hr_q2:4, hr_q3:4,
-        md_q1:3, md_q2:4, md_q3:4,
-        ev_q1:4, ev_q2:3, ev_q3:4,
-        os_q1:4, os_q2:4, os_q3:4,
-        ca_q1:4, ca_q2:4, ca_q3:4,
-        ai_q1:3, ai_q2:4, ai_q3:3,
       },
     },
   };
@@ -890,10 +871,8 @@ const sessionKeys = [
   document.getElementById('preset-crawl')?.addEventListener('click', () => applyPreset('crawl'));
   document.getElementById('preset-walk')?.addEventListener('click', () => applyPreset('walk'));
   document.getElementById('preset-run')?.addEventListener('click', () => applyPreset('run'));
-  document.getElementById('preset-fly')?.addEventListener('click', () => applyPreset('fly'));
   document.getElementById('preset-persona-crawl')?.addEventListener('click', () => applyPersonaPreset('crawl'));
   document.getElementById('preset-persona-walk')?.addEventListener('click', () => applyPersonaPreset('walk'));
-  document.getElementById('preset-persona-fly')?.addEventListener('click', () => applyPersonaPreset('fly'));
   document.getElementById('rec-refresh-btn')?.addEventListener('click', renderRecommendationPreview);
 
   document.getElementById('preset-no-company')?.addEventListener('click', () => {

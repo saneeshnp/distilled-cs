@@ -65,8 +65,8 @@ const principles = frameworkData.principles;
   <!-- Section 2: Maturity Stages -->
   <section class="hp-section hp-section-stages" id="maturity-stages">
     <div class="container">
-      <h2 class="hp-section-headline scroll-reveal">The four stages of CS maturity</h2>
-      <p class="hp-section-subheadline scroll-reveal">DistilledCS maps your customer success maturity across four progressive stages. Each stage describes where your team is today and what it takes to reach the next level.</p>
+      <h2 class="hp-section-headline scroll-reveal">The three stages of CS maturity</h2>
+      <p class="hp-section-subheadline scroll-reveal">Distilled CS maps your customer success maturity across three stages. Each stage describes where your team is today and the work that matters most at that level.</p>
       <div class="hp-stages-grid">
         {stages.map((stage, i) => (
           <div class={`hp-stage-card scroll-reveal stage-${stage.id}`} style={`--stage-delay: ${i * 0.1}s`}>
@@ -163,12 +163,12 @@ const principles = frameworkData.principles;
         <a href="/customer-success-playbooks/" class="hp-read-next-card scroll-reveal">
           <span class="hp-read-next-eyebrow">Playbooks</span>
           <span class="hp-read-next-title">Customer Success Playbooks</span>
-          <span class="hp-read-next-body">Sixteen action plans grouped by maturity stage, each with steps and pitfalls.</span>
+          <span class="hp-read-next-body">Fourteen action plans grouped by maturity stage, each with steps and pitfalls.</span>
         </a>
         <a href="/customer-success-maturity-model/" class="hp-read-next-card scroll-reveal">
           <span class="hp-read-next-eyebrow">Model</span>
           <span class="hp-read-next-title">Customer Success Maturity Model</span>
-          <span class="hp-read-next-body">Four stages from Crawl to Fly, with the capabilities that define each.</span>
+          <span class="hp-read-next-body">Three stages from Crawl to Run, with the capabilities that define each.</span>
         </a>
         <a href="/assess/" class="hp-read-next-card scroll-reveal">
           <span class="hp-read-next-eyebrow">Assessment</span>
@@ -681,7 +681,7 @@ const principles = frameworkData.principles;
 
   @media (min-width: 1024px) {
     .hp-stages-grid {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 

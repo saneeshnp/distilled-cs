@@ -17,3 +17,13 @@
 /blog                   /articles/                               301
 /blog/:slug/            /articles/:slug/                         301
 /blog/:slug             /articles/:slug/                         301
+
+# Fly playbook URL migration (three-stage collapse)
+/customer-success-playbooks/fly-cs-revenue-strategy/       /customer-success-playbooks/run-cs-revenue-strategy/       301
+/customer-success-playbooks/fly-cs-revenue-strategy        /customer-success-playbooks/run-cs-revenue-strategy/       301
+/customer-success-playbooks/fly-agentic-workflows/         /customer-success-playbooks/run-agentic-workflows/         301
+/customer-success-playbooks/fly-agentic-workflows          /customer-success-playbooks/run-agentic-workflows/         301
+/customer-success-playbooks/fly-predictive-intelligence/   /customer-success-playbooks/run-predictive-churn/          301
+/customer-success-playbooks/fly-predictive-intelligence    /customer-success-playbooks/run-predictive-churn/          301
+/customer-success-playbooks/fly-cs-culture-company-wide/   /customer-success-principles/cs-is-a-culture/             301
+/customer-success-playbooks/fly-cs-culture-company-wide    /customer-success-principles/cs-is-a-culture/             301

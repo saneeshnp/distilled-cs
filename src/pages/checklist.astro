@@ -5,9 +5,9 @@ import frameworkData from '../data/lean-cs-data.json';
 
 const stages = frameworkData.maturity_stages.stages;
 const playbooks = frameworkData.playbooks;
-const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+const stageOrder = ['crawl', 'walk', 'run'];
 
-const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 ---
 
 <BaseLayout title="Execution Checklist" description="Track progress against the priority actions for your current maturity stage. Items map directly to playbooks and persist between visits.">
@@ -37,7 +37,7 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
 
         <h2>How items map to stages and playbooks</h2>
         <p>
-          Each action belongs to a specific maturity stage (Crawl, Walk, Run, or Fly) and traces back to one or more playbooks. The "Related Playbooks" row under each stage links out to the full playbook pages, which cover the objective, step-by-step structure, metrics to watch, and common pitfalls. Crawl-stage items focus on establishing a baseline: a defined onboarding motion, a working health score, a QBR cadence for high-ARR accounts. Walk-stage items layer on segmentation and measurement. Run and Fly items move the team toward predictive and proactive operations.
+          Each action belongs to a specific maturity stage (Crawl, Walk, or Run) and traces back to one or more playbooks. The "Related Playbooks" row under each stage links out to the full playbook pages, which cover the objective, step-by-step structure, metrics to watch, and common pitfalls. Crawl-stage items focus on establishing a baseline: a defined onboarding motion, a working health score, a QBR cadence for high-ARR accounts. Walk-stage items layer on segmentation and measurement. Run items move the team toward predictive and proactive operations.
         </p>
 
         <h2>Why the order matters</h2>
@@ -521,8 +521,8 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
 
   const stages = frameworkData.maturity_stages.stages;
   const playbooks = frameworkData.playbooks as Record<string, any[]>;
-  const stageOrder = ['crawl', 'walk', 'run', 'fly'];
-  const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+  const stageOrder = ['crawl', 'walk', 'run'];
+  const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 
   const CHECKLIST_KEY = 'distilledcs_checklist';
 

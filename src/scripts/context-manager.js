@@ -6,12 +6,11 @@ const SCORES_KEY = 'distilledcs_scores';
 const COMPLETED_KEY = 'distilledcs_completed';
 const PREVIOUS_SCORES_KEY = 'distilledcs_previous_scores';
 
-// Stage score ranges (from framework data)
+// Stage score ranges (from framework data — D1 bands, ordered ascending by min)
 const STAGE_RANGES = [
-  { id: 'crawl', label: 'Crawl', min: 1.0, max: 1.7 },
-  { id: 'walk',  label: 'Walk',  min: 1.8, max: 2.5 },
-  { id: 'run',   label: 'Run',   min: 2.6, max: 3.3 },
-  { id: 'fly',   label: 'Fly',   min: 3.4, max: 4.0 },
+  { id: 'crawl', label: 'Crawl', min: 1.0, max: 2.0 },
+  { id: 'walk',  label: 'Walk',  min: 2.0, max: 3.0 },
+  { id: 'run',   label: 'Run',   min: 3.0, max: 4.0 },
 ];
 
 function safeGetItem(key) {
@@ -81,8 +80,27 @@ function migrateFromLeanCS() {
   }
 }
 
-// Run migration on load
+// One-time migration: rewrite stage: "fly" to stage: "run" in stored scores.
+// Fly users are top-tier; Run is the new top after the 3-stage collapse.
+function migrateFlyStagesToRun() {
+  try {
+    for (const key of [SCORES_KEY, PREVIOUS_SCORES_KEY]) {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      const parsed = safeParse(raw);
+      if (parsed && parsed.stage === 'fly') {
+        parsed.stage = 'run';
+        localStorage.setItem(key, JSON.stringify(parsed));
+      }
+    }
+  } catch {
+    // ignore migration errors
+  }
+}
+
+// Run migrations on load
 migrateFromLeanCS();
+migrateFlyStagesToRun();
 
 // Profile management
 export function saveProfile(profile) {
@@ -131,17 +149,17 @@ export function resetAll() {
   }
 }
 
-// Determine maturity stage from an overall score (1.0–4.0)
+// Determine maturity stage from an overall score (1.0–4.0).
+// Uses min-only selection (same pattern as determineStage() in scoring-engine.js):
+// picks the highest stage whose min the score has passed, so boundary values
+// like 2.0 land in Walk and 3.0 land in Run, not the lower stage.
 export function getMaturityStage(overallScore) {
   if (typeof overallScore !== 'number' || isNaN(overallScore)) return null;
+  let result = STAGE_RANGES[0];
   for (const stage of STAGE_RANGES) {
-    if (overallScore >= stage.min && overallScore <= stage.max) {
-      return stage;
-    }
+    if (overallScore >= stage.min) result = stage;
   }
-  // Edge case: clamp to nearest
-  if (overallScore < 1.0) return STAGE_RANGES[0];
-  return STAGE_RANGES[STAGE_RANGES.length - 1];
+  return result;
 }
 
 // Get a single value from the saved profile

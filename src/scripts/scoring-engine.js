@@ -56,6 +56,18 @@ export function determineStage(overallScore) {
   return chosen.id;
 }
 
+// Convert a raw /4 score to the /10 display scale (multiply by 2.5).
+// Returns null for missing or NaN input so callers can guard once.
+export function toDisplayScore(raw, decimals = 1) {
+  if (raw == null || Number.isNaN(raw)) return null;
+  return Number((raw * 2.5).toFixed(decimals));
+}
+
+// Convert a [min, max] score_range pair from /4 to /10 display units.
+export function toDisplayRange([min, max]) {
+  return [toDisplayScore(min), toDisplayScore(max)];
+}
+
 // Generate full assessment result object
 export function generateAssessmentResult(profile, responses) {
   const domainScores = calculateAllDomainScores(responses);

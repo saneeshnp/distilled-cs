@@ -3,27 +3,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import frameworkData from '../data/lean-cs-data.json';
 
 const stages = frameworkData.maturity_stages.stages;
-const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+const stageOrder = ['crawl', 'walk', 'run'];
 const stageTransitions = frameworkData.stage_transitions;
-const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
-const transitionMap: Record<string, string> = { crawl: 'crawl_to_walk', walk: 'walk_to_run', run: 'run_to_fly' };
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
+const transitionMap: Record<string, string> = { crawl: 'crawl_to_walk', walk: 'walk_to_run' };
 
 const faqItems = [
   {
     q: 'What is the customer success maturity model?',
-    a: 'A four-stage model that describes how CS organizations evolve from reactive firefighting to predictive, outcome-driven operations. The stages are Crawl, Walk, Run, and Fly. Each names the operating mode of the team, the metrics that matter at that level, and the plays that move the team forward.',
+    a: 'A three-stage model that describes how CS organizations evolve from reactive firefighting to proactive, outcome-driven operations. The stages are Crawl, Walk, and Run. Each names the operating mode of the team, the metrics that matter at that level, and the plays that move the team forward.',
   },
   {
-    q: 'How do the four stages differ?',
-    a: 'Crawl is reactive and foundational: the team is saving what it can while standardizing onboarding and renewal. Walk is informed and structured: segmentation is real, health scoring exists, QBRs run reliably. Run is proactive and operationalized: leading indicators drive action, expansion is a motion. Fly is predictive and optimized: the team runs on forecast, not reaction, with AI assisting routine judgment.',
+    q: 'How do the three stages differ?',
+    a: 'Crawl is reactive and foundational: the team is saving what it can while standardizing onboarding and renewal. Walk is informed and structured: segmentation is real, health scoring exists, QBRs run reliably. Run is proactive and operationalized: leading indicators drive action, expansion is a repeatable motion, and AI-assisted workflows are in practice. Continued improvement within Run is the ongoing discipline.',
   },
   {
     q: 'How do I know which stage I am in?',
-    a: 'The Distilled CS assessment scores eight domains and maps your overall score to a stage. If you have not completed it, a quick heuristic: if renewals surprise you, you are at Crawl. If you know which accounts are at risk but react late, you are at Walk. If you catch risk weeks in advance and expansion is a repeatable play, you are at Run. If forecasting is reliable and the team is automating the predictable work, you are at Fly.',
+    a: 'The Distilled CS assessment scores eight domains and maps your overall score to a stage. If you have not completed it, a quick heuristic: if renewals surprise you, you are at Crawl. If you know which accounts are at risk but react late, you are at Walk. If you catch risk weeks in advance, expansion is a repeatable motion, and predictive models or AI workflows are in use, you are at Run.',
   },
   {
     q: 'How long does it take to move between stages?',
-    a: 'Typically nine to eighteen months per transition, depending on company growth rate and how much the CS function is already instrumented. Crawl to Walk is the fastest when the team commits to consistent motions. Walk to Run is the longest because it requires a data layer that most teams underestimate. Run to Fly depends as much on the company as on CS.',
+    a: 'Typically nine to eighteen months per transition, depending on company growth rate and how much the CS function is already instrumented. Crawl to Walk is the fastest when the team commits to consistent motions. Walk to Run is the longest because it requires a data layer that most teams underestimate.',
   },
   {
     q: 'Can a CS team skip a stage?',
@@ -54,7 +54,7 @@ const faqSchema = {
 };
 ---
 
-<BaseLayout title="Customer Success Maturity Model" description="The Customer Success Maturity Model: four stages (Crawl, Walk, Run, Fly) with characteristics, priority actions, and transition signals for each." structuredData={[faqSchema]}>
+<BaseLayout title="Customer Success Maturity Model" description="The Customer Success Maturity Model: three stages (Crawl, Walk, Run) with characteristics, priority actions, and transition signals for each." structuredData={[faqSchema]}>
 
   <div class="container model-page">
 
@@ -66,7 +66,7 @@ const faqSchema = {
     <!-- Persistent H1 for SEO -->
     <header class="model-header">
       <h1 class="model-title">Customer Success Maturity Model</h1>
-      <p class="model-subtitle">The Distilled CS maturity model lets you place your CS organization on a four-stage scale (Crawl, Walk, Run, Fly) and shows the priority actions for moving up. It anchors the assessment, the recommended playbooks, and the metrics directory.</p>
+      <p class="model-subtitle">The Distilled CS maturity model places your CS organization on a three-stage scale (Crawl, Walk, Run) and shows the priority actions for moving up. It anchors the assessment, the recommended playbooks, and the metrics directory.</p>
     </header>
 
     <!-- Contextual header — shown if assessed (populated by JS) -->
@@ -166,8 +166,8 @@ const faqSchema = {
     <!-- Intro prose (moved below stages so users see the model first) -->
     <section class="pillar-intro" data-hide-if-assessed>
       <h2>Why a maturity model for customer success</h2>
-      <p>A maturity model gives the CS team a shared frame for what it is ready to do next, instead of arguing about tactics in the abstract. Principles that work at Crawl can misfire at Run. Metrics that matter at Fly are noise at Walk. Naming the stage lets the team match the advice to the reality of the organization.</p>
-      <p>The four stages above are ordered by capability, not by company size. A lean team at a Series A startup can operate at Run. A hundred-person CS org at a public company can still be stuck at Crawl if the motions are inconsistent. Stage is a description of the operating system, not a badge for the team.</p>
+      <p>A maturity model gives the CS team a shared frame for what it is ready to do next, instead of arguing about tactics in the abstract. Principles that work at Crawl can misfire at Run. Metrics that matter at Run are noise at Crawl. Naming the stage lets the team match the advice to the reality of the organization.</p>
+      <p>The three stages above are ordered by capability, not by company size. A lean team at a Series A startup can operate at Run. A hundred-person CS org at a public company can still be stuck at Crawl if the motions are inconsistent. Stage is a description of the operating system, not a badge for the team.</p>
     </section>
 
     <section class="pillar-faq">
@@ -675,13 +675,12 @@ const faqSchema = {
 <script>
   import { isAssessmentCompleted, getScores, getProfile } from '../scripts/context-manager.js';
 
-  const stageOrder = ['crawl', 'walk', 'run', 'fly'];
-  const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+  const stageOrder = ['crawl', 'walk', 'run'];
+  const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
   const stageSubtitles = {
     crawl: 'Reactive / Foundational',
     walk: 'Informed / Structured',
     run: 'Proactive / Operationalized',
-    fly: 'Predictive / Optimized',
   };
 
   // Accordion toggle

@@ -2,8 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import frameworkData from '../../data/lean-cs-data.json';
 
-const stageOrder = ['crawl', 'walk', 'run', 'fly'];
-const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+const stageOrder = ['crawl', 'walk', 'run'];
+const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 
 // Build flat list of all playbooks with stage info and ordering
 const allPlaybooks: any[] = [];
@@ -15,7 +15,7 @@ for (const stageId of stageOrder) {
 }
 
 export function getStaticPaths() {
-  const stageOrder = ['crawl', 'walk', 'run', 'fly'];
+  const stageOrder = ['crawl', 'walk', 'run'];
   const all: any[] = [];
   for (const stageId of stageOrder) {
     const pbs = (frameworkData.playbooks as any)[stageId] || [];
@@ -509,10 +509,10 @@ const breadcrumbSchema = {
     if (completed === 'true' && scoresRaw) {
       const scores = JSON.parse(scoresRaw);
       const userStage = scores.stage;
-      const stageOrder = ['crawl', 'walk', 'run', 'fly'];
-      const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run', fly: 'Fly' };
+      const stageOrder = ['crawl', 'walk', 'run'];
+      const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
       const currentIdx = stageOrder.indexOf(userStage);
-      const nextStage = currentIdx < 3 ? stageOrder[currentIdx + 1] : null;
+      const nextStage = currentIdx < 2 ? stageOrder[currentIdx + 1] : null;
 
       const indicator = document.getElementById('playbook-stage-indicator');
       const playbookStage = indicator?.getAttribute('data-playbook-stage');

@@ -46,7 +46,7 @@ const personas = [
     },
   },
   {
-    name: 'High-Fly — enterprise, mostly score 4',
+    name: 'High-Run — enterprise, mostly score 4',
     profile: { customer_segment: 'seg_enterprise', company_arr: 'arr_over_100m', cs_team_size: 'team_10plus' },
     responses: {
       sc_q1: 4, sc_q2: 4, sc_q3: 4,
@@ -145,6 +145,36 @@ for (const persona of personas) {
   console.log(`    ${highCount} high-priority, ${metrics.filter(m=>m.relevance==='medium').length} medium, ${metrics.filter(m=>m.relevance==='low').length} low`);
 }
 
+// ── Run stage: no next stage ──────────────────────────────────────────────────
+// A user with all score-4 responses is at Run (the top stage).
+// comingNext must be empty and nothing should crash.
+console.log('\n── Run stage: no next stage ──');
+{
+  const runProfile = { customer_segment: 'seg_enterprise', company_arr: 'arr_over_100m', cs_team_size: 'team_10plus' };
+  const runResponses = {
+    sc_q1: 4, sc_q2: 4, sc_q3: 4,
+    jl_q1: 4, jl_q2: 4, jl_q3: 4,
+    hr_q1: 4, hr_q2: 4, hr_q3: 4,
+    md_q1: 4, md_q2: 4, md_q3: 4,
+    ev_q1: 4, ev_q2: 4, ev_q3: 4,
+    os_q1: 4, os_q2: 4, os_q3: 4,
+    ca_q1: 4, ca_q2: 4, ca_q3: 4,
+    ai_q1: 4, ai_q2: 4, ai_q3: 4,
+  };
+  let playbooks;
+  try {
+    playbooks = composePlaybookRecommendations(runProfile, runResponses, frameworkData, allPlaybooks);
+    check('Run: no crash when at top stage', true);
+  } catch (e) {
+    check('Run: no crash when at top stage', false, e.message);
+    playbooks = { currentStage: [], weakestDomain: [], comingNext: [] };
+  }
+  check('Run: currentStage is non-empty', playbooks.currentStage.length > 0, `got ${playbooks.currentStage.length}`);
+  check('Run: comingNext is empty (no stage above Run)', playbooks.comingNext.length === 0, `got ${playbooks.comingNext.length}`);
+  check('Run: comingNext is array', Array.isArray(playbooks.comingNext));
+  console.log(`    currentStage=${playbooks.currentStage.length}, comingNext=${playbooks.comingNext.length}`);
+}
+
 // ── Edge case: missing fragments (Task 9.1) ───────────────────────────────────
 // Simulates a "transition period" where the JSON has no insight/next_step on any
 // option. The engine should fall back cleanly to stage.priority_actions and
@@ -190,7 +220,7 @@ console.log('\n── Edge case: all fragments missing ──');
 // Engine must cap at ≤3 priority actions and ≤3 strengths.
 console.log('\n── Edge case: all score-4 except one score-1 ──');
 {
-  const nearFlyResponses = {
+  const nearRunResponses = {
     sc_q1: 4, sc_q2: 4, sc_q3: 4,
     jl_q1: 4, jl_q2: 4, jl_q3: 4,
     hr_q1: 4, hr_q2: 4, hr_q3: 4,
@@ -200,8 +230,8 @@ console.log('\n── Edge case: all score-4 except one score-1 ──');
     ca_q1: 4, ca_q2: 4, ca_q3: 4,
     ai_q1: 1, ai_q2: 4, ai_q3: 4,  // one score-1 to drive a priority action
   };
-  const actions = composePriorityActions({}, nearFlyResponses, frameworkData);
-  const strengths = composeStrengths({}, nearFlyResponses, frameworkData);
+  const actions = composePriorityActions({}, nearRunResponses, frameworkData);
+  const strengths = composeStrengths({}, nearRunResponses, frameworkData);
 
   check('9.2: priority actions ≤ 3', actions.length <= 3, `got ${actions.length}`);
   check('9.2: priority actions ≥ 1', actions.length >= 1, `got ${actions.length}`);
