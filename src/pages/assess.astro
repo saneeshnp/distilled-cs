@@ -49,7 +49,7 @@ const stages = frameworkData.maturity_stages.stages;
 
         <h2>What you get back</h2>
         <p>
-          After submission you see a results summary with your stage, domain-by-domain scores, and immediate next steps. From there you can open the full <a href="/cs-maturity-report/">CS Maturity Report</a> with your executive summary, strengths, priority actions, recommended playbooks, and stage-specific metric priorities. Everything is stored in your browser, not on a server, so re-assessing later lets you track movement over time.
+          After submission you go straight to your <a href="/cs-maturity-report/">CS Maturity Report</a> — a personalised view of your stage, domain-by-domain scores, executive summary, strengths, priority actions, recommended playbooks, and stage-specific metric priorities. Everything is stored in your browser, not on a server, so re-assessing later lets you track movement over time.
         </p>
 
         <h2>Who this is for</h2>
@@ -74,6 +74,11 @@ const stages = frameworkData.maturity_stages.stages;
     <section class="phase" id="phase-profile">
       <h2 class="phase-title">First, tell us about your company and team</h2>
       <p class="phase-subtitle">These don't affect your maturity score — they help us tailor benchmarks and recommendations to your context.</p>
+
+      <div class="update-flow-bar" id="update-flow-bar" style="display:none;">
+        <span class="update-flow-hint">Updating your previous answers — change only what's different.</span>
+        <button class="btn-start-fresh" id="start-fresh-btn" type="button">Start Fresh Instead</button>
+      </div>
 
       <div class="profile-form" id="profile-form">
         <div class="profile-question company-name-field">
@@ -179,13 +184,10 @@ const stages = frameworkData.maturity_stages.stages;
         <div class="analyzing-progress" aria-hidden="true">
           <div class="analyzing-progress-fill"></div>
         </div>
+        <span class="analyzing-loader" aria-hidden="true"></span>
       </div>
     </section>
 
-    <!-- Phase 3: Results -->
-    <section class="phase" id="phase-results" style="display:none;">
-      <div id="results-content"></div>
-    </section>
 
   </div>
 </BaseLayout>
@@ -340,6 +342,42 @@ const stages = frameworkData.maturity_stages.stages;
     font-size: 1rem;
     margin-bottom: 2.5rem;
     max-width: 32rem;
+  }
+
+  .update-flow-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.625rem 0.875rem;
+    background: rgba(229, 57, 53, 0.06);
+    border: 1px solid rgba(229, 57, 53, 0.2);
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .update-flow-hint {
+    flex: 1;
+  }
+
+  .btn-start-fresh {
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-danger);
+    background: none;
+    border: 1px solid var(--color-danger);
+    border-radius: 4px;
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    min-height: 0;
+  }
+
+  .btn-start-fresh:hover {
+    background: rgba(229, 57, 53, 0.08);
   }
 
   /* Company name field */
@@ -537,255 +575,6 @@ const stages = frameworkData.maturity_stages.stages;
     color: var(--color-accent);
   }
 
-  /* ── Results ── */
-  :global(.results-header) {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-
-  :global(.results-stage-badge) {
-    display: inline-block;
-    padding: 0.5rem 1.5rem;
-    border-radius: 9999px;
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    background: color-mix(in srgb, var(--stage-color) 14%, transparent);
-    color: var(--stage-color);
-    border: 1px solid color-mix(in srgb, var(--stage-color) 30%, transparent);
-  }
-
-  :global(.results-stage-name) {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    margin-bottom: 0.375rem;
-    color: var(--stage-color);
-  }
-
-  :global(.results-stage-subtitle) {
-    color: var(--color-text-secondary);
-    font-size: 1rem;
-  }
-
-  :global(.results-overall-score) {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    margin-top: 0.5rem;
-  }
-
-  :global(.results-section) {
-    margin-bottom: 2.5rem;
-  }
-
-  :global(.results-section-title) {
-    font-family: var(--font-display);
-    font-size: 1.375rem;
-    margin-bottom: 1rem;
-  }
-
-  :global(.domain-score-row) {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  :global(.domain-score-label) {
-    flex: 1;
-    font-size: 0.9375rem;
-  }
-
-  :global(.domain-score-bar-wrap) {
-    flex: 2;
-    height: 8px;
-    background: var(--color-surface);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  :global(.domain-score-bar) {
-    height: 100%;
-    border-radius: 4px;
-    background: var(--stage-color, var(--color-accent));
-    transition: width 0.8s ease-out;
-  }
-
-  :global(.domain-score-value) {
-    width: 3rem;
-    text-align: right;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--color-text-secondary);
-  }
-
-  :global(.highlight-tag) {
-    display: inline-block;
-    padding: 0.125rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-left: 0.5rem;
-  }
-
-  :global(.highlight-strong) {
-    background: color-mix(in srgb, var(--color-stage-run) 18%, transparent);
-    color: var(--color-stage-run);
-  }
-
-  :global(.highlight-weak) {
-    background: color-mix(in srgb, var(--color-stage-crawl) 18%, transparent);
-    color: var(--color-stage-crawl);
-  }
-
-  :global(.priority-actions-list) {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  :global(.priority-actions-list li) {
-    padding: 1rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-    font-size: 0.9375rem;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-  }
-
-  :global(.priority-number) {
-    flex-shrink: 0;
-    width: 1.5rem;
-    height: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: var(--color-accent);
-    color: var(--color-bg);
-    font-size: 0.75rem;
-    font-weight: 700;
-  }
-
-  :global(.results-next-steps) {
-    margin-top: 2.5rem;
-    padding: 1.5rem;
-    background: var(--color-accent-subtle);
-    border: 1px solid var(--color-border);
-    border-radius: 0.75rem;
-  }
-
-  :global(.results-next-steps-title) {
-    font-family: var(--font-display);
-    font-size: 1.125rem;
-    color: var(--color-text-primary);
-    margin-bottom: 1rem;
-  }
-
-  :global(.results-next-steps-list) {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
-  }
-
-  :global(.results-next-steps-list li) {
-    padding-left: 1rem;
-    position: relative;
-  }
-
-  :global(.results-next-steps-list li::before) {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--color-accent);
-    font-weight: 600;
-  }
-
-  :global(.results-next-steps-list a) {
-    color: var(--color-accent);
-    text-decoration: none;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    transition: color 0.2s ease-out;
-  }
-
-  :global(.results-next-steps-list a:hover) {
-    text-decoration: underline;
-  }
-
-  :global(.results-manage) {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-    justify-content: center;
-  }
-
-  :global(.results-manage .btn-manage) {
-    display: inline-block;
-    padding: 0.5rem 1.25rem;
-    border-radius: 0.5rem;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    font-family: var(--font-body);
-    cursor: pointer;
-    background: transparent;
-    color: var(--color-text-secondary);
-    border: 1px solid var(--color-border-hover);
-    transition: all 0.25s ease-out;
-  }
-
-  :global(.results-manage .btn-manage:hover) {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-  }
-
-  :global(.results-report-cta) {
-    text-align: center;
-    margin-top: 2.5rem;
-    padding: 2rem 1.5rem;
-    background: var(--color-accent-subtle);
-    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
-    border-radius: 0.875rem;
-  }
-
-  :global(.results-report-btn) {
-    display: inline-block;
-    padding: 0.875rem 2rem;
-    background: var(--color-accent);
-    color: var(--color-bg);
-    border: none;
-    border-radius: 0.5rem;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background-color 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
-  }
-
-  :global(.results-report-btn:hover) {
-    background: var(--color-accent-hover);
-    color: var(--color-bg);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px color-mix(in srgb, var(--color-accent) 25%, transparent);
-  }
-
-  :global(.results-report-cta-sub) {
-    margin: 0.75rem 0 0;
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-  }
-
   /* ── Analyzing reveal ── */
   .phase-analyzing {
     position: fixed;
@@ -836,12 +625,36 @@ const stages = frameworkData.maturity_stages.stages;
     40%  { width: 22%; }
     100% { width: 100%; }
   }
+
+  /* ── Spin loader ── */
+  .analyzing-loader {
+    display: block;
+    width: 44px;
+    height: 44px;
+    border: 4px solid;
+    border-color: var(--color-accent) transparent;
+    border-radius: 50%;
+    margin: 2.25rem auto 0;
+    box-sizing: border-box;
+    animation: analyzing-spin 0.9s linear infinite;
+  }
+
+  @keyframes analyzing-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .analyzing-loader {
+      animation: none;
+      border-color: var(--color-accent) transparent;
+      opacity: 0.5;
+    }
+  }
 </style>
 
 <script>
   import { saveProfile, saveScores, setAssessmentCompleted, resetAll, isAssessmentCompleted, getScores, getProfile, savePreviousScores } from '../scripts/context-manager.js';
   import { calculateAllDomainScores, calculateOverallScore, determineStage, toDisplayScore } from '../scripts/scoring-engine.js';
-  import { animateDomainBars } from '../scripts/animate-domain-bars.js';
   import frameworkData from '../data/lean-cs-data.json';
 
   const contextParams = frameworkData.context_parameters.parameters;
@@ -862,7 +675,6 @@ const stages = frameworkData.maturity_stages.stages;
   const progressBarWrap = document.getElementById('progress-bar-wrap');
   const phaseProfile = document.getElementById('phase-profile') as HTMLElement;
   const phaseAssessment = document.getElementById('phase-assessment') as HTMLElement;
-  const phaseResults = document.getElementById('phase-results') as HTMLElement;
   const profileNextBtn = document.getElementById('profile-next') as HTMLButtonElement;
   const finishBtn = document.getElementById('finish-assessment');
   const assessIntro = document.querySelector('.assess-intro') as HTMLElement | null;
@@ -874,117 +686,6 @@ const stages = frameworkData.maturity_stages.stages;
     if (assessIntro) assessIntro.style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-
-  // ── Results HTML generator (reusable) ──
-  function generateResultsHTML(domainScores: Record<string, number>, overallScore: number, stageId: string): string {
-    const stage = stages.find((s: any) => s.id === stageId);
-    const sorted = Object.entries(domainScores).sort((a, b) => b[1] - a[1]);
-    const strongestId = sorted[0][0];
-    const weakestId = sorted[sorted.length - 1][0];
-    const weakest3 = sorted.slice(-3).reverse().map(([id]) => domains.find((d: any) => d.id === id));
-
-    // Personalize with company name if available
-    const savedProfile = getProfile();
-    const companyName = savedProfile?.company_name || '';
-    const stageBadgeText = companyName
-      ? `${companyName}'s Customer Success Maturity Stage`
-      : 'Your Maturity Stage';
-
-    return `
-      <div class="results-header stage-${stageId}">
-        <div class="results-stage-badge">${stageBadgeText}</div>
-        <h2 class="results-stage-name">${stage?.label || stageId}</h2>
-        <p class="results-stage-subtitle">${stage?.subtitle || ''}</p>
-        <p class="results-overall-score">Overall score: ${toDisplayScore(overallScore)} / 10</p>
-      </div>
-
-      <div class="results-section">
-        <h2 class="results-section-title">Domain Breakdown</h2>
-        ${sorted.map(([id, score]) => {
-          const d = domains.find((dm: any) => dm.id === id);
-          const pct = ((score / 4) * 100).toFixed(0);
-          const barStage = determineStage(score) ?? 'crawl';
-          const isStrong = id === strongestId;
-          const isWeak = id === weakestId;
-          return `<div class="domain-score-row stage-${barStage}">
-            <span class="domain-score-label">
-              ${d?.label || id}
-              ${isStrong ? '<span class="highlight-tag highlight-strong">Strongest</span>' : ''}
-              ${isWeak ? '<span class="highlight-tag highlight-weak">Needs focus</span>' : ''}
-            </span>
-            <div class="domain-score-bar-wrap">
-              <div class="domain-score-bar" style="width:${pct}%"></div>
-            </div>
-            <span class="domain-score-value">${toDisplayScore(score)}</span>
-          </div>`;
-        }).join('')}
-      </div>
-
-      <div class="results-section">
-        <h2 class="results-section-title">Top Priority Actions</h2>
-        <ol class="priority-actions-list">
-          ${weakest3.slice(0, 3).map((d: any, i: number) => {
-            const stageActions = stage?.priority_actions || [];
-            const rawAction = stageActions[i];
-            const action = typeof rawAction === 'string' ? rawAction : rawAction?.text || (d ? `Focus on improving ${d.label}` : 'Continue building your CS foundation');
-            return `<li><span class="priority-number">${i + 1}</span><span>${action}</span></li>`;
-          }).join('')}
-        </ol>
-      </div>
-
-      <div class="results-report-cta">
-        <a href="/cs-maturity-report/" class="results-report-btn">View Full Report &rarr;</a>
-        <p class="results-report-cta-sub">See your complete, personalized CS maturity report</p>
-      </div>
-      <div class="results-next-steps">
-        <h2 class="results-next-steps-title">Personalized actions based on your score and CS maturity</h2>
-        <ul class="results-next-steps-list">
-          <li><a href="/customer-success-playbooks/">View your playbooks to execute</a></li>
-          <li><a href="/customer-success-maturity-model/">Explore the maturity model to see where you stand</a></li>
-          <li><a href="/customer-success-metrics/">Understand your metric priorities</a></li>
-        </ul>
-      </div>
-      <div class="results-manage">
-        <button class="btn-manage" id="update-answers-btn" type="button">Update My Answers</button>
-        <button class="btn-manage" id="retake-btn" type="button">Clear &amp; Restart</button>
-      </div>
-    `;
-  }
-
-  // ── Show results screen ──
-  function showResults(domainScores: Record<string, number>, overallScore: number, stageId: string) {
-    const resultsContent = document.getElementById('results-content');
-    if (resultsContent) resultsContent.innerHTML = generateResultsHTML(domainScores, overallScore, stageId);
-
-    phaseProfile.style.display = 'none';
-    phaseAssessment.style.display = 'none';
-    phaseResults.style.display = '';
-    if (progressBarWrap) progressBarWrap.style.display = 'none';
-
-    // Hide the static SEO intro once the user has a completed assessment.
-    document.querySelectorAll<HTMLElement>('[data-hide-if-assessed]').forEach(el => { el.style.display = 'none'; });
-
-    if (resultsContent) {
-      animateDomainBars({
-        container: resultsContent,
-        rowSelector: '.domain-score-row',
-        fillSelector: '.domain-score-bar',
-        valueSelector: '.domain-score-value',
-      });
-    }
-
-    // Bind retake/update handler
-    document.getElementById('retake-btn')?.addEventListener('click', () => {
-      if (confirm('This will permanently clear your assessment results, company profile, and any progress. This cannot be undone. Continue?')) {
-        resetAll();
-        window.location.reload();
-      }
-    });
-
-    document.getElementById('update-answers-btn')?.addEventListener('click', () => {
-      startAssessmentWithPreviousAnswers();
-    });
-  }
 
   // ── Pre-populate and start assessment with previous answers ──
   function startAssessmentWithPreviousAnswers() {
@@ -1039,14 +740,28 @@ const stages = frameworkData.maturity_stages.stages;
       (btn as HTMLElement).style.display = '';
     });
 
+    // Hide intro copy — returning users don't need it
+    document.querySelectorAll<HTMLElement>('[data-hide-if-assessed]').forEach(el => { el.style.display = 'none'; });
+
+    // Show the update-flow banner with "Start Fresh" option
+    const updateBar = document.getElementById('update-flow-bar');
+    if (updateBar) updateBar.style.display = '';
+
     // Show profile phase
-    phaseResults.style.display = 'none';
     phaseProfile.style.display = '';
     phaseAssessment.style.display = 'none';
     if (progressBarWrap) progressBarWrap.style.display = '';
     updateProgress();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // ── Start Fresh button (update flow only) ──
+  document.getElementById('start-fresh-btn')?.addEventListener('click', () => {
+    if (confirm('This will clear all your answers and start from scratch. This cannot be undone. Continue?')) {
+      resetAll();
+      window.location.href = '/assess/';
+    }
+  });
 
   // ── Check if returning user → show results, or jump straight into update flow ──
   if (isAssessmentCompleted()) {
@@ -1056,7 +771,7 @@ const stages = frameworkData.maturity_stages.stages;
       if (urlParams.get('mode') === 'update') {
         startAssessmentWithPreviousAnswers();
       } else {
-        showResults(savedScores.domainScores, savedScores.overallScore, savedScores.stage);
+        window.location.replace('/cs-maturity-report/');
       }
     }
   }
@@ -1190,9 +905,8 @@ const stages = frameworkData.maturity_stages.stages;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const finalize = () => {
-      showResults(domainScores, overallScore, stageId);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
       window.dispatchEvent(new CustomEvent('distilledcs:updated'));
+      window.location.replace('/cs-maturity-report/');
     };
 
     if (reduceMotion) {
@@ -1210,7 +924,6 @@ const stages = frameworkData.maturity_stages.stages;
 
     (document.getElementById('phase-profile') as HTMLElement).style.display = 'none';
     (document.getElementById('phase-assessment') as HTMLElement).style.display = 'none';
-    (document.getElementById('phase-results') as HTMLElement).style.display = 'none';
 
     const titleEl = analyzing.querySelector<HTMLElement>('.analyzing-title');
     if (titleEl) titleEl.textContent = opts.title;

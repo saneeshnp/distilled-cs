@@ -5,6 +5,12 @@ import frameworkData from '../data/lean-cs-data.json';
 const strategyLoop = frameworkData.strategy_loop;
 const stages = frameworkData.maturity_stages.stages;
 const principles = frameworkData.principles;
+
+const stageImageAlts: Record<string, string> = {
+  crawl: 'Turtle illustration for the Crawl stage of the customer success maturity model, a reactive and foundational stage',
+  walk: 'Person walking, illustrating the Walk stage of the customer success maturity model, where structure begins to form',
+  run: 'Person running toward a goal flag, illustrating the Run stage of the customer success maturity model, where CS becomes predictive and operationalized',
+};
 ---
 
 <BaseLayout title="Customer Success Strategy & Maturity Framework" description="Open, vendor-neutral framework to assess your customer success maturity, get prescriptive playbooks, and track the metrics that move retention.">
@@ -71,6 +77,16 @@ const principles = frameworkData.principles;
         {stages.map((stage, i) => (
           <div class={`hp-stage-card scroll-reveal stage-${stage.id}`} style={`--stage-delay: ${i * 0.1}s`}>
             <div class="hp-stage-color-bar"></div>
+            <div class="hp-stage-card-img">
+              <img
+                src={`/images/maturity-stages/cs-maturity-stage-${stage.id}.png`}
+                alt={stageImageAlts[stage.id]}
+                width="310"
+                height="202"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
             <div class="hp-stage-card-content">
               <span class="hp-stage-pill">Stage {i + 1}</span>
               <span class="hp-stage-label">{stage.label}</span>
@@ -85,7 +101,7 @@ const principles = frameworkData.principles;
         ))}
       </div>
       <div class="hp-section-cta scroll-reveal">
-        <a href="/customer-success-maturity-model/" class="btn btn-secondary">Explore the full maturity model</a>
+        <a href="/customer-success-maturity-model/" class="btn btn-primary">Explore the full maturity model</a>
       </div>
     </div>
   </section>
@@ -183,8 +199,8 @@ const principles = frameworkData.principles;
   <section class="hp-section hp-section-final-cta" id="get-started">
     <div class="container">
       <div class="hp-final-cta-inner scroll-reveal">
-        <h2 class="hp-final-cta-headline">Find out where your CS team stands</h2>
-        <a href="/assess/" class="btn btn-primary btn-large">Take the Assessment</a>
+        <h2 class="hp-final-cta-headline" id="hp-final-cta-headline">Find out where your CS team stands</h2>
+        <a href="/assess/" class="btn btn-primary btn-large" id="hp-final-cta-btn">Take the Assessment</a>
       </div>
     </div>
   </section>
@@ -682,6 +698,8 @@ const principles = frameworkData.principles;
   @media (min-width: 1024px) {
     .hp-stages-grid {
       grid-template-columns: repeat(3, 1fr);
+      max-width: 960px;
+      margin-inline: auto;
     }
   }
 
@@ -703,8 +721,21 @@ const principles = frameworkData.principles;
     background: var(--stage-color);
   }
 
+  .hp-stage-card-img {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 1.5rem 0.25rem;
+  }
+
+  .hp-stage-card-img img {
+    width: 90%;
+    height: auto;
+    border-radius: 0.625rem;
+  }
+
   .hp-stage-card-content {
     padding: 1.5rem;
+    text-align: center;
   }
 
   .hp-stage-pill {
@@ -726,13 +757,14 @@ const principles = frameworkData.principles;
     display: block;
     font-family: var(--font-display);
     font-size: 1.375rem;
+    font-weight: 700;
     margin-bottom: 0.25rem;
     color: var(--stage-color);
   }
 
   .hp-stage-subtitle {
     display: block;
-    font-size: 0.8125rem;
+    font-size: 1rem;
     color: var(--color-text-muted);
     margin-bottom: 1rem;
   }
@@ -744,6 +776,7 @@ const principles = frameworkData.principles;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    text-align: left;
   }
 
   .hp-stage-chars li {
@@ -882,8 +915,19 @@ const principles = frameworkData.principles;
   // ── Dynamic CTA for assessed users ──
   try {
     if (localStorage.getItem('distilledcs_completed') === 'true') {
-      const ctaBtn = document.getElementById('hp-hero-cta-primary');
-      if (ctaBtn) ctaBtn.textContent = 'View My Assessment';
+      const ctaBtn = document.getElementById('hp-hero-cta-primary') as HTMLAnchorElement | null;
+      if (ctaBtn) {
+        ctaBtn.textContent = 'View My Results';
+        ctaBtn.href = '/cs-maturity-report/';
+      }
+
+      const finalBtn = document.getElementById('hp-final-cta-btn') as HTMLAnchorElement | null;
+      if (finalBtn) {
+        finalBtn.textContent = 'View My Results';
+        finalBtn.href = '/cs-maturity-report/';
+      }
+      const finalHeadline = document.getElementById('hp-final-cta-headline');
+      if (finalHeadline) finalHeadline.textContent = 'See how your CS team is progressing';
     }
   } catch {}
 

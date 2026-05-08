@@ -102,7 +102,11 @@ export function animateDomainBars({
       },
       { threshold: 0.15 },
     );
-    observer.observe(container);
+    // Observe the first row rather than the container — the container may be a
+    // large wrapper (e.g. the whole checklist section) whose 15% threshold only
+    // fires after significant scrolling. Watching the first animated row means
+    // the animation triggers as soon as that element enters the viewport.
+    observer.observe(rows[0]);
   } else {
     start();
   }

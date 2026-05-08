@@ -993,7 +993,7 @@
               {
                 "score": 4,
                 "label": "Full retention analytics with cohort analysis, forecasting, and leading indicator correlation",
-                "insight": "Leading indicator correlation with retention outcomes is analytics maturity most CS teams only aspire to. You have genuine forecasting capability.",
+                "insight": "You have developed a level of analytics maturity that connects leading indicators with retention outcomes, something many CS teams still aspire to.",
                 "next_step": "Establish a cadence for updating your leading indicator model. Product changes and customer mix shifts alter which signals predict churn, so recalibrate at least annually.",
                 "next_step_by_segment": {
                   "seg_enterprise": "Extend forecasting to account-level renewal probability. Board stakeholders want ARR at risk by account, not averages. Account-level precision is the next frontier.",
