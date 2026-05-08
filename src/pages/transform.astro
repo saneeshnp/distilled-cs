@@ -52,12 +52,15 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
         </div>
 
         <!-- Checklist progress -->
-        <div class="dash-card">
+        <div class="dash-card" id="dash-checklist-card">
           <span class="dash-label">Checklist Progress</span>
-          <div class="dash-progress-bar-wrap">
-            <div class="dash-progress-bar" id="dash-checklist-bar"></div>
+          <div class="dash-checklist-row">
+            <div class="dash-progress-bar-wrap">
+              <div class="dash-progress-bar" id="dash-checklist-bar"></div>
+            </div>
+            <span class="dash-value dash-value-sm" id="dash-checklist-pct"></span>
           </div>
-          <span class="dash-value dash-value-sm" id="dash-checklist-pct"></span>
+          <span class="dash-checklist-items" id="dash-checklist-items"></span>
         </div>
       </div>
 
@@ -249,8 +252,15 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     height: 100%;
     background: var(--color-accent);
     border-radius: 3px;
-    transition: width 0.6s ease-out;
+    transition: width 0.8s ease-out;
     width: 0%;
+  }
+
+  .dash-checklist-items {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 0.25rem;
   }
 
   /* ── Sections ── */
@@ -603,7 +613,9 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
 <script>
   import { toDisplayScore } from '../scripts/scoring-engine.js';
   import { animateDomainBars } from '../scripts/animate-domain-bars.js';
+  import frameworkData from '../data/lean-cs-data.json';
 
+  const stages = frameworkData.maturity_stages.stages;
   const stageOrder = ['crawl', 'walk', 'run'];
   const stageLabels = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 
@@ -675,13 +687,36 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
       try {
         const checklistRaw = localStorage.getItem('distilledcs_checklist');
         const checklist = checklistRaw ? JSON.parse(checklistRaw) : {};
-        const total = Object.keys(checklist).length;
-        const done = Object.values(checklist).filter(Boolean).length;
+
+        // Compute total from actual stage items (same logic as checklist.astro)
+        const allChecklistItems: string[] = [];
+        if (currentIdx > 0) {
+          const prev = stages[currentIdx - 1] as any;
+          prev.priority_actions.forEach((_: any, i: number) => allChecklistItems.push(`${prev.id}_${i}`));
+        }
+        const cur = stages[currentIdx] as any;
+        cur.priority_actions.forEach((_: any, i: number) => allChecklistItems.push(`${cur.id}_${i}`));
+        if (currentIdx < stages.length - 1) {
+          const next = stages[currentIdx + 1] as any;
+          next.priority_actions.forEach((_: any, i: number) => allChecklistItems.push(`${next.id}_${i}`));
+        }
+
+        const total = allChecklistItems.length;
+        const done = allChecklistItems.filter(id => checklist[id]).length;
         const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+        const checklistCard = document.getElementById('dash-checklist-card');
         const bar = document.getElementById('dash-checklist-bar');
         const pctEl = document.getElementById('dash-checklist-pct');
+        const itemsEl = document.getElementById('dash-checklist-items');
         if (bar) bar.style.width = `${pct}%`;
-        if (pctEl) pctEl.textContent = total > 0 ? `${done}/${total} items (${pct}%)` : 'No items tracked yet';
+        if (pctEl) pctEl.textContent = `${pct}%`;
+        if (itemsEl) itemsEl.textContent = total > 0 ? `${done}/${total} items` : 'No items tracked yet';
+        if (checklistCard) animateDomainBars({
+          container: checklistCard,
+          rowSelector: '.dash-checklist-row',
+          fillSelector: '.dash-progress-bar',
+          valueSelector: '#dash-checklist-pct',
+        });
       } catch { /* ignore */ }
 
       // Domain breakdown bars
