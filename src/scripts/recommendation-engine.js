@@ -146,12 +146,13 @@ export function composeMetricPriorities(profile, responses, frameworkData, allMe
   const stage = _getUserStage(responses, frameworkData);
   const segment = profile?.customer_segment;
   const arr = profile?.company_arr;
+  const complexity = profile?.product_complexity;
 
   const PRIORITY_ORDER = { high: 0, medium: 1, low: 2 };
 
   const annotated = allMetrics.map(metric => {
     const relevance = metric.priority_by_stage?.[stage] ?? 'low';
-    const benchmark = _getSegmentBenchmark(metric, segment, arr);
+    const benchmark = _getSegmentBenchmark(metric, segment, arr, complexity);
     return { metric, relevance, segmentBenchmark: benchmark };
   });
 
@@ -225,8 +226,8 @@ function _scoreToStage(score, frameworkData) {
   return chosen.id;
 }
 
-function _getSegmentBenchmark(metric, segment, arr) {
+function _getSegmentBenchmark(metric, segment, arr, complexity) {
   const ctx = metric.benchmarks_by_context;
   if (!ctx) return null;
-  return ctx[segment] ?? ctx[arr] ?? null;
+  return ctx[segment] ?? ctx[arr] ?? ctx[complexity] ?? ctx['_default'] ?? null;
 }

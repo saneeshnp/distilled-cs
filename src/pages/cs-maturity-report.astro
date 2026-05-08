@@ -618,7 +618,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
   .report-metric-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.75rem;
     padding: 0.5rem 0;
     border-bottom: 1px solid var(--color-border);
@@ -630,6 +630,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
   .report-metric-name {
     flex: 1;
+    min-width: 0;
     font-size: 0.875rem;
     color: var(--color-text-primary);
   }
@@ -645,9 +646,12 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
   .report-metric-benchmark {
     flex: 0 0 auto;
+    max-width: 45%;
     font-size: 0.75rem;
     color: var(--color-text-secondary);
     text-align: right;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   /* ── Section 7: Maturity Model ── */
@@ -1346,7 +1350,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
       if (!entries.length) return '';
 
       const rows = entries.map(({ metric: m, segmentBenchmark: b }: any) => {
-        const benchmarkHtml = priority === 'high' && b?.good
+        const benchmarkHtml = b?.good
           ? `<span class="report-metric-benchmark">Target: ${b.good}</span>`
           : '';
         return `
