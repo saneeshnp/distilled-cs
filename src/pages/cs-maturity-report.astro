@@ -42,13 +42,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
         </button>
       </div>
 
-      <!-- Beta notice -->
-      <div class="report-beta-notice" role="note">
-        <span class="report-beta-icon" aria-hidden="true">ℹ</span>
-        <span><strong>This report is in beta.</strong> Layout and print/PDF support are being actively refined. For best results, use a desktop browser.</span>
-      </div>
-
-      <!-- Report body — populated by JS -->
+<!-- Report body — populated by JS -->
       <div id="report-content"></div>
     </div>
 
@@ -178,38 +172,12 @@ const contextualRecs = frameworkData.contextual_recommendations;
     background: var(--color-accent-hover);
   }
 
-  /* ── Beta notice ── */
-  .report-beta-notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    padding: 0.625rem 1rem;
-    margin-bottom: 1.5rem;
-    border-radius: 0.5rem;
-    background: var(--color-accent-subtle);
-    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    color: var(--color-text-secondary);
-  }
-
-  .report-beta-notice strong {
-    color: var(--color-text-primary);
-  }
-
-  .report-beta-icon {
-    flex-shrink: 0;
-    font-size: 0.875rem;
-    color: var(--color-accent);
-    line-height: 1.5;
-  }
-
   @media print {
-    .report-download-btn,
-    .report-beta-notice {
+    .report-download-btn {
       display: none !important;
     }
   }
+
 </style>
 
 <style is:global>
@@ -295,6 +263,34 @@ const contextualRecs = frameworkData.contextual_recommendations;
     font-size: 0.8125rem;
     color: var(--color-text-muted, var(--color-text-secondary));
     margin-top: 0.75rem;
+  }
+
+  .report-header-profile {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem 0;
+    margin-top: 1rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+  }
+
+  .report-header-profile-label {
+    font-weight: 600;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: 0.2rem;
+  }
+
+  .report-header-profile-sep {
+    margin: 0 0.625rem;
+    color: var(--color-border-hover);
+    font-size: 0.75rem;
   }
 
   /* ── Section 2: Executive Summary ── */
@@ -930,6 +926,88 @@ const contextualRecs = frameworkData.contextual_recommendations;
     }
   }
 
+  /* ── Inline ToC card (JS-injected after report header) ── */
+  .report-toc-card {
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .report-toc-card-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+    margin: 0 0 0.625rem;
+  }
+
+  .report-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    counter-reset: toc-counter;
+  }
+
+  @media (min-width: 560px) {
+    .report-toc-list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .report-toc-item {
+    counter-increment: toc-counter;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 559px) {
+    .report-toc-link {
+      font-size: 1rem;
+    }
+  }
+
+  .report-toc-item:last-child,
+  .report-toc-item:nth-last-child(2):nth-child(odd) {
+    border-bottom: none;
+  }
+
+  .report-toc-item::before {
+    content: counter(toc-counter, decimal-leading-zero);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    min-width: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .report-toc-link {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    line-height: 1.4;
+    transition: color 0.15s;
+    min-height: 0;
+  }
+
+  .report-toc-link:hover {
+    color: var(--color-accent);
+  }
+
+  @media print {
+    .report-toc-card {
+      display: none !important;
+    }
+  }
+
   /* ── Report footer ── */
   .report-footer {
     margin-top: 3rem;
@@ -1060,6 +1138,13 @@ const contextualRecs = frameworkData.contextual_recommendations;
     return 'crawl';
   }
 
+  function joinList(items: string[]): string {
+    if (items.length === 0) return '';
+    if (items.length === 1) return items[0];
+    if (items.length === 2) return `${items[0]} and ${items[1]}`;
+    return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
+  }
+
   function formatDate(iso: string): string {
     if (!iso) return '';
     try {
@@ -1116,6 +1201,33 @@ const contextualRecs = frameworkData.contextual_recommendations;
     sections.push(renderFooter(data));
 
     el.innerHTML = sections.join('');
+    buildToc();
+  }
+
+  // ── Table of contents ──
+  function buildToc() {
+    const content = document.getElementById('report-content');
+    if (!content) return;
+
+    const sectionEls = Array.from(content.querySelectorAll('.report-section[id]')) as HTMLElement[];
+    if (!sectionEls.length) return;
+
+    const itemsHtml = sectionEls.map(s => {
+      const label = s.querySelector('h2.report-section-title')?.textContent?.trim() || '';
+      return label ? `<li class="report-toc-item"><a href="#${s.id}" class="report-toc-link">${label}</a></li>` : '';
+    }).filter(Boolean).join('');
+
+    // Inject inline card after the report header
+    const reportHeader = content.querySelector('.report-header');
+    if (reportHeader) {
+      const card = document.createElement('div');
+      card.className = 'report-toc-card';
+      card.innerHTML = `<p class="report-toc-card-label">In this report</p><ol class="report-toc-list">${itemsHtml}</ol>`;
+      reportHeader.insertAdjacentElement('afterend', card);
+    }
+
+    // Offset for sticky header
+    sectionEls.forEach(s => { s.style.scrollMarginTop = '5rem'; });
   }
 
   function renderFooter(data: ReportData): string {
@@ -1160,37 +1272,169 @@ const contextualRecs = frameworkData.contextual_recommendations;
         <p class="report-stage-subtitle">${stage?.subtitle || ''}</p>
         <p class="report-score">Overall Score: ${typeof data.overallScore === 'number' ? toDisplayScore(data.overallScore) + ' / 10' : '—'}</p>
         ${data.timestamp ? `<p class="report-date">Assessment completed ${formatDate(data.timestamp)}</p>` : ''}
+        ${renderProfileTags(data)}
       </div>
     `;
   }
 
+  function renderProfileTags(data: ReportData): string {
+    const displayParams = [
+      { key: 'company_arr',       label: 'ARR'       },
+      { key: 'customer_segment',  label: 'Segment'   },
+      { key: 'cs_team_size',      label: 'Team'      },
+      { key: 'industry_vertical', label: 'Industry'  },
+    ];
+    const items = displayParams
+      .map(p => {
+        const val = data.profile[p.key];
+        return val
+          ? `<span class="report-header-profile-item"><span class="report-header-profile-label">${p.label}</span> ${getProfileLabel(p.key, val)}</span>`
+          : '';
+      })
+      .filter(Boolean);
+    return items.length
+      ? `<div class="report-header-profile">${items.join('<span class="report-header-profile-sep" aria-hidden="true">·</span>')}</div>`
+      : '';
+  }
+
   // ── Section 2: Executive Summary ──
   function renderSummary(data: ReportData, stage: any): string {
-    const profileItems: string[] = [];
-    const displayParams = [
-      { key: 'company_arr', label: 'ARR' },
-      { key: 'customer_segment', label: 'Segment' },
-      { key: 'cs_team_size', label: 'Team Size' },
-      { key: 'industry_vertical', label: 'Industry' },
-    ];
+    const arr       = data.profile?.company_arr;
+    const segment   = data.profile?.customer_segment;
+    const teamSize  = data.profile?.cs_team_size;
+    const industry  = data.profile?.industry_vertical;
+    const teamAge   = data.profile?.cs_team_age;
+    const opsExists = data.profile?.cs_ops_exists;
 
-    for (const p of displayParams) {
-      const val = data.profile[p.key];
-      if (val) {
-        profileItems.push(`<span class="report-profile-item"><strong>${p.label}:</strong> ${getProfileLabel(p.key, val)}</span>`);
+    const arrLabel      = arr     ? getProfileLabel('company_arr', arr)       : null;
+    const industryLabel = (industry && industry !== 'ind_other')
+      ? getProfileLabel('industry_vertical', industry) : null;
+    const teamSizeLabel = teamSize ? getProfileLabel('cs_team_size', teamSize) : null;
+    const teamAgeLabel  = teamAge  ? getProfileLabel('cs_team_age', teamAge)   : null;
+
+    // "Mixed segments" reads poorly as "serving Mixed segments customers" — skip in prose,
+    // it still appears in the profile metadata row below.
+    const segmentProseMap: Record<string, string> = {
+      seg_smb: 'SMB', seg_midmarket: 'Mid-Market', seg_enterprise: 'Enterprise',
+    };
+    const segProseLabel = segment ? (segmentProseMap[segment] ?? null) : null;
+
+    const paragraphs: string[] = [];
+
+    // ── Para 1: Company identity ──
+    const nameRef = data.companyName || null;
+    let identitySentence = '';
+
+    if (nameRef) {
+      // Named company: use active verb form to avoid fragments when industry is absent
+      if (industryLabel && segProseLabel && arrLabel) {
+        identitySentence = `${nameRef} is a ${industryLabel} company serving ${segProseLabel} customers with ${arrLabel} in ARR.`;
+      } else if (industryLabel && segProseLabel) {
+        identitySentence = `${nameRef} is a ${industryLabel} company serving ${segProseLabel} customers.`;
+      } else if (industryLabel && arrLabel) {
+        identitySentence = `${nameRef} is a ${industryLabel} company with ${arrLabel} in ARR.`;
+      } else if (industryLabel) {
+        identitySentence = `${nameRef} is a ${industryLabel} company.`;
+      } else if (segProseLabel && arrLabel) {
+        identitySentence = `${nameRef} serves ${segProseLabel} customers with ${arrLabel} in ARR.`;
+      } else if (segProseLabel) {
+        identitySentence = `${nameRef} serves ${segProseLabel} customers.`;
+      } else if (arrLabel) {
+        identitySentence = `${nameRef} has ${arrLabel} in ARR.`;
+      }
+      // name only → skip; it's already prominent in the report header
+    } else {
+      if (industryLabel && segProseLabel && arrLabel) {
+        identitySentence = `Your company is a ${industryLabel} business serving ${segProseLabel} customers with ${arrLabel} in ARR.`;
+      } else if (industryLabel && segProseLabel) {
+        identitySentence = `Your company is a ${industryLabel} business serving ${segProseLabel} customers.`;
+      } else if (industryLabel && arrLabel) {
+        identitySentence = `Your company is a ${industryLabel} business with ${arrLabel} in ARR.`;
+      } else if (industryLabel) {
+        identitySentence = `Your company operates in the ${industryLabel} space.`;
+      } else if (segProseLabel && arrLabel) {
+        identitySentence = `Your company serves ${segProseLabel} customers with ${arrLabel} in ARR.`;
+      } else if (segProseLabel) {
+        identitySentence = `Your company serves ${segProseLabel} customers.`;
+      } else if (arrLabel) {
+        identitySentence = `Your company has ${arrLabel} in ARR.`;
       }
     }
 
-    const segment = data.profile?.customer_segment;
-    const teamSize = data.profile?.cs_team_size;
-    const profileSentence = frameworkData.executive_summary_templates?.[segment]?.[teamSize] ?? null;
+    // Team sentence: team age only makes sense as a modifier on team size, so it's
+    // only included when team size is known.
+    let teamSentence = '';
+    if (teamSizeLabel) {
+      const teamParts: string[] = [`a CS team of ${teamSizeLabel.toLowerCase()}`];
+      if (opsExists === 'ops_yes') teamParts.push('a dedicated CS Ops function');
+
+      teamSentence = `You have ${joinList(teamParts)}`;
+
+      if (teamAge === 'age_under_1y') {
+        teamSentence += ', established less than a year ago';
+      } else if (teamAgeLabel) {
+        teamSentence += `, with ${teamAgeLabel.toLowerCase()} of operating history`;
+      }
+      teamSentence += '.';
+    } else if (opsExists === 'ops_yes') {
+      // CS Ops context without team size — still worth surfacing
+      teamSentence = 'You have a dedicated CS Ops function in place.';
+    }
+
+    const para1 = [identitySentence, teamSentence].filter(Boolean).join(' ');
+    if (para1) paragraphs.push(`<p class="report-summary-text">${para1}</p>`);
+
+    // ── Para 2: Stage verdict ──
+    if (stage) {
+      paragraphs.push(`<p class="report-summary-text">Your assessment places your CS function at the <strong>${stage.label}</strong> stage (${stage.subtitle}). ${stage.description}</p>`);
+    }
+
+    // ── Para 3: Overall score + domain picture ──
+    const domainEntries = Object.entries(data.domainScores || {})
+      .sort((a: any, b: any) => b[1] - a[1]);
+    if (typeof data.overallScore === 'number' && domainEntries.length >= 2) {
+      const scoreDisplay = toDisplayScore(data.overallScore);
+      const [strongId, strongScore] = domainEntries[0] as [string, number];
+      const [weakId,   weakScore]   = domainEntries[domainEntries.length - 1] as [string, number];
+      const strongLabel = domainLabels[strongId] || strongId;
+      const weakLabel   = domainLabels[weakId]   || weakId;
+
+      const scoreContext = data.overallScore >= 3.0
+        ? 'strong foundations and active optimisation across most domains'
+        : data.overallScore >= 2.0
+          ? 'solid structures in place, not yet operating at full scale'
+          : 'early-stage foundations still being built';
+
+      let para3 = `Your overall score of <strong>${scoreDisplay} / 10</strong> reflects ${scoreContext}. <strong>${strongLabel}</strong> is your highest-performing domain at ${toDisplayScore(strongScore as number)}/10, while <strong>${weakLabel}</strong> (${toDisplayScore(weakScore as number)}/10) is where focused work will have the most impact.`;
+
+      const lowCount = domainEntries.filter(([_, s]: any) => (s as number) < 2.0).length;
+      if (lowCount >= 3) {
+        para3 += ` ${lowCount} of your ${domainEntries.length} domains scored below 5/10, pointing to a broad foundational gap rather than an isolated weakness.`;
+      }
+
+      paragraphs.push(`<p class="report-summary-text">${para3}</p>`);
+    }
+
+    // ── Para 4: Segment + team-size template from JSON ──
+    // Key mapping: profile stores size_1_3/size_4_10 etc., templates use team_1_3/team_4_10 etc.
+    const sizeKeyMap: Record<string, string> = {
+      size_1_3: 'team_1_3', size_4_10: 'team_4_10',
+      size_11_25: 'team_10plus', size_over_25: 'team_10plus',
+    };
+    const segKeyMap: Record<string, string> = {
+      seg_smb: 'seg_smb', seg_midmarket: 'seg_midmarket', seg_enterprise: 'seg_enterprise',
+    };
+    const segKey  = segment  ? segKeyMap[segment]   : null;
+    const sizeKey = teamSize ? sizeKeyMap[teamSize] : null;
+    const profileSentence = segKey && sizeKey
+      ? (frameworkData as any).executive_summary_templates?.[segKey]?.[sizeKey] ?? null
+      : null;
+    if (profileSentence) paragraphs.push(`<p class="report-summary-text">${profileSentence}</p>`);
 
     return `
-      <div class="report-section">
+      <div id="report-section-summary" class="report-section">
         <h2 class="report-section-title">Executive Summary</h2>
-        <p class="report-summary-text">For ${data.companyName || 'your company'}, ${stage?.description || ''}</p>
-        ${profileSentence ? `<p class="report-summary-text report-summary-profile">${profileSentence}</p>` : ''}
-        ${profileItems.length ? `<div class="report-profile-row">${profileItems.join('')}</div>` : ''}
+        ${paragraphs.join('\n')}
       </div>
     `;
   }
@@ -1243,7 +1487,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     }).join('');
 
     return `
-      <div class="report-section">
+      <div id="report-section-domains" class="report-section">
         <h2 class="report-section-title">Domain Breakdown</h2>
         ${rows}
       </div>
@@ -1276,7 +1520,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     }).join('');
 
     return `
-      <div class="report-section">
+      <div id="report-section-actions" class="report-section">
         <h2 class="report-section-title">Priority Actions</h2>
         <ol class="report-actions-list">${items}</ol>
       </div>
@@ -1295,7 +1539,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     `).join('');
 
     return `
-      <div class="report-section">
+      <div id="report-section-strengths" class="report-section">
         <h2 class="report-section-title">What You're Doing Well</h2>
         <ul class="report-strengths-list">${items}</ul>
       </div>
@@ -1328,7 +1572,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
       : '';
 
     return `
-      <div class="report-section">
+      <div id="report-section-playbooks" class="report-section">
         <h2 class="report-section-title">Recommended Playbooks</h2>
         <div class="report-playbooks-grid">${currentCards}</div>
         ${weakestHtml}
@@ -1373,7 +1617,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     };
 
     return `
-      <div class="report-section">
+      <div id="report-section-metrics" class="report-section">
         <h2 class="report-section-title">Metric Priorities</h2>
         ${renderGroup('high', 'High', grouped.high || [])}
         ${renderGroup('medium', 'Medium', grouped.medium || [])}
@@ -1415,7 +1659,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     }).join('');
 
     return `
-      <div class="report-section">
+      <div id="report-section-journey" class="report-section">
         <h2 class="report-section-title">Your CS Maturity Journey</h2>
         <div class="report-stages-track">${cards}</div>
       </div>
@@ -1453,7 +1697,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
         : '';
 
     return `
-      <div class="report-section">
+      <div id="report-section-transition" class="report-section">
         <h2 class="report-section-title">${title}</h2>
         <div class="report-transition-columns">
           <div class="report-transition-block">

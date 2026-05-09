@@ -3325,7 +3325,7 @@
     "seg_midmarket": {
       "team_solo": "Running CS solo across a mid-market book means constantly triaging between reactive account work and the proactive investments that compound over time. A health signal that surfaces where to look, rather than waiting for customers to raise issues, is the single most valuable thing you can build now.",
       "team_1_3": "A small team covering mid-market accounts has enough volume to see patterns but not enough headcount to address every signal. A documented coverage model that makes triage explicit (not every account needs the same attention) is more valuable than adding headcount before that clarity exists.",
-      "team_4_10": "A team of 4–10 in mid-market has the capacity to run real playbooks, but also the coordination overhead that erodes execution quality at this size. The teams that scale well from here make their processes measurable before informal coordination breaks down.",
+      "team_4_10": "At 4–10 people covering mid-market accounts, you have enough capacity to run real playbooks, but coordination costs start to erode execution quality if processes aren't made explicit. The teams that scale well from here document and measure their work before informal habits become bottlenecks.",
       "team_10plus": "A larger mid-market CS team surfaces the cost of inconsistency: CSMs handling similar accounts with different approaches produce unpredictable outcomes. At your scale, standards (consistent playbooks, shared health criteria, and coordinated coverage) compound more than individual CSM quality."
     },
     "seg_smb": {
