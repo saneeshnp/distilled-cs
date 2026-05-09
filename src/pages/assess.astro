@@ -177,16 +177,6 @@ const stages = frameworkData.maturity_stages.stages;
       </div>
     </section>
 
-    <!-- Analyzing overlay (shown briefly on first completion) -->
-    <section class="phase phase-analyzing" id="phase-analyzing" style="display:none;" aria-live="polite">
-      <div class="analyzing-inner">
-        <p class="analyzing-title">Processing your answers</p>
-        <div class="analyzing-progress" aria-hidden="true">
-          <div class="analyzing-progress-fill"></div>
-        </div>
-        <span class="analyzing-loader" aria-hidden="true"></span>
-      </div>
-    </section>
 
 
   </div>
@@ -576,80 +566,6 @@ const stages = frameworkData.maturity_stages.stages;
   }
 
   /* ── Analyzing reveal ── */
-  .phase-analyzing {
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 1.5rem;
-    background: var(--color-bg);
-  }
-
-  .analyzing-inner {
-    text-align: center;
-    width: 100%;
-    max-width: 360px;
-  }
-
-  .analyzing-title {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    color: var(--color-text-primary);
-    margin: 0 0 1.25rem;
-  }
-
-  .analyzing-progress {
-    width: 100%;
-    height: 4px;
-    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
-    border-radius: 999px;
-    overflow: hidden;
-  }
-
-  .analyzing-progress-fill {
-    width: 0%;
-    height: 100%;
-    background: var(--color-accent);
-    border-radius: 999px;
-  }
-
-  .analyzing-progress-fill.is-running {
-    animation: analyzing-load 2.5s ease-out forwards;
-  }
-
-  @keyframes analyzing-load {
-    0%   { width: 0%; }
-    20%  { width: 22%; }
-    40%  { width: 22%; }
-    100% { width: 100%; }
-  }
-
-  /* ── Spin loader ── */
-  .analyzing-loader {
-    display: block;
-    width: 44px;
-    height: 44px;
-    border: 4px solid;
-    border-color: var(--color-accent) transparent;
-    border-radius: 50%;
-    margin: 2.25rem auto 0;
-    box-sizing: border-box;
-    animation: analyzing-spin 0.9s linear infinite;
-  }
-
-  @keyframes analyzing-spin {
-    to { transform: rotate(360deg); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .analyzing-loader {
-      animation: none;
-      border-color: var(--color-accent) transparent;
-      opacity: 0.5;
-    }
-  }
 </style>
 
 <script>
@@ -902,46 +818,9 @@ const stages = frameworkData.maturity_stages.stages;
     const wasUpdating = isUpdating;
     isUpdating = false;
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const finalize = () => {
-      window.dispatchEvent(new CustomEvent('distilledcs:updated'));
-      window.location.replace('/cs-maturity-report/');
-    };
-
-    if (reduceMotion) {
-      finalize();
-    } else if (wasUpdating) {
-      runAnalyzingReveal(finalize, { title: 'Updating your answers', duration: 1500 });
-    } else {
-      runAnalyzingReveal(finalize, { title: 'Processing your answers', duration: 2500 });
-    }
-  }
-
-  function runAnalyzingReveal(done: () => void, opts: { title: string; duration: number }) {
-    const analyzing = document.getElementById('phase-analyzing') as HTMLElement;
-    if (!analyzing) { done(); return; }
-
-    (document.getElementById('phase-profile') as HTMLElement).style.display = 'none';
-    (document.getElementById('phase-assessment') as HTMLElement).style.display = 'none';
-
-    const titleEl = analyzing.querySelector<HTMLElement>('.analyzing-title');
-    if (titleEl) titleEl.textContent = opts.title;
-
-    analyzing.style.display = '';
-
-    const fill = analyzing.querySelector<HTMLElement>('.analyzing-progress-fill');
-    if (fill) {
-      fill.style.animationDuration = `${opts.duration}ms`;
-      fill.classList.remove('is-running');
-      void fill.offsetWidth;
-      fill.classList.add('is-running');
-    }
-
-    setTimeout(() => {
-      analyzing.style.display = 'none';
-      done();
-    }, opts.duration);
+    sessionStorage.setItem('distilledcs_just_assessed', wasUpdating ? 'update' : 'new');
+    window.dispatchEvent(new CustomEvent('distilledcs:updated'));
+    window.location.replace('/cs-maturity-report/');
   }
 
   // ── Finish & show results ──

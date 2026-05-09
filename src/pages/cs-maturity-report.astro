@@ -11,6 +11,29 @@ const contextualRecs = frameworkData.contextual_recommendations;
 ---
 
 <BaseLayout title="CS Maturity Report" description="Your personalized Customer Success maturity report with domain breakdown, priority actions, and recommended playbooks." noindex={true}>
+
+  <!-- ═══ Loading overlay (shown only when redirected from assess) ═══ -->
+  <div id="report-loading" style="display:none;" aria-live="polite" aria-label="Building your report">
+    <div class="report-loading-inner">
+      <p class="report-loading-title" id="report-loading-title">Building your report…</p>
+      <div class="report-loading-progress" aria-hidden="true">
+        <div class="report-loading-fill" id="report-loading-fill"></div>
+      </div>
+      <span class="report-loading-spinner" aria-hidden="true"></span>
+    </div>
+  </div>
+  <script is:inline>
+    (function () {
+      var flag = sessionStorage.getItem('distilledcs_just_assessed');
+      if (flag) {
+        var overlay = document.getElementById('report-loading');
+        var title = document.getElementById('report-loading-title');
+        if (overlay) overlay.style.display = '';
+        if (title) title.textContent = flag === 'update' ? 'Updating your report…' : 'Building your report…';
+      }
+    })();
+  </script>
+
   <div class="container report-page">
 
     <!-- ═══ Not-assessed fallback ═══ -->
@@ -170,6 +193,90 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
   .report-download-btn:hover {
     background: var(--color-accent-hover);
+  }
+
+  /* ── Loading overlay ── */
+  #report-loading {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg);
+    transition: opacity 0.35s ease-out;
+  }
+
+  #report-loading.is-done {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .report-loading-inner {
+    text-align: center;
+    width: 100%;
+    max-width: 360px;
+    padding: 0 1.5rem;
+  }
+
+  .report-loading-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+    margin: 0 0 1.5rem;
+  }
+
+  .report-loading-progress {
+    width: 100%;
+    height: 4px;
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .report-loading-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 999px;
+  }
+
+  .report-loading-fill.is-running {
+    animation: report-load 1.5s ease-out forwards;
+  }
+
+  @keyframes report-load {
+    0%   { width: 0%; }
+    20%  { width: 38%; }
+    45%  { width: 38%; }
+    100% { width: 100%; }
+  }
+
+  .report-loading-spinner {
+    display: block;
+    width: 44px;
+    height: 44px;
+    border: 4px solid;
+    border-color: var(--color-accent) transparent;
+    border-radius: 50%;
+    margin: 2.25rem auto 0;
+    box-sizing: border-box;
+    animation: report-spin 0.9s linear infinite;
+  }
+
+  @keyframes report-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .report-loading-spinner {
+      animation: none;
+      opacity: 0.4;
+    }
+  }
+
+  @media print {
+    #report-loading { display: none !important; }
   }
 
   @media print {
@@ -1136,8 +1243,38 @@ const contextualRecs = frameworkData.contextual_recommendations;
       document.querySelectorAll('[data-show-if-assessed]').forEach(el => (el as HTMLElement).style.display = '');
       document.querySelectorAll('[data-hide-if-assessed]').forEach(el => (el as HTMLElement).style.display = 'none');
       renderReport(reportData);
+      const hadOverlay = dismissLoadingOverlay();
+      if (!hadOverlay) animateScoreCountUp();
     }
     // If completed flag is set but data is corrupt/missing, fallback CTA stays visible
+  }
+
+  function dismissLoadingOverlay(): boolean {
+    const overlay = document.getElementById('report-loading');
+    if (!overlay || overlay.style.display === 'none') return false;
+
+    const fill = document.getElementById('report-loading-fill');
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+    sessionStorage.removeItem('distilledcs_just_assessed');
+
+    if (reduced) {
+      overlay.style.display = 'none';
+      animateScoreCountUp();
+      return true;
+    }
+
+    if (fill) fill.classList.add('is-running');
+
+    setTimeout(() => {
+      overlay.classList.add('is-done');
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        animateScoreCountUp();
+      }, 350);
+    }, 1500);
+
+    return true;
   }
 
   // ── Data layer ──
@@ -1270,6 +1407,34 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
     el.innerHTML = sections.join('');
     buildToc();
+  }
+
+  function animateScoreCountUp() {
+    const el = document.querySelector('.report-header-score-card .report-score') as HTMLElement | null;
+    if (!el) return;
+
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+
+    const targetText = el.textContent?.trim() ?? '';
+    const targetNum = parseFloat(targetText);
+    if (!isFinite(targetNum)) return;
+
+    const decimals = targetText.includes('.') ? targetText.split('.')[1].length : 0;
+
+    el.textContent = (0).toFixed(decimals);
+
+    const duration = 800;
+    const startTime = performance.now();
+
+    const tick = (now: number) => {
+      const t = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = (targetNum * eased).toFixed(decimals);
+      if (t < 1) requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
   }
 
   // ── Table of contents ──
