@@ -32,36 +32,36 @@ const stageImageAlts: Record<string, string> = {
         </div>
       </div>
 
-      <!-- Right column: Animated SVG loop — circular track + orbiting progress dashes that light up each node in turn -->
+      <!-- Right column: Animated triangle loop — a liquid-flow dash travels the perimeter, pulsing each node as it passes -->
       <div class="hp-hero-visual" id="hp-hero-visual">
-        <svg class="hp-loop-svg" viewBox="0 0 720 720" role="img" aria-labelledby="hp-loop-title hp-loop-desc">
+        <svg class="hp-loop-svg" viewBox="-20 -40 340 340" role="img" aria-labelledby="hp-loop-title hp-loop-desc">
           <title id="hp-loop-title">Strategy Loop: Assess, Execute, Transform</title>
           <desc id="hp-loop-desc">A continuous improvement cycle. Assess flows to Execute, Execute flows to Transform, and Transform loops back to Assess.</desc>
 
-          <!-- Faint full-circle track -->
-          <path class="hp-loop-track" d="M 360 92 A 268 268 0 1 1 359.9 92" />
-          <!-- Three orbiting progress dashes (pathLength 300; 14 + 86 dasharray repeated three times keeps them evenly spaced) -->
-          <path class="hp-loop-progress" pathLength="300" d="M 360 92 A 268 268 0 1 1 359.9 92" />
+          <polygon points="150,20 280,240 20,240" class="hp-loop-track" pathLength="100" />
+          <polygon points="150,20 280,240 20,240" class="hp-loop-flow" pathLength="100" />
 
-          <!-- Center label — mirrors the site logo (Distilled + CS accent) -->
-          <text class="hp-loop-center" x="360" y="360"><tspan>Distilled</tspan><tspan class="hp-loop-center-accent">CS</tspan></text>
-
-          <!-- Node: Assess (top) -->
-          <g class="hp-loop-node hp-loop-node--assess">
-            <rect class="hp-loop-card" x="252" y="49" width="216" height="90" rx="10" />
-            <text class="hp-loop-label" x="360" y="94">Assess</text>
+          <g transform="translate(150, 160)">
+            <text x="0" y="0" text-anchor="middle" class="hp-loop-center"><tspan>Distilled</tspan><tspan class="hp-loop-center-accent">CS</tspan></text>
+            <text x="0" y="20" text-anchor="middle" class="hp-loop-center-subtitle">Framework</text>
           </g>
 
-          <!-- Node: Execute (bottom-right) -->
-          <g class="hp-loop-node hp-loop-node--execute">
-            <rect class="hp-loop-card" x="484" y="455" width="196" height="90" rx="10" />
-            <text class="hp-loop-label" x="582" y="500">Execute</text>
+          <g transform="translate(150, 20)" class="hp-loop-node hp-loop-node--1">
+            <circle r="16" class="hp-loop-node-outer" />
+            <circle r="11" class="hp-loop-node-inner" />
+            <text x="0" y="-25" text-anchor="middle" class="hp-loop-node-text">ASSESS</text>
           </g>
 
-          <!-- Node: Transform (bottom-left) -->
-          <g class="hp-loop-node hp-loop-node--transform">
-            <rect class="hp-loop-card" x="40" y="455" width="224" height="90" rx="10" />
-            <text class="hp-loop-label" x="152" y="500">Transform</text>
+          <g transform="translate(280, 240)" class="hp-loop-node hp-loop-node--2">
+            <circle r="16" class="hp-loop-node-outer" />
+            <circle r="11" class="hp-loop-node-inner" />
+            <text x="0" y="35" text-anchor="middle" class="hp-loop-node-text">EXECUTE</text>
+          </g>
+
+          <g transform="translate(20, 240)" class="hp-loop-node hp-loop-node--3">
+            <circle r="16" class="hp-loop-node-outer" />
+            <circle r="11" class="hp-loop-node-inner" />
+            <text x="0" y="35" text-anchor="middle" class="hp-loop-node-text">TRANSFORM</text>
           </g>
         </svg>
       </div>
@@ -224,7 +224,7 @@ const stageImageAlts: Record<string, string> = {
     position: relative;
     display: flex;
     align-items: center;
-    padding: 3rem 1.5rem 4rem;
+    padding: 4.5rem 1.5rem 5.5rem;
     overflow: hidden;
     /* Light-mode layers (top → bottom of the background stack):
        1. Diagonal line pattern (very faint, ~5% opacity, 28px spacing)
@@ -350,111 +350,118 @@ const stageImageAlts: Record<string, string> = {
     align-items: center;
     opacity: 0;
     transform: translateY(20px);
-    max-width: 420px;
+    max-width: 340px;
     width: 100%;
   }
 
   @media (min-width: 1024px) {
     .hp-hero-visual {
-      max-width: 480px;
+      max-width: 400px;
     }
   }
 
   /* ── Strategy Loop SVG ──
-     Single circular track. Three evenly-spaced dashes orbit it; each node
-     card briefly glows as the dash reaches its position on the perimeter. */
+     Triangular track with a "liquid flow" of dashes traveling the perimeter.
+     Each corner node pulses as the flow passes over it. */
   .hp-loop-svg {
-    --hp-loop-duration: 8.4s;
-    --hp-loop-card-shadow: drop-shadow(0 12px 18px rgba(26, 26, 46, 0.08));
-    --hp-loop-resting-stroke: var(--color-border);
+    --hp-loop-duration: 10s;
     width: 100%;
     height: auto;
     display: block;
     overflow: visible;
   }
 
-  :root[data-theme="dark"] .hp-loop-svg {
-    --hp-loop-card-shadow: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
-    --hp-loop-resting-stroke: rgba(240, 237, 230, 0.28);
-  }
-
   .hp-loop-track {
+    stroke: var(--color-border);
+    stroke-width: 4;
     fill: none;
-    stroke: var(--color-text-primary);
-    stroke-width: 16;
-    stroke-linecap: round;
-    opacity: 0.1;
+    stroke-linejoin: round;
   }
 
-  .hp-loop-progress {
-    fill: none;
+  .hp-loop-flow {
     stroke: var(--color-accent);
-    stroke-width: 15;
+    stroke-width: 6;
+    fill: none;
     stroke-linecap: round;
-    /* 14 + 86 = 100, repeated 3× across pathLength 300 — three evenly-spaced dashes */
-    stroke-dasharray: 14 86;
-    animation: hp-loop-orbit var(--hp-loop-duration) linear infinite;
+    stroke-linejoin: round;
+    stroke-dasharray: 20 80;
+    animation: hp-loop-flow var(--hp-loop-duration) linear infinite;
+    filter: drop-shadow(0 0 8px var(--color-accent-subtle));
   }
 
-  @keyframes hp-loop-orbit {
-    from { stroke-dashoffset: 0; }
-    to { stroke-dashoffset: -300; }
+  @keyframes hp-loop-flow {
+    0% { stroke-dashoffset: 20; }
+    100% { stroke-dashoffset: -80; }
   }
 
-  /* Mirrors the site header logo — same display font, same accent split, scaled up. */
   .hp-loop-center {
-    fill: var(--color-text-primary);
     font-family: var(--font-display);
-    font-size: 55px;
     font-weight: 500;
+    font-size: 26px;
+    fill: var(--color-text-primary);
     letter-spacing: -0.02em;
-    text-anchor: middle;
-    dominant-baseline: middle;
+    user-select: none;
   }
 
   .hp-loop-center-accent {
     fill: var(--color-accent);
   }
 
-  .hp-loop-card {
-    fill: var(--color-surface);
-    stroke: var(--color-border);
-    stroke-width: 1.5;
-    color: var(--color-accent);
-    filter: var(--hp-loop-card-shadow);
-    animation: hp-loop-card-glow var(--hp-loop-duration) ease-in-out infinite;
-  }
-
-  .hp-loop-node--execute .hp-loop-card {
-    animation-delay: calc(var(--hp-loop-duration) / 3);
-  }
-
-  .hp-loop-node--transform .hp-loop-card {
-    animation-delay: calc(var(--hp-loop-duration) * 2 / 3);
-  }
-
-  /* Resting border softened (stroke-opacity 0.6) so the glow has somewhere to rise into. */
-  @keyframes hp-loop-card-glow {
-    0%, 28%, 100% {
-      stroke: var(--color-border);
-      stroke-opacity: 0.6;
-      filter: var(--hp-loop-card-shadow);
-    }
-    10% {
-      stroke: currentColor;
-      stroke-opacity: 1;
-      filter: drop-shadow(0 0 16px currentColor);
-    }
-  }
-
-  .hp-loop-label {
-    fill: var(--color-text-secondary);
+  .hp-loop-center-subtitle {
     font-family: var(--font-body);
-    font-size: 38px;
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    text-anchor: middle;
-    dominant-baseline: middle;
+    font-weight: 600;
+    font-size: 11px;
+    fill: var(--color-text-muted);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    user-select: none;
+  }
+
+  .hp-loop-node-text {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    fill: var(--color-text-muted);
+    user-select: none;
+  }
+
+  /* Dark hero gradient swallows the muted grey — bump to secondary for legibility. */
+  :root[data-theme="dark"] .hp-loop-node-text {
+    fill: var(--color-text-secondary);
+  }
+
+  .hp-loop-node-outer {
+    fill: var(--color-surface);
+    stroke: var(--color-accent);
+    stroke-width: 4;
+  }
+
+  .hp-loop-node-inner {
+    fill: var(--color-accent);
+  }
+
+  /* Each node pulses (r:11 → r:16) as the flow reaches its corner. Timed in
+     thirds of the cycle so the pulse is centered on the moment the dash arrives. */
+  .hp-loop-node--1 .hp-loop-node-inner { animation: hp-loop-pulse-1 var(--hp-loop-duration) linear infinite; }
+  @keyframes hp-loop-pulse-1 {
+    0% { r: 11; }
+    7%, 13% { r: 16; }
+    20%, 100% { r: 11; }
+  }
+
+  .hp-loop-node--2 .hp-loop-node-inner { animation: hp-loop-pulse-2 var(--hp-loop-duration) linear infinite; }
+  @keyframes hp-loop-pulse-2 {
+    0%, 33.33% { r: 11; }
+    40.33%, 46.33% { r: 16; }
+    53.33%, 100% { r: 11; }
+  }
+
+  .hp-loop-node--3 .hp-loop-node-inner { animation: hp-loop-pulse-3 var(--hp-loop-duration) linear infinite; }
+  @keyframes hp-loop-pulse-3 {
+    0%, 66.66% { r: 11; }
+    73.66%, 79.66% { r: 16; }
+    86.66%, 100% { r: 11; }
   }
 
   /* ── Hero entrance animation ── */
@@ -477,12 +484,9 @@ const stageImageAlts: Record<string, string> = {
       transform: none !important;
       transition: none !important;
     }
-    .hp-loop-progress,
-    .hp-loop-card {
+    .hp-loop-flow,
+    .hp-loop-node-inner {
       animation: none;
-    }
-    .hp-loop-card {
-      stroke: var(--color-border);
     }
   }
 
