@@ -31,7 +31,7 @@ const organizationSchema = {
   name: 'Distilled CS',
   url: siteUrl,
   description: 'Open, vendor-neutral CS Strategy & Maturity Framework',
-  logo: `${siteUrl}/favicon.svg`,
+  logo: `${siteUrl}/android-chrome-512x512.png`,
   sameAs: ['https://github.com/saneeshnp/distilled-cs'],
 };
 
@@ -94,7 +94,11 @@ const websiteSchema = {
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Structured data -->
     <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />

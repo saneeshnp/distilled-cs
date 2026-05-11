@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import logoRaw from '../assets/logo-mark.svg?raw';
 
 const pathname = Astro.url.pathname;
 const isHome = pathname === '/';
@@ -31,6 +32,7 @@ const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pat
 <header class="header">
   <div class="container header-inner">
     <a href="/" class="logo">
+      <span class="logo-mark" aria-hidden="true"><Fragment set:html={logoRaw} /></span>
       <span class="logo-text">Distilled</span><span class="logo-accent">CS</span>
     </a>
 
@@ -270,6 +272,8 @@ const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pat
   }
 
   .logo {
+    display: flex;
+    align-items: center;
     font-family: var(--font-display);
     font-size: 1.5rem;
     color: var(--color-text-primary);
@@ -278,6 +282,12 @@ const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pat
 
   .logo:hover {
     color: var(--color-text-primary);
+  }
+
+  .logo-mark {
+    display: flex;
+    flex-shrink: 0;
+    margin-right: 0.5rem;
   }
 
   .logo-accent {
