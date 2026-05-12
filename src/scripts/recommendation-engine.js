@@ -31,7 +31,7 @@ export function composePriorityActions(profile, responses, frameworkData) {
     (b.domain.weight ?? 1) - (a.domain.weight ?? 1)
   );
 
-  const actions = scoredEntries.slice(0, 2).map(entry => {
+  const actions = scoredEntries.slice(0, 4).map(entry => {
     const body =
       (entry.segment && entry.option.next_step_by_segment?.[entry.segment]) ||
       entry.option.next_step;
@@ -39,6 +39,7 @@ export function composePriorityActions(profile, responses, frameworkData) {
       title: entry.option.label,
       body,
       source_question_id: entry.question.id,
+      domain_label: entry.domain.label,
       score_level: entry.userScore,
     };
   });
@@ -61,7 +62,7 @@ export function composePriorityActions(profile, responses, frameworkData) {
     }
   }
 
-  return actions.slice(0, 3);
+  return actions.slice(0, 5);
 }
 
 // Compose the strengths section: up to 3 insights from the user's highest-scoring responses.

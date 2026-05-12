@@ -684,6 +684,12 @@ const contextualRecs = frameworkData.contextual_recommendations;
     font-style: italic;
   }
 
+  .report-action-domain {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
   /* ── Section: Strengths ── */
   .report-strengths-list {
     list-style: none;
@@ -1751,7 +1757,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
     const items = actions.map((a: any, i: number) => {
       const sourceHtml = a.source_question_id
-        ? `<div class="report-action-source">Based on your answer: ${a.title}</div>`
+        ? `<div class="report-action-source">Suggested based on your answer in <span class="report-action-domain">${a.domain_label}</span>: ${a.title}</div>`
         : '';
       const timeHtml = a.estimated_time
         ? `<span class="report-action-time">${a.estimated_time}</span>`
