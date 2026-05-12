@@ -400,19 +400,19 @@ const breadcrumbSchema = {
     color: var(--stage-color, var(--color-text-primary));
   }
 
-  .priority-pill {
+  :global(.priority-pill) {
     font-size: 0.6875rem;
     font-weight: 600;
     padding: 0.125rem 0.5rem;
     border-radius: 9999px;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    margin-left: auto;
+    display: inline-block;
   }
 
-  .priority-high { background: color-mix(in srgb, var(--color-stage-run) 18%, transparent); color: var(--color-stage-run); }
-  .priority-medium { background: color-mix(in srgb, var(--color-stage-walk) 18%, transparent); color: var(--color-stage-walk); }
-  .priority-low { background: color-mix(in srgb, var(--color-text-muted) 10%, transparent); color: var(--color-text-muted); }
+  :global(.priority-high) { background: color-mix(in srgb, var(--color-stage-run) 18%, transparent); color: var(--color-stage-run); }
+  :global(.priority-medium) { background: color-mix(in srgb, var(--color-stage-walk) 18%, transparent); color: var(--color-stage-walk); }
+  :global(.priority-low) { background: color-mix(in srgb, var(--color-text-muted) 10%, transparent); color: var(--color-text-muted); }
 
   .priority-why {
     margin-top: 0.625rem;
