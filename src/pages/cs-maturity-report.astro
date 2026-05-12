@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import frameworkData from '../data/lean-cs-data.json';
+import logoRaw from '../assets/logo-mark.svg?raw';
 
 const stages = frameworkData.maturity_stages.stages;
 const domains = frameworkData.assessment_domains.domains;
@@ -70,6 +71,10 @@ const contextualRecs = frameworkData.contextual_recommendations;
     </div>
 
   </div>
+
+  <script is:inline define:vars={{ logoRaw }}>
+    window.__reportLogoSvg = logoRaw;
+  </script>
 </BaseLayout>
 
 <style>
@@ -314,29 +319,41 @@ const contextualRecs = frameworkData.contextual_recommendations;
     text-align: center;
   }
 
+  .report-header-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1rem;
+    text-decoration: none;
+  }
+
+  .report-header-logo-mark svg {
+    display: block;
+    height: 28px;
+    width: auto;
+  }
+
+  .report-header-logo-wordmark {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+    line-height: 1;
+  }
+
+  .report-header-logo-accent {
+    color: var(--color-accent);
+  }
+
   .report-header-label {
     font-family: var(--font-display);
     font-size: clamp(1.75rem, 4vw, 2.75rem);
     font-weight: 400;
     letter-spacing: -0.02em;
     color: var(--color-text-primary);
-    margin-bottom: 0.25rem;
-    line-height: 1.2;
-  }
-
-  .report-brand {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-    letter-spacing: 0.01em;
-    text-align: center;
     margin-bottom: 1.25rem;
-  }
-
-  .report-brand-sep {
-    margin: 0 0.35rem;
-    opacity: 0.5;
+    line-height: 1.2;
   }
 
   /* ── Two-card row ── */
@@ -352,7 +369,6 @@ const contextualRecs = frameworkData.contextual_recommendations;
     padding: 1.25rem 1.5rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-left: 8px solid var(--stage-color, var(--color-accent));
     border-radius: 0.75rem;
     text-align: center;
   }
@@ -362,7 +378,6 @@ const contextualRecs = frameworkData.contextual_recommendations;
     padding: 1.25rem 1rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-left: 8px solid var(--stage-color, var(--color-accent));
     border-radius: 0.75rem;
     display: flex;
     flex-direction: column;
@@ -1068,11 +1083,6 @@ const contextualRecs = frameworkData.contextual_recommendations;
       background: #eee !important;
     }
 
-    /* Brand attribution — force colour in print */
-    .report-brand {
-      color: #999 !important;
-    }
-
     /* Stage badges and priority dots — preserve colors */
     .report-stage-card-badge,
     .priority-dot,
@@ -1495,11 +1505,14 @@ const contextualRecs = frameworkData.contextual_recommendations;
     const score = typeof data.overallScore === 'number' ? toDisplayScore(data.overallScore) : '—';
     return `
       <div class="report-header">
-        <h1 class="report-header-label">Customer Success Maturity Assessment</h1>
-        <div class="report-brand">${data.companyName ? `${data.companyName} <span class="report-brand-sep">|</span> ` : ''}DistilledCS.org</div>
+        <a href="/" class="report-header-logo" aria-label="Distilled CS home">
+          <span class="report-header-logo-mark" aria-hidden="true">${(window as any).__reportLogoSvg || ''}</span>
+          <span class="report-header-logo-wordmark"><span>Distilled</span><span class="report-header-logo-accent">CS</span></span>
+        </a>
+        <h1 class="report-header-label">Customer Success Assessment Report</h1>
         <div class="report-header-cards stage-${data.stage}">
           <div class="report-header-stage-card">
-            <div class="report-header-eyebrow">Your CS Stage</div>
+            <div class="report-header-eyebrow">${data.companyName ? `${data.companyName}'s CS Stage` : 'Your CS Stage'}</div>
             <div class="report-stage-name">${stage?.label || data.stage}</div>
             <p class="report-stage-subtitle">${stage?.subtitle || ''}</p>
           </div>
