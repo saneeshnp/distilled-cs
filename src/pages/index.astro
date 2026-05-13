@@ -6,6 +6,24 @@ const strategyLoop = frameworkData.strategy_loop;
 const stages = frameworkData.maturity_stages.stages;
 const principles = frameworkData.principles;
 
+const phaseDetails: Record<string, string[]> = {
+  assess: [
+    'Answer a few questions across key areas of your CS practice',
+    'Find out your maturity stage — Crawl, Walk, or Run',
+    'Get a full report with domain scores and a prioritised action list',
+  ],
+  execute: [
+    'Access playbooks built for your exact maturity stage',
+    'Track the metrics that matter most right now',
+    'Work through a checklist of the highest-impact actions',
+  ],
+  transform: [
+    'See what has improved since you started',
+    'Re-take the assessment to measure your growth',
+    'Get a guide for moving up to your next stage',
+  ],
+};
+
 const stageImageAlts: Record<string, string> = {
   crawl: 'Turtle illustration for the Crawl stage of the customer success maturity model, a reactive and foundational stage',
   walk: 'Person walking, illustrating the Walk stage of the customer success maturity model, where structure begins to form',
@@ -24,11 +42,11 @@ const stageImageAlts: Record<string, string> = {
           An open framework to assess your <strong style="color: var(--color-accent); font-weight: 700;">Customer Success</strong>  maturity and rebuild your strategy.
         </h1>
         <p class="hp-hero-sub">
-          With Distilled CS, you can quickly identify where your organization stands in its customer success journey, uncover what is missing from your strategy, and map out the exact next steps to elevate your CS team's impact.
+        With Distilled CS, you can quickly identify where you are in your customer success journey and get a clear strategy for moving forward.
         </p>
         <div class="hp-hero-ctas">
           <a href="/assess/" class="btn btn-primary" id="hp-hero-cta-primary" data-contextual="hero-cta">Take the Assessment</a>
-          <a href="/customer-success-maturity-model/" class="btn btn-secondary">Explore the Framework</a>
+          <a href="#how-it-works" class="btn btn-secondary">See how it works</a>
         </div>
       </div>
 
@@ -68,11 +86,38 @@ const stageImageAlts: Record<string, string> = {
     </div>
   </section>
 
-  <!-- Section 2: Maturity Stages -->
+  <!-- Section 2: How it works -->
+  <section class="hp-section hp-section-loop" id="how-it-works">
+    <div class="container">
+      <h2 class="hp-section-headline scroll-reveal">How it works</h2>
+      <p class="hp-section-subheadline scroll-reveal">The Distilled CS framework follows three steps: understand where you are, execute strategies tailored to your goals, and measure progress to keep improving as your CS team grows.</p>
+
+      <div class="hp-how-grid">
+        {strategyLoop.phases.map((phase, i) => (
+          <div class="hp-how-card scroll-reveal" style={`--reveal-delay: ${i * 0.1}s`}>
+            <span class="hp-how-number">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="hp-how-title">{phase.label}</h3>
+            <p class="hp-how-tagline">{phase.tagline}</p>
+            <ul class="hp-how-list">
+              {(phaseDetails[phase.id] ?? []).map(item => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div class="hp-section-cta scroll-reveal">
+        <a href="/assess/" class="btn btn-primary" id="hp-how-cta">Take the Assessment</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Maturity Stages -->
   <section class="hp-section hp-section-stages" id="maturity-stages">
     <div class="container">
       <h2 class="hp-section-headline scroll-reveal">The three stages of CS maturity</h2>
-      <p class="hp-section-subheadline scroll-reveal">Distilled CS maps your customer success maturity across three stages. Each stage describes where your team is today and the work that matters most at that level.</p>
+      <p class="hp-section-subheadline scroll-reveal">Every CS team sits somewhere on this scale. The assessment tells you exactly where — and what to focus on from there.</p>
       <div class="hp-stages-grid">
         {stages.map((stage, i) => (
           <div class={`hp-stage-card scroll-reveal stage-${stage.id}`} style={`--stage-delay: ${i * 0.1}s`}>
@@ -103,26 +148,6 @@ const stageImageAlts: Record<string, string> = {
       <div class="hp-section-cta scroll-reveal">
         <a href="/customer-success-maturity-model/" class="btn btn-primary">Explore the full maturity model</a>
       </div>
-    </div>
-  </section>
-
-  <!-- Section 3: The Strategy Loop -->
-  <section class="hp-section hp-section-loop" id="strategy-loop">
-    <div class="container">
-      <h2 class="hp-section-headline scroll-reveal">The Strategy Loop</h2>
-      <p class="hp-section-subheadline scroll-reveal">A continuous cycle of improvement — assess your current state, execute stage-appropriate actions, and transform your CS organisation over time.</p>
-
-      <ol class="hp-loop-phases-detail">
-        {strategyLoop.phases.map((phase, i) => (
-          <li class="hp-loop-phase-row scroll-reveal" style={`--reveal-delay: ${i * 0.1}s`}>
-            <span class="hp-loop-phase-number">{String(i + 1).padStart(2, '0')}</span>
-            <div class="hp-loop-phase-body">
-              <h3 class="hp-loop-phase-title">{phase.label}</h3>
-              <p class="hp-loop-phase-desc">{phase.description}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
     </div>
   </section>
 
@@ -186,10 +211,10 @@ const stageImageAlts: Record<string, string> = {
           <span class="hp-read-next-title">Customer Success Maturity Model</span>
           <span class="hp-read-next-body">Three stages from Crawl to Run, with the capabilities that define each.</span>
         </a>
-        <a href="/assess/" class="hp-read-next-card scroll-reveal">
+        <a href="/assess/" class="hp-read-next-card scroll-reveal" id="hp-read-next-assess">
           <span class="hp-read-next-eyebrow">Assessment</span>
-          <span class="hp-read-next-title">Take the Maturity Assessment</span>
-          <span class="hp-read-next-body">Twenty-four questions across eight domains. Get a stage and a priority list.</span>
+          <span class="hp-read-next-title" id="hp-read-next-assess-title">Take the Maturity Assessment</span>
+          <span class="hp-read-next-body" id="hp-read-next-assess-body">A few questions across eight domains. Get a stage and a priority list.</span>
         </a>
       </div>
     </div>
@@ -563,63 +588,83 @@ const stageImageAlts: Record<string, string> = {
   }
 
   /* ══════════════════════════════════════════
-     SECTION: STRATEGY LOOP
+     SECTION: HOW IT WORKS
      ══════════════════════════════════════════ */
-  .hp-loop-phases-detail {
-    list-style: none;
-    padding: 0;
-    margin: 2.5rem 0 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .hp-loop-phase-row {
+  .hp-how-grid {
     display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: baseline;
-    column-gap: 1.25rem;
-    padding: 1.25rem 0;
-  }
-
-  .hp-loop-phase-row + .hp-loop-phase-row {
-    border-top: 1px dashed color-mix(in srgb, var(--color-accent) 25%, transparent);
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 3rem;
   }
 
   @media (min-width: 768px) {
-    .hp-loop-phase-row {
-      grid-template-columns: 48px 1fr;
-      column-gap: 1.5rem;
-      padding: 1.25rem 0;
+    .hp-how-grid {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 
-  .hp-loop-phase-number {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    color: var(--color-accent);
-    opacity: 0.7;
-    line-height: 1.3;
-  }
-
-  .hp-loop-phase-body {
+  .hp-how-card {
+    padding: 1.75rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.375rem;
   }
 
-  .hp-loop-phase-title {
+  .hp-how-number {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--color-accent);
+    margin-bottom: 0.25rem;
+    line-height: 1;
+  }
+
+  .hp-how-title {
     font-family: var(--font-display);
     font-size: 1.25rem;
     color: var(--color-text-primary);
     margin: 0;
-    line-height: 1.3;
+    line-height: 1.2;
   }
 
-  .hp-loop-phase-desc {
-    font-size: 0.9375rem;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
+  .hp-how-tagline {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-accent);
     margin: 0;
+    line-height: 1.4;
+  }
+
+  .hp-how-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.375rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .hp-how-list li {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .hp-how-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    opacity: 0.5;
   }
 
   /* ══════════════════════════════════════════
@@ -919,19 +964,20 @@ const stageImageAlts: Record<string, string> = {
   // ── Dynamic CTA for assessed users ──
   try {
     if (localStorage.getItem('distilledcs_completed') === 'true') {
-      const ctaBtn = document.getElementById('hp-hero-cta-primary') as HTMLAnchorElement | null;
-      if (ctaBtn) {
-        ctaBtn.textContent = 'View My Results';
-        ctaBtn.href = '/cs-maturity-report/';
+      for (const id of ['hp-hero-cta-primary', 'hp-how-cta', 'hp-final-cta-btn']) {
+        const btn = document.getElementById(id) as HTMLAnchorElement | null;
+        if (btn) { btn.textContent = 'View My Results'; btn.href = '/cs-maturity-report/'; }
       }
 
-      const finalBtn = document.getElementById('hp-final-cta-btn') as HTMLAnchorElement | null;
-      if (finalBtn) {
-        finalBtn.textContent = 'View My Results';
-        finalBtn.href = '/cs-maturity-report/';
-      }
       const finalHeadline = document.getElementById('hp-final-cta-headline');
       if (finalHeadline) finalHeadline.textContent = 'See how your CS team is progressing';
+
+      const readNextCard = document.getElementById('hp-read-next-assess') as HTMLAnchorElement | null;
+      if (readNextCard) readNextCard.href = '/cs-maturity-report/';
+      const readNextTitle = document.getElementById('hp-read-next-assess-title');
+      if (readNextTitle) readNextTitle.textContent = 'View Your Maturity Report';
+      const readNextBody = document.getElementById('hp-read-next-assess-body');
+      if (readNextBody) readNextBody.textContent = 'See your stage, domain scores, and priority actions.';
     }
   } catch {}
 
