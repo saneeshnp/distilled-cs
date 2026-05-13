@@ -130,7 +130,7 @@
   };
 
   function populateContextBar() {
-    if (window.location.pathname === '/' || !isAssessmentCompleted()) return;
+    if (window.location.pathname === '/' || window.location.pathname.startsWith('/cs-maturity-report') || !isAssessmentCompleted()) return;
 
     const scores = getScores();
     const profile = getProfile();
