@@ -1,0 +1,19 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<a href="/assess/" class:list={['btn', 'btn-primary', 'assess-cta-btn', className]}>Take the Assessment</a>
+
+<script>
+  try {
+    if (localStorage.getItem('distilledcs_completed') === 'true') {
+      document.querySelectorAll<HTMLAnchorElement>('.assess-cta-btn').forEach(btn => {
+        btn.textContent = 'View My Assessment';
+        btn.href = '/cs-maturity-report/';
+      });
+    }
+  } catch {}
+</script>

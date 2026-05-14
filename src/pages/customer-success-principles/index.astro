@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AssessCTA from '../../components/AssessCTA.astro';
 import frameworkData from '../../data/lean-cs-data.json';
 
 const principles = frameworkData.principles;
@@ -136,7 +137,7 @@ const faqSchema = {
     <div class="principles-cta">
       <p class="cta-text">These principles come to life in the assessment, the maturity model, and every metric recommendation.</p>
       <div class="cta-buttons">
-        <a href="/assess/" class="btn btn-primary">Take the Assessment</a>
+        <AssessCTA />
         <a href="/customer-success-maturity-model/" class="btn btn-secondary">View the Maturity Model</a>
       </div>
     </div>
