@@ -75,6 +75,7 @@ const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pat
         <!-- Assess -->
         <li>
           <a
+            id="nav-assess-link"
             href="/assess/"
             class:list={['nav-link', { active: pathname === '/assess/' }]}
             aria-current={pathname === '/assess/' ? 'page' : undefined}
@@ -192,6 +193,7 @@ const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pat
       <!-- Assess -->
       <li>
         <a
+          id="nav-assess-link-mobile"
           href="/assess/"
           class:list={['nav-link-mobile', { active: pathname === '/assess/' }]}
           aria-current={pathname === '/assess/' ? 'page' : undefined}
@@ -570,6 +572,20 @@ const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pat
       if (dd) dd.classList.remove('open');
     });
   });
+
+  // Update Assess nav link to go directly to the report for assessed users.
+  function updateAssessLink() {
+    try {
+      if (localStorage.getItem('distilledcs_completed') === 'true') {
+        for (const id of ['nav-assess-link', 'nav-assess-link-mobile']) {
+          const el = document.getElementById(id) as HTMLAnchorElement | null;
+          if (el) { el.href = '/cs-maturity-report/'; el.textContent = 'My Report'; }
+        }
+      }
+    } catch {}
+  }
+  updateAssessLink();
+  window.addEventListener('distilledcs:updated', updateAssessLink);
 
   // Show stage badge if assessment completed — class-based so colors flip with theme.
   try {
