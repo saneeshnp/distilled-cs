@@ -35,6 +35,17 @@ const contextualRecs = frameworkData.contextual_recommendations;
     })();
   </script>
 
+  <!-- ═══ Shared-view banner (shown only when viewing ?d=… payload) ═══ -->
+  <div class="shared-banner" id="report-shared-banner" role="complementary" aria-label="Shared report context" hidden>
+    <div class="container shared-banner-inner">
+      <div class="shared-banner-text">
+        <span class="shared-banner-eyebrow">Shared report</span>
+        <span class="shared-banner-headline" id="shared-banner-headline"></span>
+      </div>
+      <a href="/assess/" class="shared-banner-cta">Take your own assessment →</a>
+    </div>
+  </div>
+
   <div class="container report-page">
 
     <!-- ═══ Not-assessed fallback ═══ -->
@@ -84,17 +95,102 @@ const contextualRecs = frameworkData.contextual_recommendations;
           </ul>
         </div>
 
-        <button type="button" class="report-download-btn" id="download-pdf-btn">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M4.5 1h5l3.5 3.5V13a2 2 0 0 1-2 2H4.5A1.5 1.5 0 0 1 3 13.5v-11A1.5 1.5 0 0 1 4.5 1z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M9.5 1v3.5H13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Print / Save PDF
-        </button>
+        <div class="report-toolbar-right">
+          <button type="button" class="report-share-btn" id="report-share-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="12" cy="3.5" r="1.75" stroke="currentColor" stroke-width="1.3"/>
+              <circle cx="4" cy="8" r="1.75" stroke="currentColor" stroke-width="1.3"/>
+              <circle cx="12" cy="12.5" r="1.75" stroke="currentColor" stroke-width="1.3"/>
+              <path d="M5.5 7.2L10.5 4.3M5.5 8.8L10.5 11.7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            Share
+          </button>
+
+          <button type="button" class="report-download-btn" id="download-pdf-btn">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4.5 1h5l3.5 3.5V13a2 2 0 0 1-2 2H4.5A1.5 1.5 0 0 1 3 13.5v-11A1.5 1.5 0 0 1 4.5 1z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9.5 1v3.5H13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Print / Save PDF
+          </button>
+        </div>
       </div>
 
 <!-- Report body — populated by JS -->
       <div id="report-content"></div>
+    </div>
+
+    <!-- ═══ Share modal ═══ -->
+    <div class="share-modal" id="share-modal" role="dialog" aria-modal="true" aria-labelledby="share-modal-title" hidden>
+      <div class="share-modal-backdrop" id="share-modal-backdrop"></div>
+      <div class="share-modal-panel" role="document">
+        <div class="share-modal-header">
+          <h2 class="share-modal-title" id="share-modal-title">Share your maturity report</h2>
+          <button type="button" class="share-modal-close" id="share-modal-close" aria-label="Close share dialog">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="share-modal-tabs" role="tablist">
+          <button type="button" class="share-modal-tab is-active" role="tab" id="share-tab-report" aria-selected="true" aria-controls="share-panel-report" data-share-tab="report">
+            Share this report
+          </button>
+          <button type="button" class="share-modal-tab" role="tab" id="share-tab-score" aria-selected="false" aria-controls="share-panel-score" data-share-tab="score">
+            Share your score
+          </button>
+        </div>
+
+        <div class="share-modal-panel-body" role="tabpanel" id="share-panel-report" aria-labelledby="share-tab-report">
+          <p class="share-modal-blurb">
+            Anyone with this link can view your full report — domain scores, priority actions, and the answers behind them.
+          </p>
+
+          <label class="share-modal-toggle">
+            <input type="checkbox" id="share-include-company" checked />
+            <span>Include my company name in the shared report</span>
+          </label>
+
+          <div class="share-modal-link-row">
+            <input type="text" id="share-report-url" class="share-modal-link" readonly />
+            <button type="button" class="share-modal-copy" id="share-copy-report" data-copy-target="share-report-url">
+              <span class="share-copy-default">Copy link</span>
+              <span class="share-copy-done">Copied</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="share-modal-panel-body" role="tabpanel" id="share-panel-score" aria-labelledby="share-tab-score" hidden>
+          <p class="share-modal-blurb">
+            Invite others to take the assessment. Your individual answers are <strong>not</strong> included.
+          </p>
+
+          <div class="share-modal-suggested">
+            <span class="share-modal-suggested-label">Suggested post</span>
+            <textarea id="share-score-text" class="share-modal-textarea" readonly rows="3"></textarea>
+            <button type="button" class="share-modal-copy share-modal-copy--text" id="share-copy-text" data-copy-target="share-score-text">
+              <span class="share-copy-default">Copy text</span>
+              <span class="share-copy-done">Copied</span>
+            </button>
+          </div>
+
+          <div class="share-modal-socials">
+            <a href="#" class="share-modal-social" id="share-linkedin" target="_blank" rel="noopener noreferrer">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM5 13H3V6h2v7zM4 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm9 8h-2V9.5c0-.83-.67-1.5-1.5-1.5S8 8.67 8 9.5V13H6V6h2v1c.42-.6 1.18-1 2-1 1.66 0 3 1.34 3 3v4z"/>
+              </svg>
+              Share on LinkedIn
+            </a>
+            <a href="#" class="share-modal-social" id="share-x" target="_blank" rel="noopener noreferrer">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M11.9 1.5h2.3l-5.05 5.77L15 14.5h-4.65l-3.64-4.76L2.5 14.5H.2l5.4-6.17L0 1.5h4.77l3.3 4.35L11.9 1.5zm-.8 11.6h1.27L4.97 2.82H3.6l7.5 10.28z"/>
+              </svg>
+              Share on X
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -294,6 +390,417 @@ const contextualRecs = frameworkData.contextual_recommendations;
     background: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.6);
     color: #fff;
+  }
+
+  /* ── Toolbar right cluster: Share + Print ── */
+  .report-toolbar-right {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .report-share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    line-height: 1;
+    font-weight: 500;
+    font-family: var(--font-body);
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.2s ease-out;
+    min-height: 0;
+  }
+
+  .report-share-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.6);
+    color: #fff;
+  }
+
+  /* ── Shared-view banner — tinted callout with stage stripe ── */
+  .shared-banner {
+    background: var(--color-accent-subtle);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+    border-left: 4px solid var(--stage-color, var(--color-accent));
+  }
+
+  .shared-banner[hidden] {
+    display: none;
+  }
+
+  .shared-banner-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.25rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    color: var(--color-text-primary);
+    flex-wrap: wrap;
+  }
+
+  .shared-banner-text {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .shared-banner-eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--stage-color, var(--color-accent));
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--stage-color, var(--color-accent)) 14%, transparent);
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  .shared-banner-headline {
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    color: var(--color-text-primary);
+  }
+
+  .shared-banner-headline strong {
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .shared-banner-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4375rem 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    background: var(--color-bg);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+    border-radius: 0.375rem;
+    text-decoration: none;
+    transition: all 0.18s ease-out;
+    flex-shrink: 0;
+    min-height: 0;
+  }
+
+  .shared-banner-cta:hover {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border-color: var(--color-accent);
+  }
+
+  @media (pointer: coarse) {
+    .shared-banner-cta {
+      min-height: 44px;
+      padding: 0.5rem 0.875rem;
+    }
+  }
+
+  /* ── Version mismatch footnote (sits at top of report body) ── */
+  .report-version-notice {
+    background: color-mix(in srgb, var(--color-warning) 12%, var(--color-bg));
+    border: 1px solid color-mix(in srgb, var(--color-warning) 40%, transparent);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+
+  .report-version-notice strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  /* ── Share modal ── */
+  .share-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .share-modal[hidden] {
+    display: none;
+  }
+
+  .share-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transition: opacity 0.18s ease-out;
+  }
+
+  .share-modal.is-open .share-modal-backdrop {
+    opacity: 1;
+  }
+
+  .share-modal-panel {
+    position: relative;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.875rem;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
+    width: 100%;
+    max-width: 32rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    transform: translateY(8px);
+    opacity: 0;
+    transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  }
+
+  .share-modal.is-open .share-modal-panel {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .share-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.125rem 1.25rem 0.875rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .share-modal-title {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-text-primary);
+  }
+
+  .share-modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease-out;
+    min-height: 0;
+  }
+
+  .share-modal-close:hover {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+  }
+
+  @media (pointer: coarse) {
+    .share-modal-close {
+      min-width: 44px;
+      min-height: 44px;
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .share-modal-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .share-modal-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 0.15s ease-out;
+    min-height: 0;
+    font-family: var(--font-body);
+    margin-bottom: -1px;
+  }
+
+  .share-modal-tab:hover {
+    color: var(--color-text-primary);
+  }
+
+  .share-modal-tab.is-active {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .share-modal-panel-body {
+    padding: 1.25rem;
+  }
+
+  .share-modal-panel-body[hidden] {
+    display: none;
+  }
+
+  .share-modal-blurb {
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+  }
+
+  .share-modal-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.875rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .share-modal-toggle input {
+    margin: 0;
+    accent-color: var(--color-accent);
+  }
+
+  .share-modal-link-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .share-modal-link {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-size: 0.8125rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .share-modal-copy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1rem;
+    border-radius: 0.375rem;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border: 1px solid var(--color-accent);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.15s ease-out;
+    min-height: 0;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .share-modal-copy:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .share-modal-copy .share-copy-done {
+    display: none;
+  }
+
+  .share-modal-copy.is-copied .share-copy-default {
+    display: none;
+  }
+
+  .share-modal-copy.is-copied .share-copy-done {
+    display: inline;
+  }
+
+  .share-modal-copy.is-copied {
+    background: color-mix(in srgb, var(--color-accent) 80%, transparent);
+  }
+
+  .share-modal-note {
+    margin: 0.875rem 0 0;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .share-modal-suggested {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .share-modal-suggested-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+
+  .share-modal-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    resize: vertical;
+    min-height: 5rem;
+  }
+
+  .share-modal-copy--text {
+    align-self: flex-start;
+  }
+
+  .share-modal-socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .share-modal-social {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s ease-out;
+  }
+
+  .share-modal-social:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
   }
 
   /* ── Loading overlay ── */
@@ -1219,7 +1726,10 @@ const contextualRecs = frameworkData.contextual_recommendations;
     .context-bar,
     .report-toolbar,
     .report-download-btn,
-    .report-overflow-menu {
+    .report-share-btn,
+    .report-overflow-menu,
+    .shared-banner,
+    .share-modal {
       display: none !important;
     }
 
@@ -1569,7 +2079,17 @@ const contextualRecs = frameworkData.contextual_recommendations;
     composePlaybookRecommendations,
     composeMetricPriorities,
   } from '../scripts/recommendation-engine.js';
-  import { toDisplayScore } from '../scripts/scoring-engine.js';
+  import {
+    toDisplayScore,
+    calculateAllDomainScores,
+    calculateOverallScore,
+    determineStage,
+  } from '../scripts/scoring-engine.js';
+  import {
+    encodeReport,
+    decodeReport,
+    filterResponsesToKnownIds,
+  } from '../scripts/share-encoder.js';
 
   const stages = (frameworkData as any).maturity_stages.stages;
   const domains = (frameworkData as any).assessment_domains.domains;
@@ -1577,25 +2097,35 @@ const contextualRecs = frameworkData.contextual_recommendations;
   const allMetrics = (frameworkData as any).metrics_directory.metrics;
   const stageTransitions = (frameworkData as any).stage_transitions;
   const contextParams = (frameworkData as any).context_parameters.parameters;
+  const ASSESSMENT_VERSION = (frameworkData as any).meta.assessment_version as number;
+  const ALL_QUESTION_IDS: string[] = domains.flatMap((d: any) => d.questions.map((q: any) => q.id));
 
   const stageOrder = ['crawl', 'walk', 'run'];
   const domainLabels: Record<string, string> = {};
   domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
 
   // ── Toggle assessed/not-assessed views ──
-  const completed = isAssessmentCompleted();
+  // Shared-view URLs (?d=...) take precedence over localStorage. This lets a
+  // viewer who has never taken the assessment see someone else's report, and
+  // keeps the viewer's own context bar / progress untouched.
+  const sharedData = tryDecodeSharedReport();
+  let reportData: ReportData | null = null;
 
-  if (completed) {
-    const reportData = getReportData();
-    if (reportData) {
-      document.querySelectorAll('[data-show-if-assessed]').forEach(el => (el as HTMLElement).style.display = '');
-      document.querySelectorAll('[data-hide-if-assessed]').forEach(el => (el as HTMLElement).style.display = 'none');
-      renderReport(reportData);
-      const hadOverlay = dismissLoadingOverlay();
-      if (!hadOverlay) animateScoreCountUp();
-    }
-    // If completed flag is set but data is corrupt/missing, fallback CTA stays visible
+  if (sharedData) {
+    reportData = sharedData;
+  } else if (isAssessmentCompleted()) {
+    reportData = buildFromLocalStorage();
   }
+
+  if (reportData) {
+    document.querySelectorAll('[data-show-if-assessed]').forEach(el => (el as HTMLElement).style.display = '');
+    document.querySelectorAll('[data-hide-if-assessed]').forEach(el => (el as HTMLElement).style.display = 'none');
+    applySharedViewChrome(reportData);
+    renderReport(reportData);
+    const hadOverlay = dismissLoadingOverlay();
+    if (!hadOverlay) animateScoreCountUp();
+  }
+  // If completed flag is set but data is corrupt/missing, fallback CTA stays visible
 
   function dismissLoadingOverlay(): boolean {
     const overlay = document.getElementById('report-loading');
@@ -1636,11 +2166,85 @@ const contextualRecs = frameworkData.contextual_recommendations;
     timestamp: string;
     previousScores: any | null;
     checklistProgress: Record<string, boolean> | null;
+    isSharedView?: boolean;
+    versionMismatch?: boolean;
   }
 
-  function getReportData(): ReportData | null {
-    // Future: const urlData = parseURLParams(); if (urlData) return urlData;
-    return buildFromLocalStorage();
+  // Decode an inbound shared report from `?d=...`. Returns null if no param,
+  // malformed payload, or no usable responses after filtering against the
+  // current question schema. Re-scores from responses so stage/overall reflect
+  // the current scoring engine, not whatever was baked into the link.
+  function tryDecodeSharedReport(): ReportData | null {
+    let payload: string | null = null;
+    try {
+      payload = new URLSearchParams(window.location.search).get('d');
+    } catch {
+      return null;
+    }
+    if (!payload) return null;
+
+    const decoded = decodeReport(payload);
+    if (!decoded) return null;
+
+    const responses = filterResponsesToKnownIds(decoded.responses, ALL_QUESTION_IDS);
+    if (!Object.keys(responses).length) return null;
+
+    const domainScores = calculateAllDomainScores(responses);
+    const overallScore = calculateOverallScore(domainScores);
+    const stage = determineStage(overallScore ?? 0);
+    if (overallScore == null || !stage) return null;
+
+    return {
+      companyName: decoded.companyName,
+      profile: decoded.profile,
+      domainScores,
+      overallScore,
+      stage,
+      responses,
+      timestamp: decoded.timestamp || '',
+      previousScores: null,
+      checklistProgress: null,
+      isSharedView: true,
+      versionMismatch: decoded.version !== ASSESSMENT_VERSION,
+    };
+  }
+
+  // Apply UI changes that only matter in shared-view mode (and no-op otherwise).
+  // Hides destructive/personal actions and reveals the shared-context banner.
+  function applySharedViewChrome(data: ReportData) {
+    if (!data.isSharedView) return;
+
+    // Hide the overflow menu (Update / Clear) — those actions belong to the
+    // viewer's own report, not someone else's.
+    const overflow = document.getElementById('report-overflow-menu');
+    if (overflow) (overflow as HTMLElement).style.display = 'none';
+
+    // Hide the Share button too — secondary shares cause confusion and the
+    // shared payload was tailored for the original viewer.
+    const shareBtn = document.getElementById('report-share-btn');
+    if (shareBtn) (shareBtn as HTMLElement).style.display = 'none';
+
+    // Reveal the static banner, populate the headline, set stage class
+    const banner = document.getElementById('report-shared-banner');
+    const headline = document.getElementById('shared-banner-headline');
+    if (headline) {
+      const name = (data.companyName || '').trim();
+      headline.innerHTML = name
+        ? `You are viewing <strong>${escapeHtml(name)}</strong>'s CS assessment shared with you via a link`
+        : 'You are viewing a CS assessment shared with you via a link';
+    }
+    if (banner) {
+      // Stage class drives the left-stripe color via --stage-color
+      banner.classList.remove('stage-crawl', 'stage-walk', 'stage-run');
+      if (data.stage) banner.classList.add(`stage-${data.stage}`);
+      banner.hidden = false;
+    }
+  }
+
+  function escapeHtml(s: string): string {
+    return s.replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]!));
   }
 
   function buildFromLocalStorage(): ReportData | null {
@@ -1753,6 +2357,16 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
     // Footer — generation timestamp + link to re-assess
     bodySections.push(renderFooter(data));
+
+    // Version-mismatch footnote — only when viewing an older shared payload
+    if (data.isSharedView && data.versionMismatch) {
+      bodySections.unshift(`
+        <div class="report-version-notice" role="note">
+          <strong>Note:</strong> this shared report was generated against an earlier
+          version of the assessment. Some recommendations may have shifted since.
+        </div>
+      `);
+    }
 
     // Append body wrapper (starts invisible)
     const bodyEl = document.createElement('div');
@@ -2346,6 +2960,109 @@ const contextualRecs = frameworkData.contextual_recommendations;
       resetAll();
       window.location.href = '/assess/';
     }
+  });
+
+  // ── Share modal ──
+  const shareBtn = document.getElementById('report-share-btn');
+  const shareModal = document.getElementById('share-modal');
+  const shareBackdrop = document.getElementById('share-modal-backdrop');
+  const shareClose = document.getElementById('share-modal-close');
+  const shareIncludeCompany = document.getElementById('share-include-company') as HTMLInputElement | null;
+  const shareReportUrlInput = document.getElementById('share-report-url') as HTMLInputElement | null;
+  const shareScoreTextarea = document.getElementById('share-score-text') as HTMLTextAreaElement | null;
+  const shareLinkedInLink = document.getElementById('share-linkedin') as HTMLAnchorElement | null;
+  const shareXLink = document.getElementById('share-x') as HTMLAnchorElement | null;
+
+  function openShareModal() {
+    if (!shareModal) return;
+    refreshShareModal();
+    shareModal.hidden = false;
+    requestAnimationFrame(() => shareModal.classList.add('is-open'));
+    // Focus the active tab for accessibility
+    const activeTab = shareModal.querySelector<HTMLElement>('.share-modal-tab.is-active');
+    activeTab?.focus();
+  }
+
+  function closeShareModal() {
+    if (!shareModal) return;
+    shareModal.classList.remove('is-open');
+    setTimeout(() => { shareModal.hidden = true; }, 180);
+    shareBtn?.focus();
+  }
+
+  // Re-builds the URLs and pre-filled text from the current report state.
+  // Called on open and whenever the "include company" toggle changes.
+  function refreshShareModal() {
+    if (!reportData) return;
+    const includeCompany = shareIncludeCompany?.checked ?? true;
+    const payload = encodeReport({
+      version: ASSESSMENT_VERSION,
+      companyName: includeCompany ? reportData.companyName : '',
+      profile: reportData.profile,
+      responses: reportData.responses,
+      timestamp: reportData.timestamp,
+    });
+    const origin = window.location.origin;
+    const reportUrl = `${origin}/cs-maturity-report/?d=${payload}`;
+    const assessUrl = `${origin}/assess/`;
+    if (shareReportUrlInput) shareReportUrlInput.value = reportUrl;
+
+    // Suggested social post — uses display score (/10) and stage label
+    const scoreDisplay = toDisplayScore(reportData.overallScore, 1);
+    const stageLabel = getStageData(reportData.stage)?.label ?? '';
+    const text = `I just took the Distilled CS maturity assessment for my team and scored ${scoreDisplay}/10 — ${stageLabel} stage. Take yours to see where you are on your customer success journey: ${assessUrl}`;
+    if (shareScoreTextarea) shareScoreTextarea.value = text;
+    if (shareLinkedInLink) {
+      shareLinkedInLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(assessUrl)}`;
+    }
+    if (shareXLink) {
+      shareXLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    }
+  }
+
+  shareBtn?.addEventListener('click', openShareModal);
+  shareBackdrop?.addEventListener('click', closeShareModal);
+  shareClose?.addEventListener('click', closeShareModal);
+  shareIncludeCompany?.addEventListener('change', refreshShareModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && shareModal && !shareModal.hidden) {
+      closeShareModal();
+    }
+  });
+
+  // Tab switching
+  document.querySelectorAll<HTMLButtonElement>('.share-modal-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const target = tab.getAttribute('data-share-tab');
+      document.querySelectorAll<HTMLButtonElement>('.share-modal-tab').forEach((t) => {
+        const isActive = t === tab;
+        t.classList.toggle('is-active', isActive);
+        t.setAttribute('aria-selected', String(isActive));
+      });
+      document.querySelectorAll<HTMLElement>('.share-modal-panel-body').forEach((panel) => {
+        panel.hidden = panel.id !== `share-panel-${target}`;
+      });
+    });
+  });
+
+  // Copy buttons (delegated by data-copy-target)
+  document.querySelectorAll<HTMLButtonElement>('.share-modal-copy').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const targetId = btn.getAttribute('data-copy-target');
+      if (!targetId) return;
+      const target = document.getElementById(targetId) as HTMLInputElement | HTMLTextAreaElement | null;
+      if (!target) return;
+      const text = target.value;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        target.select();
+        document.execCommand?.('copy');
+      }
+      btn.classList.add('is-copied');
+      setTimeout(() => btn.classList.remove('is-copied'), 1600);
+    });
   });
 
   // ── Section 8: Transition Guide ──

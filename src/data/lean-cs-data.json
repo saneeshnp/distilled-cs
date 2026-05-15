@@ -2,6 +2,7 @@
   "meta": {
     "framework_name": "Distilled CS",
     "version": "0.4.0",
+    "assessment_version": 1,
     "description": "A vendor-neutral, open customer success maturity framework with contextual guidance",
     "license": "CC BY-SA 4.0",
     "last_updated": "2026-04-27"
