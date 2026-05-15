@@ -87,7 +87,7 @@ for (const persona of personas) {
   // Priority actions
   console.log('\n  composePriorityActions:');
   check('returns array', Array.isArray(actions));
-  check('≤ 3 actions', actions.length <= 3, `got ${actions.length}`);
+  check('≤ 9 actions', actions.length <= 9, `got ${actions.length}`);
   check('≥ 1 action', actions.length >= 1, `got ${actions.length}`);
   check('each action has body', actions.every(a => typeof a.body === 'string' && a.body.length > 0));
   if (actions.length > 0) {
@@ -99,6 +99,21 @@ for (const persona of personas) {
   const nonNullScores = actions.filter(a => a.score_level !== null).map(a => a.score_level);
   const sorted = [...nonNullScores].sort((x, y) => x - y);
   check('scored actions in ascending order', JSON.stringify(nonNullScores) === JSON.stringify(sorted));
+
+  // Body composition: scored actions concatenate insight + next_step
+  const composedOk = actions.filter(a => a.source_question_id !== null).every(a => {
+    const domain = frameworkData.assessment_domains.domains.find(d =>
+      d.questions.some(q => q.id === a.source_question_id)
+    );
+    const question = domain?.questions.find(q => q.id === a.source_question_id);
+    const option = question?.options.find(o => o.score === a.score_level);
+    if (!option?.insight || !option?.next_step) return true;
+    const expectedNext = (persona.profile?.customer_segment &&
+      option.next_step_by_segment?.[persona.profile.customer_segment]) ||
+      option.next_step;
+    return a.body.includes(option.insight) && a.body.includes(expectedNext);
+  });
+  check('scored action bodies = insight + next_step', composedOk);
 
   // Strengths
   console.log('\n  composeStrengths:');
@@ -233,7 +248,7 @@ console.log('\n── Edge case: all score-4 except one score-1 ──');
   const actions = composePriorityActions({}, nearRunResponses, frameworkData);
   const strengths = composeStrengths({}, nearRunResponses, frameworkData);
 
-  check('9.2: priority actions ≤ 3', actions.length <= 3, `got ${actions.length}`);
+  check('9.2: priority actions ≤ 9', actions.length <= 9, `got ${actions.length}`);
   check('9.2: priority actions ≥ 1', actions.length >= 1, `got ${actions.length}`);
   check('9.2: strengths ≤ 3', strengths.length <= 3, `got ${strengths.length}`);
   check('9.2: strengths ≥ 2 (enough high scores)', strengths.length >= 2, `got ${strengths.length}`);
@@ -342,6 +357,284 @@ console.log('\n── Purity: determinism and no input mutation ──');
   check('9.5: responses not mutated', JSON.stringify(responses) === responsesSnap);
   check('9.5: frameworkData.meta not mutated', JSON.stringify(frameworkData.meta) === dataSnap);
   console.log(`    actions run 1=${r1.length}, run 2=${r2.length} — identical: ${JSON.stringify(r1)===JSON.stringify(r2)}`);
+}
+
+// ── Domain diversity: adaptive per-domain cap (Task 10) ──────────────────────
+// Pass 1 picks at most 1 action per domain (max diversity). Falls back to Pass 2
+// (allow 2nd per domain) and Pass 3 (allow 3rd) only when fewer than 8 domains
+// have qualifying entries. For a normal 24-question assessment across all 8
+// domains, Pass 1 alone yields 8 scored actions — one per domain.
+console.log('\n── Domain diversity: adaptive 1→2→3 per domain ──');
+{
+  // Normal case: 24 answered questions, varied scores. Pass 1 covers all 8 domains.
+  const concentratedResponses = {
+    sc_q1: 1, sc_q2: 1, sc_q3: 1,
+    jl_q1: 2, jl_q2: 2, jl_q3: 2,
+    hr_q1: 3, hr_q2: 3, hr_q3: 3,
+    md_q1: 3, md_q2: 3, md_q3: 3,
+    ev_q1: 3, ev_q2: 3, ev_q3: 3,
+    os_q1: 3, os_q2: 3, os_q3: 3,
+    ca_q1: 3, ca_q2: 3, ca_q3: 3,
+    ai_q1: 3, ai_q2: 3, ai_q3: 3,
+  };
+  const actions = composePriorityActions({}, concentratedResponses, frameworkData);
+  const byDomain = {};
+  for (const a of actions) {
+    if (a.source_question_id === null) continue;
+    const dom = a.source_question_id.split('_')[0];
+    byDomain[dom] = (byDomain[dom] ?? 0) + 1;
+  }
+  const scoredCount = Object.values(byDomain).reduce((a, b) => a + b, 0);
+  check('10a: normal case — max 1 per domain', Object.values(byDomain).every(n => n === 1),
+    `domain counts: ${JSON.stringify(byDomain)}`);
+  check('10a: normal case — 8 distinct domains', Object.keys(byDomain).length === 8,
+    `domains: ${Object.keys(byDomain).join(',')}, count: ${Object.keys(byDomain).length}`);
+  check('10a: normal case — 8 scored actions', scoredCount === 8, `got ${scoredCount}`);
+  console.log(`    normal: ${JSON.stringify(byDomain)}, total=${actions.length}`);
+}
+
+// Adaptive fallback: only 2 domains answered → Pass 2 and Pass 3 kick in.
+// 6 questions across 2 domains → engine surfaces all 6.
+console.log('\n── Adaptive: only 2 domains answered → all 6 scored entries surface ──');
+{
+  const sparseResponses = {
+    sc_q1: 1, sc_q2: 1, sc_q3: 1,
+    jl_q1: 1, jl_q2: 1, jl_q3: 1,
+  };
+  const actions = composePriorityActions({}, sparseResponses, frameworkData);
+  const byDomain = {};
+  for (const a of actions) {
+    if (a.source_question_id === null) continue;
+    const dom = a.source_question_id.split('_')[0];
+    byDomain[dom] = (byDomain[dom] ?? 0) + 1;
+  }
+  const scoredCount = Object.values(byDomain).reduce((a, b) => a + b, 0);
+  check('10b: 2 domains × score-1 → 6 scored actions', scoredCount === 6, `got ${scoredCount}`);
+  check('10b: distributed evenly (3+3)', byDomain.sc === 3 && byDomain.jl === 3,
+    `sc=${byDomain.sc}, jl=${byDomain.jl}`);
+  console.log(`    sparse 2-domain: ${JSON.stringify(byDomain)}, total=${actions.length}`);
+}
+
+// Adaptive fallback: only 1 domain answered → all 3 questions surface.
+console.log('\n── Adaptive: only 1 domain answered → 3rd per domain allowed ──');
+{
+  const singleDomainResponses = { sc_q1: 1, sc_q2: 1, sc_q3: 1 };
+  const actions = composePriorityActions({}, singleDomainResponses, frameworkData);
+  const scoredActions = actions.filter(a => a.source_question_id !== null);
+  check('10c: 1 domain × 3 questions → 3 scored actions', scoredActions.length === 3,
+    `got ${scoredActions.length}`);
+  check('10c: all 3 from segmentation', scoredActions.every(a => a.source_question_id.startsWith('sc_')),
+    `ids: ${scoredActions.map(a => a.source_question_id).join(',')}`);
+  console.log(`    single-domain: ${scoredActions.length} scored + ${actions.length - scoredActions.length} fallback`);
+}
+
+// Diversity across ALL personas: verify the preset/persona fixtures cover all 8 domains.
+console.log('\n── Diversity across all 3 persona fixtures ──');
+{
+  for (const persona of personas) {
+    const actions = composePriorityActions(persona.profile, persona.responses, frameworkData);
+    const byDomain = {};
+    for (const a of actions) {
+      if (a.source_question_id === null) continue;
+      const dom = a.source_question_id.split('_')[0];
+      byDomain[dom] = (byDomain[dom] ?? 0) + 1;
+    }
+    const distinctDomains = Object.keys(byDomain).length;
+    // For these 3 personas (all 24 answered), Pass 1 alone covers all 8 domains
+    check(`10d: "${persona.name}" — 8 distinct domains`, distinctDomains === 8,
+      `${distinctDomains} domains: ${Object.keys(byDomain).join(',')}`);
+    check(`10d: "${persona.name}" — no domain repeats`, Object.values(byDomain).every(n => n === 1),
+      `counts: ${JSON.stringify(byDomain)}`);
+  }
+}
+
+// ── Edge: empty responses ────────────────────────────────────────────────────
+// User reaches the report without answering any capability questions (e.g. URL-shared
+// link with profile-only data). Engine must not crash and should return only the
+// stage fallback action.
+console.log('\n── Edge: empty responses ──');
+{
+  let actions, strengths;
+  try {
+    actions = composePriorityActions({ customer_segment: 'seg_smb' }, {}, frameworkData);
+    strengths = composeStrengths({}, {}, frameworkData);
+    check('empty responses: no crash', true);
+  } catch (e) {
+    check('empty responses: no crash', false, e.message);
+    actions = []; strengths = [];
+  }
+  check('empty responses: returns array', Array.isArray(actions));
+  check('empty responses: scored actions all skipped',
+    actions.every(a => a.source_question_id === null));
+  check('empty responses: strengths empty', strengths.length === 0);
+  console.log(`    actions=${actions.length} (stage fallback only), strengths=${strengths.length}`);
+}
+
+// ── Edge: null/undefined response values ─────────────────────────────────────
+// A response field could be set to null/undefined by buggy localStorage state.
+// Engine must skip these gracefully.
+console.log('\n── Edge: null/undefined responses for some questions ──');
+{
+  const messyResponses = {
+    sc_q1: null,
+    sc_q2: undefined,
+    sc_q3: 2,
+    jl_q1: 1,
+    jl_q2: 1,
+    // Rest missing entirely
+  };
+  let actions;
+  try {
+    actions = composePriorityActions({}, messyResponses, frameworkData);
+    check('null/undef responses: no crash', true);
+  } catch (e) {
+    check('null/undef responses: no crash', false, e.message);
+    actions = [];
+  }
+  check('null/undef: returns array', Array.isArray(actions));
+  check('null/undef: all bodies non-empty', actions.every(a => typeof a.body === 'string' && a.body.length > 0));
+  console.log(`    actions=${actions.length}`);
+}
+
+// ── Body sanitation: no literal "undefined"/"null" leakage ──────────────────
+// Ensures `${maybeUndef}` template interpolation never produces "undefined" or
+// "null" in any rendered body string, across a wide range of personas.
+console.log('\n── Body sanitation: no "undefined" / "null" in any composed body ──');
+{
+  const probePersonas = [
+    { name: 'all-1', responses: Object.fromEntries(personas[0].responses ? Object.entries(personas[0].responses) : []) },
+    { name: 'all-1', responses: personas[0].responses },
+    { name: 'mid-walk', responses: personas[1].responses },
+    { name: 'high-run', responses: personas[2].responses },
+    { name: 'mixed-2-3', responses: Object.fromEntries(Object.keys(personas[0].responses).map((k, i) => [k, (i % 2) + 2])) },
+  ];
+  const segments = [undefined, 'seg_smb', 'seg_midmarket', 'seg_enterprise'];
+  let bodiesChecked = 0;
+  let leaks = [];
+  for (const p of probePersonas) {
+    for (const seg of segments) {
+      const profile = seg ? { customer_segment: seg } : {};
+      const actions = composePriorityActions(profile, p.responses, frameworkData);
+      for (const a of actions) {
+        bodiesChecked++;
+        if (typeof a.body !== 'string' || a.body.length === 0) {
+          leaks.push(`${p.name}/${seg}: empty body on ${a.source_question_id}`);
+        }
+        if (a.body && (a.body.includes('undefined') || a.body.includes('null'))) {
+          leaks.push(`${p.name}/${seg}: leak in ${a.source_question_id}: "${a.body.slice(0, 60)}…"`);
+        }
+      }
+    }
+  }
+  check(`sanitation: ${bodiesChecked} bodies, 0 "undefined"/"null" leaks`, leaks.length === 0,
+    leaks.slice(0, 3).join(' | '));
+  console.log(`    ${bodiesChecked} bodies checked across ${probePersonas.length} personas × ${segments.length} segments`);
+}
+
+// ── Exhaustive single-answer fuzz ────────────────────────────────────────────
+// For every (question, score) combination across all 8 domains × 3 questions × 4 scores
+// = 96 single-answer assessments, verify the engine returns clean data with no
+// nulls, no crashes, and well-formed fields. This catches any latent JSON gaps
+// (e.g. a question option missing insight or next_step).
+console.log('\n── Exhaustive fuzz: every (question, score) single-answer ──');
+{
+  let combos = 0;
+  let failures = [];
+  for (const domain of frameworkData.assessment_domains.domains) {
+    for (const question of domain.questions) {
+      for (const score of [1, 2, 3, 4]) {
+        combos++;
+        const responses = { [question.id]: score };
+        try {
+          const actions = composePriorityActions({}, responses, frameworkData);
+          if (!Array.isArray(actions)) failures.push(`${question.id}/s${score}: not array`);
+          for (const a of actions) {
+            if (typeof a.body !== 'string' || a.body.length === 0) {
+              failures.push(`${question.id}/s${score}: empty body`);
+            }
+            if (a.body && (a.body.includes('undefined') || a.body.includes('null'))) {
+              failures.push(`${question.id}/s${score}: literal undef/null`);
+            }
+            if (a.source_question_id !== null && typeof a.domain_label !== 'string') {
+              failures.push(`${question.id}/s${score}: scored action missing domain_label`);
+            }
+          }
+        } catch (e) {
+          failures.push(`${question.id}/s${score}: crash — ${e.message}`);
+        }
+      }
+    }
+  }
+  check(`fuzz: ${combos} combos, 0 failures`, failures.length === 0,
+    failures.slice(0, 3).join(' | '));
+  console.log(`    ${combos} single-answer assessments verified`);
+}
+
+// ── Exhaustive cross-segment fuzz: every (question, score, segment) ─────────
+// Same as above but also varies customer_segment, since next_step_by_segment
+// overrides may exist on score-3+ options. 96 × 4 segments = 384 combos.
+console.log('\n── Cross-segment fuzz: every (question, score, segment) ──');
+{
+  let combos = 0;
+  let failures = [];
+  const segments = [null, 'seg_smb', 'seg_midmarket', 'seg_enterprise'];
+  for (const domain of frameworkData.assessment_domains.domains) {
+    for (const question of domain.questions) {
+      for (const score of [1, 2, 3, 4]) {
+        for (const seg of segments) {
+          combos++;
+          const profile = seg ? { customer_segment: seg } : {};
+          const responses = { [question.id]: score };
+          try {
+            const actions = composePriorityActions(profile, responses, frameworkData);
+            for (const a of actions) {
+              if (a.body && (a.body.includes('undefined') || a.body.includes('null'))) {
+                failures.push(`${question.id}/s${score}/${seg ?? 'no-seg'}: leak`);
+              }
+            }
+          } catch (e) {
+            failures.push(`${question.id}/s${score}/${seg ?? 'no-seg'}: crash — ${e.message}`);
+          }
+        }
+      }
+    }
+  }
+  check(`cross-segment fuzz: ${combos} combos, 0 failures`, failures.length === 0,
+    failures.slice(0, 3).join(' | '));
+  console.log(`    ${combos} (question × score × segment) combos verified`);
+}
+
+// ── Stage fallback shape ─────────────────────────────────────────────────────
+// The 5th action card (stage fallback) has different fields from scored cards.
+// Verify its shape is consistent: title, body (non-empty), source_question_id=null,
+// score_level=null, domain_label=null.
+console.log('\n── Stage fallback action shape ──');
+{
+  const allScore1 = personas[0].responses;
+  const actions = composePriorityActions({}, allScore1, frameworkData);
+  const fallback = actions.find(a => a.source_question_id === null);
+  check('stage fallback: exists', !!fallback);
+  if (fallback) {
+    check('stage fallback: title is string', typeof fallback.title === 'string' && fallback.title.length > 0);
+    check('stage fallback: body is string', typeof fallback.body === 'string' && fallback.body.length > 0);
+    check('stage fallback: score_level is null', fallback.score_level === null);
+    check('stage fallback: domain_label is null', fallback.domain_label === null);
+  }
+}
+
+// ── Total cap ────────────────────────────────────────────────────────────────
+// With all 24 questions answered across 8 domains, the engine should surface
+// 8 scored actions (one per domain) plus 1 stage fallback = 9 total max.
+console.log('\n── Total cap: never exceed 9 actions ──');
+{
+  const allScore1 = personas[0].responses;
+  const actions = composePriorityActions({}, allScore1, frameworkData);
+  check('total ≤ 9', actions.length <= 9, `got ${actions.length}`);
+  const scored = actions.filter(a => a.source_question_id !== null);
+  check('scored ≤ 8', scored.length <= 8, `got ${scored.length}`);
+  check('all 8 domains covered when 24 answered', new Set(scored.map(a => a.source_question_id.split('_')[0])).size === 8,
+    `domains: ${[...new Set(scored.map(a => a.source_question_id.split('_')[0]))].join(',')}`);
+  console.log(`    actions=${actions.length}, scored=${scored.length}, distinct domains=${new Set(scored.map(a => a.source_question_id.split('_')[0])).size}`);
 }
 
 // ── Summary ───────────────────────────────────────────────────────────────────

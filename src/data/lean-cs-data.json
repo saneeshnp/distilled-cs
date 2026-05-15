@@ -906,7 +906,7 @@
                 "score": 4,
                 "label": "Predictive models that flag risk early, with automated escalation and cross-functional response",
                 "insight": "Automated cross-functional risk response is rare. Most teams identify risk but leave action coordination entirely to the CSM.",
-                "next_step": "Measure the time from risk flag to first intervention. If that gap consistently exceeds 48 hours, the escalation path has a bottleneck to find and fix.",
+                "next_step": "Track how long it takes from flagging a risk to taking the first action. If that gap is regularly more than 48 hours, find the bottleneck in your escalation path and fix it.",
                 "next_step_by_segment": {
                   "seg_enterprise": "Ensure cross-functional escalation includes a named executive sponsor relationship owner. Enterprise risk response requires C-suite involvement protocols.",
                   "seg_midmarket": "Add a feedback loop: track which automated interventions actually moved accounts from red to green. Kill the interventions that consistently don't move the needle.",
@@ -1052,7 +1052,7 @@
                 "score": 1,
                 "label": "Spreadsheets and basic CRM only",
                 "insight": "Spreadsheets and CRM alone mean your CS data is fragmented: health signals, customer history, and renewal dates live in separate places.",
-                "next_step": "Before evaluating CS platforms, standardize your CRM: ensure every account record has renewal date, ARR, CSM owner, and last contact date. Clean data makes platform adoption successful."
+                "next_step": "Clean up your CRM before reaching for new tools or CS platforms. Every account record should have renewal date, ARR, CSM owner, and last contact date. Clean data is the foundation any future platform will rely on."
               },
               {
                 "score": 2,
@@ -1460,7 +1460,7 @@
                 "score": 3,
                 "label": "Key customer metrics (NRR, churn, health) are visible to and partially owned by multiple teams",
                 "insight": "Multi-team visibility to NRR and churn changes the conversation from 'CS's problem' to 'our signal', a meaningful cultural shift.",
-                "next_step": "Visibility without accountability stalls. Identify the next metric to make explicitly jointly owned: pick one where another team's actions clearly move the number. Expansion NRR shared with Sales is a natural fit.",
+                "next_step": "Move from shared visibility to shared accountability. Pick one customer metric and give another team co-ownership of it. Expansion NRR shared with Sales is a natural place to start.",
                 "next_step_by_segment": {
                   "seg_enterprise": "Extend metric visibility to account-level health dashboards accessible to Sales, Support, and Product leadership. Account-level data creates account-level accountability.",
                   "seg_midmarket": "Tie shared metric visibility to the product roadmap process. If Product can see that a feature correlates with 20% lower churn, it becomes a prioritization input, not just a CS data point.",
@@ -1508,7 +1508,7 @@
               {
                 "score": 3,
                 "label": "Predictive models (health scoring, churn risk, or expansion propensity) are in production and integrated into CSM workflows",
-                "insight": "Predictive models in production and integrated into CSM workflows represents a meaningful capability gap over teams still at the drafting-and-summarization stage.",
+                "insight": "Predictive models are running inside your CSM workflows. That puts you ahead of teams still using AI only for drafting and summaries.",
                 "next_step": "Validate model precision and recall against actual outcomes quarterly. A model that fires 40% accurate churn alerts creates alert fatigue and erodes CSM trust faster than no model at all.",
                 "next_step_by_segment": {
                   "seg_enterprise": "Ensure predictive models include relationship signals (exec sponsor engagement, stakeholder network breadth) alongside product usage. Enterprise churn often starts in the relationship, not in the data.",

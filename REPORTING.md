@@ -122,10 +122,10 @@ Order matters — sections render top-to-bottom in this order:
 | 2 | Executive Summary | `renderSummary` | Personalized via `executive_summary_templates` keyed by `seg_*` + team-size band |
 | 3 | Your Strengths | `renderStrengths` | **Conditional** — only renders if `composeStrengths` returns ≥ 2 fragments |
 | 4 | Domain Breakdown | `renderDomainBreakdown` | Sorted by score descending, with delta arrows when `previousScores` exists |
-| 5 | Priority Actions | `renderPriorityActions` | Response-composed via `composePriorityActions`; falls back to `stage.priority_actions` |
+| 5 | Priority Actions | `renderPriorityActions` | Body = `insight + " " + next_step` (personalized lead-in + directive). Up to 8 scored (1 per domain via adaptive cap) + 1 stage fallback = 9 max. Cards 1–5 prominent; 6–9 grouped under "More actions worth considering" with compact muted styling. Domain eyebrow above each card; no question/answer attribution footer. |
 | 6 | Recommended Playbooks | `renderPlaybooks` | Current stage + "Strengthen Weakest Area" + "Coming Next" |
-| 7 | Metric Priorities | `renderMetrics` | Grouped by high/medium/low; high-priority shows segment benchmarks |
-| 8 | Maturity Journey | `renderMaturityModel` | Three stage cards with Completed / You-are-here / Upcoming badges |
+| 7 | Metric Priorities | `renderMetrics` | Three tiers with distinct visual weight: **High** = accent-tinted card wrapper, **Medium** = plain rows, **Low** = compact muted rows under "Also worth tracking" subhead. The colored priority dot stays as a secondary signal. |
+| 8 | Maturity Journey | `renderMaturityModel` | Three stage cards. All share the same shape: label + subtitle + badge + description paragraph. No `key_characteristics` list rendered — listing per-capability statements would imply a checklist of completed items, which would misrepresent the average-score stage assignment. Past stages: "✓ Completed" badge. Current stage: "You are here" badge. Future stages: "Coming next" badge. Section footer links to `/customer-success-maturity-model/` for full detail. |
 | 9 | Transition Guide | `renderTransitionGuide` | **Hidden at Run stage** (no next stage to transition to) |
 | — | Footer | `renderFooter` | Generated timestamp + re-assessment link. Timestamp omitted gracefully if missing |
 
@@ -154,6 +154,33 @@ composeMetricPriorities(profile, responses, stage, allMetrics)
 - `profile_modifiers` in JSON (`customer_segment`, `company_arr`, `cs_team_size`) declare `emphasizes` and `deprioritizes` tag arrays per profile value.
 - The engine: pulls fragments from the user's responses, filters by `deprioritizes` tags for the user's profile, dedupes, ranks, and returns the top N.
 - When no fragments are available, falls back to `stage.priority_actions` — no crash.
+
+### Priority actions: composition and selection
+
+`composePriorityActions` is the most opinionated part of the engine. It does two things on top of the generic fragment-pull described above:
+
+**1. Body composition — insight + next_step.**
+The `body` field returned to the template is `${option.insight} ${nextStep}` (where `nextStep` is either `next_step_by_segment[segment]` or `next_step`). The insight is the personalized lead-in ("you are here") and the next_step is the directive ("do this"). Together they read as one natural recommendation, no Q&A attribution needed. If `insight` is absent on an option, body falls back to `nextStep` alone. Both fields are written to be standalone-readable — see the manual QA pass during the Phase 1 rollout for the four pairs that were edited to flow naturally when concatenated (`ai_q1.s3`, `ca_q3.s3`, `hr_q2.s4`, `md_q3.s1`).
+
+**2. Adaptive per-domain selection with cap escalation.**
+The engine surfaces variety first, depth only when needed. After sorting candidates by `userScore` ascending (lowest = highest priority), it runs three picking passes:
+
+- **Pass 1 (cap=1 per domain):** pick at most one entry from each domain. Best diversity. For a normal 24-question assessment across all 8 domains, this alone fills the target.
+- **Pass 2 (cap=2):** if Pass 1 returned fewer than `MAX_SCORED` (only happens when the user answered questions in fewer than 8 domains), allow a second entry per domain.
+- **Pass 3 (cap=3):** absolute ceiling — each domain has at most 3 questions, so allowing 3 per domain is equivalent to "all qualifying entries."
+
+`MAX_SCORED = 8`. Add one stage-level fallback (deduped against picked entries via raw `next_step` text comparison, not against the composed body string). Total cap: **9 priority actions** (8 scored + 1 fallback).
+
+**3. Two-tier display.**
+The flat array of up to 9 entries is split by the template ([cs-maturity-report.astro](src/pages/cs-maturity-report.astro)): cards 1–4 (top 4 scored) + card 5 (stage fallback) render as the prominent headline block; cards 6–9 (additional scored) render under a "More actions worth considering" subhead with compact muted styling (smaller padding, smaller number badge, smaller eyebrow, transparent background, secondary text color). Same content shape, visually quieter.
+
+**Edge cases (covered by 121 checks in `recommendation-engine.test.js`):**
+- Empty responses → returns 1 stage fallback only, no crash
+- Null/undefined response values → silently skipped
+- Unknown scores (e.g., legacy localStorage with `score: 5`) → silently skipped
+- Sparse responses (only 1–2 domains answered) → Pass 2/Pass 3 fill in additional scored entries from the answered domains
+- Missing `insight` on an option → body falls back to `next_step` alone
+- 384-combo exhaustive fuzz over (question × score × segment) verifies no `"undefined"` or `"null"` strings ever leak into a rendered body
 
 ### Executive summary templates
 
@@ -363,7 +390,9 @@ In scoped blocks: always write `:root[data-theme="dark"] .foo` — never `[data-
 | If you change | Also verify |
 |---|---|
 | A question's wording in `lean-cs-data.json` | No code change needed; old shared links still work |
-| A question's option `insight`/`next_step` | Re-run `recommendation-engine.test.js` |
+| A question's option `insight`/`next_step` | Re-run `recommendation-engine.test.js`. **The insight is now rendered as a sentence-leading lead-in before `next_step`** — make sure the two flow naturally when concatenated. |
+| `MAX_SCORED` or the per-domain cap logic in `composePriorityActions` | Update the test assertions for total cap, scored cap, and domain-distribution expectations. The two-tier template split (cards 1–5 vs 6–9) is hardcoded to `prominentScored.slice(0, 4)` — adjust both if the headline target changes. |
+| Anything in `renderMaturityModel` | The deliberate choice is **same shape for all 3 cards** (badge + description, no characteristics list). Reintroducing the characteristics list per stage would re-introduce the "implies completion of every capability" problem. If you need per-capability detail, send the user to `/customer-success-maturity-model/`. |
 | What a score level (1-4) **means** on any question | **Bump `meta.assessment_version` in `lean-cs-data.json`**. Old links now show the version-mismatch footnote |
 | A question ID | Add to a migration map before `filterResponsesToKnownIds`. Old links lose that answer otherwise |
 | The number of questions per domain | Domain scoring tolerates fewer answers (averages over `answered.length`), but verify `recommendation-engine` doesn't expect a specific count |

@@ -31,10 +31,42 @@ export function composePriorityActions(profile, responses, frameworkData) {
     (b.domain.weight ?? 1) - (a.domain.weight ?? 1)
   );
 
-  const actions = scoredEntries.slice(0, 4).map(entry => {
-    const body =
+  // Adaptive per-domain selection: prefer maximum domain variety, fall back to
+  // depth only when needed to fill the target. Pass 1 picks at most 1 per domain
+  // (best diversity). If we have fewer than MAX_SCORED picks (user answered
+  // questions in fewer than MAX_SCORED domains), Pass 2 allows a 2nd per domain.
+  // Pass 3 allows a 3rd (each domain has at most 3 questions, so this is the ceiling).
+  // For a typical user who answered all 24 questions across all 8 domains,
+  // Pass 1 alone gives 8 scored actions — one per domain — sorted by score asc.
+  // Template displays the first 4 prominently and the next 4 as "also worth your
+  // attention" so the cognitive load of the headline section stays manageable.
+  const MAX_SCORED = 8;
+  const diverseEntries = [];
+  const domainCounts = new Map();
+  const pickedIds = new Set();
+  for (const cap of [1, 2, 3]) {
+    if (diverseEntries.length >= MAX_SCORED) break;
+    for (const entry of scoredEntries) {
+      if (diverseEntries.length >= MAX_SCORED) break;
+      if (pickedIds.has(entry.question.id)) continue;
+      const count = domainCounts.get(entry.domain.id) ?? 0;
+      if (count >= cap) continue;
+      diverseEntries.push(entry);
+      pickedIds.add(entry.question.id);
+      domainCounts.set(entry.domain.id, count + 1);
+    }
+  }
+
+  const actions = diverseEntries.map(entry => {
+    const nextStep =
       (entry.segment && entry.option.next_step_by_segment?.[entry.segment]) ||
       entry.option.next_step;
+    // Prepend the insight as a personalized lead-in. The insight is a "you are here"
+    // observation tied to the user's answer; it gives the next_step natural context
+    // without quoting the question/answer back at them.
+    const body = entry.option.insight
+      ? `${entry.option.insight} ${nextStep}`
+      : nextStep;
     return {
       title: entry.option.label,
       body,
@@ -44,11 +76,18 @@ export function composePriorityActions(profile, responses, frameworkData) {
     };
   });
 
-  // Add 1 stage-level action that isn't already represented and isn't deprioritized
+  // Add 1 stage-level action that isn't already represented and isn't deprioritized.
+  // Dedup compares pa.text against raw next_step text (not the composed body),
+  // since pa.text would mirror the next_step field, not insight + next_step.
   if (stageData?.priority_actions?.length) {
-    const usedBodies = new Set(actions.map(a => a.body));
+    const usedNextSteps = new Set(
+      diverseEntries.map(entry =>
+        (entry.segment && entry.option.next_step_by_segment?.[entry.segment]) ||
+        entry.option.next_step
+      )
+    );
     const fallback = stageData.priority_actions.find(pa =>
-      !usedBodies.has(pa.text) &&
+      !usedNextSteps.has(pa.text) &&
       !(deprioritize.size > 0 && (pa.tags ?? []).some(t => deprioritize.has(t)))
     );
     if (fallback) {
@@ -56,13 +95,14 @@ export function composePriorityActions(profile, responses, frameworkData) {
         title: fallback.text,
         body: fallback.why_it_matters,
         source_question_id: null,
+        domain_label: null,
         score_level: null,
         estimated_time: fallback.estimated_time ?? null,
       });
     }
   }
 
-  return actions.slice(0, 5);
+  return actions;
 }
 
 // Compose the strengths section: up to 3 insights from the user's highest-scoring responses.

@@ -1422,10 +1422,20 @@ const contextualRecs = frameworkData.contextual_recommendations;
     flex: 1;
   }
 
+  .report-action-eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 0.375rem;
+  }
+
   .report-action-text {
     font-size: 0.9375rem;
-    font-weight: 500;
+    font-weight: 400;
     color: var(--color-text-primary);
+    line-height: 1.6;
     margin-bottom: 0.25rem;
   }
 
@@ -1433,6 +1443,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    margin-top: 0.5rem;
   }
 
   .report-action-time,
@@ -1447,17 +1458,46 @@ const contextualRecs = frameworkData.contextual_recommendations;
     font-weight: 600;
   }
 
-  .report-action-source {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    margin-top: 0.375rem;
-    font-style: italic;
+  /* "More actions worth considering" subhead — separates headline 5 from additional picks */
+  .report-action-subhead {
+    margin: 2rem 0 1rem;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: var(--color-text-primary);
+    padding-bottom: 0.375rem;
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .report-action-domain {
-    font-style: normal;
-    font-weight: 600;
-    color: var(--color-text-primary);
+  /* Additional priority actions (cards 6+): same layout, visually quieter */
+  .report-actions-list-additional {
+    gap: 0.625rem;
+  }
+
+  .report-action-item.is-additional {
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border-color: var(--color-border-subtle, var(--color-border));
+  }
+
+  .report-action-item.is-additional .report-action-num {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.6875rem;
+    background: transparent;
+    border: 1px solid var(--color-accent-subtle);
+    color: var(--color-text-secondary);
+  }
+
+  .report-action-item.is-additional .report-action-eyebrow {
+    font-size: 0.625rem;
+    margin-bottom: 0.25rem;
+    color: var(--color-text-secondary);
+  }
+
+  .report-action-item.is-additional .report-action-text {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
   }
 
   /* ── Section: Strengths ── */
@@ -1561,6 +1601,33 @@ const contextualRecs = frameworkData.contextual_recommendations;
     margin-bottom: 1.25rem;
   }
 
+  /* High priority: tinted card wrapper signals "focus here first" */
+  .report-metric-group.is-priority-high {
+    padding: 1rem 1.25rem;
+    border-radius: 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-border));
+    background: color-mix(in srgb, var(--color-accent) 5%, var(--color-surface));
+    margin-bottom: 1.5rem;
+  }
+
+  /* Low priority: muted reference list, not an action tier */
+  .report-metric-group.is-priority-low {
+    margin-top: 1.75rem;
+  }
+
+  .report-metric-group.is-priority-low .report-metric-row {
+    padding: 0.375rem 0;
+  }
+
+  .report-metric-group.is-priority-low .report-metric-name {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+  }
+
+  .report-metric-group.is-priority-low .report-metric-benchmark {
+    font-size: 0.6875rem;
+  }
+
   .report-metric-group-title {
     font-size: 0.8125rem;
     font-weight: 600;
@@ -1571,6 +1638,17 @@ const contextualRecs = frameworkData.contextual_recommendations;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  /* Softer subhead for Low priority — display font, no uppercase, no dot */
+  .report-metric-group-title.is-soft {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.625rem;
   }
 
   .report-metric-group-title .priority-dot {
@@ -1652,6 +1730,66 @@ const contextualRecs = frameworkData.contextual_recommendations;
   .report-stage-card.is-current {
     border-color: var(--stage-color, var(--color-accent));
     background: color-mix(in srgb, var(--stage-color, var(--color-accent)) 6%, var(--color-surface));
+  }
+
+  /* Past stages: compact, muted — just confirmation that the user crossed this threshold */
+  .report-stage-card.is-past {
+    border-style: dashed;
+    border-width: 1px;
+    opacity: 0.85;
+  }
+
+  .report-stage-card.is-past .report-stage-card-label,
+  .report-stage-card.is-past .report-stage-card-subtitle {
+    color: var(--color-text-secondary);
+  }
+
+  /* Future stages: compact, shows description preview without characteristics */
+  .report-stage-card.is-future {
+    border-style: dashed;
+    border-width: 1px;
+    opacity: 0.9;
+  }
+
+  .report-stage-card-description {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin: 0 0 0.75rem;
+  }
+
+  .report-stage-card.is-current .report-stage-card-description {
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+  }
+
+  .report-stage-card-badge-future {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    margin-bottom: 0.75rem;
+  }
+
+  .report-stages-footer {
+    margin: 1rem 0 0;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .report-stages-footer a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .report-stages-footer a:hover {
+    text-decoration: underline;
   }
 
   .report-stage-card-label {
@@ -2801,30 +2939,55 @@ const contextualRecs = frameworkData.contextual_recommendations;
     const actions = composePriorityActions(data.profile as any, data.responses, frameworkData as any);
     if (!actions.length) return '';
 
-    const items = actions.map((a: any, i: number) => {
-      const sourceHtml = a.source_question_id
-        ? `<div class="report-action-source">Suggested based on your answer in <span class="report-action-domain">${a.domain_label}</span>: ${a.title}</div>`
+    // Split: first 4 scored + stage fallback = headline block (1-5).
+    // Remaining scored entries = "also worth your attention" block (compact).
+    const scoredActions = actions.filter((a: any) => a.source_question_id !== null);
+    const fallbackAction = actions.find((a: any) => a.source_question_id === null) ?? null;
+    const prominentScored = scoredActions.slice(0, 4);
+    const additionalScored = scoredActions.slice(4);
+
+    const renderItem = (a: any, index: number, isAdditional: boolean) => {
+      const eyebrowHtml = a.domain_label
+        ? `<div class="report-action-eyebrow">${a.domain_label}</div>`
         : '';
       const timeHtml = a.estimated_time
         ? `<span class="report-action-time">${a.estimated_time}</span>`
         : '';
-
+      const cls = isAdditional ? 'report-action-item is-additional' : 'report-action-item';
       return `
-        <li class="report-action-item">
-          <span class="report-action-num">${i + 1}</span>
+        <li class="${cls}">
+          <span class="report-action-num">${index}</span>
           <div class="report-action-body">
+            ${eyebrowHtml}
             <div class="report-action-text">${a.body}</div>
-            ${timeHtml || sourceHtml ? `<div class="report-action-meta">${timeHtml}</div>` : ''}
-            ${sourceHtml}
+            ${timeHtml ? `<div class="report-action-meta">${timeHtml}</div>` : ''}
           </div>
         </li>
       `;
-    }).join('');
+    };
+
+    let position = 0;
+    const headlineItems = [
+      ...prominentScored.map((a: any) => renderItem(a, ++position, false)),
+      ...(fallbackAction ? [renderItem(fallbackAction, ++position, false)] : []),
+    ].join('');
+
+    const additionalItems = additionalScored
+      .map((a: any) => renderItem(a, ++position, true))
+      .join('');
+
+    const additionalBlock = additionalItems
+      ? `
+        <h3 class="report-action-subhead">More actions worth considering</h3>
+        <ol class="report-actions-list report-actions-list-additional" start="${prominentScored.length + (fallbackAction ? 1 : 0) + 1}">${additionalItems}</ol>
+      `
+      : '';
 
     return `
       <div id="report-section-actions" class="report-section">
         <h2 class="report-section-title">Priority Actions</h2>
-        <ol class="report-actions-list">${items}</ol>
+        <ol class="report-actions-list">${headlineItems}</ol>
+        ${additionalBlock}
       </div>
     `;
   }
@@ -2907,12 +3070,18 @@ const contextualRecs = frameworkData.contextual_recommendations;
         `;
       }).join('');
 
+      // Low priority gets a softer subhead — its job is reference material, not
+      // a tier of action. High/Medium keep the dot + "Priority" framing.
+      const titleHtml = priority === 'low'
+        ? `<h3 class="report-metric-group-title is-soft">${label}</h3>`
+        : `<h3 class="report-metric-group-title">
+             <span class="priority-dot priority-dot-${priority}"></span>
+             ${label} Priority
+           </h3>`;
+
       return `
-        <div class="report-metric-group">
-          <h3 class="report-metric-group-title">
-            <span class="priority-dot priority-dot-${priority}"></span>
-            ${label} Priority
-          </h3>
+        <div class="report-metric-group is-priority-${priority}">
+          ${titleHtml}
           ${rows}
         </div>
       `;
@@ -2923,39 +3092,54 @@ const contextualRecs = frameworkData.contextual_recommendations;
         <h2 class="report-section-title">Metric Priorities</h2>
         ${renderGroup('high', 'High', grouped.high || [])}
         ${renderGroup('medium', 'Medium', grouped.medium || [])}
-        ${renderGroup('low', 'Low', grouped.low || [])}
+        ${renderGroup('low', 'Also worth tracking', grouped.low || [])}
       </div>
     `;
   }
 
   // ── Section 7: Maturity Model ──
+  // Past stages render as compact "Completed" cards. Current stage shows full
+  // detail (description + characteristics). Future stages show a short
+  // description as a preview without the characteristics list — listing
+  // characteristics implies per-capability claims, which would be misleading
+  // (the user's stage is an overall average, not a checklist of completed items).
   function renderMaturityModel(data: ReportData): string {
     const currentIdx = stageOrder.indexOf(data.stage);
 
     const cards = stages.map((s: any) => {
       const idx = stageOrder.indexOf(s.id);
       const isCurrent = s.id === data.stage;
-      const isCompleted = idx < currentIdx;
+      const isPast = idx < currentIdx;
+      const isFuture = idx > currentIdx;
 
-      const characteristics = s.key_characteristics?.length
-        ? `<ul class="report-characteristics-list">
-            ${s.key_characteristics.map((c: string) => `<li>${c}</li>`).join('')}
-          </ul>`
-        : '';
-
+      let variantClass = '';
       let badge = '';
+
       if (isCurrent) {
+        variantClass = ' is-current';
         badge = '<span class="report-stage-card-badge">You are here</span>';
-      } else if (isCompleted) {
+      } else if (isPast) {
+        variantClass = ' is-past';
         badge = '<span class="report-stage-card-badge-completed">✓ Completed</span>';
+      } else if (isFuture) {
+        variantClass = ' is-future';
+        badge = '<span class="report-stage-card-badge-future">Coming next</span>';
       }
 
+      // Every card shows the same shape: badge + description paragraph.
+      // The characteristics list is intentionally omitted from the current stage
+      // too — listing per-capability statements implies a checklist of completed
+      // items, which would misrepresent the average-score stage assignment.
+      const bodyHtml = s.description
+        ? `<p class="report-stage-card-description">${s.description}</p>`
+        : '';
+
       return `
-        <div class="report-stage-card stage-${s.id}${isCurrent ? ' is-current' : ''}">
+        <div class="report-stage-card stage-${s.id}${variantClass}">
           <div class="report-stage-card-label">${s.label}</div>
           <div class="report-stage-card-subtitle">${s.subtitle}</div>
           ${badge}
-          ${characteristics}
+          ${bodyHtml}
         </div>
       `;
     }).join('');
@@ -2964,6 +3148,9 @@ const contextualRecs = frameworkData.contextual_recommendations;
       <div id="report-section-journey" class="report-section">
         <h2 class="report-section-title">Your CS Maturity Journey</h2>
         <div class="report-stages-track">${cards}</div>
+        <p class="report-stages-footer">
+          <a href="/customer-success-maturity-model/">See the full maturity model →</a>
+        </p>
       </div>
     `;
   }
