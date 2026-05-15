@@ -254,22 +254,26 @@ The Share modal markup remains in the DOM but is unreachable without the trigger
 
 ### The Share modal
 
+Title: **"Share your CS report"** (in Source Serif 4, weight 600, `--color-text-secondary` muted gray — softer than primary text so it reads as a section heading without being stark).
+
 Two tabs:
 
-1. **Share this report** — generates `?d=<payload>` URL, copy button, "Include company name in the shared report" toggle (default on). Toggling the checkbox re-encodes via `refreshShareModal()`.
+1. **Share this report** — generates `?d=<payload>` URL, copy button, "Include my company name in the shared report" toggle (default on). Toggling the checkbox re-encodes via `refreshShareModal()`.
 2. **Share your score** — generates a clean `/assess/` URL + pre-filled social text using the score and stage. LinkedIn / X intent URLs encoded via `encodeURIComponent`. No SDKs.
 
 Copy buttons use `navigator.clipboard.writeText` with a `document.execCommand('copy')` fallback. A `.is-copied` class flips the button label to "Copied" for 1.6s.
+
+**Privacy footer** (`.share-modal-footer`) — a static strip at the bottom of the modal, shown for both tabs. Small padlock icon + muted text: *"We don't store/track any of your report data, it stays only in your browser and the share link itself."* This is a factual statement, not marketing — the site has no backend, responses live in localStorage, and shared links encode the payload directly into the URL. If the architecture ever changes (backend, account system, telemetry), this note must be revisited.
 
 ---
 
 ## 8. Print / PDF
 
-Uses `window.print()` with comprehensive `@media print` rules. **Do not introduce html2pdf.js or html2canvas** — those tools clone the document into hidden iframes, which under Astro's dev server triggers cascading HMR reloads and crashes Vite.
+Toolbar button is labeled **"Save as PDF"** with a document-plus-down-arrow icon. The button calls `window.print()` — the browser's print dialog opens, and the user picks "Save as PDF" as the destination (the default in most modern browsers on the second visit). The 99% case is PDF download; physical printing is supported via the same dialog. The label and icon reflect user intent, not the underlying implementation. **Do not introduce html2pdf.js or html2canvas** — those tools clone the document into hidden iframes, which under Astro's dev server triggers cascading HMR reloads and crashes Vite.
 
 Print rules to be aware of:
 
-- Hides: header, footer, ContextBar, `.report-toolbar`, `.report-download-btn`, `.report-share-btn`, `.report-overflow-menu`, `.shared-banner`, `.share-modal`
+- Hides: header, footer, ContextBar, `.report-toolbar` and all its buttons (`.report-overflow-menu`, `.report-share-btn`, `.report-download-btn`), `.shared-banner`, `.share-modal`
 - Forces light-mode CSS variables on both `:root` and `:root[data-theme="dark"]`
 - Forces solid stage colors (Material 700) regardless of theme
 - Strips the header background image and falls back to a flat surface
@@ -295,6 +299,8 @@ Two glass cards sit inside `.report-header-content`:
 - In dark mode, the stage name, score number, and SVG ring fill all switch to `var(--stage-color)` (the pastel) for vivid contrast against the dark image
 
 Toolbar floats above the image at `position: absolute; top: 1.25rem`. **Anchor**: it's positioned relative to `#report-assessed`, which is `position: relative`. Don't put anything between `#report-assessed` and the toolbar's positioning context, or the toolbar will land on the wrong element. (This is exactly why the shared-banner is rendered as a sibling of `.container.report-page`, not inside `#report-assessed`.)
+
+**Mobile toolbar (`< 640px`)** — labels hide, all three buttons become icon-only with reduced padding and a tightened inter-button gap. Without this, the three labeled buttons (Options + Share + Save as PDF) wrap onto a second row and overlap the header content below, because the absolutely-positioned toolbar doesn't push the header down. Each button retains an `aria-label` so screen readers still announce the action. The media query lives **after** all three base button definitions in the stylesheet — equal-specificity selectors rely on source order, and an earlier draft accidentally placed `.report-share-btn`'s base rule after the media query, which silently re-introduced the larger padding on mobile. If you add a new toolbar button, normalize its base padding to match its peers (`0.625rem 0.875rem`) and ensure the mobile media query is still the last block touching button sizing.
 
 ---
 
@@ -363,7 +369,7 @@ In scoped blocks: always write `:root[data-theme="dark"] .foo` — never `[data-
 | The number of questions per domain | Domain scoring tolerates fewer answers (averages over `answered.length`), but verify `recommendation-engine` doesn't expect a specific count |
 | `domain.id` | Updates needed in `scoring-engine`, `recommendation-engine`, `renderDomainBreakdown`, and the JSON `principles[].related_metrics` reverse-lookup |
 | Header image | Verify the stage tint still reads correctly at 62% (Walk uses 75%/`#e07100`) and dark-mode override still applies |
-| Anything in the toolbar | Add it to the `@media print` hide-list |
+| Anything in the toolbar | Add it to the `@media print` hide-list AND to the mobile icon-only media query selector list. Normalize base padding to match peers (`0.625rem 0.875rem`). Add an `aria-label` since the text label is hidden on mobile. |
 | Anything in `applySharedViewChrome` | Test both shared and non-shared rendering — the function gates on `data.isSharedView` |
 | The `ReportData` shape | Update both `tryDecodeSharedReport` and `buildFromLocalStorage` so they emit the same shape |
 
@@ -386,7 +392,7 @@ When you touch the report page substantively, run through this:
 6. **Share your score tab** — copy text + LinkedIn + X intent URLs all work
 7. **Print preview** — verify nav, footer, ContextBar, toolbar, banner, modal are all hidden; report renders in light mode with solid stage colors
 8. **Dark mode** — verify glass cards, ring fill, stage name color, banner stripe all read correctly
-9. **Mobile (375px width)** — verify toolbar buttons wrap cleanly, banner CTA stays accessible, glass cards stack
+9. **Mobile (375px width)** — verify all three toolbar buttons are icon-only on one row (no wrap, no overlap with header content), banner CTA stays accessible, glass cards stack, modal footer note wraps cleanly
 10. **Reduced motion** — DevTools → emulate `prefers-reduced-motion: reduce`; verify no animations fire, content visible on first paint
 11. **Re-run encoder tests** — `node src/scripts/share-encoder.test.js` (should be 35 passed, 0 failed)
 12. **Re-run engine tests** — `node src/scripts/recommendation-engine.test.js`
