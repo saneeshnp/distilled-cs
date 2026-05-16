@@ -1,0 +1,43 @@
+name: Suggestion / Improvement
+description: Propose an improvement to the framework — metrics, benchmarks, descriptions, assessment questions, or playbooks.
+labels: ["suggestion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest an improvement. The more context you give, the easier it is to act on.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What would you like to improve?
+      description: Describe the specific part of the framework you're suggesting a change to (e.g. a metric definition, a benchmark value, an assessment question).
+      placeholder: "Example: The NRR benchmark for SMB in the Crawl stage feels too optimistic — in my experience, 90% is more realistic than 100%."
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does this matter?
+      description: What problem does your suggestion solve, or what gap does it fill?
+      placeholder: "Example: Teams at the Crawl stage are unlikely to hit a 100% NRR benchmark, so showing that as the target may be discouraging rather than useful."
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Your CS context (optional)
+      description: Any relevant background — company size, segment, team size, or experience — that informs your suggestion.
+      placeholder: "Example: I lead CS at a 50-person SaaS company serving SMB customers."
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Sources or references (optional)
+      description: If you're proposing a benchmark or data change, share where the numbers come from.
+    validations:
+      required: false

@@ -1,0 +1,61 @@
+name: New Content Proposal
+description: Propose a new metric, playbook, article, or other addition to the framework.
+labels: ["new content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to propose something net-new — a metric not yet in the directory, a playbook for a gap you've identified, or an article idea.
+
+  - type: dropdown
+    id: content-type
+    attributes:
+      label: What type of content are you proposing?
+      options:
+        - New metric
+        - New playbook
+        - New article / post
+        - New assessment question
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: title
+    attributes:
+      label: Proposed title or name
+      placeholder: "Example: Expansion Revenue per CSM"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the content
+      description: What is it, and what gap in the framework does it fill?
+      placeholder: "Example: There's no metric that captures CSM-level expansion efficiency. Expansion Revenue per CSM would show how well each CSM is driving upsell/cross-sell, and would be most relevant at the Walk and Run stages."
+    validations:
+      required: true
+
+  - type: textarea
+    id: stage
+    attributes:
+      label: Which maturity stage(s) is this most relevant to?
+      placeholder: "Example: Walk and Run"
+    validations:
+      required: false
+
+  - type: textarea
+    id: draft
+    attributes:
+      label: Draft content (optional)
+      description: If you've already written a definition, formula, steps, or outline — paste it here. Even rough notes are useful.
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Sources or references (optional)
+    validations:
+      required: false

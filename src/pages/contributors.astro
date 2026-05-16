@@ -100,20 +100,18 @@ const otherContributors = contributors.filter(c => !c.role.includes('Maintainer'
     )}
 
     <!-- How to contribute -->
-    <section class="contribute-cta is-muted" aria-disabled="true">
-      <span class="coming-soon-tag">Coming soon</span>
+    <section class="contribute-cta">
       <h2 class="contribute-heading">Want to contribute?</h2>
       <p class="contribute-body">
-        Distilled CS gets better when practitioners share what works. Whether it's a new playbook, a metric refinement, a correction, or just feedback, contributions of any size will be welcome once the repository is public.
+        Distilled CS gets better when practitioners share what works. Whether it's a new playbook, a metric refinement, a correction, or just feedback — every contribution helps.
       </p>
       <ul class="contribute-list">
-        <li><strong>Open an issue</strong> to suggest a change, report a bug, or propose a new playbook or metric.</li>
-        <li><strong>Submit a pull request</strong> with edits to the framework data, content, or site.</li>
-        <li><strong>Share your experience</strong>, what worked, what didn't, and what's missing from your stage.</li>
+        <li><strong><a href="https://github.com/saneeshnp/distilled-cs/issues/new/choose" target="_blank" rel="noopener noreferrer">Open an issue</a></strong> to suggest a change, report a problem, or propose a new playbook or metric.</li>
+        <li><strong>Share your experience</strong> — what worked, what didn't, and what's missing from your stage.</li>
       </ul>
       <div class="contribute-actions">
-        <span class="btn btn-primary is-disabled" aria-disabled="true">View on GitHub</span>
-        <span class="btn btn-secondary is-disabled" aria-disabled="true">Open an Issue</span>
+        <a href="https://github.com/saneeshnp/distilled-cs" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View on GitHub</a>
+        <a href="/contribute/" class="btn btn-secondary">How to Contribute</a>
       </div>
     </section>
 
@@ -278,33 +276,6 @@ const otherContributors = contributors.filter(c => !c.role.includes('Maintainer'
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.75rem;
-  }
-
-  .contribute-cta.is-muted {
-    opacity: 0.65;
-  }
-
-  .coming-soon-tag {
-    display: inline-block;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-accent);
-    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
-    padding: 0.25rem 0.625rem;
-    border-radius: 999px;
-    margin-bottom: 1rem;
-  }
-
-  .btn.is-disabled {
-    cursor: not-allowed;
-    pointer-events: none;
-    opacity: 0.5;
-    background: transparent;
-    color: var(--color-text-muted);
-    border-color: var(--color-border);
   }
 
   .contribute-heading {

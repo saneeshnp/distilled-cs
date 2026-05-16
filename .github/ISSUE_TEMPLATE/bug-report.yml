@@ -1,0 +1,53 @@
+name: Report a Problem
+description: Something on the site isn't working as expected — a tool, page, or feature that seems broken.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please fill in as much detail as you can. Screenshots are especially helpful.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe what you saw.
+      placeholder: "Example: The checklist page shows an empty list after I completed the assessment."
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+      placeholder: "Example: I expected to see my personalised checklist items."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the steps someone else can follow to see the same problem.
+      placeholder: |
+        1. Complete the assessment
+        2. Go to /checklist/
+        3. Notice the list is empty
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: "Example: Chrome 124 on macOS, or Safari on iPhone 15"
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots (optional)
+      description: You can paste images directly into this box.
+    validations:
+      required: false
