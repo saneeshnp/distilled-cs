@@ -119,7 +119,7 @@ Order matters — sections render top-to-bottom in this order:
 | # | Section | Function | Notes |
 |---|---|---|---|
 | 1 | Header | `renderHeader` | Always renders. Includes attribution + (in shared view, sub-header logo is hidden so only the page-level brand mark shows in print) |
-| 2 | Executive Summary | `renderSummary` | Personalized via `executive_summary_templates` keyed by `seg_*` + team-size band |
+| 2 | Executive Summary | `renderSummary` | Four paragraphs — see below |
 | 3 | Your Strengths | `renderStrengths` | **Conditional** — only renders if `composeStrengths` returns ≥ 2 fragments |
 | 4 | Domain Breakdown | `renderDomainBreakdown` | Sorted by score descending, with delta arrows when `previousScores` exists |
 | 5 | Priority Actions | `renderPriorityActions` | Body = `insight + " " + next_step` (personalized lead-in + directive). Up to 8 scored (1 per domain via adaptive cap) + 1 stage fallback = 9 max. Cards 1–5 prominent; 6–9 grouped under "More actions worth considering" with compact muted styling. Domain eyebrow above each card; no question/answer attribution footer. |
@@ -128,6 +128,12 @@ Order matters — sections render top-to-bottom in this order:
 | 8 | Maturity Journey | `renderMaturityModel` | Three stage cards. All share the same shape: label + subtitle + badge + description paragraph. No `key_characteristics` list rendered — listing per-capability statements would imply a checklist of completed items, which would misrepresent the average-score stage assignment. Past stages: "✓ Completed" badge. Current stage: "You are here" badge. Future stages: "Coming next" badge. Section footer links to `/customer-success-maturity-model/` for full detail. |
 | 9 | Transition Guide | `renderTransitionGuide` | **Hidden at Run stage** (no next stage to transition to) |
 | — | Footer | `renderFooter` | Generated timestamp + re-assessment link. Timestamp omitted gracefully if missing |
+
+**`renderSummary` — four-paragraph structure:**
+- **Para 1**: Company identity sentence (segment + team size prose). Omitted if profile is absent.
+- **Para 2**: Stage verdict — label, subtitle, and description from `maturity_stages`.
+- **Para 3**: Overall score + domain picture. When the gap between the highest and lowest domain score is ≥ 0.5 (raw 1–4 scale, i.e. ≥ 1.25/10), names the strongest and weakest domain explicitly. When the gap is < 0.5 (near-tie or flat profile), shows a "consistent across all domains" sentence instead — calling out a "highest" and "lowest" domain when scores are effectively equal is misleading. A broad-gap note is appended when ≥ 3 domains scored below 5/10.
+- **Para 4**: Segment + team-size template from `executive_summary_templates` in JSON, keyed by `seg_*` → team-size band. Omitted if profile keys don't match.
 
 A version-mismatch notice (`.report-version-notice`) is `unshift`-ed onto `bodySections` when `data.isSharedView && data.versionMismatch`, so it appears at the top of the body fade-in.
 
