@@ -2845,7 +2845,19 @@ const contextualRecs = frameworkData.contextual_recommendations;
           ? 'solid structures in place, not yet operating at full scale'
           : 'early-stage foundations still being built';
 
-      let para3 = `Your overall score of <strong>${scoreDisplay} / 10</strong> reflects ${scoreContext}. <strong>${strongLabel}</strong> is your highest-performing domain at ${toDisplayScore(strongScore as number)}/10, while <strong>${weakLabel}</strong> (${toDisplayScore(weakScore as number)}/10) is where focused work will have the most impact.`;
+      // Only surface the high/low contrast when there is a meaningful gap (0.5 on
+      // the raw 1–4 scale = 1.25/10 displayed). Near-ties and flat profiles get a
+      // "balanced" note instead — calling out a "highest" and "lowest" domain when
+      // the scores are identical or nearly so is misleading.
+      const GAP_THRESHOLD = 0.5;
+      const gap = (strongScore as number) - (weakScore as number);
+
+      let para3: string;
+      if (gap >= GAP_THRESHOLD) {
+        para3 = `Your overall score of <strong>${scoreDisplay} / 10</strong> reflects ${scoreContext}. <strong>${strongLabel}</strong> is your highest-performing domain at ${toDisplayScore(strongScore as number)}/10, while <strong>${weakLabel}</strong> (${toDisplayScore(weakScore as number)}/10) is where focused work will have the most impact.`;
+      } else {
+        para3 = `Your overall score of <strong>${scoreDisplay} / 10</strong> reflects ${scoreContext}. Your scores are consistent across all domains, pointing to an even foundation rather than isolated strengths or gaps.`;
+      }
 
       const lowCount = domainEntries.filter(([_, s]: any) => (s as number) < 2.0).length;
       if (lowCount >= 3) {
