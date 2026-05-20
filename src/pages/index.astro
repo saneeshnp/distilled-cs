@@ -25,9 +25,9 @@ const phaseDetails: Record<string, string[]> = {
 };
 
 const stageImageAlts: Record<string, string> = {
-  crawl: 'Turtle illustration for the Crawl stage of the customer success maturity model, a reactive and foundational stage',
-  walk: 'Person walking, illustrating the Walk stage of the customer success maturity model, where structure begins to form',
-  run: 'Person running toward a goal flag, illustrating the Run stage of the customer success maturity model, where CS becomes predictive and operationalized',
+  crawl: 'Stick figure crawling, representing the Crawl stage of the customer success maturity model, a reactive and foundational phase',
+  walk: 'Stick figure walking, representing the Walk stage of the customer success maturity model, where structure begins to form',
+  run: 'Stick figure running, representing the Run stage of the customer success maturity model, where CS becomes predictive and operationalized',
 };
 ---
 
@@ -117,24 +117,26 @@ const stageImageAlts: Record<string, string> = {
   <section class="hp-section hp-section-stages" id="maturity-stages">
     <div class="container">
       <h2 class="hp-section-headline scroll-reveal">The three stages of CS maturity</h2>
-      <p class="hp-section-subheadline scroll-reveal">Every CS team sits somewhere on this scale. The assessment tells you exactly where — and what to focus on from there.</p>
+      <p class="hp-section-subheadline scroll-reveal">Every CS team sits somewhere on this scale. The assessment tells you exactly where, and what to focus on from there.</p>
       <div class="hp-stages-grid">
         {stages.map((stage, i) => (
           <div class={`hp-stage-card scroll-reveal stage-${stage.id}`} style={`--stage-delay: ${i * 0.1}s`}>
             <div class="hp-stage-color-bar"></div>
+            <div class="hp-stage-pill-row">
+              <span class="hp-stage-pill">Stage {i + 1}</span>
+              <span class="hp-stage-label">{stage.label}</span>
+            </div>
             <div class="hp-stage-card-img">
               <img
                 src={`/images/maturity-stages/cs-maturity-stage-${stage.id}.png`}
                 alt={stageImageAlts[stage.id]}
-                width="310"
-                height="202"
+                width="610"
+                height="404"
                 loading="lazy"
                 decoding="async"
               />
             </div>
             <div class="hp-stage-card-content">
-              <span class="hp-stage-pill">Stage {i + 1}</span>
-              <span class="hp-stage-label">{stage.label}</span>
               <span class="hp-stage-subtitle">{stage.subtitle}</span>
               <ul class="hp-stage-chars">
                 {stage.key_characteristics.slice(0, 4).map(char => (
@@ -778,18 +780,30 @@ const stageImageAlts: Record<string, string> = {
   .hp-stage-card-img {
     display: flex;
     justify-content: center;
-    padding: 1.5rem 1.5rem 0.25rem;
+    padding: 0.75rem 1.5rem 0.25rem;
   }
 
   .hp-stage-card-img img {
     width: 90%;
     height: auto;
     border-radius: 0.625rem;
+    padding: 0.75rem;
+    background-color: color-mix(in srgb, var(--stage-color) 8%, var(--color-surface));
+    border: 1px solid color-mix(in srgb, var(--stage-color) 25%, var(--color-border));
   }
 
+
   .hp-stage-card-content {
-    padding: 1.5rem;
+    padding: 0.875rem 1.5rem 1.5rem;
     text-align: center;
+  }
+
+  .hp-stage-pill-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.5rem 0;
   }
 
   .hp-stage-pill {
@@ -804,7 +818,6 @@ const stageImageAlts: Record<string, string> = {
     border: 1px solid color-mix(in srgb, var(--stage-color) 45%, transparent);
     padding: 0.2rem 0.6rem;
     border-radius: 999px;
-    margin-bottom: 0.75rem;
   }
 
   .hp-stage-label {
@@ -812,7 +825,6 @@ const stageImageAlts: Record<string, string> = {
     font-family: var(--font-display);
     font-size: 1.375rem;
     font-weight: 700;
-    margin-bottom: 0.25rem;
     color: var(--stage-color);
   }
 

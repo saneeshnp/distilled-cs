@@ -20,9 +20,9 @@ const stageIntroLines: Record<string, string> = {
 // subject with stage context so it reads well for screen readers and is
 // keyword-rich for image-search indexing without being stuffed.
 const stageImageAlt: Record<string, string> = {
-  crawl: 'Turtle illustration for the Crawl stage of the customer success maturity model, a reactive and foundational stage',
-  walk: 'Person walking, illustrating the Walk stage of the customer success maturity model, where structure begins to form',
-  run: 'Person running toward a goal flag, illustrating the Run stage of the customer success maturity model, where CS becomes predictive and operationalized',
+  crawl: 'Stick figure crawling, representing the Crawl stage of the customer success maturity model, a reactive and foundational phase',
+  walk: 'Stick figure walking, representing the Walk stage of the customer success maturity model, where structure begins to form',
+  run: 'Stick figure running, representing the Run stage of the customer success maturity model, where CS becomes predictive and operationalized',
 };
 
 const faqItems = [
@@ -132,8 +132,8 @@ const faqSchema = {
                 <img
                   src={`/images/maturity-stages/cs-maturity-stage-${stage.id}.png`}
                   alt={stageImageAlt[stage.id]}
-                  width="320"
-                  height="200"
+                  width="610"
+                  height="404"
                   loading="lazy"
                   decoding="async"
                 />
@@ -502,10 +502,11 @@ const faqSchema = {
     width: 100%;
     max-width: 320px;
     align-self: center;
-    border: 1px solid var(--color-border);
+    border: 1px solid color-mix(in srgb, var(--stage-color) 25%, var(--color-border));
     border-radius: 0.5rem;
     overflow: hidden;
-    background: var(--color-bg);
+    background: color-mix(in srgb, var(--stage-color) 8%, var(--color-surface));
+    padding: 0.75rem;
   }
 
   .stage-illustration img {
