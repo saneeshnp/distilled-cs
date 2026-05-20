@@ -87,9 +87,18 @@ const contextualRecs = frameworkData.contextual_recommendations;
             <li role="none">
               <button type="button" class="report-menu-item report-menu-item--danger" id="report-restart-btn" role="menuitem">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M11.8 5A5 5 0 1 0 12 7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                  <path d="M12 2.5V6H8.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Retake Assessment
+              </button>
+            </li>
+            <li role="none">
+              <button type="button" class="report-menu-item report-menu-item--danger" id="report-clear-btn" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   <path d="M2.5 4h9M5 4V2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V4M10.5 4l-.6 6.8a.7.7 0 0 1-.7.7H4.8a.7.7 0 0 1-.7-.7L3.5 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Redo Assessment
+                Clear Assessment
               </button>
             </li>
           </ul>
@@ -3206,9 +3215,16 @@ const contextualRecs = frameworkData.contextual_recommendations;
   }
 
   document.getElementById('report-restart-btn')?.addEventListener('click', () => {
-    if (confirm('This will permanently clear your assessment results, company profile, and any progress. This cannot be undone. Continue?')) {
+    if (confirm('This will permanently clear your assessment data and start a fresh assessment. This cannot be undone. Continue?')) {
       resetAll();
       window.location.href = '/assess/';
+    }
+  });
+
+  document.getElementById('report-clear-btn')?.addEventListener('click', () => {
+    if (confirm('This will permanently clear your assessment results, company profile, and any progress. This cannot be undone. Continue?')) {
+      resetAll();
+      window.location.href = '/';
     }
   });
 
