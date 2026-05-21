@@ -36,3 +36,7 @@ pnpm-debug.log*
 
 # Personal social media post studio (not for publishing)
 /src/pages/studio.astro
+
+# Working task list for the 7th principle addition
+/PRINCIPLE_7_TASKS.md
+/principle-7-draft.md

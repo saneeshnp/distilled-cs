@@ -92,7 +92,7 @@ Each playbook includes a clear objective, a step-by-step action plan, the metric
 
 ## Guiding Principles
 
-Six principles underpin the entire framework:
+Seven principles underpin the entire framework:
 
 1. **Customer Success Is a Culture, Not Just a Department** — CS outcomes require cross-functional alignment, not just a dedicated team
 2. **Proactive Over Reactive** — Build systems that surface risk before customers feel pain

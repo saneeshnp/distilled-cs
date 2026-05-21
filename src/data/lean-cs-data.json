@@ -34,7 +34,8 @@
       ],
       "related_principles": [
         "outcomes_over_activities",
-        "context_drives_strategy"
+        "context_drives_strategy",
+        "maturity_requires_iteration"
       ]
     },
     {
@@ -154,7 +155,8 @@
       ],
       "related_principles": [
         "segment_then_scale",
-        "data_informed_not_data_paralyzed"
+        "data_informed_not_data_paralyzed",
+        "maturity_requires_iteration"
       ]
     },
     {
@@ -183,7 +185,39 @@
       ],
       "related_principles": [
         "proactive_over_reactive",
-        "outcomes_over_activities"
+        "outcomes_over_activities",
+        "maturity_requires_iteration"
+      ]
+    },
+    {
+      "id": "maturity_requires_iteration",
+      "slug": "maturity-requires-iteration",
+      "title": "Maturity Requires Iteration",
+      "summary": "Strong CS teams keep evolving as the business, customers, and product change.",
+      "description": "CS evolves on two fronts: the way the team runs, and the way the team thinks. Practices, processes, and mindsets all drift if nobody is responsible for upgrading them. The technology landscape, the customer base, and the rest of the company keep changing, which means how CS operates and how CS frames its role both have to change with them. Maturing teams build a regular cadence agreed by the team, preferably quarterly, for evaluating new practices and tools, adopting what fits, and retiring what no longer earns its place. The discipline is in the cadence and in the willingness to revise both the system and the assumptions underneath it.",
+      "icon": "cycle",
+      "target_keyword": "iterative customer success",
+      "meta_description": "Maturity in customer success requires iteration: revisiting playbooks, tooling, and mindset on a deliberate cadence as the business and the market evolve. How the principle shows up across Crawl, Walk, and Run.",
+      "why_it_matters": "CS sits at the intersection of product, sales, support, and the customer. Each of those moves on its own clock, and the cumulative effect on how CS should operate is significant over even a single year. Teams that build a habit of revisiting their own playbooks, tooling, and mindset on a deliberate cadence stay ahead of that drift. Teams that do not eventually find themselves running a model built for the company they used to be. The cost shows up in specific places: practices that fit a 20-customer team are still in force at 200 customers, AI tools get adopted by individual CSMs without a clear view on what they should change, and the team accumulates a stack of overlapping rituals nobody trusts. This principle backs the Transform phase of this framework, which presumes a team that keeps iterating on purpose, on both the system and the way it thinks about its role.",
+      "stage_manifestation": {
+        "crawl": "The team has not yet asked whether the way CS runs is still the right way. Practices, templates, and tools were imported from a previous company or copied from a vendor blog and have been in place since. New tools get evaluated when a CSM stumbles across one and likes it; abandonment is rarer than adoption, so the stack grows. The team's view of its own role is similarly inherited and goes unexamined: whether CS owns expansion, what counts as a successful customer, how proactive the team should be. Nobody owns the question of whether either the operating model or the mindset still fits the business the team now serves.",
+        "walk": "The team runs a regular retro on the operating model itself, naming what should change and what should hold. New tool evaluations are coordinated through a CS Ops role or the head of CS instead of being left to individual CSMs. Some practices get retired, though usually only after they have visibly stopped working for a quarter or two. The team has started to articulate its own beliefs about how CS should operate, what kinds of accounts get what attention, and where CS adds the most value. There is no formal evaluation process for adopting new methodologies or AI tools yet; decisions are mostly made by whoever has read the most recent article.",
+        "run": "The team runs a regular cadence of operating-model reviews, preferably quarterly, with the same weight on the calendar as renewal forecasts. New methodologies, tools, and AI adoption all enter through a written evaluation flow: defined criteria, a time-boxed pilot with at least one segment, and an explicit yes-or-no at the end. Retirements are announced; practices that no longer fit do not linger as dead code in playbooks. The cultural side of CS gets the same scrutiny on the same cadence: how the team thinks about its role, what assumptions it carries about customers, and how it engages with product and sales. When the company itself changes shape through a GTM pivot or a major reorg, the CS team has a structured way to absorb the implications instead of waiting for the pain to surface in retention metrics."
+      },
+      "related_playbooks": [
+        "crawl-ai-copilots",
+        "run-ai-governance",
+        "run-cs-revenue-strategy"
+      ],
+      "related_metrics": [
+        "nrr",
+        "health_score",
+        "time_to_value"
+      ],
+      "related_principles": [
+        "context_drives_strategy",
+        "data_informed_not_data_paralyzed",
+        "cs_is_a_culture"
       ]
     }
   ],

@@ -14,6 +14,7 @@ const iconSvgs: Record<string, string> = {
   layers: '<path d="M20 4L4 12l16 8 16-8L20 4z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="round"/><path d="M4 20l16 8 16-8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 28l16 8 16-8" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
   open: '<circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 20h24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20 5c-4 4-6 9-6 15s2 11 6 15" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M20 5c4 4 6 9 6 15s-2 11-6 15" stroke="currentColor" stroke-width="1.5" fill="none"/>',
   culture: '<circle cx="20" cy="20" r="15" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="20" cy="14" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="12" cy="24" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="28" cy="24" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M17 15.5L14 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M23 15.5L26 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15 24h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
+  cycle: '<path d="M32 20A12 12 0 1 1 20 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M16 5L21 8L16 11Z" fill="currentColor"/>',
 };
 
 const faqItems = [
@@ -27,15 +28,19 @@ const faqItems = [
   },
   {
     q: 'Are these principles universal across industries?',
-    a: 'The six principles here are written to apply to any B2B SaaS CS organization. Expression varies. "Segment then scale" at an enterprise vendor means named-account scoring and vertical plays. At a product-led SMB company it means usage-driven cohorts. The principle holds; the implementation depends on segment economics.',
+    a: 'The principles here are written to apply to any B2B SaaS CS organization. Expression varies. "Segment then scale" at an enterprise vendor means named-account scoring and vertical plays. At a product-led SMB company it means usage-driven cohorts. The principle holds; the implementation depends on segment economics.',
   },
   {
     q: 'How do principles show up in day-to-day CS work?',
     a: 'They show up as the tie-breaker in trade-offs. Do we push a QBR date to accommodate a key stakeholder or run it with who is available? The outcomes-over-activities principle points to pushing. Do we add a new metric because leadership asked? The data-informed-not-data-paralyzed principle says audit what is already tracked first. Principles make trade-offs explicit.',
   },
   {
-    q: 'How were these six principles chosen?',
-    a: 'They were distilled from patterns observed across CS operating models that scale: what the teams that stay focused share, what the teams that scatter lack. The names and framing are intended to be memorable and operationally useful, not exhaustive. A seventh or eighth principle would be indulgence.',
+    q: 'How were these principles chosen?',
+    a: 'They were distilled from patterns observed across CS operating models that scale: what the teams that stay focused share, what the teams that scatter lack. The names and framing are intended to be memorable and operationally useful. They are not meant to be an exhaustive list of beliefs a CS team can hold. New principles get added when the framework\'s structure demands one. \'Maturity Requires Iteration\' is the most recent, written because the Transform phase of the Assess-Execute-Transform loop needed a principle of its own.',
+  },
+  {
+    q: 'Why does this framework include a principle about iteration?',
+    a: 'Because the framework presumes a continuous loop. Assess, Execute, and Transform are meant to repeat as the business changes. The Transform phase needed a principle of its own: somewhere to anchor the work of revising practices, tooling, and mindset over time. Without it, Transform looks like a step on the loop. The principle makes it a discipline the team practices.',
   },
   {
     q: 'Can a team adopt only some of them?',
@@ -62,7 +67,7 @@ const faqSchema = {
 };
 ---
 
-<BaseLayout title="Customer Success Principles" description="The six customer success principles behind the Distilled CS framework: open, practical, and built for real CS teams making trade-off decisions." structuredData={[faqSchema]}>
+<BaseLayout title="Customer Success Principles" description="The seven customer success principles behind the Distilled CS framework: open, practical, and built for real CS teams making trade-off decisions." structuredData={[faqSchema]}>
 
   <div class="container principles-page">
 
@@ -96,8 +101,8 @@ const faqSchema = {
     <section class="pillar-intro">
       <h2>How to use these principles</h2>
       <p> A customer success principle is the compass that keeps tactics pointed in the same direction when the team disagrees on a specific account, a specific metric movement, or a specific renewal risk. As the customer success team evolves, new tactics get introduced and modified: a health scorecard with extra fields added every quarter, a QBR template that works for some segments but not others, an escalation path that no one can clearly map. Each change may make sense on its own, but without a shared principle to guide them, these pieces stop fitting together and gradually lose direction.</p>
-      <p>Read the six above as tie-breakers. When two CSMs disagree on whether to run a QBR on the customer's timeline or the team's capacity, "outcomes over activities" settles it. When leadership asks for a new health metric, "data-informed, not data-paralyzed" settles whether to add it.</p>
-      <p>Each card links to a deeper page with the full definition, how it manifests across the three maturity stages, and the playbooks and metrics it connects to. Pick two or three to anchor on. Adopting all six at once is a signal that none are being taken seriously yet.</p>
+      <p>Read the seven above as tie-breakers. When two CSMs disagree on whether to run a QBR on the customer's timeline or the team's capacity, "outcomes over activities" settles it. When leadership asks for a new health metric, "data-informed, not data-paralyzed" settles whether to add it.</p>
+      <p>Each card links to a deeper page with the full definition, how it manifests across the three maturity stages, and the playbooks and metrics it connects to. Pick two or three to anchor on. Adopting all seven at once is a signal that none are being taken seriously yet.</p>
     </section>
 
     <section class="pillar-faq">
