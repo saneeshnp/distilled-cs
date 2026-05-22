@@ -95,11 +95,12 @@ Each playbook includes a clear objective, a step-by-step action plan, the metric
 Seven principles underpin the entire framework:
 
 1. **Customer Success Is a Culture, Not Just a Department** — CS outcomes require cross-functional alignment, not just a dedicated team
-2. **Proactive Over Reactive** — Build systems that surface risk before customers feel pain
-3. **Segment, Then Scale** — The right engagement for each segment at a cost the business can sustain
-4. **Outcomes Over Activities** — Measure value delivered, not tasks completed
-5. **Context Drives Strategy** — Best practices without context are just guesses
-6. **Data-Informed, Not Data-Paralyzed** — Act on one trustworthy signal rather than staring at a dozen unreliable ones
+2. **Maturity Requires Iteration** — Strong CS teams keep evolving as the business, customers, and product change
+3. **Proactive Over Reactive** — Build systems that surface risk before customers feel pain
+4. **Segment, Then Scale** — The right engagement for each segment at a cost the business can sustain
+5. **Outcomes Over Activities** — Measure value delivered, not tasks completed
+6. **Context Drives Strategy** — Best practices without context are just guesses
+7. **Data-Informed, Not Data-Paralyzed** — Act on one trustworthy signal rather than staring at a dozen unreliable ones
 
 ## Metrics Directory
 
