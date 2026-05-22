@@ -70,6 +70,8 @@ export function composePriorityActions(profile, responses, frameworkData) {
     return {
       title: entry.option.label,
       body,
+      insight: entry.option.insight || null,
+      next_step: nextStep,
       source_question_id: entry.question.id,
       domain_label: entry.domain.label,
       score_level: entry.userScore,

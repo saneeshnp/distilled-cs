@@ -1448,6 +1448,10 @@ const contextualRecs = frameworkData.contextual_recommendations;
     margin-bottom: 0.25rem;
   }
 
+  .report-action-next-step {
+    margin-top: 0.5rem;
+  }
+
   .report-action-meta {
     display: flex;
     gap: 1rem;
@@ -2975,12 +2979,15 @@ const contextualRecs = frameworkData.contextual_recommendations;
         ? `<span class="report-action-time">${a.estimated_time}</span>`
         : '';
       const cls = isAdditional ? 'report-action-item is-additional' : 'report-action-item';
+      const bodyHtml = (a.insight && a.next_step)
+        ? `<div class="report-action-text">${a.insight}</div><div class="report-action-text report-action-next-step"><strong>Action Needed:</strong> ${a.next_step}</div>`
+        : `<div class="report-action-text">${a.body}</div>`;
       return `
         <li class="${cls}">
           <span class="report-action-num">${index}</span>
           <div class="report-action-body">
             ${eyebrowHtml}
-            <div class="report-action-text">${a.body}</div>
+            ${bodyHtml}
             ${timeHtml ? `<div class="report-action-meta">${timeHtml}</div>` : ''}
           </div>
         </li>
@@ -3006,7 +3013,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
     return `
       <div id="report-section-actions" class="report-section">
-        <h2 class="report-section-title">Priority Actions</h2>
+        <h2 class="report-section-title">Priority Actions for You</h2>
         <ol class="report-actions-list">${headlineItems}</ol>
         ${additionalBlock}
       </div>
