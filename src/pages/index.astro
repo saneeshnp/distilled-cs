@@ -143,6 +143,9 @@ const stageImageAlts: Record<string, string> = {
                   <li>{char}</li>
                 ))}
               </ul>
+              <a href={`/customer-success-maturity-model/#stage-${stage.id}`} class="hp-stage-more-link">
+                See the full {stage.label} stage overview <span class="hp-stage-more-arrow" aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
         ))}
@@ -765,6 +768,8 @@ const stageImageAlts: Record<string, string> = {
     border-radius: 0.75rem;
     overflow: hidden;
     transition: border-color 0.25s ease-out, transform 0.25s ease-out;
+    display: flex;
+    flex-direction: column;
   }
 
   .hp-stage-card:hover {
@@ -773,7 +778,7 @@ const stageImageAlts: Record<string, string> = {
   }
 
   .hp-stage-color-bar {
-    height: 10px;
+    height: 5px;
     background: var(--stage-color);
   }
 
@@ -796,6 +801,9 @@ const stageImageAlts: Record<string, string> = {
   .hp-stage-card-content {
     padding: 0.875rem 1.5rem 1.5rem;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
 
   .hp-stage-pill-row {
@@ -862,6 +870,30 @@ const stageImageAlts: Record<string, string> = {
     height: 4px;
     border-radius: 50%;
     background: var(--stage-color);
+  }
+
+  .hp-stage-more-link {
+    display: inline-block;
+    margin-top: auto;
+    padding-top: 1rem;
+    font-size: 0.8125rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease-out;
+  }
+
+  .hp-stage-more-link:hover {
+    color: var(--stage-color);
+  }
+
+  .hp-stage-more-arrow {
+    display: inline-block;
+    transition: transform 0.2s ease-out;
+  }
+
+  .hp-stage-more-link:hover .hp-stage-more-arrow {
+    transform: translateX(3px);
   }
 
   /* ══════════════════════════════════════════
