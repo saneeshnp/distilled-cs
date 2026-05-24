@@ -17,6 +17,40 @@ const categoryLabels: Record<string, string> = {
   ai: 'AI & Automation',
 };
 
+const personaSlugMap: Record<string, string> = {
+  'CSM': 'csm',
+  'CS Manager': 'cs-manager',
+  'VP/Director of CS': 'vp-director',
+  'CRO/CCO': 'cro-cco',
+  'Product Manager': 'product-manager',
+  'CEO/Founder': 'ceo-founder',
+  'CS Ops': 'cs-ops',
+};
+
+const personaLabels: Record<string, string> = {
+  'csm': 'CSM',
+  'cs-manager': 'CS Manager',
+  'vp-director': 'VP / Director',
+  'cro-cco': 'CRO / CCO',
+  'product-manager': 'Product Manager',
+  'ceo-founder': 'CEO / Founder',
+  'cs-ops': 'CS Ops',
+};
+
+const personas: string[] = [...new Set(
+  metrics.flatMap(m =>
+    (m.audience as { role: string }[]).map(a => personaSlugMap[a.role]).filter(Boolean)
+  )
+)];
+
+// Pre-compute persona slugs per metric to avoid serializing full audience objects to DOM
+const metricPersonas: Record<string, string> = Object.fromEntries(
+  metrics.map(m => [
+    m.id,
+    (m.audience as { role: string }[]).map(a => personaSlugMap[a.role]).filter(Boolean).join('|'),
+  ])
+);
+
 const faqItems = [
   {
     q: "What's the difference between NRR and GRR?",
@@ -76,28 +110,69 @@ const faqSchema = {
       <p class="page-subtitle">The right metrics for your stage. Part of the Execute phase. Track these as you work through your playbooks.</p>
     </div>
 
-    <!-- Contextual banner (JS populated) -->
-    <div id="metrics-context-banner" data-show-if-assessed style="display:none;"></div>
-
     <!-- CTA for non-assessed -->
     <div class="assess-cta-banner" data-hide-if-assessed>
       <p>Take the assessment to see which metrics are highest priority for your stage.</p>
       <a href="/assess/" class="cta-link">Take the Assessment &rarr;</a>
     </div>
 
-    <!-- Filter bar -->
-    <div class="filter-bar">
-      <button class="filter-btn active" data-filter="all" type="button">All</button>
-      {categories.map(cat => (
-        <button class="filter-btn" data-filter={cat} type="button">{categoryLabels[cat] || cat}</button>
-      ))}
+    <!-- Filter box -->
+    <div class="filter-box">
+      <button class="filter-box-toggle" id="filter-box-toggle" type="button" aria-expanded="false" aria-controls="filter-section">
+        <span class="filter-box-heading">
+          <svg class="filter-funnel-icon" width="13" height="12" viewBox="0 0 13 12" fill="none" aria-hidden="true">
+            <path d="M0.5 1h12L8 6.5V11L5 9.5V6.5L0.5 1z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Filter Metrics
+        </span>
+        <svg class="filter-toggle-chevron rotated" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="filter-section collapsed" id="filter-section">
+        <div class="filter-section-inner">
+        <!-- Highlight row: shown only when assessed (JS-controlled) -->
+        <div class="filter-row" id="highlight-filter-row" style="display:none">
+          <span class="filter-label">Highlight</span>
+          <div class="filter-bar" id="highlight-filter-bar">
+            <button class="filter-btn active" data-highlight-filter="stage" id="highlight-stage-btn" type="button">Your stage</button>
+            <button class="filter-btn" data-highlight-filter="all" type="button">All stages</button>
+          </div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Filter by Category</span>
+          <div class="filter-bar" id="category-filter-bar">
+            <button class="filter-btn active" data-filter="all" type="button">All</button>
+            {categories.map(cat => (
+              <button class="filter-btn" data-filter={cat} type="button">{categoryLabels[cat] || cat}</button>
+            ))}
+          </div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Filter by Role</span>
+          <div class="filter-bar" id="persona-filter-bar">
+            <button class="filter-btn active" data-persona-filter="all" type="button">All roles</button>
+            {personas.map(slug => (
+              <button class="filter-btn" data-persona-filter={slug} type="button">{personaLabels[slug] || slug}</button>
+            ))}
+          </div>
+        </div>
+        <div class="filter-row" id="priority-label-filter-row" style="display:none">
+          <span class="filter-label">Priority for your stage</span>
+          <div class="filter-bar" id="priority-label-filter-bar">
+            <button class="filter-btn active" data-priority-label-filter="show" type="button">Show</button>
+            <button class="filter-btn" data-priority-label-filter="hide" type="button">Hide</button>
+          </div>
+        </div>
+        </div><!-- /.filter-section-inner -->
+      </div>
     </div>
 
     <!-- Metrics grid -->
     <h2 class="grid-heading">Browse the directory</h2>
     <div class="metrics-grid" id="metrics-grid">
       {metrics.map(metric => (
-        <a href={`/customer-success-metrics/${metric.id}/`} class="metric-card" data-metric-id={metric.id} data-category={metric.category} data-priorities={JSON.stringify(metric.priority_by_stage)}>
+        <a href={`/customer-success-metrics/${metric.id}/`} class="metric-card" data-metric-id={metric.id} data-category={metric.category} data-priorities={JSON.stringify(metric.priority_by_stage)} data-personas={metricPersonas[metric.id]}>
           <div class="metric-card-top">
             <span class={`category-tag cat-${metric.category}`}>{categoryLabels[metric.category] || metric.category}</span>
             <span class="priority-indicator" data-priority-slot={metric.id}></span>
@@ -206,12 +281,109 @@ const faqSchema = {
     white-space: nowrap;
   }
 
+  /* Filter box */
+  .filter-box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  .filter-box-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    text-align: left;
+  }
+
+  .filter-box-toggle:hover {
+    background: color-mix(in srgb, var(--color-border) 30%, transparent);
+  }
+
+  .filter-box-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .filter-funnel-icon {
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  .filter-toggle-chevron {
+    color: var(--color-text-muted);
+    transition: transform 0.2s ease-out;
+    flex-shrink: 0;
+  }
+
+  .filter-toggle-chevron.rotated {
+    transform: rotate(-180deg);
+  }
+
+  /* Filter section */
+  .filter-section {
+    overflow: hidden;
+    max-height: 600px;
+    transition: max-height 0.35s ease-out;
+  }
+
+  .filter-section.collapsed {
+    max-height: 0;
+  }
+
+  .filter-section-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .filter-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  @media (min-width: 640px) {
+    .filter-section-inner {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 0.75rem;
+      align-items: start;
+    }
+    .filter-row {
+      display: contents;
+    }
+  }
+
+  .filter-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-primary);
+    padding-top: 0.45rem;
+    white-space: nowrap;
+    min-width: 4.5rem;
+  }
+
   /* Filter bar */
   .filter-bar {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-bottom: 2rem;
   }
 
   .filter-btn {
@@ -315,6 +487,8 @@ const faqSchema = {
     line-height: 1.55;
     flex: 1;
   }
+
+  #metrics-grid.hide-priority-labels :global(.priority-indicator) { visibility: hidden; }
 
   :global(.priority-pill) {
     font-size: 0.6875rem;
@@ -483,16 +657,69 @@ const faqSchema = {
 
   const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 
-  // Category filtering
-  document.querySelectorAll('.filter-btn').forEach(btn => {
+  // Filter box toggle
+  document.getElementById('filter-box-toggle')?.addEventListener('click', () => {
+    const section = document.getElementById('filter-section');
+    const toggle = document.getElementById('filter-box-toggle');
+    const chevron = toggle?.querySelector('.filter-toggle-chevron');
+    const isCollapsed = section?.classList.toggle('collapsed');
+    toggle?.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+    chevron?.classList.toggle('rotated', !!isCollapsed);
+  });
+
+  // Combined filter state
+  let activeCategory = 'all';
+  let activePersona = 'all';
+  let activeHighlight = 'stage';
+  let userStage = '';
+
+  function applyFilters() {
+    document.querySelectorAll('.metric-card').forEach(el => {
+      const card = el as HTMLElement;
+      const cat = card.getAttribute('data-category') || '';
+      const personaStr = card.getAttribute('data-personas') || '';
+      const personas = personaStr ? personaStr.split('|') : [];
+      const catMatch = activeCategory === 'all' || cat === activeCategory;
+      const personaMatch = activePersona === 'all' || personas.includes(activePersona);
+      card.style.display = (catMatch && personaMatch) ? '' : 'none';
+
+      // Dimming: only apply when highlight is set to stage and a stage is known
+      if (userStage) {
+        const priorities = JSON.parse(card.getAttribute('data-priorities') || '{}');
+        const priority = priorities[userStage];
+        if (activeHighlight === 'stage') {
+          card.classList.toggle('dimmed', priority === 'low');
+        } else {
+          card.classList.remove('dimmed');
+        }
+      }
+    });
+  }
+
+  document.getElementById('category-filter-bar')?.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('category-filter-bar')?.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const filter = btn.getAttribute('data-filter');
-      document.querySelectorAll('.metric-card').forEach(card => {
-        const cat = (card as HTMLElement).getAttribute('data-category');
-        (card as HTMLElement).style.display = (filter === 'all' || cat === filter) ? '' : 'none';
-      });
+      activeCategory = btn.getAttribute('data-filter') || 'all';
+      applyFilters();
+    });
+  });
+
+  document.getElementById('persona-filter-bar')?.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('persona-filter-bar')?.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activePersona = btn.getAttribute('data-persona-filter') || 'all';
+      applyFilters();
+    });
+  });
+
+  document.getElementById('highlight-filter-bar')?.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('highlight-filter-bar')?.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeHighlight = btn.getAttribute('data-highlight-filter') || 'stage';
+      applyFilters();
     });
   });
 
@@ -501,19 +728,28 @@ const faqSchema = {
     const scores = getScores();
     if (scores && scores.stage) {
       const stage = scores.stage;
+      userStage = stage;
 
       // Show/hide assessed elements
-      document.querySelectorAll('[data-show-if-assessed]').forEach(el => (el as HTMLElement).style.display = '');
       document.querySelectorAll('[data-hide-if-assessed]').forEach(el => (el as HTMLElement).style.display = 'none');
 
-      // Banner
-      const banner = document.getElementById('metrics-context-banner');
-      if (banner) {
-        banner.innerHTML = `<div class="context-banner stage-${stage}">
-          <span class="context-banner-dot"></span>
-          Showing priorities for your stage: <strong class="context-banner-stage">${stageLabels[stage]}</strong>
-        </div>`;
-      }
+      // Show highlight and priority-label rows, populate stage label
+      const highlightRow = document.getElementById('highlight-filter-row');
+      const highlightBtn = document.getElementById('highlight-stage-btn');
+      if (highlightRow) highlightRow.style.display = '';
+      if (highlightBtn) highlightBtn.textContent = `Your CS stage: ${stageLabels[stage]}`;
+
+      const priorityLabelRow = document.getElementById('priority-label-filter-row');
+      if (priorityLabelRow) priorityLabelRow.style.display = '';
+
+      document.getElementById('priority-label-filter-bar')?.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById('priority-label-filter-bar')?.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const grid = document.getElementById('metrics-grid');
+          if (grid) grid.classList.toggle('hide-priority-labels', btn.getAttribute('data-priority-label-filter') === 'hide');
+        });
+      });
 
       // Priority indicators on cards
       document.querySelectorAll('.metric-card').forEach(card => {
@@ -523,9 +759,6 @@ const faqSchema = {
         const slot = card.querySelector(`[data-priority-slot="${metricId}"]`);
         if (slot && priority) {
           slot.innerHTML = `<span class="priority-pill priority-${priority}">${priority}</span>`;
-        }
-        if (priority === 'low') {
-          card.classList.add('dimmed');
         }
       });
 
@@ -541,6 +774,9 @@ const faqSchema = {
         });
         cards.forEach(c => grid.appendChild(c));
       }
+
+      // Apply initial dimming via applyFilters
+      applyFilters();
     }
   }
 </script>
