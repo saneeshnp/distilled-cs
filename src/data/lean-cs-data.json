@@ -629,18 +629,18 @@
                 "score": 1,
                 "label": "We don't segment; all customers get a similar experience",
                 "insight": "Your team treats every account the same, regardless of value, complexity, or growth potential.",
-                "next_step": "Start with one dimension: ARR. Separate your top 20% of accounts by ARR and give them a higher-touch engagement model. Even a rough split creates clarity on where CSM time goes."
+                "next_step": "To improve your customer segmentation, start with one dimension: ARR. Separate your top 20% of accounts by ARR and give them a higher-touch engagement model. Even a rough split creates clarity on where CSM time goes."
               },
               {
                 "score": 2,
                 "label": "Basic segmentation by ARR or contract size",
                 "insight": "You use ARR as a proxy for value. That's a reasonable start, but it misses risk and growth potential.",
-                "next_step": "Add a second dimension: usage intensity or strategic growth potential. A small account with deep product adoption often warrants more attention than a large account on auto-renewal."
+                "next_step": "To improve your customer segmentation, add a second dimension: usage intensity or strategic growth potential. A small account with deep product adoption often needs more attention than a large account on auto-renewal."
               },
               {
                 "score": 3,
                 "label": "Multi-factor segmentation (ARR + complexity + strategic value + lifecycle stage)",
-                "insight": "You have four-dimensional segmentation, one of the more sophisticated coverage models in use.",
+                "insight": "You are already segmenting customers by multiple factors, one of the more sophisticated coverage models in use.",
                 "next_step": "Validate that each segment drives a genuinely differentiated CS motion: different playbooks, onboarding tracks, and intervention thresholds, rather than just being a reporting lens.",
                 "next_step_by_segment": {
                   "seg_enterprise": "Verify that strategic value scoring reflects exec-sponsor access and expansion runway, not just ACV. Re-score enterprise accounts annually.",

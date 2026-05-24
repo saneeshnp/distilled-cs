@@ -108,8 +108,8 @@ export function composePriorityActions(profile, responses, frameworkData) {
 }
 
 // Compose the strengths section: up to 3 insights from the user's highest-scoring responses.
-// Returns an empty array when fewer than 2 score-3+ responses have insight text,
-// so callers can omit the section rather than show a thin list.
+// Returns an empty array when no score-3+ responses have insight text,
+// so callers can omit the section rather than show an empty list.
 export function composeStrengths(profile, responses, frameworkData) {
   const domains = frameworkData.assessment_domains.domains;
   const highEntries = [];
@@ -124,7 +124,7 @@ export function composeStrengths(profile, responses, frameworkData) {
     }
   }
 
-  if (highEntries.length < 2) return [];
+  if (!highEntries.length) return [];
 
   // Highest score first; stable — JSON domain order breaks ties
   highEntries.sort((a, b) => b.score - a.score);
