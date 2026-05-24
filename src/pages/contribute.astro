@@ -14,7 +14,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </header>
 
     <p class="quick-note">
-      Already familiar with GitHub? <a href="https://github.com/saneeshnp/distilled-cs/issues/new/choose" target="_blank" rel="noopener noreferrer">Open an issue directly</a> — the rest of this page walks through every step for those who are new to it.
+      Already familiar with GitHub? <a href="https://github.com/saneeshnp/distilled-cs/issues/new/choose" target="_blank" rel="noopener noreferrer">Open an issue directly</a>.<br>
+      Prefer a conversation? <a href="https://www.linkedin.com/company/distilled-cs/" target="_blank" rel="noopener noreferrer">Reach out on LinkedIn</a>.
     </p>
 
     <nav class="toc" aria-label="Table of contents">
@@ -77,35 +78,40 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <!-- Section 3 -->
       <section class="content-section" id="ways-to-contribute">
         <h2>Ways you can contribute</h2>
-        <p>You don't need to write code to make a meaningful contribution. Here are some ways you can help:</p>
+        <p>You don't need to write code to make a meaningful contribution. You can help improve the <a href="/customer-success-metrics/">metrics directory</a>, <a href="/customer-success-playbooks/">playbooks</a>, assessment questions, or any other part of the framework. Here are the ways to do it:</p>
         <div class="contribution-types">
-          <div class="contrib-card">
+          <a class="contrib-card" href="https://github.com/saneeshnp/distilled-cs/issues/new/choose" target="_blank" rel="noopener noreferrer">
             <h3>Share your experience</h3>
             <p>Have benchmarks from your CS team? Disagree with a recommendation? Your real-world context makes the framework better for everyone.</p>
-          </div>
-          <div class="contrib-card">
+            <span class="contrib-card-cta">Share your feedback on GitHub &rarr;</span>
+          </a>
+          <a class="contrib-card" href="https://github.com/saneeshnp/distilled-cs/issues/new/choose" target="_blank" rel="noopener noreferrer">
             <h3>Suggest improvements</h3>
-            <p>Think a metric definition could be clearer? Have an idea for a new assessment question? Open an issue and describe your suggestion.</p>
-          </div>
-          <div class="contrib-card">
+            <p>Think a metric definition could be clearer? Have an idea for a new assessment question? Describe your suggestion in a GitHub issue.</p>
+            <span class="contrib-card-cta">Suggest an improvement on GitHub &rarr;</span>
+          </a>
+          <a class="contrib-card" href="https://github.com/saneeshnp/distilled-cs/issues/new/choose" target="_blank" rel="noopener noreferrer">
             <h3>Propose new content</h3>
-            <p>Have an idea for a new metric, playbook, or article? Open an issue with your idea or a rough draft — we'll take it from there.</p>
-          </div>
-          <div class="contrib-card">
+            <p>Have an idea for a new metric, playbook, or article? Share your idea or a rough draft and we'll take it from there.</p>
+            <span class="contrib-card-cta">Submit a content proposal on GitHub &rarr;</span>
+          </a>
+          <a class="contrib-card" href="https://github.com/saneeshnp/distilled-cs/issues/new/choose" target="_blank" rel="noopener noreferrer">
             <h3>Report a problem</h3>
             <p>Something not working right on the site? Let us know by opening an issue with details about what happened.</p>
-          </div>
-          <div class="contrib-card">
+            <span class="contrib-card-cta">Report a problem on GitHub &rarr;</span>
+          </a>
+          <a class="contrib-card" href="https://github.com/saneeshnp/distilled-cs" target="_blank" rel="noopener noreferrer">
             <h3>Spread the word</h3>
             <p>Share the framework with your network, reference it in talks or articles, or star the repository on GitHub to help others discover it.</p>
-          </div>
+            <span class="contrib-card-cta">View the Distilled CS repository &rarr;</span>
+          </a>
         </div>
       </section>
 
       <!-- Section 4 -->
       <section class="content-section" id="submit-idea">
         <h2>Submit an idea or suggestion</h2>
-        <p>This is the easiest way to contribute — no technical skills needed.</p>
+        <p>This is the easiest way to contribute, no technical skills needed. Ready to jump in? <a href="https://github.com/saneeshnp/distilled-cs/issues/new/choose" target="_blank" rel="noopener noreferrer">Open an issue on the Distilled CS GitHub repository</a> and skip the walkthrough. Or follow the steps below if you're new to GitHub.</p>
         <ol class="step-list">
           <li>
             <strong>Go to the Distilled CS repository</strong>
@@ -180,6 +186,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <p>
           Every contribution, no matter how small, helps make Customer Success better for everyone. Thank you for being part of this.
         </p>
+        <p><a href="/contributors/">See the current contributors &rarr;</a></p>
       </section>
 
     </div>
@@ -475,11 +482,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
-    transition: border-color 0.2s ease-out;
+    transition: border-color 0.2s ease-out, transform 0.2s ease-out;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
   }
 
   .contrib-card:hover {
-    border-color: var(--color-border-hover);
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    color: inherit;
   }
 
   .contrib-card h3 {
@@ -490,6 +503,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .contrib-card p {
     font-size: 0.8125rem;
     margin-bottom: 0;
+    flex: 1;
+  }
+
+  .contrib-card-cta {
+    display: block;
+    margin-top: 0.875rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-accent);
   }
 
 </style>

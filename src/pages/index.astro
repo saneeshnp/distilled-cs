@@ -9,7 +9,7 @@ const principles = frameworkData.principles;
 const phaseDetails: Record<string, string[]> = {
   assess: [
     'Answer a few questions across key areas of your CS practice',
-    'Find out your maturity stage — Crawl, Walk, or Run',
+    'Find out your CS maturity stage: Crawl, Walk, or Run',
     'Get a full report with domain scores and a prioritised action list',
   ],
   execute: [
@@ -117,7 +117,7 @@ const stageImageAlts: Record<string, string> = {
   <section class="hp-section hp-section-stages" id="maturity-stages">
     <div class="container">
       <h2 class="hp-section-headline scroll-reveal">The three stages of CS maturity</h2>
-      <p class="hp-section-subheadline scroll-reveal">Every CS team sits somewhere on this scale. The assessment tells you exactly where, and what to focus on from there.</p>
+      <p class="hp-section-subheadline scroll-reveal">In this framework, every CS team sits somewhere on the maturity scale below. The assessment tells you exactly where, and what to focus on from there.</p>
       <div class="hp-stages-grid">
         {stages.map((stage, i) => (
           <div class={`hp-stage-card scroll-reveal stage-${stage.id}`} style={`--stage-delay: ${i * 0.1}s`}>
