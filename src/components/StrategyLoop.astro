@@ -59,13 +59,13 @@ const phases = [
           class={`loop-node loop-node--${phase.id} ${isActive ? 'loop-node--active' : ''}`}
           style={`${pos.top ? `top:${pos.top};` : ''}${pos.bottom ? `bottom:${pos.bottom};` : ''}${pos.left ? `left:${pos.left};` : ''}${pos.right ? `right:${pos.right};` : ''}${pos.transform ? `transform:${pos.transform};` : ''}`}
         >
-          {interactive ? (
+          {interactive && !isActive ? (
             <a href={phase.href} class="loop-node-link" aria-label={`${phase.label}: ${phase.tagline}`}>
               <span class="loop-node-label">{phase.label}</span>
               <span class="loop-node-tagline">{phase.tagline}</span>
             </a>
           ) : (
-            <div class="loop-node-link" aria-label={`${phase.label}: ${phase.tagline}`}>
+            <div class="loop-node-link" aria-label={`${phase.label}: ${phase.tagline}`} aria-current={isActive ? 'page' : undefined}>
               <span class="loop-node-label">{phase.label}</span>
               <span class="loop-node-tagline">{phase.tagline}</span>
             </div>
@@ -91,10 +91,10 @@ const phases = [
       );
       return (
         <>
-          {interactive ? (
+          {interactive && !isActive ? (
             <a href={phase.href} class={cardClass} aria-label={`${phase.label}: ${phase.tagline}`}>{cardInner}</a>
           ) : (
-            <div class={cardClass} aria-label={`${phase.label}: ${phase.tagline}`}>{cardInner}</div>
+            <div class={cardClass} aria-label={`${phase.label}: ${phase.tagline}`} aria-current={isActive ? 'page' : undefined}>{cardInner}</div>
           )}
           {i < 2 && (
             <span class="loop-row-arrow" aria-hidden="true">
@@ -114,7 +114,7 @@ const phases = [
       const isActive = activePhase === phase.id;
       return (
         <>
-          {interactive ? (
+          {interactive && !isActive ? (
             <a href={phase.href} class={`loop-linear-node ${isActive ? 'loop-linear-node--active' : ''}`}>
               <span class="loop-linear-step">{String(i + 1).padStart(2, '0')}</span>
               <div class="loop-linear-content">
@@ -126,7 +126,7 @@ const phases = [
               </svg>
             </a>
           ) : (
-            <div class={`loop-linear-node ${isActive ? 'loop-linear-node--active' : ''}`}>
+            <div class={`loop-linear-node ${isActive ? 'loop-linear-node--active' : ''}`} aria-current={isActive ? 'page' : undefined}>
               <span class="loop-linear-step">{String(i + 1).padStart(2, '0')}</span>
               <div class="loop-linear-content">
                 <span class="loop-linear-label">{phase.label}</span>

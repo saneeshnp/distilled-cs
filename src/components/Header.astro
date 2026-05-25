@@ -13,20 +13,14 @@ const homeSubLinks = [
   { href: '/#get-started', label: 'Get Started' },
 ];
 
-const executeSubLinks = [
-  { href: '/customer-success-playbooks/', label: 'Playbooks' },
-  { href: '/customer-success-metrics/', label: 'Metrics' },
-  { href: '/checklist/', label: 'Checklist' },
-];
-
 const navLinks = [
-  { href: '/customer-success-principles/', label: 'Principles' },
   { href: '/assess/', label: 'Assess' },
+  { href: '/customer-success-principles/', label: 'Principles' },
+  { href: '/customer-success-metrics/', label: 'Metrics' },
+  { href: '/customer-success-playbooks/', label: 'Playbooks' },
   { href: '/transform/', label: 'Transform' },
   { href: '/customer-success-maturity-model/', label: 'Maturity Model' },
 ];
-
-const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pathname.startsWith('/customer-success-metrics/') || pathname === '/checklist/';
 ---
 
 <header class="header">
@@ -61,17 +55,6 @@ const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pat
           </ul>
         </li>
 
-        <!-- Principles -->
-        <li>
-          <a
-            href="/customer-success-principles/"
-            class:list={['nav-link', { active: pathname === '/customer-success-principles/' }]}
-            aria-current={pathname === '/customer-success-principles/' ? 'page' : undefined}
-          >
-            Principles
-          </a>
-        </li>
-
         <!-- Assess -->
         <li>
           <a
@@ -84,26 +67,37 @@ const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pat
           </a>
         </li>
 
-        <!-- Execute dropdown -->
-        <li class="nav-dropdown">
+        <!-- Principles -->
+        <li>
+          <a
+            href="/customer-success-principles/"
+            class:list={['nav-link', { active: pathname === '/customer-success-principles/' }]}
+            aria-current={pathname === '/customer-success-principles/' ? 'page' : undefined}
+          >
+            Principles
+          </a>
+        </li>
+
+        <!-- Metrics -->
+        <li>
+          <a
+            href="/customer-success-metrics/"
+            class:list={['nav-link', { active: pathname.startsWith('/customer-success-metrics/') }]}
+            aria-current={pathname === '/customer-success-metrics/' ? 'page' : undefined}
+          >
+            Metrics
+          </a>
+        </li>
+
+        <!-- Playbooks -->
+        <li>
           <a
             href="/customer-success-playbooks/"
-            class:list={['nav-link nav-link-has-dropdown', { active: isExecutePage }]}
-            aria-haspopup="true"
-            aria-expanded="false"
+            class:list={['nav-link', { active: pathname.startsWith('/customer-success-playbooks/') }]}
+            aria-current={pathname === '/customer-success-playbooks/' ? 'page' : undefined}
           >
-            Execute
-            <svg class="dropdown-chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            Playbooks
           </a>
-          <ul class="dropdown-menu" role="menu">
-            {executeSubLinks.map(sub => (
-              <li role="none">
-                <a href={sub.href} class="dropdown-link" role="menuitem">{sub.label}</a>
-              </li>
-            ))}
-          </ul>
         </li>
 
         <!-- Transform -->
@@ -179,17 +173,6 @@ const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pat
         </ul>
       </li>
 
-      <!-- Principles -->
-      <li>
-        <a
-          href="/customer-success-principles/"
-          class:list={['nav-link-mobile', { active: pathname === '/customer-success-principles/' }]}
-          aria-current={pathname === '/customer-success-principles/' ? 'page' : undefined}
-        >
-          Principles
-        </a>
-      </li>
-
       <!-- Assess -->
       <li>
         <a
@@ -202,33 +185,37 @@ const isExecutePage = pathname.startsWith('/customer-success-playbooks/') || pat
         </a>
       </li>
 
-      <!-- Execute with expandable sub-links on mobile -->
-      <li class="mobile-dropdown">
-        <div class="mobile-dropdown-header">
-          <a
-            href="/customer-success-playbooks/"
-            class:list={['nav-link-mobile', { active: isExecutePage }]}
-          >
-            Execute
-          </a>
-          <button
-            class="mobile-dropdown-toggle"
-            aria-label="Expand Execute sections"
-            aria-expanded="false"
-            type="button"
-          >
-            <svg class="dropdown-chevron" width="12" height="7" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-        </div>
-        <ul class="mobile-sub-menu" hidden>
-          {executeSubLinks.map(sub => (
-            <li>
-              <a href={sub.href} class="nav-link-mobile nav-link-sub">{sub.label}</a>
-            </li>
-          ))}
-        </ul>
+      <!-- Principles -->
+      <li>
+        <a
+          href="/customer-success-principles/"
+          class:list={['nav-link-mobile', { active: pathname === '/customer-success-principles/' }]}
+          aria-current={pathname === '/customer-success-principles/' ? 'page' : undefined}
+        >
+          Principles
+        </a>
+      </li>
+
+      <!-- Metrics -->
+      <li>
+        <a
+          href="/customer-success-metrics/"
+          class:list={['nav-link-mobile', { active: pathname.startsWith('/customer-success-metrics/') }]}
+          aria-current={pathname === '/customer-success-metrics/' ? 'page' : undefined}
+        >
+          Metrics
+        </a>
+      </li>
+
+      <!-- Playbooks -->
+      <li>
+        <a
+          href="/customer-success-playbooks/"
+          class:list={['nav-link-mobile', { active: pathname.startsWith('/customer-success-playbooks/') }]}
+          aria-current={pathname === '/customer-success-playbooks/' ? 'page' : undefined}
+        >
+          Playbooks
+        </a>
       </li>
 
       <!-- Transform -->
