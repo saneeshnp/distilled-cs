@@ -137,4 +137,10 @@ Contributions are welcome via [GitHub Issues](https://github.com/saneeshnp/disti
 
 ## License
 
-Licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Free to use, adapt, and share — with attribution. Any adaptations must be shared under the same license.
+Distilled CS is dual-licensed to separate the framework (an open standard) from the codebase that delivers it.
+
+- **Framework content** is licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). This covers `src/data/lean-cs-data.json` (assessment data, playbooks, metrics, principles, glossary), articles in `src/content/`, and framework illustrations in `public/images/maturity-stages/`, `public/images/cs-framework-stages.png`, and `public/images/cs-report-header.png`. Free to use, adapt, and share with attribution. See [LICENSE-CONTENT](LICENSE-CONTENT).
+- **Codebase** (Astro components, scripts, build tooling, configuration, CSS, and everything else not listed above) is licensed under the [MIT License](LICENSE).
+- **Brand** — the name "Distilled CS" and the project logo are not covered by either license. Forks and adaptations should use their own name.
+
+**How to attribute the framework**: *"Based on Distilled CS ([distilledcs.org](https://distilledcs.org)), licensed under CC BY 4.0."*
