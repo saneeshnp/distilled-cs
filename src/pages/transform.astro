@@ -19,7 +19,8 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
 ---
 
 <BaseLayout title="Transform: Track CS Maturity Progress" description="Track CS maturity progress over time, re-assess to validate growth, and review the trigger signals for moving to the next stage.">
-  <div class="container transform-page">
+  <div class="container">
+  <div class="transform-page">
 
     <!-- Strategy Loop wayfinding -->
     <div class="transform-loop-indicator">
@@ -148,6 +149,7 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     </div>
 
   </div>
+  </div>
 </BaseLayout>
 
 <style>
@@ -159,6 +161,8 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
   }
 
   .transform-loop-indicator {
+    max-width: 48rem;
+    margin-inline: auto;
     margin-bottom: 1.5rem;
     opacity: 0.8;
   }

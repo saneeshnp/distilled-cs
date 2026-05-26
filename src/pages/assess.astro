@@ -10,7 +10,8 @@ const stages = frameworkData.maturity_stages.stages;
 
 <BaseLayout title="Customer Success Maturity Assessment" description="A 5-minute assessment of your customer success operation across 8 domains. Returns a stage rating, priority actions, and recommended playbooks.">
 
-  <div class="container assess-page">
+  <div class="container">
+  <div class="assess-page">
 
     <!-- Strategy Loop wayfinding -->
     <div class="assess-loop-indicator">
@@ -180,17 +181,20 @@ const stages = frameworkData.maturity_stages.stages;
 
 
   </div>
+  </div>
 </BaseLayout>
 
 <style>
   .assess-page {
     padding-top: 2rem;
     padding-bottom: 6rem;
-    max-width: 48rem;
+    max-width: 52rem;
     margin-inline: auto;
   }
 
   .assess-loop-indicator {
+    max-width: 48rem;
+    margin-inline: auto;
     margin-bottom: 1.5rem;
     opacity: 0.8;
   }
