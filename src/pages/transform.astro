@@ -32,6 +32,12 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
       <p class="page-subtitle">Measure your progress. Re-assess to validate growth. Cross into your next maturity stage.</p>
     </div>
 
+    <!-- Why Transform callout (visible to all users) -->
+    <div class="principle-callout">
+      <span class="principle-callout-eyebrow">Why Transform?</span>
+      <p class="principle-callout-text">Customer Success maturity is built through deliberate iteration. This phase closes the loop by measuring impact, capturing learnings, and preparing your team for the next cycle. Read our CS principle to know more: <a href="/customer-success-principles/maturity-requires-iteration/" class="principle-callout-link">Maturity Requires Iteration</a>.</p>
+    </div>
+
     <!-- ═══ Assessed user view (JS-populated) ═══ -->
     <div id="transform-assessed" data-show-if-assessed style="display:none;">
 
@@ -343,6 +349,42 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     max-width: 28rem;
     margin: 0 auto 1.5rem;
     line-height: 1.6;
+  }
+
+  .principle-callout {
+    background: var(--color-accent-subtle);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+    border-radius: 0.5rem;
+    padding: 1rem 1.25rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .principle-callout-eyebrow {
+    display: block;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-bottom: 0.375rem;
+  }
+
+  .principle-callout-text {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  .principle-callout-link {
+    color: var(--color-accent);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .principle-callout-link:hover {
+    text-decoration: underline;
   }
 
   /* ── Not-assessed view ── */

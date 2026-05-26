@@ -1,6 +1,6 @@
 # Distilled CS
 
-**The open Customer Success strategy framework.** Available at [distilledcs.org](https://distilledcs.org).
+**The open framework for Customer Success maturity and strategy.** Available at [distilledcs.org](https://distilledcs.org).
 
 ---
 
@@ -8,7 +8,7 @@
 
 Customer Success teams have a shared problem: there is no industry standard for how to build, measure, and grow a CS function. Every team starts from scratch — guessing at benchmarks, improvising health scores, and hoping their metrics are the right ones. Existing frameworks are either paywalled, vendor-locked, or too generic to be actionable.
 
-Distilled CS is an open, vendor-neutral framework that gives CS leaders a structured system for maturing their function — from a scrappy, reactive team to a strategic, data-driven operation. Think of it as what the [FinOps Foundation](https://www.finops.org/) did for cloud cost management, but for Customer Success.
+Distilled CS is an open, vendor-neutral framework that gives CS leaders and practitioners a structured system for maturing their function — from a scrappy, reactive team to a strategic, data-driven operation. Think of it as what the [FinOps Foundation](https://www.finops.org/) did for cloud cost management, but for Customer Success.
 
 It is free, open source, and designed by practitioners for practitioners.
 
