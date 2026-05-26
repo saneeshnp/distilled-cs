@@ -219,6 +219,12 @@ button, a, input, select, textarea {
   button, a, [role="radio"], [role="checkbox"] {
     min-height: 44px;
   }
+
+  /* Context bar link and dismiss are intentionally compact — override the 44px floor */
+  .context-bar-link,
+  .context-bar-dismiss {
+    min-height: 0;
+  }
 }
 
 /* Selection color */

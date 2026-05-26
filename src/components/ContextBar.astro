@@ -21,13 +21,12 @@
 
   .context-bar.visible {
     display: block;
-    max-height: 4rem;
+    max-height: 5.5rem;
   }
 
   .context-bar-inner {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     gap: 1rem;
@@ -40,6 +39,8 @@
     gap: 0.625rem;
     color: var(--color-text-secondary);
     flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
   }
 
   :global(.context-bar-company) {
@@ -67,17 +68,12 @@
     background: var(--stage-color);
   }
 
-  :global(.context-bar-actions) {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-shrink: 0;
-  }
-
   :global(.context-bar-link) {
     font-size: 0.75rem;
     color: var(--color-text-muted);
     text-decoration: none;
+    flex-shrink: 0;
+    min-height: 0;
     transition: color 0.2s ease-out;
   }
 
@@ -91,8 +87,11 @@
     color: var(--color-text-muted);
     cursor: pointer;
     font-size: 1rem;
-    padding: 0;
+    padding: 0.5rem;
+    margin: -0.5rem;
     line-height: 1;
+    flex-shrink: 0;
+    min-height: 0;
     transition: color 0.2s ease-out;
   }
 
@@ -162,7 +161,7 @@
       loopPhase = 'Transform';
     }
     const phaseHtml = loopPhase
-      ? `<span class="context-bar-separator context-bar-detail">|</span><span class="context-bar-phase">${loopPhase}</span>`
+      ? `<span class="context-bar-separator context-bar-detail">|</span><span class="context-bar-phase context-bar-detail">${loopPhase}</span>`
       : '';
 
     const companyHtml = companyName
@@ -179,10 +178,8 @@
         </span>
         ${phaseHtml}
       </div>
-      <div class="context-bar-actions">
-        <a href="/assess/?mode=update" class="context-bar-link" aria-label="Edit your assessment answers">Edit Assessment</a>
-        <button class="context-bar-dismiss" id="context-bar-dismiss" aria-label="Dismiss context bar" type="button">&times;</button>
-      </div>
+      <a href="/assess/?mode=update" class="context-bar-link" aria-label="Edit your assessment answers">Edit Assessment</a>
+      <button class="context-bar-dismiss" id="context-bar-dismiss" aria-label="Dismiss context bar" type="button">&times;</button>
     `;
 
     // Animate in (clear any previous session dismissal on fresh save)
