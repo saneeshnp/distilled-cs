@@ -1983,7 +1983,8 @@ const contextualRecs = frameworkData.contextual_recommendations;
       color: #2D6A5A !important;
     }
     .report-header-attribution {
-      display: none !important;
+      display: block !important;
+      color: #777 !important;
     }
     .report-header-label {
       color: #1a1a1a !important;
@@ -2710,7 +2711,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
               <p class="report-stage-subtitle">${stage?.subtitle || ''}</p>
             </div>
             <div class="report-header-score-card stage-${data.stage}">
-              <div class="report-header-eyebrow">Overall Score</div>
+              <div class="report-header-eyebrow">Overall CS Maturity Score</div>
               <div class="report-score-ring-wrap">
                 <svg class="report-score-ring" viewBox="0 0 120 120" aria-hidden="true">
                   <circle class="report-score-ring-track" cx="60" cy="60" r="54"/>
