@@ -1566,8 +1566,14 @@ const contextualRecs = frameworkData.contextual_recommendations;
     opacity: 0.55;
   }
 
-  .report-playbook-card.is-weak-domain {
-    border-left: 3px solid var(--color-warning, #F5A623);
+  .report-playbook-card.is-weak-domain::before {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 3px;
+    background: var(--color-warning, #F5A623);
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
   }
 
   .report-playbook-title {
@@ -2053,10 +2059,15 @@ const contextualRecs = frameworkData.contextual_recommendations;
     }
 
     /* Flatten accent borders in print */
-    .report-strength-item,
-    .report-playbook-card.is-weak-domain {
+    .report-strength-item {
       border-left-color: #aaa !important;
       background: #f9f9f9 !important;
+    }
+    .report-playbook-card.is-weak-domain {
+      background: #f9f9f9 !important;
+    }
+    .report-playbook-card.is-weak-domain::before {
+      background: #aaa !important;
     }
 
     /* Prevent sections and cards from splitting across pages */

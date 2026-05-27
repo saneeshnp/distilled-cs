@@ -270,13 +270,21 @@ const faqSchema = {
     border-radius: 0.75rem;
     text-decoration: none;
     transition: border-color 0.2s ease-out, transform 0.2s ease-out, box-shadow 0.2s ease-out;
-    border-top: 3px solid var(--stage-color);
     min-width: 0;
+  }
+
+  .playbook-card::before {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 3px;
+    background: var(--stage-color);
+    border-radius: 2px;
+    flex-shrink: 0;
   }
 
   .playbook-card:hover {
     border-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
-    border-top-color: var(--stage-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
