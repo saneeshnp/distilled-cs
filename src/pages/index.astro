@@ -121,35 +121,57 @@ const stageImageAlts: Record<string, string> = {
       <div class="hp-stages-grid">
         {stages.map((stage, i) => (
           <div class={`hp-stage-card scroll-reveal stage-${stage.id}`} style={`--stage-delay: ${i * 0.1}s`}>
-            <div class="hp-stage-color-bar"></div>
-            <div class="hp-stage-pill-row">
-              <span class="hp-stage-pill">Stage {i + 1}</span>
-              <span class="hp-stage-label">{stage.label}</span>
+            <div class="hp-stage-card-top">
+              <div class="hp-stage-card-heading">
+                <span class="hp-stage-pill">Stage {i + 1}</span>
+                <span class="hp-stage-label">{stage.label}</span>
+              </div>
+              <div class="hp-stage-card-img-wrap">
+                <div class="hp-stage-card-img">
+                  <img
+                    src={`/images/maturity-stages/cs-maturity-stage-${stage.id}.png`}
+                    alt={stageImageAlts[stage.id]}
+                    width="610"
+                    height="404"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div class="hp-stage-color-bar"></div>
+              </div>
             </div>
-            <div class="hp-stage-card-img">
-              <img
-                src={`/images/maturity-stages/cs-maturity-stage-${stage.id}.png`}
-                alt={stageImageAlts[stage.id]}
-                width="610"
-                height="404"
-                loading="lazy"
-                decoding="async"
-              />
+            <div class="hp-stage-subtitle-row">
+              <span class="hp-stage-meta-primary">{stage.subtitle.split(' / ')[0]}</span>
+              <span class="hp-stage-meta-secondary">{stage.subtitle.split(' / ')[1]}</span>
             </div>
-            <div class="hp-stage-card-content">
-              <span class="hp-stage-subtitle">{stage.subtitle}</span>
-              <ul class="hp-stage-chars">
-                {stage.key_characteristics.slice(0, 4).map(char => (
-                  <li>{char}</li>
-                ))}
-              </ul>
-              <a href={`/customer-success-maturity-model/#stage-${stage.id}`} class="hp-stage-more-link">
-                See the full {stage.label} stage overview <span class="hp-stage-more-arrow" aria-hidden="true">→</span>
-              </a>
-            </div>
+            <div class="hp-stage-divider"></div>
+            <ul class="hp-stage-chars">
+              {stage.key_characteristics.slice(0, 4).map(char => (
+                <li>{char}</li>
+              ))}
+            </ul>
+            <a href={`/customer-success-maturity-model/#stage-${stage.id}`} class="hp-stage-more-link">
+              Explore {stage.label} stage <span class="hp-stage-more-arrow" aria-hidden="true">→</span>
+            </a>
           </div>
         ))}
       </div>
+      <!-- Maturity scale progression indicator -->
+      <div class="hp-maturity-scale scroll-reveal">
+        <div class="hp-scale-col">
+          <div class="hp-scale-dot stage-crawl" data-scale-stage="crawl">1</div>
+          <span class="hp-scale-label" data-scale-label="crawl">Crawl</span>
+        </div>
+        <div class="hp-scale-col">
+          <div class="hp-scale-dot stage-walk" data-scale-stage="walk">2</div>
+          <span class="hp-scale-label" data-scale-label="walk">Walk</span>
+        </div>
+        <div class="hp-scale-col">
+          <div class="hp-scale-dot stage-run" data-scale-stage="run">3</div>
+          <span class="hp-scale-label" data-scale-label="run">Run</span>
+        </div>
+      </div>
+
       <div class="hp-section-cta scroll-reveal">
         <a href="/customer-success-maturity-model/" class="btn btn-primary">Explore the full maturity model</a>
       </div>
@@ -766,52 +788,48 @@ const stageImageAlts: Record<string, string> = {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.75rem;
-    overflow: hidden;
+    padding: 1.5rem;
     transition: border-color 0.25s ease-out, transform 0.25s ease-out;
     display: flex;
     flex-direction: column;
   }
 
   .hp-stage-card:hover {
-    border-color: var(--stage-color);
+    border-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
     transform: translateY(-2px);
   }
 
-  .hp-stage-color-bar {
-    height: 5px;
-    background: var(--stage-color);
-  }
-
-  .hp-stage-card-img {
+  /* Top row: heading left, circle image right */
+  .hp-stage-card-top {
     display: flex;
-    justify-content: center;
-    padding: 0.75rem 1.5rem 0.25rem;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
   }
 
-  .hp-stage-card-img img {
-    width: 90%;
-    height: auto;
-    border-radius: 0.625rem;
-    padding: 0.75rem;
-    background-color: color-mix(in srgb, var(--stage-color) 8%, var(--color-surface));
-    border: 1px solid color-mix(in srgb, var(--stage-color) 25%, var(--color-border));
-  }
-
-
-  .hp-stage-card-content {
-    padding: 0.875rem 1.5rem 1.5rem;
-    text-align: center;
+  .hp-stage-card-heading {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
     flex: 1;
+    min-width: 0;
   }
 
-  .hp-stage-pill-row {
+  .hp-stage-card-img-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.875rem 1.5rem 0;
+    flex-shrink: 0;
+  }
+
+  .hp-stage-color-bar {
+    width: 2.5rem;
+    height: 3px;
+    background: var(--stage-color);
+    border-radius: 2px;
   }
 
   .hp-stage-pill {
@@ -831,60 +849,101 @@ const stageImageAlts: Record<string, string> = {
   .hp-stage-label {
     display: block;
     font-family: var(--font-display);
-    font-size: 1.375rem;
+    font-size: 2.375rem;
     font-weight: 700;
     color: var(--stage-color);
+    line-height: 1.1;
   }
 
-  .hp-stage-subtitle {
-    display: block;
-    font-size: 1rem;
-    color: var(--color-text-muted);
+  /* Circle image */
+  .hp-stage-card-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--stage-color) 10%, var(--color-surface));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .hp-stage-card-img img {
+    width: 72%;
+    height: 72%;
+    object-fit: contain;
+  }
+
+  /* Subtitle */
+  .hp-stage-subtitle-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
     margin-bottom: 1rem;
   }
 
+  .hp-stage-meta-primary {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .hp-stage-meta-secondary {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Divider */
+  .hp-stage-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin-bottom: 1rem;
+  }
+
+  /* Characteristics list with checkmark circles */
   .hp-stage-chars {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    text-align: left;
+    gap: 0.625rem;
   }
 
   .hp-stage-chars li {
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     color: var(--color-text-secondary);
     line-height: 1.5;
-    padding-left: 1rem;
+    padding-left: 1.25rem;
     position: relative;
   }
 
   .hp-stage-chars li::before {
-    content: '';
+    content: '✓';
     position: absolute;
     left: 0;
-    top: 0.5rem;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--stage-color);
+    top: 0;
+    color: var(--stage-color);
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.5;
   }
 
+  /* Explore link */
   .hp-stage-more-link {
     display: inline-block;
-    margin-top: auto;
-    padding-top: 1rem;
-    font-size: 0.8125rem;
-    font-style: italic;
-    color: var(--color-text-muted);
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--stage-color);
     text-decoration: none;
-    transition: color 0.2s ease-out;
+    border-bottom: 1.5px solid var(--stage-color);
+    padding-bottom: 0.125rem;
+    transition: opacity 0.2s ease-out;
   }
 
   .hp-stage-more-link:hover {
-    color: var(--stage-color);
+    opacity: 0.75;
   }
 
   .hp-stage-more-arrow {
@@ -894,6 +953,74 @@ const stageImageAlts: Record<string, string> = {
 
   .hp-stage-more-link:hover .hp-stage-more-arrow {
     transform: translateX(3px);
+  }
+
+  /* ── Maturity scale ── */
+  .hp-maturity-scale {
+    display: none; /* hidden on mobile and tablet — shown only at 3-column breakpoint */
+  }
+
+  @media (min-width: 1024px) {
+    .hp-maturity-scale {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      max-width: 960px;
+      margin: 1.5rem auto 0;
+      position: relative;
+    }
+
+    .hp-maturity-scale::before {
+      content: '';
+      position: absolute;
+      top: 13px;
+      left: calc((100% - 2.5rem) / 6);
+      right: calc((100% - 2.5rem) / 6);
+      height: 2px;
+      background: var(--color-border);
+      z-index: 0;
+    }
+  }
+
+  .hp-scale-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hp-scale-dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--stage-color);
+    color: var(--color-on-stage);
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: var(--font-body);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  }
+
+  .hp-scale-dot.is-current {
+    box-shadow: 0 0 0 3px var(--color-surface), 0 0 0 5px var(--stage-color);
+    transform: scale(1.15);
+  }
+
+  .hp-scale-label {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+  }
+
+  .hp-scale-label.is-current {
+    color: var(--color-text-primary);
+    font-weight: 600;
   }
 
   /* ══════════════════════════════════════════
@@ -1040,6 +1167,18 @@ const stageImageAlts: Record<string, string> = {
       if (readNextTitle) readNextTitle.textContent = 'View Your Maturity Report';
       const readNextBody = document.getElementById('hp-read-next-assess-body');
       if (readNextBody) readNextBody.textContent = 'See your stage, domain scores, and priority actions.';
+    }
+  } catch {}
+
+  // ── Maturity scale: highlight assessed user's stage ──
+  try {
+    const scoresRaw = localStorage.getItem('distilledcs_scores');
+    if (localStorage.getItem('distilledcs_completed') === 'true' && scoresRaw) {
+      const userStage = JSON.parse(scoresRaw).stage;
+      const dot = document.querySelector(`[data-scale-stage="${userStage}"]`);
+      if (dot) dot.classList.add('is-current');
+      const label = document.querySelector(`[data-scale-label="${userStage}"]`);
+      if (label) label.classList.add('is-current');
     }
   } catch {}
 
