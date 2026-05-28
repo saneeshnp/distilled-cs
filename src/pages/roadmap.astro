@@ -12,7 +12,7 @@ const lastUpdated = 'May 2026';
 
     <header class="page-header">
       <p class="eyebrow">Last updated: {lastUpdated}</p>
-      <h1 class="page-title">Roadmap</h1>
+      <h1 class="page-title">Distilled CS Roadmap</h1>
       <p class="page-subtitle">
         We believe in being open about what we're building and why. This page is where we share what's coming next, so the people using this framework can follow along, push back, and help shape what gets built.
       </p>
@@ -21,13 +21,38 @@ const lastUpdated = 'May 2026';
     <div class="page-body">
 
       <section class="content-section">
-        <h2>We're working on this</h2>
+        <h2>What we're building</h2>
         <p>
           One of the principles we try to hold ourselves to is transparency: not just in the framework content, but in how we develop it. That means sharing direction early, being clear about what we're prioritising and why, and letting the needs of real CS teams drive what comes next.
         </p>
-        <p>
-          Please come back soon as we work on getting a meaningful roadmap page. We are working on putting together a list along with a timeline and reasoning behind the feature.
-        </p>
+        <div class="table-wrapper">
+          <table class="roadmap-table">
+            <colgroup>
+              <col style="width: 60%">
+              <col style="width: 20%">
+              <col style="width: 20%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Status</th>
+                <th>Issue / Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CS Metrics Map: show metric priority across all maturity stages in one view</td>
+                <td><span class="status status-planned">Planned</span></td>
+                <td><a href="https://github.com/saneeshnp/distilled-cs/issues/19" target="_blank" rel="noopener noreferrer">#19</a></td>
+              </tr>
+              <tr>
+                <td>Anonymous CS score submission: optionally share your maturity score, industry, and company type to contribute to aggregate industry benchmark data</td>
+                <td><span class="status status-planned">Planned</span></td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section class="content-section">
@@ -48,7 +73,7 @@ const lastUpdated = 'May 2026';
 <style>
   .roadmap-page {
     padding-block: 3rem 5rem;
-    max-width: 42rem;
+    max-width: 56rem;
     margin-inline: auto;
   }
 
@@ -105,5 +130,90 @@ const lastUpdated = 'May 2026';
 
   .content-section p:last-child {
     margin-bottom: 0;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    margin-top: 1.25rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.625rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .roadmap-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+
+  .roadmap-table thead tr {
+    background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+  }
+
+  .roadmap-table th {
+    text-align: left;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    border-bottom: 2px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+  }
+
+  .roadmap-table td {
+    padding: 1rem 1.25rem;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .roadmap-table tbody tr {
+    transition: background 0.15s ease;
+  }
+
+  .roadmap-table tbody tr:hover {
+    background: color-mix(in srgb, var(--color-accent) 4%, transparent);
+  }
+
+  .roadmap-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .roadmap-table td:first-child {
+    color: var(--color-text-primary);
+  }
+
+  .roadmap-table a {
+    color: var(--color-accent);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .status {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .status-planned {
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    color: var(--color-accent);
+  }
+
+  .status-in-progress {
+    background: color-mix(in srgb, #F57C00 15%, transparent);
+    color: #F57C00;
+  }
+
+  .status-done {
+    background: color-mix(in srgb, #388E3C 15%, transparent);
+    color: #388E3C;
   }
 </style>
