@@ -97,7 +97,9 @@ const articleSchema = {
     </header>
 
     <section class="principle-section">
-      <p class="principle-description">{principle.description}</p>
+      {principle.description.split('\n\n').map((para: string) => (
+        <p class="principle-description">{para}</p>
+      ))}
     </section>
 
     {principle.why_it_matters && (
@@ -265,6 +267,10 @@ const articleSchema = {
     line-height: 1.7;
     color: var(--color-text-secondary);
     margin: 0;
+  }
+
+  .principle-description + .principle-description {
+    margin-top: 1rem;
   }
 
   /* Stage grid */
