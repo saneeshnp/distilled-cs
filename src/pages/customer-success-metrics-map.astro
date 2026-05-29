@@ -12,17 +12,6 @@ const rows = frameworkData.metrics_directory.metrics.map(m => ({
   why: m.why_priority as Record<string, string>,
 }));
 
-// Per-stage priority counts for the column distribution bar.
-const countsById: Record<string, { high: number; medium: number; low: number }> = {};
-for (const stage of stages) {
-  const c = { high: 0, medium: 0, low: 0 };
-  for (const r of rows) {
-    const level = r.priorities[stage.id] as 'high' | 'medium' | 'low';
-    if (level in c) c[level]++;
-  }
-  countsById[stage.id] = c;
-}
-
 const categoryLabels: Record<string, string> = {
   revenue: 'Revenue',
   retention: 'Retention',
@@ -97,31 +86,26 @@ const faqSchema = {
       </p>
       <div class="toolbar-controls">
         <div class="control-group">
-          <span class="control-label">Group by category</span>
-          <div class="control-bar" id="group-toggle">
-            <button class="control-btn active" data-group="off" type="button">Off</button>
-            <button class="control-btn" data-group="on" type="button">On</button>
+          <span class="control-label" id="group-label">Group by category</span>
+          <div class="control-bar" id="group-toggle" role="group" aria-labelledby="group-label">
+            <button class="control-btn active" data-group="off" type="button" aria-pressed="true">Off</button>
+            <button class="control-btn" data-group="on" type="button" aria-pressed="false">On</button>
           </div>
         </div>
         <div class="control-group">
-          <span class="control-label">Display</span>
-          <div class="control-bar" id="display-toggle">
-            <button class="control-btn active" data-display="chips" type="button">Chips</button>
-            <button class="control-btn" data-display="heatmap" type="button">Heatmap</button>
+          <span class="control-label" id="display-label">Display</span>
+          <div class="control-bar" id="display-toggle" role="group" aria-labelledby="display-label">
+            <button class="control-btn active" data-display="chips" type="button" aria-pressed="true">Chips</button>
+            <button class="control-btn" data-display="heatmap" type="button" aria-pressed="false">Heatmap</button>
           </div>
         </div>
         <div class="control-group">
-          <span class="control-label">Show priority shifts</span>
-          <div class="control-bar" id="shift-toggle">
-            <button class="control-btn active" data-shift="off" type="button">Off</button>
-            <button class="control-btn" data-shift="on" type="button">On</button>
+          <span class="control-label" id="shift-label">Show priority shifts</span>
+          <div class="control-bar" id="shift-toggle" role="group" aria-labelledby="shift-label">
+            <button class="control-btn active" data-shift="off" type="button" aria-pressed="true">Off</button>
+            <button class="control-btn" data-shift="on" type="button" aria-pressed="false">On</button>
           </div>
         </div>
-      </div>
-      <div class="toolbar-legend">
-        <span class="legend-item"><span class="priority-pill priority-high">high</span> Track and act on it now</span>
-        <span class="legend-item"><span class="priority-pill priority-medium">medium</span> Build toward it</span>
-        <span class="legend-item"><span class="priority-pill priority-low">low</span> Not a focus yet</span>
       </div>
     </div>
     <p class="mode-hint" id="mode-hint" hidden></p>
@@ -131,16 +115,14 @@ const faqSchema = {
       <table class="priority-map">
         <thead>
           <tr>
-            <th scope="col" class="metric-col-head">Metric</th>
+            <th scope="col" class="metric-col-head">
+              <span class="metric-col-label">Metric</span>
+              <span class="metric-col-count">{rows.length} metrics</span>
+            </th>
             {stages.map(stage => (
               <th scope="col" class={`stage-col-head stage-${stage.id}`} data-col={stage.id}>
                 <span class="stage-name">{stage.label}</span>
                 <span class="stage-sub">{stage.subtitle}</span>
-                <span class="count-bar" title={`${countsById[stage.id].high} high · ${countsById[stage.id].medium} medium · ${countsById[stage.id].low} low`} aria-hidden="true">
-                  <span class="count-seg seg-high" style={`flex:${countsById[stage.id].high}`}></span>
-                  <span class="count-seg seg-medium" style={`flex:${countsById[stage.id].medium}`}></span>
-                  <span class="count-seg seg-low" style={`flex:${countsById[stage.id].low}`}></span>
-                </span>
               </th>
             ))}
           </tr>
@@ -366,22 +348,6 @@ const faqSchema = {
     color: var(--color-accent);
   }
 
-  .toolbar-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem 1.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .legend-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-  }
-
   .mode-hint {
     font-size: 0.8125rem;
     color: var(--color-text-muted);
@@ -458,6 +424,20 @@ const faqSchema = {
     vertical-align: middle;
   }
 
+  .metric-col-label {
+    display: block;
+  }
+
+  .metric-col-count {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.6875rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--color-text-muted);
+  }
+
   .metric-cell-inner {
     display: flex;
     align-items: center;
@@ -525,30 +505,24 @@ const faqSchema = {
     margin-top: 0.15rem;
   }
 
-  .count-bar {
-    display: flex;
-    width: 70%;
-    max-width: 7rem;
-    height: 4px;
-    margin: 0.55rem auto 0;
-    border-radius: 9999px;
-    overflow: hidden;
-    background: color-mix(in srgb, var(--color-text-muted) 18%, transparent);
-  }
-
-  .count-seg { height: 100%; }
-  .seg-high { background: var(--color-stage-run); }
-  .seg-medium { background: var(--color-stage-walk); }
-  .seg-low { background: color-mix(in srgb, var(--color-text-muted) 45%, transparent); }
-
   .prio-cell {
     text-align: center;
-    transition: opacity 0.2s ease-out, background 0.2s ease-out;
   }
 
   /* Active column highlight (assessed users) */
   .col-active {
     background: color-mix(in srgb, var(--stage-color, var(--color-accent)) 9%, transparent);
+  }
+
+  /* Row hover: full-row tint to guide the eye across the wide table.
+     Both the sticky metric cell and the priority cells use the same opaque
+     tint so the row highlights instantly and evenly (no fade). Heatmap-shaded
+     cells keep their own background (higher specificity), which is intentional. */
+  @media (hover: hover) {
+    .metric-row:hover .metric-cell,
+    .metric-row:hover .prio-cell {
+      background: color-mix(in srgb, var(--color-text-muted) 8%, var(--color-bg));
+    }
   }
 
   .your-stage-tag {
@@ -579,10 +553,12 @@ const faqSchema = {
   .priority-medium { background: color-mix(in srgb, var(--color-stage-walk) 18%, transparent); color: var(--color-stage-walk); }
   .priority-low { background: color-mix(in srgb, var(--color-text-muted) 10%, transparent); color: var(--color-text-muted); }
 
-  /* Heatmap mode: cell shading carries the intensity, chip becomes plain text */
-  .priority-map.heatmap .prio-cell[data-priority="high"] { background: color-mix(in srgb, var(--color-stage-run) 40%, transparent); }
-  .priority-map.heatmap .prio-cell[data-priority="medium"] { background: color-mix(in srgb, var(--color-stage-walk) 34%, transparent); }
-  .priority-map.heatmap .prio-cell[data-priority="low"] { background: color-mix(in srgb, var(--color-text-muted) 12%, transparent); }
+  /* Heatmap mode: single-hue intensity ramp (low→high = faint→strong) so the
+     table reads as a gradient. Solid fills (mixed with the page bg) keep the
+     steps consistent and stop the active-column tint bleeding through. */
+  .priority-map.heatmap .prio-cell[data-priority="high"] { background: color-mix(in srgb, var(--color-stage-run) 52%, var(--color-bg)); }
+  .priority-map.heatmap .prio-cell[data-priority="medium"] { background: color-mix(in srgb, var(--color-stage-run) 27%, var(--color-bg)); }
+  .priority-map.heatmap .prio-cell[data-priority="low"] { background: color-mix(in srgb, var(--color-stage-run) 8%, var(--color-bg)); }
 
   .priority-map.heatmap .priority-pill {
     background: transparent;
@@ -590,12 +566,26 @@ const faqSchema = {
     padding-inline: 0;
   }
 
-  /* Priority-shift mode: dim the steady cells, spotlight the step-ups */
-  .priority-map.show-shifts .prio-cell { opacity: 0.3; }
-  .priority-map.show-shifts .prio-cell.shift-up { opacity: 1; }
+  /* Priority-shift mode: recede the steady cells, spotlight the step-ups
+     (the stage where each metric first rises). Mutes rather than using
+     opacity, so text stays legible in both display modes. */
   .priority-map.show-shifts .prio-cell.shift-up .priority-pill::after {
     content: ' \2191';
     font-weight: 700;
+  }
+
+  /* Chips + shift: mute steady chips, keep step-up chips at full strength. */
+  .priority-map.show-shifts:not(.heatmap) .prio-cell:not(.shift-up) .priority-pill {
+    background: color-mix(in srgb, var(--color-text-muted) 9%, transparent);
+    color: var(--color-text-muted);
+  }
+
+  /* Heatmap + shift: flatten steady cells so only the step-ups stay shaded. */
+  .priority-map.show-shifts.heatmap .prio-cell:not(.shift-up) {
+    background: var(--color-bg);
+  }
+  .priority-map.show-shifts.heatmap .prio-cell:not(.shift-up) .priority-pill {
+    color: var(--color-text-muted);
   }
 
   /* Group header rows (injected by JS) */
@@ -900,8 +890,12 @@ const faqSchema = {
     const bar = document.getElementById(id);
     bar?.querySelectorAll('.control-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        bar.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+        bar.querySelectorAll('.control-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
         cb(btn.getAttribute(attr) || '');
       });
     });

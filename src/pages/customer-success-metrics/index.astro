@@ -108,7 +108,13 @@ const faqSchema = {
     <div class="page-header">
       <h1 class="page-title">Customer Success Metrics</h1>
       <p class="page-subtitle">The right metrics for your stage. Part of the Execute phase. Track these as you work through your playbooks.</p>
-      <a href="/customer-success-metrics-map/" class="map-link">View the priority map &rarr;</a>
+      <a href="/customer-success-metrics-map/" class="map-link">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M1.5 6.5h13M6 6.5v7" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        View the priority map &rarr;
+      </a>
     </div>
 
     <!-- CTA for non-assessed -->
@@ -259,11 +265,25 @@ const faqSchema = {
   }
 
   .map-link {
-    display: inline-block;
-    margin-top: 0.625rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--color-accent);
+    border-radius: 0.5rem;
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--color-accent);
+    text-decoration: none;
+    transition: all 0.2s ease-out;
+  }
+
+  .map-link:hover {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    transform: translateY(-1px);
   }
 
   /* CTA banner */
