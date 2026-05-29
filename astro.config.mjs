@@ -33,6 +33,11 @@ export default defineConfig({
           item.priority = 0.9;
           item.changefreq = 'monthly';
         }
+        // Metrics priority map: pillar-adjacent reference, monthly.
+        else if (url === 'https://distilledcs.org/customer-success-metrics-map/') {
+          item.priority = 0.9;
+          item.changefreq = 'monthly';
+        }
         // Metric / playbook detail pages: solid priority, monthly.
         else if (
           url.startsWith('https://distilledcs.org/customer-success-metrics/') ||

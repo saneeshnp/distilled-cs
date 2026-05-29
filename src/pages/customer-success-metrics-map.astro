@@ -1,0 +1,547 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import frameworkData from '../data/lean-cs-data.json';
+
+const stages = frameworkData.maturity_stages.stages;
+
+const rows = frameworkData.metrics_directory.metrics.map(m => ({
+  id: m.id,
+  name: m.name,
+  category: m.category,
+  priorities: m.priority_by_stage as Record<string, string>,
+}));
+
+const categoryLabels: Record<string, string> = {
+  revenue: 'Revenue',
+  retention: 'Retention',
+  onboarding: 'Onboarding',
+  health: 'Health',
+  sentiment: 'Sentiment',
+  usage: 'Usage',
+  ai: 'AI & Automation',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://distilledcs.org/' },
+    { '@type': 'ListItem', position: 2, name: 'Customer Success Metrics', item: 'https://distilledcs.org/customer-success-metrics/' },
+    { '@type': 'ListItem', position: 3, name: 'Metrics Priority Map', item: 'https://distilledcs.org/customer-success-metrics-map/' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Customer Success Metrics Priority Map"
+  description="See which customer success metrics matter at each maturity stage. A single map of all 24 metrics with their priority across Crawl, Walk, and Run."
+  structuredData={[breadcrumbSchema]}
+>
+  <div class="container map-page">
+
+    <a href="/customer-success-metrics/" class="back-link">&larr; Back to the metrics directory</a>
+
+    <div class="page-header">
+      <h1 class="page-title">Metrics Priority Map</h1>
+      <p class="page-subtitle">Every metric in one view, with its priority at each maturity stage. Use it to see what to focus on now and what comes next.</p>
+    </div>
+
+    <!-- CTA for non-assessed -->
+    <div class="assess-cta-banner" data-hide-if-assessed>
+      <p>Take the assessment to highlight your stage and sort metrics by what matters most for your team.</p>
+      <a href="/assess/" class="cta-link">Take the Assessment &rarr;</a>
+    </div>
+
+    <!-- Your-stage note for assessed -->
+    <p class="stage-note" data-show-if-assessed style="display:none">
+      Your stage column is highlighted, and metrics are sorted by their priority for your stage.
+    </p>
+
+    <!-- Controls -->
+    <div class="map-controls">
+      <span class="control-label">Group by category</span>
+      <div class="control-bar" id="group-toggle">
+        <button class="control-btn active" data-group="off" type="button">Off</button>
+        <button class="control-btn" data-group="on" type="button">On</button>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="map-legend">
+      <span class="legend-item"><span class="priority-pill priority-high">high</span> Track and act on it now</span>
+      <span class="legend-item"><span class="priority-pill priority-medium">medium</span> Build toward it</span>
+      <span class="legend-item"><span class="priority-pill priority-low">low</span> Not a focus yet</span>
+    </div>
+
+    <!-- Table -->
+    <div class="map-table-wrap">
+      <table class="priority-map">
+        <thead>
+          <tr>
+            <th scope="col" class="metric-col-head">Metric</th>
+            {stages.map(stage => (
+              <th scope="col" class={`stage-col-head stage-${stage.id}`} data-col={stage.id}>
+                <span class="stage-name">{stage.label}</span>
+                <span class="stage-sub">{stage.subtitle}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody id="map-body">
+          {rows.map(row => (
+            <tr class="metric-row" data-category={row.category} data-priorities={JSON.stringify(row.priorities)}>
+              <th scope="row" class="metric-cell">
+                <a href={`/customer-success-metrics/${row.id}/`}>{row.name}</a>
+              </th>
+              {stages.map(stage => (
+                <td class={`prio-cell stage-${stage.id}`} data-col={stage.id}>
+                  <span class={`priority-pill priority-${row.priorities[stage.id]}`}>{row.priorities[stage.id]}</span>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <section class="map-intro">
+      <h2>How to read this map</h2>
+      <p>Priority rises as a team matures. A metric that is low priority at Crawl is often high priority at Run, because the team has the foundations in place to act on it. Reading a row left to right shows how the importance of that metric shifts as the customer success function grows.</p>
+      <p>Two rules cut across every stage. Fewer metrics reviewed with discipline beat many tracked loosely, so start with the high-priority ones for your stage. And benchmarks must match your segment and ARR band. Each metric name links to its detail page, where you will find the formula, segment benchmarks, and common mistakes.</p>
+    </section>
+
+    <section class="pillar-related">
+      <h2>Related topics</h2>
+      <div class="related-grid">
+        <a href="/customer-success-metrics/" class="related-card">
+          <h3>Metrics directory</h3>
+          <p>Browse all 24 metrics with filters by category, role, and stage.</p>
+        </a>
+        <a href="/customer-success-maturity-model/" class="related-card">
+          <h3>Maturity model</h3>
+          <p>The three stages that set priority on each metric.</p>
+        </a>
+        <a href="/customer-success-playbooks/" class="related-card">
+          <h3>Playbooks</h3>
+          <p>Stage-specific plays that move the metrics in this map.</p>
+        </a>
+        <a href="/assess/" class="related-card">
+          <h3>Take the assessment</h3>
+          <p>Get a stage-specific priority list for your team.</p>
+        </a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .map-page {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+  }
+
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .page-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .page-subtitle {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    max-width: 40rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-accent);
+  }
+
+  /* CTA banner */
+  .assess-cta-banner {
+    padding: 1rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .assess-cta-banner p {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+  }
+
+  .cta-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+
+  .stage-note {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  /* Controls */
+  .map-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .control-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-primary);
+  }
+
+  .control-bar {
+    display: inline-flex;
+    gap: 0.5rem;
+  }
+
+  .control-btn {
+    padding: 0.375rem 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+  }
+
+  .control-btn:hover {
+    border-color: var(--color-border-hover);
+    color: var(--color-text-primary);
+  }
+
+  .control-btn.active {
+    border-color: var(--color-accent);
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+  }
+
+  /* Legend */
+  .map-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Table */
+  .map-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    max-width: 60rem;
+  }
+
+  table.priority-map {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 560px;
+    table-layout: fixed;
+  }
+
+  .metric-col-head,
+  .metric-cell { width: 34%; }
+
+  .stage-col-head,
+  .prio-cell { width: 22%; }
+
+  .priority-map th,
+  .priority-map td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+  }
+
+  .priority-map tbody tr:last-child th,
+  .priority-map tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Sticky metric column */
+  .metric-col-head,
+  .metric-cell {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    text-align: left;
+    background: var(--color-bg);
+  }
+
+  .metric-col-head {
+    background: var(--color-surface);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+  }
+
+  .metric-cell {
+    font-weight: 500;
+  }
+
+  .metric-cell a {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    font-size: 0.9375rem;
+  }
+
+  .metric-cell a:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  /* Stage column headers */
+  .stage-col-head {
+    text-align: center;
+    background: var(--color-surface);
+  }
+
+  .stage-name {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--stage-color);
+  }
+
+  .stage-sub {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    margin-top: 0.125rem;
+  }
+
+  .prio-cell {
+    text-align: center;
+  }
+
+  /* Active column highlight (assessed users) */
+  .col-active {
+    background: color-mix(in srgb, var(--stage-color, var(--color-accent)) 9%, transparent);
+  }
+
+  .your-stage-tag {
+    display: inline-block;
+    margin-top: 0.375rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.125rem 0.45rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--stage-color) 18%, transparent);
+    color: var(--stage-color);
+  }
+
+  /* Priority chips */
+  .priority-pill {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .priority-high { background: color-mix(in srgb, var(--color-stage-run) 18%, transparent); color: var(--color-stage-run); }
+  .priority-medium { background: color-mix(in srgb, var(--color-stage-walk) 18%, transparent); color: var(--color-stage-walk); }
+  .priority-low { background: color-mix(in srgb, var(--color-text-muted) 10%, transparent); color: var(--color-text-muted); }
+
+  /* Group header rows (injected by JS) */
+  :global(.priority-map .group-header th) {
+    position: sticky;
+    left: 0;
+    background: var(--color-accent-subtle);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    padding: 0.6rem 1rem;
+    text-align: left;
+  }
+
+  /* Intro + related */
+  .map-intro {
+    max-width: 44rem;
+    margin-top: 3rem;
+  }
+  .map-intro h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.75rem;
+    color: var(--color-text-primary);
+  }
+  .map-intro p {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.875rem;
+  }
+
+  .pillar-related {
+    margin-top: 3.5rem;
+  }
+  .pillar-related h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+  @media (min-width: 640px) {
+    .related-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .related-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  .related-card {
+    padding: 1rem 1.125rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .related-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+    color: inherit;
+  }
+  .related-card h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    margin-bottom: 0.375rem;
+    color: var(--color-text-primary);
+  }
+  .related-card p {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+  }
+</style>
+
+<script>
+  import { isAssessmentCompleted, getScores } from '../scripts/context-manager.js';
+
+  const categoryLabels: Record<string, string> = {
+    revenue: 'Revenue',
+    retention: 'Retention',
+    onboarding: 'Onboarding',
+    health: 'Health',
+    sentiment: 'Sentiment',
+    usage: 'Usage',
+    ai: 'AI & Automation',
+  };
+
+  const body = document.getElementById('map-body');
+  const allRows = body ? [...body.querySelectorAll('.metric-row')] : [];
+  const categoryOrder = [...new Set(allRows.map(r => (r as HTMLElement).dataset.category || ''))];
+
+  const rank: Record<string, number> = { high: 0, medium: 1, low: 2 };
+  let grouping = 'off';
+  let userStage = '';
+
+  function priorityRank(row: Element): number {
+    const p = JSON.parse((row as HTMLElement).dataset.priorities || '{}')[userStage];
+    return rank[p] ?? 3;
+  }
+
+  function sortRows(rows: Element[]): Element[] {
+    if (!userStage) return rows;
+    return [...rows].sort((a, b) => priorityRank(a) - priorityRank(b));
+  }
+
+  function render() {
+    if (!body) return;
+    body.querySelectorAll('.group-header').forEach(h => h.remove());
+
+    if (grouping === 'off') {
+      sortRows(allRows).forEach(r => body.appendChild(r));
+    } else {
+      categoryOrder.forEach(cat => {
+        const rows = allRows.filter(r => (r as HTMLElement).dataset.category === cat);
+        if (!rows.length) return;
+        const header = document.createElement('tr');
+        header.className = 'group-header';
+        header.innerHTML = `<th scope="colgroup" colspan="4">${categoryLabels[cat] || cat}</th>`;
+        body.appendChild(header);
+        sortRows(rows).forEach(r => body.appendChild(r));
+      });
+    }
+  }
+
+  function highlightColumn(stage: string) {
+    document.querySelectorAll(`[data-col="${stage}"]`).forEach(el => el.classList.add('col-active'));
+    const head = document.querySelector(`.stage-col-head[data-col="${stage}"]`);
+    if (head && !head.querySelector('.your-stage-tag')) {
+      head.insertAdjacentHTML('beforeend', '<span class="your-stage-tag">Your stage</span>');
+    }
+  }
+
+  // Group toggle
+  document.getElementById('group-toggle')?.querySelectorAll('.control-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('group-toggle')?.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      grouping = btn.getAttribute('data-group') || 'off';
+      render();
+    });
+  });
+
+  // Contextual enhancement
+  if (isAssessmentCompleted()) {
+    const scores = getScores();
+    if (scores && scores.stage) {
+      userStage = scores.stage;
+      document.querySelectorAll('[data-hide-if-assessed]').forEach(el => (el as HTMLElement).style.display = 'none');
+      document.querySelectorAll('[data-show-if-assessed]').forEach(el => (el as HTMLElement).style.display = '');
+      highlightColumn(userStage);
+    }
+  }
+
+  render();
+</script>
