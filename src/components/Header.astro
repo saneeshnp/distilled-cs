@@ -569,9 +569,14 @@ const navLinks = [
   function updateAssessLink() {
     try {
       if (localStorage.getItem('distilledcs_completed') === 'true') {
+        const onReport = window.location.pathname === '/cs-maturity-report/';
         for (const id of ['nav-assess-link', 'nav-assess-link-mobile']) {
           const el = document.getElementById(id) as HTMLAnchorElement | null;
-          if (el) { el.href = '/cs-maturity-report/'; el.textContent = 'My Report'; }
+          if (el) {
+            el.href = '/cs-maturity-report/';
+            el.textContent = 'My Report';
+            if (onReport) el.classList.add('active');
+          }
         }
       }
     } catch {}
