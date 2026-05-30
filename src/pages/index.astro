@@ -575,6 +575,14 @@ const stageImageAlts: Record<string, string> = {
     text-align: center;
   }
 
+  @media (min-width: 1024px) {
+    .hp-section-stages .hp-section-cta {
+      max-width: 960px;
+      margin-inline: 0;
+      text-align: center;
+    }
+  }
+
   /* ══════════════════════════════════════════
      BUTTONS
      ══════════════════════════════════════════ */
@@ -779,8 +787,9 @@ const stageImageAlts: Record<string, string> = {
   @media (min-width: 1024px) {
     .hp-stages-grid {
       grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
       max-width: 960px;
-      margin-inline: auto;
+      margin-inline: 0;
     }
   }
 
@@ -850,7 +859,7 @@ const stageImageAlts: Record<string, string> = {
     display: block;
     font-family: var(--font-display);
     font-size: 2.375rem;
-    font-weight: 700;
+    font-weight: 400;
     color: var(--stage-color);
     line-height: 1.1;
   }
@@ -966,7 +975,7 @@ const stageImageAlts: Record<string, string> = {
       grid-template-columns: repeat(3, 1fr);
       gap: 1.25rem;
       max-width: 960px;
-      margin: 1.5rem auto 0;
+      margin: 1.5rem 0 0;
       position: relative;
     }
 
