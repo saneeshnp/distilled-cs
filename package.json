@@ -10,7 +10,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node src/scripts/recommendation-engine.test.js && node src/scripts/share-encoder.test.js"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",
