@@ -29,6 +29,11 @@ const stageSubtitles: Record<string, string> = {
   walk: 'Operating system forming',
   run: 'Scaled and measurable',
 };
+const stageImageAlts: Record<string, string> = {
+  crawl: 'Stick figure crawling, representing the Crawl stage of the customer success maturity model, a reactive and foundational phase',
+  walk: 'Stick figure walking, representing the Walk stage of the customer success maturity model, where structure begins to form',
+  run: 'Stick figure running, representing the Run stage of the customer success maturity model, where CS becomes predictive and operationalized',
+};
 
 // Build playbook lookup
 const allPlaybooks: Record<string, any[]> = frameworkData.playbooks as any;
@@ -113,12 +118,24 @@ const articleSchema = {
       <section class="principle-section">
         <h2 class="section-heading">How this shows up across maturity stages</h2>
         <p class="section-lede">The same principle looks different at every stage. Calibrate the expectation to where the team actually is.</p>
-        <div class="stage-grid">
+        <div class="stage-rows">
           {stageOrder.map(stage => (
-            <article class={`stage-card stage-${stage}`}>
-              <div class="stage-card-header">
-                <span class="stage-badge">{stageLabels[stage]}</span>
-                <span class="stage-subtitle">{stageSubtitles[stage]}</span>
+            <article class={`stage-row stage-${stage}`}>
+              <div class="stage-row-head">
+                <div class="stage-row-img">
+                  <img
+                    src={`/images/maturity-stages/cs-maturity-stage-${stage}.png`}
+                    alt={stageImageAlts[stage]}
+                    width="610"
+                    height="404"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div class="stage-row-label">
+                  <span class="stage-badge">{stageLabels[stage]}</span>
+                  <span class="stage-subtitle">{stageSubtitles[stage]}</span>
+                </div>
               </div>
               <p class="stage-body">{principle.stage_manifestation[stage]}</p>
             </article>
@@ -274,44 +291,51 @@ const articleSchema = {
   }
 
   /* Stage grid */
-  .stage-grid {
-    display: grid;
-    grid-template-columns: 1fr;
+  .stage-rows {
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
   }
 
-  @media (min-width: 720px) {
-    .stage-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .stage-card {
+  .stage-row {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
     padding: 1.25rem 1.25rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
   }
 
-  .stage-card::before {
-    content: '';
-    display: block;
-    width: 2.5rem;
-    height: 3px;
-    background: var(--stage-color);
-    border-radius: 2px;
-    flex-shrink: 0;
-    margin-bottom: 0.75rem;
+  .stage-row-head {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
   }
 
-  .stage-card-header {
+  .stage-row-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--stage-color) 10%, var(--color-surface));
     display: flex;
-    align-items: baseline;
-    gap: 0.625rem;
-    margin-bottom: 0.5rem;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .stage-row-img img {
+    width: 72%;
+    height: 72%;
+    object-fit: contain;
+  }
+
+  .stage-row-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.125rem;
   }
 
   .stage-badge {
