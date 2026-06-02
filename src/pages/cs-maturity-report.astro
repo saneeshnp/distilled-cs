@@ -2703,9 +2703,17 @@ const contextualRecs = frameworkData.contextual_recommendations;
     } catch { return ''; }
   }
 
+  // Format the overall maturity score for display, always keeping the
+  // decimal place (e.g. a whole 8 renders as "8.0", not "8"). toDisplayScore
+  // returns a Number, which drops trailing zeros, so re-apply toFixed here.
+  function formatDisplayScore(raw: number, decimals = 1): string {
+    const n = toDisplayScore(raw, decimals);
+    return n == null ? '—' : n.toFixed(decimals);
+  }
+
   // ── Section 1: Header ──
   function renderHeader(data: ReportData, stage: any): string {
-    const score = typeof data.overallScore === 'number' ? toDisplayScore(data.overallScore) : '—';
+    const score = typeof data.overallScore === 'number' ? formatDisplayScore(data.overallScore) : '—';
     return `
       <div class="report-header stage-${data.stage}">
         <div class="report-header-tint" aria-hidden="true"></div>
@@ -2858,7 +2866,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     const domainEntries = Object.entries(data.domainScores || {})
       .sort((a: any, b: any) => b[1] - a[1]);
     if (typeof data.overallScore === 'number' && domainEntries.length >= 2) {
-      const scoreDisplay = toDisplayScore(data.overallScore);
+      const scoreDisplay = formatDisplayScore(data.overallScore);
       const [strongId, strongScore] = domainEntries[0] as [string, number];
       const [weakId,   weakScore]   = domainEntries[domainEntries.length - 1] as [string, number];
       const strongLabel = domainLabels[strongId] || strongId;
@@ -3293,7 +3301,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     if (shareReportUrlInput) shareReportUrlInput.value = reportUrl;
 
     // Suggested social post — uses display score (/10) and stage label
-    const scoreDisplay = toDisplayScore(reportData.overallScore, 1);
+    const scoreDisplay = formatDisplayScore(reportData.overallScore, 1);
     const stageLabel = getStageData(reportData.stage)?.label ?? '';
     const text = `I just took the Distilled CS maturity assessment for my team and scored ${scoreDisplay}/10 — ${stageLabel} stage. Take yours to see where you are on your customer success journey: ${assessUrl}`;
     if (shareScoreTextarea) shareScoreTextarea.value = text;
