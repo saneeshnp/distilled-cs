@@ -78,6 +78,20 @@ const sessionKeys = [
       </div>
     </section>
 
+    <!-- Quick Nav -->
+    <section class="debug-section">
+      <h2 class="section-heading">Jump to Page</h2>
+      <p class="section-desc">Open a context-aware page to see the current state applied.</p>
+      <div class="nav-links">
+        <a class="nav-link" href="/cs-maturity-report/">CS Maturity Report</a>
+        <a class="nav-link" href="/transform/">Transform</a>
+        <a class="nav-link" href="/customer-success-metrics/">Metrics</a>
+        <a class="nav-link" href="/customer-success-maturity-model/">Maturity Model</a>
+        <a class="nav-link" href="/checklist/">Checklist</a>
+        <a class="nav-link" href="/assess/">Assess</a>
+      </div>
+    </section>
+
     <!-- Recommendation Preview -->
     <section class="debug-section">
       <div class="section-heading-row">
@@ -277,6 +291,30 @@ const sessionKeys = [
   .preset-crawl { border-color: var(--color-stage-crawl); color: var(--color-stage-crawl); }
   .preset-walk { border-color: var(--color-stage-walk); color: var(--color-stage-walk); }
   .preset-run { border-color: var(--color-stage-run); color: var(--color-stage-run); }
+  /* Quick nav */
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid var(--color-border-hover);
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    transition: all 0.2s ease-out;
+  }
+
+  .nav-link:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
   /* Key editor */
   .keys-list {
     display: flex;
@@ -654,7 +692,7 @@ const sessionKeys = [
       responses: Object.fromEntries(allQuestionIds.map(id => [id, 1])),
     },
     walk: {
-      profile: { customer_segment: 'seg_midmarket', company_arr: 'arr_5m_20m', cs_team_size: 'team_1_3' },
+      profile: { customer_segment: 'seg_midmarket', company_arr: 'arr_5m_20m', cs_team_size: 'size_1_3' },
       stage: 'walk',
       responses: {
         sc_q1:2, sc_q2:3, sc_q3:2,
@@ -885,6 +923,7 @@ const sessionKeys = [
         showToast('Removed company name');
         refreshState();
         refreshKeyDisplays();
+        renderRecommendationPreview();
       } else {
         showToast('No profile to modify');
       }
@@ -945,6 +984,7 @@ const sessionKeys = [
         if (display) display.style.display = '';
         refreshState();
         refreshKeyDisplays();
+        renderRecommendationPreview();
       } catch (err) {
         showToast('Invalid JSON');
       }
@@ -955,6 +995,7 @@ const sessionKeys = [
       showToast(`Deleted ${key}`);
       refreshState();
       refreshKeyDisplays();
+      renderRecommendationPreview();
     }
 
     if (action === 'delete-session') {
@@ -973,6 +1014,7 @@ const sessionKeys = [
     showToast('All state cleared');
     refreshState();
     refreshKeyDisplays();
+    renderRecommendationPreview();
   });
 
   document.getElementById('action-export')?.addEventListener('click', () => {
@@ -1000,6 +1042,7 @@ const sessionKeys = [
       showToast('State imported');
       refreshState();
       refreshKeyDisplays();
+      renderRecommendationPreview();
     } catch {
       showToast('Failed to import. Check clipboard has valid JSON.');
     }
