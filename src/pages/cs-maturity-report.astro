@@ -1524,11 +1524,22 @@ const contextualRecs = frameworkData.contextual_recommendations;
   }
 
   .report-strength-item {
-    padding: 0.875rem 1.25rem;
+    display: flex;
+    align-items: stretch;
+    gap: 0.875rem;
+    padding: 1.25rem;
     background: var(--color-accent-subtle);
     border: 1px solid var(--color-border);
-    border-left: 3px solid var(--color-accent);
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
+  }
+
+  .report-strength-item::before {
+    content: '';
+    display: block;
+    width: 3px;
+    background: var(--color-accent);
+    border-radius: 2px;
+    flex-shrink: 0;
   }
 
   .report-strength-body {
