@@ -25,7 +25,8 @@
       },
       "related_playbooks": [
         "crawl-onboarding-program",
-        "walk-qbr-ebr-cadence"
+        "walk-qbr-ebr-cadence",
+        "walk-cross-functional-alignment"
       ],
       "related_metrics": [
         "nrr",
@@ -87,7 +88,8 @@
       "related_playbooks": [
         "walk-health-scoring",
         "walk-ai-health-scoring",
-        "run-predictive-churn"
+        "run-predictive-churn",
+        "walk-renewal-save-motion"
       ],
       "related_metrics": [
         "health_score",
@@ -147,7 +149,8 @@
       "related_playbooks": [
         "walk-qbr-ebr-cadence",
         "run-expansion-motion",
-        "run-cs-revenue-strategy"
+        "run-cs-revenue-strategy",
+        "walk-renewal-save-motion"
       ],
       "related_metrics": [
         "time_to_value",
@@ -177,7 +180,8 @@
       "related_playbooks": [
         "crawl-customer-segmentation",
         "walk-lifecycle-journey-maps",
-        "run-ai-governance"
+        "run-ai-governance",
+        "walk-cross-functional-alignment"
       ],
       "related_metrics": [
         "nrr",
@@ -3697,6 +3701,65 @@
           "Ignoring new customers. Predictive models need tenure to work, so new accounts should still use rule-based scoring as a baseline"
         ],
         "estimated_duration": "6–10 weeks"
+      },
+      {
+        "id": "walk-renewal-save-motion",
+        "title": "Build a Renewal and At-Risk Save Motion",
+        "objective": "Build a forecasted renewal process and a defined save motion that gives every at-risk account a path back to healthy.",
+        "why": "By the walk stage, your team can see which accounts are at risk but often has no agreed process for acting on that signal. Renewals get worked reactively in the final weeks, and saves depend on whichever CSM happens to notice. A forecasted renewal motion gives at-risk accounts a defined recovery path and turns renewals from last-minute negotiations into predictable outcomes.",
+        "steps": [
+          "Build a renewal forecast that lists every account by renewal date, current health, and a likelihood call (commit, at-risk, churn), updated monthly",
+          "Set a renewal checkpoint timeline by tier: start renewal work 120 days out for enterprise, 90 for mid-market, 60 for the rest",
+          "Map each health tier to a defined action: green accounts follow a standard renewal path, yellow accounts get an intervention plan, red accounts trigger an escalation",
+          "Write the save play for at-risk accounts: confirm the root cause, rebuild the value case with usage and outcome data, then agree a recovery plan with the customer",
+          "Define escalation paths and owners: when an account turns red, who is pulled in (manager, executive sponsor, product) and within what timeframe",
+          "Re-engage the executive sponsor on at-risk accounts before the renewal window opens, not during it",
+          "Document every save and loss with the reason, so patterns feed back into onboarding, product, and segmentation",
+          "Review the renewal forecast in a weekly meeting, the same way sales reviews its pipeline"
+        ],
+        "metrics_to_watch": [
+          "grr",
+          "logo_retention",
+          "health_score",
+          "escalation_rate",
+          "nrr"
+        ],
+        "common_pitfalls": [
+          "Treating renewal as a date instead of a process. By the time the contract is up, the outcome is usually already decided",
+          "Acting only when an account turns red. The cheapest save is the intervention you make while the account is still yellow",
+          "Running saves without the economic buyer. CSM-to-champion conversations rarely reverse a churn decision made above them",
+          "Not recording why accounts churn or get saved. Without the pattern, you keep fixing symptoms instead of causes"
+        ],
+        "estimated_duration": "4–6 weeks"
+      },
+      {
+        "id": "walk-cross-functional-alignment",
+        "title": "Build the CS Cross-Functional Operating Model",
+        "objective": "Define how CS works with Sales, Product, and Support through shared handoffs, feedback loops, and escalation paths.",
+        "why": "By the walk stage, CS is an established function, but its connections to Sales, Product, and Support usually run on personal relationships rather than process. Leads get handed off with missing context, customer feedback disappears into Product without a loop back, and escalations move at the speed of who knows whom. A defined operating model makes these connections repeatable, so the customer experience does not depend on which colleagues happen to talk to each other.",
+        "steps": [
+          "Define the Sales-to-CS handoff: the criteria for transfer, the information passed (goals, success criteria, stakeholders), and the timeframe for first CS contact",
+          "Define the CS-to-Support escalation path: when CS escalates, what context is attached, and the response expectations by severity",
+          "Build the Product feedback loop: a single intake for customer feedback, a way to weight it by account impact, and a regular readout to CS on what shipped",
+          "Agree shared definitions across teams: what counts as onboarded, at-risk, a qualified expansion, and a churn",
+          "Set shared metrics and light SLAs at each handoff, so every team knows what it owns and what good looks like",
+          "Clarify who owns the renewal and the expansion conversation between CS and Sales, by segment, and write it down",
+          "Run a recurring cross-functional sync with a standing agenda: at-risk accounts, expansion pipeline, and recurring product blockers",
+          "Assign a single owner for the operating model so it stays maintained as teams and processes change"
+        ],
+        "metrics_to_watch": [
+          "escalation_rate",
+          "csat",
+          "nps",
+          "time_to_value"
+        ],
+        "common_pitfalls": [
+          "Letting alignment depend on relationships. When a key person leaves, an undocumented process leaves with them",
+          "Sending feedback into Product with no loop back. CSMs stop submitting it once they see nothing happen",
+          "Leaving renewal and expansion ownership ambiguous between CS and Sales. The ambiguity gets resolved in the customer's inbox, badly",
+          "Holding the cross-functional sync without making decisions. A meeting that only shares status adds cost without changing outcomes"
+        ],
+        "estimated_duration": "4–6 weeks"
       }
     ],
     "run": [
