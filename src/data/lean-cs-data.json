@@ -121,7 +121,8 @@
       "related_playbooks": [
         "crawl-customer-segmentation",
         "run-digital-engagement",
-        "run-expansion-motion"
+        "run-expansion-motion",
+        "walk-team-capacity"
       ],
       "related_metrics": [
         "nrr",
@@ -185,7 +186,8 @@
         "crawl-customer-segmentation",
         "walk-lifecycle-journey-maps",
         "run-ai-governance",
-        "walk-cross-functional-alignment"
+        "walk-cross-functional-alignment",
+        "walk-team-capacity"
       ],
       "related_metrics": [
         "nrr",
@@ -3739,7 +3741,7 @@
       {
         "id": "walk-cross-functional-alignment",
         "title": "Build the CS Cross-Functional Operating Model",
-        "objective": "Define how CS works with Sales, Product, and Support through shared handoffs, feedback loops, and escalation paths.",
+        "objective": "Define how customer success works with Sales, Product, and Support through shared handoffs, feedback loops, and escalation paths.",
         "why": "By the walk stage, CS is an established function, but its connections to Sales, Product, and Support usually run on personal relationships rather than process. Leads get handed off with missing context, customer feedback disappears into Product without a loop back, and escalations move at the speed of who knows whom. A defined operating model makes these connections repeatable, so the customer experience does not depend on which colleagues happen to talk to each other.",
         "steps": [
           "Define the Sales-to-CS handoff: the criteria for transfer, the information passed (goals, success criteria, stakeholders), and the timeframe for first CS contact",
@@ -3820,6 +3822,34 @@
           "Treating adoption as an onboarding task that ends at go-live. Adoption is a continuous motion, not a milestone",
           "Driving breadth over depth. Customers who use one feature deeply retain better than those who sample many shallowly",
           "Running the same play for every segment. The long tail needs digital plays, not CSM time you cannot scale"
+        ],
+        "estimated_duration": "4–6 weeks"
+      },
+      {
+        "id": "walk-team-capacity",
+        "title": "Design Your CS Team Structure and Capacity Model",
+        "objective": "Build a customer success team structure and capacity model that matches coverage to account value instead of dividing accounts evenly.",
+        "why": "By the walk stage, the team has usually grown by adding CSMs reactively, so books of business are uneven and the coverage an account gets depends more on who was hired when than on what the account is worth. A capacity model ties headcount and coverage to segments and real workload, so high-value accounts are not under-served and CSMs are not quietly underwater. It also turns hiring from a panic into a planned decision.",
+        "steps": [
+          "Define the coverage model per segment: high-touch, mid-touch, and tech-touch, and what each segment actually gets",
+          "Estimate the workload of an account by segment (onboarding load, touch cadence, complexity), not just its ARR",
+          "Set a target capacity per CSM by segment (accounts or ARR per CSM) based on that workload, and write down the assumptions",
+          "Compare current books of business against the target and find the over-loaded and under-loaded CSMs",
+          "Rebalance assignments so coverage matches account value, and define how new accounts get routed",
+          "Define the roles you need beyond the CSM: onboarding specialists, CS Ops, renewals, and scaled or digital coverage, and when each is justified",
+          "Build a hiring trigger: the leading signals (segment growth, capacity utilization, pipeline) that say it is time to add a CSM",
+          "Review capacity each quarter as the book grows, and adjust the ratios with evidence rather than gut feel"
+        ],
+        "metrics_to_watch": [
+          "grr",
+          "nrr",
+          "csat"
+        ],
+        "common_pitfalls": [
+          "Sizing books by account count alone. A CSM with 30 complex accounts can be busier than one with 80 simple ones",
+          "Setting one CSM ratio for the whole base. Enterprise and tech-touch coverage need very different ratios",
+          "Hiring only once CSMs are already underwater. By then retention has usually slipped, which is the expensive way to learn you were short-staffed",
+          "Treating the model as fixed. As segments and product complexity change, the ratios that worked last year quietly stop working"
         ],
         "estimated_duration": "4–6 weeks"
       }
