@@ -80,11 +80,11 @@ Distilled CS adapts to your context. When you take the assessment, you provide y
 
 ## Strategy Playbooks
 
-The framework includes **14 strategy playbooks** across three maturity stages, covering the highest-leverage moves for each stage of growth:
+The framework includes **19 strategy playbooks** across three maturity stages, covering the highest-leverage moves for each stage of growth:
 
 **Crawl stage** (4 playbooks): Establish a retention baseline, build your first customer segmentation, create a basic onboarding program, and set up foundational CS processes
 
-**Walk stage** (4 playbooks): Implement health scoring, build lifecycle journey maps, operationalize QBR/EBR cadence, and introduce proactive risk management
+**Walk stage** (9 playbooks): Implement health scoring, build lifecycle journey maps, operationalize QBR/EBR cadence, pilot predictive health scoring, build a renewal and at-risk save motion, build the CS cross-functional operating model, stand up a voice of customer program, drive product adoption, and design your CS team structure and capacity model
 
 **Run stage** (6 playbooks): Scale with digital-led engagement, build predictive churn models, formalize expansion motion, operationalize AI-assisted workflows, and drive CS-led revenue strategy
 

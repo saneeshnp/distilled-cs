@@ -152,6 +152,8 @@ composePlaybookRecommendations(profile, responses, stage, allPlaybooks)
 composeMetricPriorities(profile, responses, stage, allMetrics)
 ```
 
+> **Known behavior — uncapped current-stage playbook list (revisit).** `composePlaybookRecommendations` returns `currentStage = allPlaybooks[stage]` with no cap, and `renderPlaybooks` maps the full list. When a stage gains playbooks, the report's "Recommended Playbooks" section grows with it. After the June 2026 playbook expansion, Walk holds 9 playbooks, so a Walk user's report shows 9 current-stage cards (and a Crawl user's "Coming Next" → Walk also shows 9). This is acceptable for now. If the section gets unwieldy, revisit: cap to the top N by weakest-domain relevance with a "see all playbooks" link. Any cap change touches `recommendation-engine.js` and is covered by `recommendation-engine.test.js`.
+
 ### How composition works
 
 - Each question option in `lean-cs-data.json` carries optional `insight` (≤120 chars, "what you revealed by picking this") and `next_step` (≤200 chars, "what to do next").
