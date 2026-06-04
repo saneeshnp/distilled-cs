@@ -35,6 +35,7 @@
       "title": "CS Metrics Map",
       "description": "Show metric priority across all maturity stages in one view.",
       "status": "shipped",
+      "pageUrl": "/customer-success-metrics-map/",
       "links": [
         { "label": "V1", "url": "https://github.com/saneeshnp/distilled-cs/commit/3ce50bb77e6495a5fa175e1d1b956cd44b6125be" },
         { "label": "V2", "url": "https://github.com/saneeshnp/distilled-cs/commit/d434ccc0f0c9beb594f617a6ae62d84290d65484" },

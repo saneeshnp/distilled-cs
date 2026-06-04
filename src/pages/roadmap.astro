@@ -2,6 +2,16 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import roadmapData from '../data/roadmap.json';
 const lastUpdated = 'June 2026';
+const lastUpdatedISO = '2026-06';
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://distilledcs.org/' },
+    { '@type': 'ListItem', position: 2, name: 'Roadmap', item: 'https://distilledcs.org/roadmap/' },
+  ],
+};
 
 const statusMeta: Record<string, { label: string; className: string }> = {
   planned: { label: 'Planned', className: 'status-planned' },
@@ -15,6 +25,7 @@ type RoadmapItem = {
   description: string;
   status: string;
   note?: string;
+  pageUrl?: string;
   links?: { label: string; url: string }[];
 };
 
@@ -26,15 +37,16 @@ const shippedItems = items.filter((i) => i.status === 'shipped');
 <BaseLayout
   title="Roadmap"
   description="What we're building next for the Distilled CS framework, and why. We share our direction openly so CS teams can follow along and help shape what gets built."
+  structuredData={[breadcrumbSchema]}
 >
 
   <div class="container roadmap-page">
 
     <header class="page-header">
-      <p class="eyebrow">Last updated: {lastUpdated}</p>
+      <p class="eyebrow">Last updated: <time datetime={lastUpdatedISO}>{lastUpdated}</time></p>
       <h1 class="page-title">Distilled CS Roadmap</h1>
       <p class="page-subtitle">
-        We believe in being open about what we're building and why. This page is where we share what's coming next, so the people using this framework can follow along, push back, and help shape what gets built.
+        We believe in being open about what we're building and why. This page is where we share what's coming next, so customer success practitioners using this framework can follow along, push back, and help shape what gets built.
       </p>
     </header>
 
@@ -47,15 +59,15 @@ const shippedItems = items.filter((i) => i.status === 'shipped');
         </p>
         <div class="roadmap-grid">
           {buildingItems.map((item) => (
-            <article class="roadmap-card">
+            <article class={`roadmap-card accent-${item.status}`}>
               <div class="roadmap-card-head">
+                <h3 class="roadmap-card-title">{item.title}</h3>
                 <span class={`status ${statusMeta[item.status]?.className ?? 'status-planned'}`}>
                   {statusMeta[item.status]?.label ?? item.status}
                 </span>
-                {item.note && <span class="roadmap-note">{item.note}</span>}
               </div>
-              <h3 class="roadmap-card-title">{item.title}</h3>
               <p class="roadmap-card-desc">{item.description}</p>
+              {item.note && <p class="roadmap-note">{item.note}</p>}
             </article>
           ))}
         </div>
@@ -68,14 +80,17 @@ const shippedItems = items.filter((i) => i.status === 'shipped');
         </p>
         <div class="roadmap-grid">
           {shippedItems.map((item) => (
-            <article class="roadmap-card">
+            <article class={`roadmap-card accent-${item.status}`}>
               <div class="roadmap-card-head">
+                <h3 class="roadmap-card-title">{item.title}</h3>
                 <span class={`status ${statusMeta[item.status]?.className ?? 'status-done'}`}>
                   {statusMeta[item.status]?.label ?? item.status}
                 </span>
               </div>
-              <h3 class="roadmap-card-title">{item.title}</h3>
               <p class="roadmap-card-desc">{item.description}</p>
+              {item.pageUrl && (
+                <a class="roadmap-card-cta" href={item.pageUrl}>View it on the site →</a>
+              )}
               {item.links && item.links.length > 0 && (
                 <div class="roadmap-card-links">
                   {item.links.map((link) => (
@@ -189,6 +204,7 @@ const shippedItems = items.filter((i) => i.status === 'shipped');
   }
 
   .roadmap-card {
+    --card-accent: var(--color-accent);
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
@@ -199,22 +215,42 @@ const shippedItems = items.filter((i) => i.status === 'shipped');
     transition: border-color 0.2s ease-out, transform 0.2s ease-out;
   }
 
+  .roadmap-card::before {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 3px;
+    background: var(--card-accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
   .roadmap-card:hover {
     border-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
     transform: translateY(-2px);
   }
 
+  .accent-planned { --card-accent: #F57C00; }
+  .accent-in-progress { --card-accent: var(--color-accent); }
+  .accent-exploring { --card-accent: var(--color-text-muted); }
+  .accent-shipped { --card-accent: #388E3C; }
+
   .roadmap-card-head {
     display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .roadmap-card-head .status {
+    flex-shrink: 0;
   }
 
   .roadmap-note {
     font-size: 0.75rem;
     color: var(--color-text-muted);
     font-style: italic;
+    margin: 0;
   }
 
   .roadmap-card-title {
@@ -230,6 +266,20 @@ const shippedItems = items.filter((i) => i.status === 'shipped');
     color: var(--color-text-secondary);
     line-height: 1.6;
     margin: 0;
+  }
+
+  .roadmap-card-cta {
+    align-self: flex-start;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-decoration: none;
+    margin-top: 0.25rem;
+  }
+
+  .roadmap-card-cta:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .roadmap-card-links {
