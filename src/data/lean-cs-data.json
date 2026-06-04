@@ -26,7 +26,8 @@
       "related_playbooks": [
         "crawl-onboarding-program",
         "walk-qbr-ebr-cadence",
-        "walk-cross-functional-alignment"
+        "walk-cross-functional-alignment",
+        "walk-voice-of-customer"
       ],
       "related_metrics": [
         "nrr",
@@ -89,7 +90,8 @@
         "walk-health-scoring",
         "walk-ai-health-scoring",
         "run-predictive-churn",
-        "walk-renewal-save-motion"
+        "walk-renewal-save-motion",
+        "walk-drive-adoption"
       ],
       "related_metrics": [
         "health_score",
@@ -150,7 +152,9 @@
         "walk-qbr-ebr-cadence",
         "run-expansion-motion",
         "run-cs-revenue-strategy",
-        "walk-renewal-save-motion"
+        "walk-renewal-save-motion",
+        "walk-voice-of-customer",
+        "walk-drive-adoption"
       ],
       "related_metrics": [
         "time_to_value",
@@ -3758,6 +3762,64 @@
           "Sending feedback into Product with no loop back. CSMs stop submitting it once they see nothing happen",
           "Leaving renewal and expansion ownership ambiguous between CS and Sales. The ambiguity gets resolved in the customer's inbox, badly",
           "Holding the cross-functional sync without making decisions. A meeting that only shares status adds cost without changing outcomes"
+        ],
+        "estimated_duration": "4–6 weeks"
+      },
+      {
+        "id": "walk-voice-of-customer",
+        "title": "Stand Up a Voice of Customer Program",
+        "objective": "Build a repeatable way to collect customer feedback, route it to the right teams, and close the loop with customers.",
+        "why": "By the walk stage, you are likely collecting NPS or CSAT, but the responses sit in a spreadsheet and rarely change anything. Feedback arrives through surveys, support tickets, QBRs, and churn calls, with no shared place to see the themes. A Voice of Customer program turns scattered signals into a ranked list of what to fix, and shows customers that telling you something leads to a response.",
+        "steps": [
+          "Inventory the feedback you already collect (surveys, support tickets, QBR notes, churn reasons) and find the gaps",
+          "Choose your core instruments and cadence: relationship NPS twice a year, transactional CSAT after key interactions, CES after onboarding",
+          "Standardize how feedback is tagged and stored so themes can be counted, not just read",
+          "Define routing: who owns acting on detractors, who owns product requests, and who owns pricing or packaging signals",
+          "Set a close-the-loop standard: every detractor gets a follow-up within a defined window, and the customer hears what changed",
+          "Build a monthly readout of top themes for product, support, and leadership, weighted by account impact",
+          "Track response rates and follow-up completion, not just the score, so the program stays honest",
+          "Each quarter, review which themes led to actual changes and report that back to customers"
+        ],
+        "metrics_to_watch": [
+          "nps",
+          "csat",
+          "ces",
+          "product_adoption_depth"
+        ],
+        "common_pitfalls": [
+          "Collecting scores without closing the loop. A survey that gets no follow-up teaches customers their feedback is ignored",
+          "Treating NPS as a number to hit rather than a list of accounts to act on. The verbatims matter more than the score",
+          "Routing all feedback to product with no prioritization. Volume without account weighting buries the signals that affect revenue",
+          "Surveying too often. Fatigue lowers response rates and skews who bothers to answer"
+        ],
+        "estimated_duration": "3–5 weeks"
+      },
+      {
+        "id": "walk-drive-adoption",
+        "title": "Drive Product Adoption After Onboarding",
+        "objective": "Build a proactive motion that moves customers from initial onboarding to deep, habitual product use.",
+        "why": "Walk-stage teams get customers to first value during onboarding, then lose momentum. Usage plateaus, accounts settle into a shallow set of features, and the gap between onboarding and renewal becomes where silent churn starts. A deliberate adoption motion keeps customers progressing toward the usage that actually predicts retention and expansion, instead of hoping onboarding was enough.",
+        "steps": [
+          "Define what adopted means for your product: the specific features and usage frequency that correlate with retention and expansion",
+          "Map the gap between onboarding completion and your adoption definition for each segment",
+          "Identify the two or three behaviors that most predict long-term retention, and make those the focus",
+          "Build adoption plays for common gaps: an in-app nudge for an unused core feature, a CSM outreach when usage drops, a use-case workshop for stalled teams",
+          "Instrument adoption signals in your CS platform so a stall triggers an action, not just a dashboard entry",
+          "Tie adoption milestones to the lifecycle journey so the next play is always defined",
+          "Segment the motion: high-touch CSM plays for strategic accounts, digital and in-app plays for the long tail",
+          "Review adoption depth by cohort each quarter and feed the weak spots back to onboarding and product"
+        ],
+        "metrics_to_watch": [
+          "adoption_rate",
+          "product_adoption_depth",
+          "stickiness_ratio",
+          "time_to_value"
+        ],
+        "common_pitfalls": [
+          "Measuring logins instead of meaningful usage. An account can log in daily and still get no value",
+          "Treating adoption as an onboarding task that ends at go-live. Adoption is a continuous motion, not a milestone",
+          "Driving breadth over depth. Customers who use one feature deeply retain better than those who sample many shallowly",
+          "Running the same play for every segment. The long tail needs digital plays, not CSM time you cannot scale"
         ],
         "estimated_duration": "4–6 weeks"
       }
