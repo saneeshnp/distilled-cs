@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-const lastUpdated = 'May 2026';
+const lastUpdated = 'June 2026';
 ---
 
 <BaseLayout
@@ -41,14 +41,63 @@ const lastUpdated = 'May 2026';
             </thead>
             <tbody>
               <tr>
-                <td>CS Metrics Map: show metric priority across all maturity stages in one view</td>
+                <td>Re-assessment reminder: download a calendar invite to re-take the assessment in 90 days and keep the improvement loop moving</td>
                 <td><span class="status status-planned">Planned</span></td>
-                <td><a href="https://github.com/saneeshnp/distilled-cs/issues/19" target="_blank" rel="noopener noreferrer">#19</a></td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>Site-wide search: find any metric, playbook, principle, or glossary term from a single search box</td>
+                <td><span class="status status-planned">Planned</span></td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>Resume an in-progress assessment: pick up where you left off instead of starting the questionnaire over</td>
+                <td><span class="status status-planned">Planned</span></td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>Gap-to-next-stage view: a visual map of the capability gaps between your current stage and the next, and the playbooks that close them</td>
+                <td><span class="status status-exploring">Exploring</span></td>
+                <td>Concept stage</td>
               </tr>
               <tr>
                 <td>Anonymous CS score submission: optionally share your maturity score, industry, and company type to contribute to aggregate industry benchmark data</td>
                 <td><span class="status status-planned">Planned</span></td>
                 <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="content-section">
+        <h2>What we've shipped</h2>
+        <p>
+          Items that have moved from the plan into the live framework. We keep them here so the history of the framework stays visible.
+        </p>
+        <div class="table-wrapper">
+          <table class="roadmap-table">
+            <colgroup>
+              <col style="width: 60%">
+              <col style="width: 20%">
+              <col style="width: 20%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Status</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CS Metrics Map: show metric priority across all maturity stages in one view</td>
+                <td><span class="status status-done">Shipped</span></td>
+                <td>
+                  <a href="https://github.com/saneeshnp/distilled-cs/commit/3ce50bb77e6495a5fa175e1d1b956cd44b6125be" target="_blank" rel="noopener noreferrer">V1</a>,
+                  <a href="https://github.com/saneeshnp/distilled-cs/commit/d434ccc0f0c9beb594f617a6ae62d84290d65484" target="_blank" rel="noopener noreferrer">V2</a>,
+                  <a href="https://github.com/saneeshnp/distilled-cs/commit/55c1715c48b25f85002a5720de8c7a54de6408d4" target="_blank" rel="noopener noreferrer">V3</a>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -210,6 +259,11 @@ const lastUpdated = 'May 2026';
   .status-in-progress {
     background: color-mix(in srgb, #F57C00 15%, transparent);
     color: #F57C00;
+  }
+
+  .status-exploring {
+    background: color-mix(in srgb, var(--color-text-muted) 15%, transparent);
+    color: var(--color-text-secondary);
   }
 
   .status-done {
