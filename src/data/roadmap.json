@@ -1,0 +1,45 @@
+{
+  "items": [
+    {
+      "title": "Re-assessment reminder",
+      "description": "Download a calendar invite to re-take the assessment in 90 days and keep the improvement loop moving.",
+      "status": "planned",
+      "links": []
+    },
+    {
+      "title": "Site-wide search",
+      "description": "Find any metric, playbook, principle, or glossary term from a single search box.",
+      "status": "planned",
+      "links": []
+    },
+    {
+      "title": "Resume an in-progress assessment",
+      "description": "Pick up where you left off instead of starting the questionnaire over.",
+      "status": "planned",
+      "links": []
+    },
+    {
+      "title": "Gap-to-next-stage view",
+      "description": "A visual map of the capability gaps between your current stage and the next, and the playbooks that close them.",
+      "status": "exploring",
+      "note": "Concept stage",
+      "links": []
+    },
+    {
+      "title": "Anonymous CS score submission",
+      "description": "Optionally share your maturity score, industry, and company type to contribute to aggregate industry benchmark data.",
+      "status": "planned",
+      "links": []
+    },
+    {
+      "title": "CS Metrics Map",
+      "description": "Show metric priority across all maturity stages in one view.",
+      "status": "shipped",
+      "links": [
+        { "label": "V1", "url": "https://github.com/saneeshnp/distilled-cs/commit/3ce50bb77e6495a5fa175e1d1b956cd44b6125be" },
+        { "label": "V2", "url": "https://github.com/saneeshnp/distilled-cs/commit/d434ccc0f0c9beb594f617a6ae62d84290d65484" },
+        { "label": "V3", "url": "https://github.com/saneeshnp/distilled-cs/commit/55c1715c48b25f85002a5720de8c7a54de6408d4" }
+      ]
+    }
+  ]
+}
