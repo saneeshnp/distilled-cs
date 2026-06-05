@@ -104,15 +104,18 @@
     gap: 0.625rem;
     padding: 0.5rem 0.875rem;
     background: var(--color-surface);
+    /* Border stays subtle in every state — focus is communicated by the soft
+       outer halo (box-shadow) rather than by recoloring this inner line.
+       That keeps the rounded field looking like a single floating pill instead
+       of a halo + accent rectangle. */
     border: 1px solid var(--color-border);
-    border-radius: 0.625rem;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    border-radius: 0.875rem;
+    transition: box-shadow 0.15s ease, background-color 0.15s ease;
   }
 
   .search-field:focus-within {
-    border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-border));
     background: var(--color-bg);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 18%, transparent);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-accent) 16%, transparent);
   }
 
   .search-form-icon {
@@ -134,6 +137,17 @@
     font-family: var(--font-body);
     font-size: 1rem;
     padding: 0.25rem 0;
+  }
+
+  /* global.css applies a site-wide `:focus-visible { outline: 2px solid accent }`
+     for accessibility. The search field's wrapper already paints a clear focus
+     halo around the whole row, so the per-input outline would just double up
+     as a hard rectangle inside the rounded pill. Suppress it for this input
+     only; keyboard users still see the halo. */
+  .search-input:focus,
+  .search-input:focus-visible {
+    outline: none;
+    box-shadow: none;
   }
 
   .search-input::placeholder {
