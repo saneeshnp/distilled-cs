@@ -291,10 +291,24 @@
     .search-modal {
       width: 100vw;
       max-width: 100vw;
-      max-height: 100vh;
-      height: 100vh;
+      /* Use dvh (dynamic viewport height) so the modal matches the visible
+         viewport on mobile Chromium browsers. With plain `vh`, the modal
+         sizes to the LARGEST viewport (URL bar hidden), so when the URL
+         bar is showing the top of the dialog slides under it. dvh tracks
+         the current visible area as the browser chrome shows/hides.
+         Chrome 108+ / Safari 15.4+ — gracefully no-ops on older versions. */
+      max-height: 100dvh;
+      height: 100dvh;
       border-radius: 0;
       border: none;
+    }
+
+    .search-modal-inner {
+      /* Respect notch/cutout safe areas so the search input isn't pushed
+         under the status bar on devices with display cutouts. No-op on
+         devices without an inset. */
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     /* Keyboard-only affordances; meaningless on touch. */
