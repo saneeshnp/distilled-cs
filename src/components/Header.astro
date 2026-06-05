@@ -123,10 +123,33 @@ const navLinks = [
         </li>
       </ul>
       <div class="stage-badge" id="nav-stage-badge" style="display:none;" aria-label="Your maturity stage"></div>
+      <button
+        type="button"
+        class="search-trigger"
+        data-open-search
+        aria-label="Search the site"
+        title="Search (⌘K)"
+      >
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="7" cy="7" r="5"></circle>
+          <path d="m10.5 10.5 3 3"></path>
+        </svg>
+      </button>
       <ThemeToggle />
     </nav>
 
     <div class="mobile-header-actions">
+      <button
+        type="button"
+        class="search-trigger"
+        data-open-search
+        aria-label="Search the site"
+      >
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="7" cy="7" r="5"></circle>
+          <path d="m10.5 10.5 3 3"></path>
+        </svg>
+      </button>
       <ThemeToggle />
       <button
         class="mobile-toggle"
@@ -390,6 +413,41 @@ const navLinks = [
      global.css so it flips with the theme. Scoped rule only adds nav spacing. */
   #nav-stage-badge {
     margin-left: 0.75rem;
+  }
+
+  .search-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-left: 0.5rem;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: color 0.2s ease-out, background-color 0.2s ease-out, border-color 0.2s ease-out;
+  }
+
+  .search-trigger:hover {
+    color: var(--color-accent);
+    border-color: var(--color-border-hover);
+    background-color: var(--color-surface-hover);
+  }
+
+  .search-trigger:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  @media (pointer: coarse) {
+    .search-trigger {
+      width: 2.75rem;
+      height: 2.75rem;
+      min-width: 2.75rem;
+    }
   }
 
   /* Mobile header actions: theme toggle + hamburger on small screens */

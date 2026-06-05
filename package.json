@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
     "test": "node src/scripts/recommendation-engine.test.js && node src/scripts/share-encoder.test.js"
@@ -20,6 +21,7 @@
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
-    "@playform/compress": "0.2.3"
+    "@playform/compress": "0.2.3",
+    "pagefind": "^1.5.2"
   }
 }
