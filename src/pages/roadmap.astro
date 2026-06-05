@@ -1,8 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import roadmapData from '../data/roadmap.json';
-const lastUpdated = 'June 2026';
-const lastUpdatedISO = '2026-06';
 
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -26,12 +24,27 @@ type RoadmapItem = {
   status: string;
   note?: string;
   pageUrl?: string;
+  shipped?: string;
   links?: { label: string; url: string }[];
 };
 
 const items = roadmapData.items as RoadmapItem[];
 const buildingItems = items.filter((i) => i.status !== 'shipped');
-const shippedItems = items.filter((i) => i.status === 'shipped');
+const shippedItems = items
+  .filter((i) => i.status === 'shipped')
+  // Most recently shipped first; items without a date sink to the bottom.
+  .sort((a, b) => (b.shipped ?? '').localeCompare(a.shipped ?? ''));
+
+// Format an ISO date (YYYY-MM-DD or YYYY-MM) as "Jun 2026" for display.
+function formatShippedDate(iso?: string): string | null {
+  if (!iso) return null;
+  const d = new Date(iso + 'T00:00:00Z');
+  if (isNaN(d.getTime())) return null;
+  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+}
+
+const lastUpdatedISO = (roadmapData as { last_updated?: string }).last_updated;
+const lastUpdated = formatShippedDate(lastUpdatedISO) ?? 'recently';
 ---
 
 <BaseLayout
@@ -79,27 +92,35 @@ const shippedItems = items.filter((i) => i.status === 'shipped');
           Items that have moved from the plan into the live framework. We keep them here so the history of the framework stays visible.
         </p>
         <div class="roadmap-grid">
-          {shippedItems.map((item) => (
-            <article class={`roadmap-card accent-${item.status}`}>
-              <div class="roadmap-card-head">
-                <h3 class="roadmap-card-title">{item.title}</h3>
-                <span class={`status ${statusMeta[item.status]?.className ?? 'status-done'}`}>
-                  {statusMeta[item.status]?.label ?? item.status}
-                </span>
-              </div>
-              <p class="roadmap-card-desc">{item.description}</p>
-              {item.pageUrl && (
-                <a class="roadmap-card-cta" href={item.pageUrl}>View it on the site →</a>
-              )}
-              {item.links && item.links.length > 0 && (
-                <div class="roadmap-card-links">
-                  {item.links.map((link) => (
-                    <a href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>
-                  ))}
+          {shippedItems.map((item) => {
+            const shippedLabel = formatShippedDate(item.shipped);
+            return (
+              <article class={`roadmap-card accent-${item.status}`}>
+                <div class="roadmap-card-head">
+                  <h3 class="roadmap-card-title">{item.title}</h3>
+                  <span class={`status ${statusMeta[item.status]?.className ?? 'status-done'}`}>
+                    {statusMeta[item.status]?.label ?? item.status}
+                  </span>
                 </div>
-              )}
-            </article>
-          ))}
+                {shippedLabel && (
+                  <p class="roadmap-shipped-date">
+                    <time datetime={item.shipped}>{shippedLabel}</time>
+                  </p>
+                )}
+                <p class="roadmap-card-desc">{item.description}</p>
+                {item.pageUrl && (
+                  <a class="roadmap-card-cta" href={item.pageUrl}>View it on the site →</a>
+                )}
+                {item.links && item.links.length > 0 && (
+                  <div class="roadmap-card-links">
+                    {item.links.map((link) => (
+                      <a href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>
+                    ))}
+                  </div>
+                )}
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -109,7 +130,7 @@ const shippedItems = items.filter((i) => i.status === 'shipped');
           Every addition to Distilled CS starts with the same question: does this help a CS team do their job better? Not more comprehensively, not more impressively, but more usefully. We weigh that against the stage the team is at and the constraints they're actually working under.
         </p>
         <p>
-          If you have something specific you'd like to see, or want to tell us what's missing from the framework, the <a href="/contact/">contact page</a> is the right place.
+          If you have something specific you'd like to see, or want to help build, document, or fix something on the framework, the <a href="/contribute/">contribute page</a> walks through how to get started on GitHub. You can also reach out via the <a href="/contact/">contact page</a>.
         </p>
       </section>
 
@@ -251,6 +272,15 @@ const shippedItems = items.filter((i) => i.status === 'shipped');
     color: var(--color-text-muted);
     font-style: italic;
     margin: 0;
+  }
+
+  /* Quiet date metadata under the title. Status pill at top-right already
+     carries the "Shipped" label, so this is just the WHEN — small, muted,
+     mixed-case to avoid competing with the title or the description. */
+  .roadmap-shipped-date {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin: -0.375rem 0 0.125rem;
   }
 
   .roadmap-card-title {

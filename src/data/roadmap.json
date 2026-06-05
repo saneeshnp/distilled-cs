@@ -1,14 +1,9 @@
 {
+  "last_updated": "2026-06-05",
   "items": [
     {
       "title": "Re-assessment reminder",
       "description": "Download a calendar invite to re-take the assessment in 90 days and keep the improvement loop moving.",
-      "status": "planned",
-      "links": []
-    },
-    {
-      "title": "Site-wide search",
-      "description": "Find any metric, playbook, principle, or glossary term from a single search box.",
       "status": "planned",
       "links": []
     },
@@ -32,9 +27,19 @@
       "links": []
     },
     {
+      "title": "Site-wide search",
+      "description": "Find any metric, playbook, principle, or glossary term from a single search box.",
+      "status": "shipped",
+      "shipped": "2026-06-05",
+      "links": [
+        { "label": "v1", "url": "https://github.com/saneeshnp/distilled-cs/commit/26a7b20dd04d84cd78fc1d88ffaca4ace8491233" }
+      ]
+    },
+    {
       "title": "CS Metrics Map",
       "description": "Show metric priority across all maturity stages in one view.",
       "status": "shipped",
+      "shipped": "2026-05-29",
       "pageUrl": "/customer-success-metrics-map/",
       "links": [
         { "label": "V1", "url": "https://github.com/saneeshnp/distilled-cs/commit/3ce50bb77e6495a5fa175e1d1b956cd44b6125be" },
