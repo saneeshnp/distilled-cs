@@ -13,4 +13,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm test
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      # Source-level checks (no build needed) — fail fast before the slow step.
+      - name: Validate framework data cross-references
+        run: npm run check:data
+
+      - name: Validate roadmap schema
+        run: npm run check:roadmap
+
+      # Full build + Pagefind index generation (postbuild hook).
+      - name: Build
+        run: npm run build
+
+      # Post-build checks against dist/.
+      - name: Validate internal links
+        run: npm run check:links
+
+      - name: Verify Pagefind index
+        run: npm run check:pagefind

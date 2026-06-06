@@ -12,7 +12,11 @@
     "postbuild": "pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "node src/scripts/recommendation-engine.test.js && node src/scripts/share-encoder.test.js"
+    "test": "node src/scripts/recommendation-engine.test.js && node src/scripts/share-encoder.test.js",
+    "check:data": "node scripts/checks/validate-data-references.mjs",
+    "check:roadmap": "node scripts/checks/validate-roadmap.mjs",
+    "check:links": "node scripts/checks/validate-internal-links.mjs",
+    "check:pagefind": "node -e \"const e=require('./dist/pagefind/pagefind-entry.json');const n=e.languages.en.page_count;if(n<60){console.error('\\u2717 Pagefind indexed only '+n+' pages (expected >=60)');process.exit(1)}console.log('\\u2713 Pagefind indexed '+n+' pages')\""
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",

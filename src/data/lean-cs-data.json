@@ -1767,7 +1767,6 @@
         ],
         "related_metrics": [
           "nrr",
-          "churn_rate",
           "logo_retention"
         ],
         "audience": [
@@ -1834,7 +1833,6 @@
         ],
         "related_metrics": [
           "grr",
-          "churn_rate",
           "time_to_value"
         ],
         "audience": [
@@ -1975,7 +1973,6 @@
           "Updating health scores too infrequently. Monthly is minimum; weekly is better for high-touch accounts"
         ],
         "related_metrics": [
-          "churn_rate",
           "nrr",
           "csat",
           "adoption_rate"
