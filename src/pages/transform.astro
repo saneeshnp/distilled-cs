@@ -59,7 +59,7 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
         </div>
 
         <!-- Checklist progress -->
-        <div class="dash-card" id="dash-checklist-card">
+        <a href="/checklist/" class="dash-card dash-card-link" id="dash-checklist-card">
           <span class="dash-label">Checklist Progress</span>
           <div class="dash-checklist-row">
             <div class="dash-progress-bar-wrap">
@@ -68,7 +68,8 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
             <span class="dash-value dash-value-sm" id="dash-checklist-pct"></span>
           </div>
           <span class="dash-checklist-items" id="dash-checklist-items"></span>
-        </div>
+          <span class="dash-card-cta">View checklist →</span>
+        </a>
       </div>
 
       <!-- Domain breakdown -->
@@ -215,8 +216,9 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
   }
 
   .dash-label {
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -271,6 +273,26 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     font-size: 0.75rem;
     color: var(--color-text-muted);
     margin-top: 0.25rem;
+  }
+
+  .dash-card-link {
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .dash-card-link:hover {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 12%, transparent);
+  }
+
+  .dash-card-cta {
+    display: block;
+    margin-top: auto;
+    padding-top: 0.625rem;
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    font-weight: 500;
   }
 
   /* ── Sections ── */
