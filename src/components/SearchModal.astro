@@ -197,6 +197,7 @@
   .search-results {
     flex: 1;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 0.5rem;
     min-height: 4rem;
   }
@@ -470,6 +471,7 @@
     function openModal() {
       if (dialog!.open) return;
       dialog!.showModal();
+      document.documentElement.style.overflowY = 'hidden';
       // Pre-load Pagefind asap so the first keystroke is responsive.
       loadPagefind();
       // Defer focus to next tick to avoid losing it to a click handler.
@@ -479,10 +481,7 @@
     function closeModal() {
       if (!dialog!.open) return;
       dialog!.close();
-      input!.value = '';
-      lastQuery = '';
-      activeIndex = -1;
-      renderEmpty();
+      // overflow restored in the 'close' event listener (covers Esc too)
     }
 
     // Debounced input handler — Pagefind is fast but text-input cadence is faster.
@@ -529,8 +528,9 @@
       });
     }
 
-    // Esc is handled by native <dialog>, but reset state on close.
+    // Fires for all close paths: closeModal(), Esc, and backdrop click.
     dialog.addEventListener('close', () => {
+      document.documentElement.style.overflowY = '';
       input!.value = '';
       lastQuery = '';
       activeIndex = -1;
