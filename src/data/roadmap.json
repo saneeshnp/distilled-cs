@@ -1,11 +1,14 @@
 {
-  "last_updated": "2026-06-05",
+  "last_updated": "2026-06-08",
   "items": [
     {
       "title": "Re-assessment reminder",
-      "description": "Download a calendar invite to re-take the assessment in 90 days and keep the improvement loop moving.",
-      "status": "planned",
-      "links": []
+      "description": "Download a calendar invite to re-take the assessment in 90 days and keep the improvement loop moving. A basic version is now live on the Transform page and the CS Maturity Report toolbar. An enhanced version is coming soon, with a customisation modal to adjust the reminder date and add a personal note.",
+      "status": "in-progress",
+      "links": [
+        { "label": "Transform page", "url": "/transform/" },
+        { "label": "CS Maturity Report", "url": "/cs-maturity-report/" }
+      ]
     },
     {
       "title": "Resume an in-progress assessment",
