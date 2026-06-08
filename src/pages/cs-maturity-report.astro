@@ -115,7 +115,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
             <span class="report-btn-label">Share</span>
           </button>
 
-          <button type="button" class="report-remind-btn" id="report-remind-btn" aria-label="Download 90-day re-assessment reminder">
+          <button type="button" class="report-remind-btn" id="report-remind-btn" aria-label="Download 90-day re-assessment reminder" title="Download a calendar reminder to re-assess in 90 days">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="2" y="3" width="12" height="11" rx="1.5"/>
               <path d="M5 1v3M11 1v3M2 7h12"/>
@@ -1045,6 +1045,12 @@ const contextualRecs = frameworkData.contextual_recommendations;
     text-align: center;
     max-width: 56rem;
     margin-inline: auto;
+  }
+
+  @media (min-width: 640px) {
+    .report-header-content {
+      padding-top: 6rem;
+    }
   }
 
   .report-header-logo {
@@ -2996,7 +3002,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
     return `
       <div id="report-section-domains" class="report-section">
-        <h2 class="report-section-title">Domain Breakdown</h2>
+        <h2 class="report-section-title">Scores Across CS Domains</h2>
         ${rows}
       </div>
     `;
