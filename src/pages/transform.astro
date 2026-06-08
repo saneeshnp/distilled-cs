@@ -95,7 +95,17 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
       <div class="reassess-cta">
         <h2 class="reassess-headline">Ready to validate your growth?</h2>
         <p class="reassess-body">Re-take the assessment to see how far you've come. Your previous results will be saved for comparison.</p>
-        <a href="/assess/?mode=update" class="btn btn-primary btn-large">Re-Assess Now</a>
+        <div class="reassess-actions">
+          <a href="/assess/?mode=update" class="btn btn-primary btn-large">Re-Assess Now</a>
+          <button type="button" id="download-ics-btn" class="btn btn-outline btn-large">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="3" width="12" height="11" rx="1.5"/>
+              <path d="M5 1v3M11 1v3M2 7h12"/>
+            </svg>
+            Download 90-day reminder
+          </button>
+        </div>
+        <p class="reassess-ics-hint">Adds a calendar event 90 days from your last assessment.</p>
       </div>
     </div>
 
@@ -373,6 +383,19 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     line-height: 1.6;
   }
 
+  .reassess-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .reassess-ics-hint {
+    margin: 0.875rem auto 0;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
   .principle-callout {
     background: var(--color-accent-subtle);
     border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
@@ -528,6 +551,21 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
 
   .btn-primary:hover {
     background: var(--color-accent-hover);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--color-accent);
+    border: 1.5px solid var(--color-accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-family: var(--font-body);
+  }
+
+  .btn-outline:hover {
+    background: color-mix(in srgb, var(--color-accent) 8%, transparent);
   }
 
   .btn-large {
@@ -946,6 +984,65 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
       }
 
     }
+
+    // ── Calendar reminder download ──
+    const icsBtn = document.getElementById('download-ics-btn');
+    if (icsBtn) {
+      icsBtn.addEventListener('click', () => {
+        try {
+          const scoresRaw = localStorage.getItem('distilledcs_scores');
+          const scores = scoresRaw ? JSON.parse(scoresRaw) : {};
+          const base = scores.timestamp ? new Date(scores.timestamp) : new Date();
+          const remind = new Date(base.getTime() + 90 * 24 * 60 * 60 * 1000);
+
+          function toIcsDate(d: Date): string {
+            return d.toISOString().slice(0, 10).replace(/-/g, '');
+          }
+
+          const uid = `distilledcs-reassess-${base.getTime()}@distilledcs.org`;
+          const dtstamp = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
+          const dtstart = toIcsDate(remind);
+          const dtend = toIcsDate(new Date(remind.getTime() + 24 * 60 * 60 * 1000));
+
+          const lines = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//Distilled CS//Re-Assessment Reminder//EN',
+            'CALSCALE:GREGORIAN',
+            'METHOD:PUBLISH',
+            'BEGIN:VEVENT',
+            `UID:${uid}`,
+            `DTSTAMP:${dtstamp}`,
+            `DTSTART;VALUE=DATE:${dtstart}`,
+            `DTEND;VALUE=DATE:${dtend}`,
+            'SUMMARY:Re-take CS Maturity Assessment',
+            'DESCRIPTION:90 days have passed since your last CS maturity assessment.' +
+              ' Re-take it at https://distilledcs.org/assess/ to track your progress and plan your next improvement cycle.',
+            'URL:https://distilledcs.org/assess/',
+            'BEGIN:VALARM',
+            'TRIGGER:-P1D',
+            'ACTION:DISPLAY',
+            'DESCRIPTION:CS Maturity Assessment reminder — due tomorrow',
+            'END:VALARM',
+            'END:VEVENT',
+            'END:VCALENDAR',
+          ];
+
+          const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'cs-assessment-reminder.ics';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } catch {
+          // ignore
+        }
+      });
+    }
+
   } catch {
     // Ignore localStorage errors
   }
