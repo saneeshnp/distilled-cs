@@ -72,15 +72,6 @@ const faqSchema = {
       <p class="page-subtitle">High-leverage strategic guides for each maturity stage. Each playbook gives you a clear objective, step-by-step actions, and the metrics to watch.</p>
     </div>
 
-    <section class="pillar-intro" data-hide-if-assessed>
-      <h2>What a customer success playbook is for</h2>
-      <p>A customer success playbook turns a repeatable motion into something any CSM can run with the same outcome. It names the trigger (a new signup, a health drop, a renewal approaching), the objective, the ordered steps, the metrics that confirm it worked, and the pitfalls teams hit when they try it for the first time. Good playbooks compress tribal knowledge into operational instructions.</p>
-      <p>Playbooks should be written after a motion has been proven, not before. A team that codifies an onboarding flow on day one usually codifies the wrong thing. Run the motion two or three times, see what actually works, then write it down. That is also when the right metrics to attach become obvious.</p>
-      <h3>Playbooks by maturity stage</h3>
-      <p>This library groups playbooks by stage so the most relevant ones surface first. <strong>Crawl</strong> plays establish the basics: a reliable onboarding program, a consistent renewal motion, and a named response when a customer goes red. <strong>Walk</strong> introduces segmentation and QBRs at scale. <strong>Run</strong> operationalizes expansion, leading-indicator escalations, advocacy, and predictive motions that draw on product usage, AI-assisted signals, and cross-functional data.</p>
-      <p>Each playbook carries an estimated duration, the metrics it moves, and links to the principles and domains it touches. If your team has completed the assessment, the library highlights your current stage and the one after it. If not, the bottom of each detail page explains how the playbook maps to a maturity path.</p>
-    </section>
-
     <!-- Contextual banner for assessed users (JS-populated) -->
     <div id="playbooks-context-banner" data-show-if-assessed style="display:none;" class="context-banner"></div>
 
@@ -120,6 +111,15 @@ const faqSchema = {
         </section>
       );
     })}
+
+    <section class="pillar-intro" data-hide-if-assessed>
+      <h2>What a customer success playbook is for</h2>
+      <p>A customer success playbook turns a repeatable motion into something any CSM can run with the same outcome. It names the trigger (a new signup, a health drop, a renewal approaching), the objective, the ordered steps, the metrics that confirm it worked, and the pitfalls teams hit when they try it for the first time. Good playbooks compress tribal knowledge into operational instructions.</p>
+      <p>Playbooks should be written after a motion has been proven, not before. A team that codifies an onboarding flow on day one usually codifies the wrong thing. Run the motion two or three times, see what actually works, then write it down. That is also when the right metrics to attach become obvious.</p>
+      <h3>Playbooks by maturity stage</h3>
+      <p>This library groups playbooks by stage so the most relevant ones surface first. <strong>Crawl</strong> plays establish the basics: a reliable onboarding program, a consistent renewal motion, and a named response when a customer goes red. <strong>Walk</strong> introduces segmentation and QBRs at scale. <strong>Run</strong> operationalizes expansion, leading-indicator escalations, advocacy, and predictive motions that draw on product usage, AI-assisted signals, and cross-functional data.</p>
+      <p>Each playbook carries an estimated duration, the metrics it moves, and links to the principles and domains it touches. If your team has completed the assessment, the library highlights your current stage and the one after it. If not, the bottom of each detail page explains how the playbook maps to a maturity path.</p>
+    </section>
 
     <section class="pillar-faq">
       <h2>Frequently asked questions</h2>
