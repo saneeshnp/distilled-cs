@@ -289,7 +289,7 @@ The Share modal markup remains in the DOM but is unreachable without the trigger
 
 ### The Share modal
 
-Title: **"Share your CS report"** (in Source Serif 4, weight 600, `--color-text-secondary` muted gray — softer than primary text so it reads as a section heading without being stark).
+Title: **"Share your CS report"** (in Source Serif 4, weight 500, `--color-text-primary`). The lighter 500 weight keeps the serif heading from reading heavy in the compact modal, and primary color gives it enough presence at that weight. The Remind modal title shares the same `.share-modal-title` rule, so both stay in sync.
 
 Two tabs:
 

@@ -162,7 +162,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
         <div class="share-modal-panel-body" role="tabpanel" id="share-panel-report" aria-labelledby="share-tab-report">
           <p class="share-modal-blurb">
-            Anyone with this link can view your full report — domain scores, priority actions, and the answers behind them.
+            Anyone with this link can view your full report: domain scores, priority actions, and the answers behind them.
           </p>
 
           <label class="share-modal-toggle">
@@ -696,9 +696,9 @@ const contextualRecs = frameworkData.contextual_recommendations;
   .share-modal-title {
     font-family: var(--font-display);
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 500;
     margin: 0;
-    color: var(--color-text-secondary);
+    color: var(--color-text-primary);
     letter-spacing: -0.005em;
   }
 
@@ -3581,7 +3581,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     // Suggested social post — uses display score (/10) and stage label
     const scoreDisplay = formatDisplayScore(reportData.overallScore, 1);
     const stageLabel = getStageData(reportData.stage)?.label ?? '';
-    const text = `I just took the Distilled CS maturity assessment for my team and scored ${scoreDisplay}/10 — ${stageLabel} stage. Take yours to see where you are on your customer success journey: ${assessUrl}`;
+    const text = `I just took the Distilled CS maturity assessment for my team and scored ${scoreDisplay}/10, at the ${stageLabel} stage. Take yours to see where you are on your customer success journey: ${assessUrl}`;
     if (shareScoreTextarea) shareScoreTextarea.value = text;
     if (shareLinkedInLink) {
       shareLinkedInLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(assessUrl)}`;
