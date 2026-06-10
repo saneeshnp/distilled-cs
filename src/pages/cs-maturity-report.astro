@@ -115,7 +115,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
             <span class="report-btn-label">Share</span>
           </button>
 
-          <button type="button" class="report-remind-btn" id="report-remind-btn" aria-label="Download 90-day re-assessment reminder" title="Download a calendar reminder to re-assess in 90 days">
+          <button type="button" class="report-remind-btn" id="report-remind-btn" aria-label="Set a re-assessment reminder" title="Set a calendar reminder to re-assess">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <rect x="2" y="3" width="12" height="11" rx="1.5"/>
               <path d="M5 1v3M11 1v3M2 7h12"/>
@@ -215,6 +215,69 @@ const contextualRecs = frameworkData.contextual_recommendations;
             <path d="M4.5 6.5V4.5a2.5 2.5 0 0 1 5 0v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
           </svg>
           <span>We don't store/track any of your report data, it stays only in your browser and the share link itself.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Remind modal ═══ -->
+    <div class="share-modal" id="remind-modal" role="dialog" aria-modal="true" aria-labelledby="remind-modal-title" hidden>
+      <div class="share-modal-backdrop" id="remind-modal-backdrop"></div>
+      <div class="share-modal-panel" role="document">
+        <div class="share-modal-header">
+          <h2 class="share-modal-title" id="remind-modal-title">Set a re-assessment reminder</h2>
+          <button type="button" class="share-modal-close" id="remind-modal-close" aria-label="Close reminder dialog">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="share-modal-panel-body">
+          <p class="share-modal-blurb">
+            Maturity moves in quarters, not weeks. Schedule a reminder to re-take the assessment and track how your scores shift over time.
+          </p>
+
+          <fieldset class="remind-fieldset">
+            <legend class="remind-legend">Remind me in</legend>
+            <div class="remind-options" role="radiogroup">
+              <label class="remind-option">
+                <input type="radio" name="remind-interval" value="30" />
+                <span class="remind-option-main">30 days</span>
+              </label>
+              <label class="remind-option">
+                <input type="radio" name="remind-interval" value="60" />
+                <span class="remind-option-main">60 days</span>
+              </label>
+              <label class="remind-option">
+                <input type="radio" name="remind-interval" value="90" checked />
+                <span class="remind-option-main">90 days</span>
+                <span class="remind-option-badge">Recommended</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="share-modal-toggle">
+            <input type="checkbox" id="remind-day-before" checked />
+            <span>Add a heads-up alert the day before</span>
+          </label>
+
+          <p class="remind-date-preview" id="remind-date-preview"></p>
+
+          <button type="button" class="share-modal-copy remind-download-btn" id="remind-download-btn">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="3" width="12" height="11" rx="1.5"/>
+              <path d="M5 1v3M11 1v3M2 7h12"/>
+            </svg>
+            Download calendar reminder
+          </button>
+        </div>
+
+        <div class="share-modal-footer">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <rect x="3" y="6.5" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M4.5 6.5V4.5a2.5 2.5 0 0 1 5 0v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span>The reminder is a standard .ics calendar file. Nothing is stored or sent, it downloads straight to your device.</span>
         </div>
       </div>
     </div>
@@ -872,6 +935,87 @@ const contextualRecs = frameworkData.contextual_recommendations;
     flex-shrink: 0;
     margin-top: 0.25rem;
     color: var(--color-text-muted);
+  }
+
+  /* ── Remind modal controls ── */
+  .remind-fieldset {
+    border: none;
+    margin: 0 0 0.875rem;
+    padding: 0;
+  }
+
+  .remind-legend {
+    padding: 0;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+
+  .remind-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .remind-option {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+    cursor: pointer;
+    transition: border-color 0.15s ease-out, background 0.15s ease-out;
+  }
+
+  .remind-option:hover {
+    border-color: var(--color-accent);
+  }
+
+  .remind-option input {
+    margin: 0;
+    accent-color: var(--color-accent);
+  }
+
+  .remind-option:has(input:checked) {
+    border-color: var(--color-accent);
+    background: var(--color-accent-subtle);
+  }
+
+  .remind-option-main {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .remind-option-badge {
+    margin-left: auto;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-bg);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .remind-date-preview {
+    margin: 0 0 1rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+  }
+
+  .remind-date-preview strong {
+    color: var(--color-text-primary);
+  }
+
+  .remind-download-btn {
+    width: 100%;
+    gap: 0.5rem;
   }
 
   /* ── Loading overlay ── */
@@ -3270,14 +3414,69 @@ const contextualRecs = frameworkData.contextual_recommendations;
     downloadBtn.addEventListener('click', () => window.print());
   }
 
-  document.getElementById('report-remind-btn')?.addEventListener('click', () => {
+  // Shared open/close controller for the report's modals (Share + Remind).
+  // Reuses the .share-modal shell styles for both; only the body differs.
+  function createModalController(
+    modal: HTMLElement | null,
+    trigger: HTMLElement | null,
+    opts: { onOpen?: () => void; initialFocus?: () => HTMLElement | null } = {},
+  ) {
+    function open() {
+      if (!modal) return;
+      opts.onOpen?.();
+      modal.hidden = false;
+      requestAnimationFrame(() => modal.classList.add('is-open'));
+      const focusEl = opts.initialFocus?.() ?? modal.querySelector<HTMLElement>('.share-modal-close');
+      focusEl?.focus();
+    }
+    function close() {
+      if (!modal) return;
+      modal.classList.remove('is-open');
+      setTimeout(() => { modal.hidden = true; }, 180);
+      trigger?.focus();
+    }
+    return { open, close, modal };
+  }
+
+  // ── Remind modal ──
+  const remindBtn = document.getElementById('report-remind-btn');
+  const remindModal = document.getElementById('remind-modal');
+  const remindBackdrop = document.getElementById('remind-modal-backdrop');
+  const remindClose = document.getElementById('remind-modal-close');
+  const remindDownloadBtn = document.getElementById('remind-download-btn');
+  const remindDatePreview = document.getElementById('remind-date-preview');
+  const remindDayBefore = document.getElementById('remind-day-before') as HTMLInputElement | null;
+
+  function getRemindInterval(): number {
+    const checked = remindModal?.querySelector<HTMLInputElement>('input[name="remind-interval"]:checked');
+    return checked ? parseInt(checked.value, 10) : 90;
+  }
+
+  // Base the reminder on the assessment date, but never schedule it in the past:
+  // if the assessment is older than the chosen interval, count from today instead.
+  function getRemindDate(days: number): Date {
+    let baseTime = Date.now();
     try {
       const scoresRaw = localStorage.getItem('distilledcs_scores');
       const scores = scoresRaw ? JSON.parse(scoresRaw) : {};
-      const base = scores.timestamp ? new Date(scores.timestamp) : new Date();
-      const remind = new Date(base.getTime() + 90 * 24 * 60 * 60 * 1000);
+      if (scores.timestamp) baseTime = Math.max(new Date(scores.timestamp).getTime(), Date.now());
+    } catch { /* ignore */ }
+    return new Date(baseTime + days * 24 * 60 * 60 * 1000);
+  }
+
+  function updateRemindPreview() {
+    if (!remindDatePreview) return;
+    const date = getRemindDate(getRemindInterval());
+    const formatted = date.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
+    remindDatePreview.innerHTML = `You'll be reminded on <strong>${formatted}</strong>.`;
+  }
+
+  function downloadReminderIcs() {
+    try {
+      const days = getRemindInterval();
+      const remind = getRemindDate(days);
       const toIcsDate = (d: Date) => d.toISOString().slice(0, 10).replace(/-/g, '');
-      const uid = `distilledcs-reassess-${base.getTime()}@distilledcs.org`;
+      const uid = `distilledcs-reassess-${Date.now()}@distilledcs.org`;
       const dtstamp = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
       const lines = [
         'BEGIN:VCALENDAR',
@@ -3291,17 +3490,20 @@ const contextualRecs = frameworkData.contextual_recommendations;
         `DTSTART;VALUE=DATE:${toIcsDate(remind)}`,
         `DTEND;VALUE=DATE:${toIcsDate(new Date(remind.getTime() + 86400000))}`,
         'SUMMARY:Re-take CS Maturity Assessment',
-        'DESCRIPTION:90 days have passed since your last CS maturity assessment.' +
+        `DESCRIPTION:${days} days have passed since your last CS maturity assessment.` +
           ' Re-take it at https://distilledcs.org/assess/ to track your progress.',
         'URL:https://distilledcs.org/assess/',
-        'BEGIN:VALARM',
-        'TRIGGER:-P1D',
-        'ACTION:DISPLAY',
-        'DESCRIPTION:CS Maturity Assessment reminder — due tomorrow',
-        'END:VALARM',
-        'END:VEVENT',
-        'END:VCALENDAR',
       ];
+      if (remindDayBefore?.checked) {
+        lines.push(
+          'BEGIN:VALARM',
+          'TRIGGER:-P1D',
+          'ACTION:DISPLAY',
+          'DESCRIPTION:CS Maturity Assessment reminder, due tomorrow',
+          'END:VALARM',
+        );
+      }
+      lines.push('END:VEVENT', 'END:VCALENDAR');
       const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -3312,6 +3514,21 @@ const contextualRecs = frameworkData.contextual_recommendations;
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch { /* ignore */ }
+  }
+
+  const remindController = createModalController(remindModal, remindBtn, {
+    onOpen: updateRemindPreview,
+    initialFocus: () => remindModal?.querySelector<HTMLElement>('input[name="remind-interval"]:checked') ?? null,
+  });
+  remindBtn?.addEventListener('click', remindController.open);
+  remindBackdrop?.addEventListener('click', remindController.close);
+  remindClose?.addEventListener('click', remindController.close);
+  remindModal?.querySelectorAll<HTMLInputElement>('input[name="remind-interval"]').forEach((radio) => {
+    radio.addEventListener('change', updateRemindPreview);
+  });
+  remindDownloadBtn?.addEventListener('click', () => {
+    downloadReminderIcs();
+    remindController.close();
   });
 
   document.getElementById('report-restart-btn')?.addEventListener('click', () => {
@@ -3339,22 +3556,10 @@ const contextualRecs = frameworkData.contextual_recommendations;
   const shareLinkedInLink = document.getElementById('share-linkedin') as HTMLAnchorElement | null;
   const shareXLink = document.getElementById('share-x') as HTMLAnchorElement | null;
 
-  function openShareModal() {
-    if (!shareModal) return;
-    refreshShareModal();
-    shareModal.hidden = false;
-    requestAnimationFrame(() => shareModal.classList.add('is-open'));
-    // Focus the active tab for accessibility
-    const activeTab = shareModal.querySelector<HTMLElement>('.share-modal-tab.is-active');
-    activeTab?.focus();
-  }
-
-  function closeShareModal() {
-    if (!shareModal) return;
-    shareModal.classList.remove('is-open');
-    setTimeout(() => { shareModal.hidden = true; }, 180);
-    shareBtn?.focus();
-  }
+  const shareController = createModalController(shareModal, shareBtn, {
+    onOpen: refreshShareModal,
+    initialFocus: () => shareModal?.querySelector<HTMLElement>('.share-modal-tab.is-active') ?? null,
+  });
 
   // Re-builds the URLs and pre-filled text from the current report state.
   // Called on open and whenever the "include company" toggle changes.
@@ -3386,15 +3591,15 @@ const contextualRecs = frameworkData.contextual_recommendations;
     }
   }
 
-  shareBtn?.addEventListener('click', openShareModal);
-  shareBackdrop?.addEventListener('click', closeShareModal);
-  shareClose?.addEventListener('click', closeShareModal);
+  shareBtn?.addEventListener('click', shareController.open);
+  shareBackdrop?.addEventListener('click', shareController.close);
+  shareClose?.addEventListener('click', shareController.close);
   shareIncludeCompany?.addEventListener('change', refreshShareModal);
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && shareModal && !shareModal.hidden) {
-      closeShareModal();
-    }
+    if (e.key !== 'Escape') return;
+    if (shareModal && !shareModal.hidden) shareController.close();
+    if (remindModal && !remindModal.hidden) remindController.close();
   });
 
   // Tab switching

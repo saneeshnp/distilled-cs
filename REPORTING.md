@@ -300,6 +300,21 @@ Copy buttons use `navigator.clipboard.writeText` with a `document.execCommand('c
 
 **Privacy footer** (`.share-modal-footer`) — a static strip at the bottom of the modal, shown for both tabs. Small padlock icon + muted text: *"We don't store/track any of your report data, it stays only in your browser and the share link itself."* This is a factual statement, not marketing — the site has no backend, responses live in localStorage, and shared links encode the payload directly into the URL. If the architecture ever changes (backend, account system, telemetry), this note must be revisited.
 
+### The Remind modal
+
+The toolbar **"Remind me"** button (`#report-remind-btn`) opens a second modal (`#remind-modal`) rather than downloading directly. It **reuses the `.share-modal` shell** (same `.share-modal-backdrop` / `.share-modal-panel` / `.share-modal-header` / `.share-modal-footer` classes, so it inherits the open/close animation, the touch-target close button, and the print-hide rule automatically). Only the body controls are remind-specific (`.remind-*` classes).
+
+Title: **"Set a re-assessment reminder"**. Body:
+
+- **Interval radio group** (`input[name="remind-interval"]`) — 30 / 60 / 90 days, **90 checked by default** and carrying a "Recommended" pill (`.remind-option-badge`). Selected option styled via `.remind-option:has(input:checked)`.
+- **"Add a heads-up alert the day before"** checkbox (`#remind-day-before`, default on) — toggles whether the `.ics` includes the `VALARM` block (`TRIGGER:-P1D`).
+- **Live date preview** (`#remind-date-preview`) — "You'll be reminded on \<date\>." Updates on every radio `change`.
+- **"Download calendar reminder"** button (`#remind-download-btn`) — builds the `.ics` and closes the modal.
+
+`.ics` generation (`downloadReminderIcs`): VCALENDAR + VEVENT with a `VALUE=DATE` all-day `DTSTART`, downloaded as `cs-assessment-reminder.ics`. The reminder date (`getRemindDate`) is `assessment timestamp + interval`, but clamped so it's **never in the past** — if the assessment is older than the interval, it counts from today instead (`Math.max(assessmentTime, Date.now())`).
+
+**Shared modal controller** — `createModalController(modal, trigger, { onOpen, initialFocus })` returns `{ open, close }` and is used by **both** the Share and Remind modals (open adds `.is-open` next frame + focuses an initial element; close removes it, hides after the 180ms transition, returns focus to the trigger). A single `keydown` Escape listener closes whichever modal is currently open. When adding a third modal, reuse this controller and extend the Escape listener.
+
 ---
 
 ## 8. Print / PDF
@@ -308,7 +323,7 @@ Toolbar button is labeled **"Save as PDF"** with a document-plus-down-arrow icon
 
 Print rules to be aware of:
 
-- Hides: header, footer, ContextBar, `.report-toolbar` and all its buttons (`.report-overflow-menu`, `.report-share-btn`, `.report-download-btn`), `.shared-banner`, `.share-modal`
+- Hides: header, footer, ContextBar, `.report-toolbar` and all its buttons (`.report-overflow-menu`, `.report-share-btn`, `.report-remind-btn`, `.report-download-btn`), `.shared-banner`, `.share-modal` (the Remind modal shares the `.share-modal` class, so it's hidden by the same rule)
 - Forces light-mode CSS variables on both `:root` and `:root[data-theme="dark"]`
 - Forces solid stage colors (Material 700) regardless of theme
 - Strips the header background image and falls back to a flat surface
