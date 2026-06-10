@@ -284,8 +284,9 @@ When `data.isSharedView === true`:
   - Without name: `You are viewing a CS assessment shared with you via a link`
 - The **overflow menu** ("Update My Answers" / "Clear & Restart") is hidden — those actions belong to the viewer's own report, not someone else's.
 - The **Share button** is hidden — secondary shares cause confusion and the payload was tailored for the original viewer.
+- The **Remind button** is hidden — the re-assessment reminder is a personal commitment anchored to the viewer's own assessment, and the `.ics` it generates is computed from the original author's timestamp, so it's meaningless on a shared view. After this, the shared-view toolbar is just "Save as PDF".
 
-The Share modal markup remains in the DOM but is unreachable without the trigger button.
+The Share and Remind modal markup remains in the DOM but is unreachable without their trigger buttons.
 
 ### The Share modal
 

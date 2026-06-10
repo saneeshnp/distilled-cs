@@ -2611,6 +2611,12 @@ const contextualRecs = frameworkData.contextual_recommendations;
     const shareBtn = document.getElementById('report-share-btn');
     if (shareBtn) (shareBtn as HTMLElement).style.display = 'none';
 
+    // Hide the Remind button — the reminder is a personal commitment anchored
+    // to the viewer's own assessment date, and the .ics it generates is based
+    // on the original author's timestamp, so it's meaningless on a shared view.
+    const remindBtn = document.getElementById('report-remind-btn');
+    if (remindBtn) (remindBtn as HTMLElement).style.display = 'none';
+
     // Reveal the static banner, populate the headline, set stage class
     const banner = document.getElementById('report-shared-banner');
     const headline = document.getElementById('shared-banner-headline');
