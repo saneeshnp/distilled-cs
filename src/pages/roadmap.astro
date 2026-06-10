@@ -230,8 +230,11 @@ const lastUpdated = formatShippedDate(lastUpdatedISO) ?? 'recently';
     flex-direction: column;
     gap: 0.625rem;
     padding: 1.25rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
+    /* Subtle status-tinted surface + border, derived from --card-accent so
+       each status reads distinctively without hard-coding per-card colors.
+       Mixing into the theme tokens keeps it correct in light and dark mode. */
+    background: color-mix(in srgb, var(--card-accent) 7%, var(--color-surface));
+    border: 1px solid color-mix(in srgb, var(--card-accent) 22%, var(--color-border));
     border-radius: 0.75rem;
     transition: border-color 0.2s ease-out, transform 0.2s ease-out;
   }
@@ -247,7 +250,7 @@ const lastUpdated = formatShippedDate(lastUpdatedISO) ?? 'recently';
   }
 
   .roadmap-card:hover {
-    border-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
+    border-color: color-mix(in srgb, var(--card-accent) 45%, transparent);
     transform: translateY(-2px);
   }
 
