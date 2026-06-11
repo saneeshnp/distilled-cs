@@ -261,6 +261,11 @@ const contextualRecs = frameworkData.contextual_recommendations;
             <span>Add a heads-up alert the day before</span>
           </label>
 
+          <label class="share-modal-toggle">
+            <input type="checkbox" id="remind-include-link" />
+            <span>Include a private link to this report (contains your assessment data)</span>
+          </label>
+
           <p class="remind-date-preview" id="remind-date-preview"></p>
 
           <button type="button" class="share-modal-copy remind-download-btn" id="remind-download-btn">
@@ -277,7 +282,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
             <rect x="3" y="6.5" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
             <path d="M4.5 6.5V4.5a2.5 2.5 0 0 1 5 0v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
           </svg>
-          <span>The reminder is a standard .ics calendar file. Nothing is stored or sent, it downloads straight to your device.</span>
+          <span id="remind-footer-note">The reminder is a standard .ics calendar file. Nothing is stored or sent, it downloads straight to your device.</span>
         </div>
       </div>
     </div>
@@ -3452,6 +3457,51 @@ const contextualRecs = frameworkData.contextual_recommendations;
   const remindDownloadBtn = document.getElementById('remind-download-btn');
   const remindDatePreview = document.getElementById('remind-date-preview');
   const remindDayBefore = document.getElementById('remind-day-before') as HTMLInputElement | null;
+  const remindIncludeLink = document.getElementById('remind-include-link') as HTMLInputElement | null;
+  const remindFooterNote = document.getElementById('remind-footer-note');
+
+  const REMIND_FOOTER_DEFAULT = 'The reminder is a standard .ics calendar file. Nothing is stored or sent, it downloads straight to your device.';
+  const REMIND_FOOTER_WITH_LINK = 'This invite will include a private link containing your assessment data. Anyone with the calendar event can open your report.';
+
+  // Footer copy must stay honest: the default "nothing is sent" line is false
+  // once the link is embedded, so swap it whenever the checkbox state changes.
+  function updateRemindFooter() {
+    if (!remindFooterNote) return;
+    remindFooterNote.textContent = remindIncludeLink?.checked ? REMIND_FOOTER_WITH_LINK : REMIND_FOOTER_DEFAULT;
+  }
+
+  // Encode the current report into a shareable snapshot link, WITHOUT the
+  // company name. A calendar invite is more exposed than the browser (it syncs
+  // to the user's calendar cloud), so the embedded payload stays limited to
+  // profile + answers + timestamp.
+  function buildReportSnapshotLink(): string | null {
+    if (!reportData) return null;
+    try {
+      const payload = encodeReport({
+        version: ASSESSMENT_VERSION,
+        companyName: '',
+        profile: reportData.profile,
+        responses: reportData.responses,
+        timestamp: reportData.timestamp,
+      });
+      return `${window.location.origin}/cs-maturity-report/?d=${payload}`;
+    } catch {
+      return null;
+    }
+  }
+
+  // RFC 5545 content lines must not exceed 75 octets; longer lines are folded
+  // with CRLF + a leading space. The snapshot link pushes DESCRIPTION/URL well
+  // past that. Folding by character ≈ octet here since the payload is ASCII
+  // base64url and the company name (the only unicode risk) is excluded.
+  function foldIcsLine(line: string): string {
+    if (line.length <= 75) return line;
+    const chunks: string[] = [line.slice(0, 75)];
+    for (let i = 75; i < line.length; i += 74) {
+      chunks.push(' ' + line.slice(i, i + 74));
+    }
+    return chunks.join('\r\n');
+  }
 
   function getRemindInterval(): number {
     const checked = remindModal?.querySelector<HTMLInputElement>('input[name="remind-interval"]:checked');
@@ -3484,6 +3534,16 @@ const contextualRecs = frameworkData.contextual_recommendations;
       const toIcsDate = (d: Date) => d.toISOString().slice(0, 10).replace(/-/g, '');
       const uid = `distilledcs-reassess-${Date.now()}@distilledcs.org`;
       const dtstamp = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
+
+      const snapshotLink = remindIncludeLink?.checked ? buildReportSnapshotLink() : null;
+      let description = `${days} days have passed since your last CS maturity assessment.` +
+        ' Re-take it at https://distilledcs.org/assess/ to track your progress.';
+      let eventUrl = 'https://distilledcs.org/assess/';
+      if (snapshotLink) {
+        description += ` Compare against your previous report: ${snapshotLink}`;
+        eventUrl = snapshotLink;
+      }
+
       const lines = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
@@ -3496,9 +3556,8 @@ const contextualRecs = frameworkData.contextual_recommendations;
         `DTSTART;VALUE=DATE:${toIcsDate(remind)}`,
         `DTEND;VALUE=DATE:${toIcsDate(new Date(remind.getTime() + 86400000))}`,
         'SUMMARY:Re-take CS Maturity Assessment',
-        `DESCRIPTION:${days} days have passed since your last CS maturity assessment.` +
-          ' Re-take it at https://distilledcs.org/assess/ to track your progress.',
-        'URL:https://distilledcs.org/assess/',
+        `DESCRIPTION:${description}`,
+        `URL:${eventUrl}`,
       ];
       if (remindDayBefore?.checked) {
         lines.push(
@@ -3510,7 +3569,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
         );
       }
       lines.push('END:VEVENT', 'END:VCALENDAR');
-      const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+      const blob = new Blob([lines.map(foldIcsLine).join('\r\n')], { type: 'text/calendar;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -3523,7 +3582,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
   }
 
   const remindController = createModalController(remindModal, remindBtn, {
-    onOpen: updateRemindPreview,
+    onOpen: () => { updateRemindPreview(); updateRemindFooter(); },
     initialFocus: () => remindModal?.querySelector<HTMLElement>('input[name="remind-interval"]:checked') ?? null,
   });
   remindBtn?.addEventListener('click', remindController.open);
@@ -3532,6 +3591,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
   remindModal?.querySelectorAll<HTMLInputElement>('input[name="remind-interval"]').forEach((radio) => {
     radio.addEventListener('change', updateRemindPreview);
   });
+  remindIncludeLink?.addEventListener('change', updateRemindFooter);
   remindDownloadBtn?.addEventListener('click', () => {
     downloadReminderIcs();
     remindController.close();
