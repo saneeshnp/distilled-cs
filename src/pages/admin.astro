@@ -615,6 +615,11 @@ const sessionKeys = [
     composeStrengths,
     composePlaybookRecommendations,
   } from '../scripts/recommendation-engine.js';
+  import {
+    calculateAllDomainScores,
+    calculateOverallScore,
+    determineStage,
+  } from '../scripts/scoring-engine.js';
 
   // ── Gate: require ?debug-enabled=true ──
   const debugEnabled = new URLSearchParams(window.location.search).get('debug-enabled') === 'true';
@@ -653,47 +658,71 @@ const sessionKeys = [
     'ai_q1', 'ai_q2', 'ai_q3', // ai_leverage
   ];
 
-  function makeScores(stage: string, score: number) {
-    const domainScore = score;
-    // Clamp to valid option range (1–4) for pre-populating answer buttons
-    const responseScore = Math.min(4, Math.max(1, Math.round(score)));
-    const responses: Record<string, number> = {};
-    allQuestionIds.forEach(id => { responses[id] = responseScore; });
-    return {
-      domainScores: {
-        segmentation_coverage: domainScore,
-        journey_lifecycle: domainScore,
-        health_risk: domainScore,
-        metrics_data: domainScore,
-        expansion_value: domainScore,
-        org_strategy: domainScore,
-        cs_culture_alignment: domainScore,
-        ai_leverage: domainScore,
-      },
-      overallScore: score,
-      stage,
-      responses,
-      timestamp: new Date().toISOString(),
-    };
+  // Build a complete, internally-consistent scores object from a response map,
+  // computed exactly like a real assessment (see assess.astro): each domain
+  // score is the average of its answers, the overall is the average of domains,
+  // and the stage is DERIVED from that score, never asserted. This keeps debug
+  // data faithful to production — e.g. a shared report (which re-scores from
+  // answers) lands on the identical numbers instead of drifting.
+  function makeScores(responses: Record<string, number>) {
+    const domainScores = calculateAllDomainScores(responses);
+    const overallScore = calculateOverallScore(domainScores);
+    const stage = determineStage(overallScore ?? 0);
+    return { domainScores, overallScore, stage, responses, timestamp: new Date().toISOString() };
   }
 
+  // Realistic answer sets per stage: integer answers (1–4) with natural
+  // per-domain and per-question variation, not a flat fill. AI leverage is the
+  // weakest domain at every stage, mirroring how most teams actually score.
+  // These average out to ~1.37 (Crawl), ~2.38 (Walk), and ~3.38 (Run).
+  const presetResponses: Record<string, Record<string, number>> = {
+    crawl: {
+      sc_q1: 2, sc_q2: 1, sc_q3: 2,
+      jl_q1: 1, jl_q2: 2, jl_q3: 1,
+      hr_q1: 2, hr_q2: 1, hr_q3: 1,
+      md_q1: 1, md_q2: 1, md_q3: 2,
+      ev_q1: 1, ev_q2: 2, ev_q3: 1,
+      os_q1: 2, os_q2: 2, os_q3: 1,
+      ca_q1: 1, ca_q2: 1, ca_q3: 2,
+      ai_q1: 1, ai_q2: 1, ai_q3: 1,
+    },
+    walk: {
+      sc_q1: 3, sc_q2: 2, sc_q3: 3,
+      jl_q1: 2, jl_q2: 3, jl_q3: 2,
+      hr_q1: 3, hr_q2: 2, hr_q3: 3,
+      md_q1: 2, md_q2: 2, md_q3: 3,
+      ev_q1: 2, ev_q2: 3, ev_q3: 2,
+      os_q1: 3, os_q2: 3, os_q3: 2,
+      ca_q1: 2, ca_q2: 3, ca_q3: 2,
+      ai_q1: 2, ai_q2: 2, ai_q3: 1,
+    },
+    run: {
+      sc_q1: 4, sc_q2: 3, sc_q3: 4,
+      jl_q1: 3, jl_q2: 4, jl_q3: 3,
+      hr_q1: 4, hr_q2: 3, hr_q3: 4,
+      md_q1: 3, md_q2: 4, md_q3: 3,
+      ev_q1: 3, ev_q2: 3, ev_q3: 4,
+      os_q1: 4, os_q2: 4, os_q3: 3,
+      ca_q1: 3, ca_q2: 4, ca_q3: 3,
+      ai_q1: 3, ai_q2: 2, ai_q3: 3,
+    },
+  };
+
   const presets: Record<string, { profile: any; scores: any }> = {
-    crawl: { profile: { ...presetProfile }, scores: makeScores('crawl', 1.4) },
-    walk:  { profile: { ...presetProfile }, scores: makeScores('walk', 2.2) },
-    run:   { profile: { ...presetProfile }, scores: makeScores('run', 3.0) },
+    crawl: { profile: { ...presetProfile }, scores: makeScores(presetResponses.crawl) },
+    walk:  { profile: { ...presetProfile }, scores: makeScores(presetResponses.walk) },
+    run:   { profile: { ...presetProfile }, scores: makeScores(presetResponses.run) },
   };
 
   // Persona fixtures — match the recommendation-engine.test.js personas exactly
   // so the debug preview exercises the same paths as the test harness.
-  const personaPresets: Record<string, { profile: any; responses: Record<string, number>; stage: string }> = {
+  const personaPresets: Record<string, { profile: any; responses: Record<string, number> }> = {
     crawl: {
       profile: {},
-      stage: 'crawl',
       responses: Object.fromEntries(allQuestionIds.map(id => [id, 1])),
     },
     walk: {
       profile: { customer_segment: 'seg_midmarket', company_arr: 'arr_5m_20m', cs_team_size: 'size_1_3' },
-      stage: 'walk',
       responses: {
         sc_q1:2, sc_q2:3, sc_q3:2,
         jl_q1:2, jl_q2:2, jl_q3:3,
@@ -877,15 +906,7 @@ const sessionKeys = [
   function applyPersonaPreset(name: string) {
     const persona = personaPresets[name];
     if (!persona) return;
-    const domainScores: Record<string, number> = {};
-    const domains = (frameworkData as any).assessment_domains.domains;
-    for (const domain of domains) {
-      const qs = domain.questions.filter((q: any) => typeof persona.responses[q.id] === 'number');
-      if (qs.length === 0) continue;
-      domainScores[domain.id] = qs.reduce((s: number, q: any) => s + persona.responses[q.id], 0) / qs.length;
-    }
-    const overallScore = Object.values(domainScores).reduce((a: number, b) => a + (b as number), 0) / Object.keys(domainScores).length;
-    const scores = { domainScores, overallScore, stage: persona.stage, responses: persona.responses, timestamp: new Date().toISOString() };
+    const scores = makeScores(persona.responses);
     localStorage.setItem('distilledcs_profile', JSON.stringify(persona.profile));
     localStorage.setItem('distilledcs_scores', JSON.stringify(scores));
     localStorage.setItem('distilledcs_completed', 'true');
