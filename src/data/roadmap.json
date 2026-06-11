@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-10",
+  "last_updated": "2026-06-11",
   "items": [
     {
       "title": "Re-assessment reminder",
@@ -10,6 +10,12 @@
         { "label": "Transform page", "url": "/transform/" },
         { "label": "CS Maturity Report", "url": "/cs-maturity-report/" }
       ]
+    },
+    {
+      "title": "Checklist revamp with export",
+      "description": "A rebuilt execution checklist, with export as the headline feature. Save your checklist as a Markdown or plain-text file and bring it into the tools you already use. Export the full list or only the sections you choose, whether or not you have taken the assessment.",
+      "status": "planned",
+      "links": []
     },
     {
       "title": "Resume an in-progress assessment",
