@@ -26,7 +26,13 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
       <div class="page-header">
         <h1 class="page-title">Execution Checklist</h1>
         <p class="page-subtitle">Track your progress on the priority actions from your stage playbooks. Take the assessment to get a personalized, interactive checklist.</p>
-        <a href="/assess/" class="btn btn-primary">Take the Assessment</a>
+        <div class="checklist-header-actions">
+          <a href="/assess/" class="btn btn-primary">Take the Assessment</a>
+          <button type="button" class="checklist-export-btn" data-open-export>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.5v8M5 6.5l3 3 3-3"/><path d="M2.5 11v2a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2"/></svg>
+            Export checklist
+          </button>
+        </div>
       </div>
 
       <div class="checklist-explainer">
@@ -84,6 +90,59 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
           </div>
         );
       })}
+    </div>
+
+    <!-- ═══ Export modal ═══ -->
+    <div class="export-modal" id="export-modal" role="dialog" aria-modal="true" aria-labelledby="export-modal-title" hidden>
+      <div class="export-modal-backdrop" id="export-modal-backdrop"></div>
+      <div class="export-modal-panel" role="document">
+        <div class="export-modal-header">
+          <h2 class="export-modal-title" id="export-modal-title">Export checklist</h2>
+          <button type="button" class="export-modal-close" id="export-modal-close" aria-label="Close export dialog">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+
+        <div class="export-modal-body">
+          <div>
+            <span class="export-field-label">Format</span>
+            <div class="export-format-options">
+              <label class="export-format-option">
+                <input type="radio" name="export-format" value="md" checked />
+                <span>Markdown</span>
+              </label>
+              <label class="export-format-option">
+                <input type="radio" name="export-format" value="txt" />
+                <span>Plain text</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <span class="export-field-label">Sections</span>
+            <div class="export-sections" id="export-sections"></div>
+          </div>
+
+          <label class="export-toggle">
+            <input type="checkbox" id="export-include-notes" checked />
+            <span>Include "why it matters" notes</span>
+          </label>
+
+          <div>
+            <span class="export-field-label">Preview</span>
+            <textarea class="export-preview" id="export-preview" readonly spellcheck="false" rows="8"></textarea>
+          </div>
+
+          <div class="export-actions">
+            <button type="button" class="export-action-btn export-action-secondary" id="export-download">Download file</button>
+            <button type="button" class="export-action-btn export-action-primary" id="export-copy">Copy</button>
+          </div>
+        </div>
+
+        <div class="export-modal-footer">
+          Exports the sections you select. Everything happens in your browser, nothing is uploaded.
+        </div>
+      </div>
     </div>
 
   </div>
@@ -516,6 +575,269 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
     max-width: 36rem;
     margin-bottom: 1.5rem;
   }
+
+  /* ── Export trigger button (used in both static + JS-rendered headers) ── */
+  .checklist-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .checklist-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.25rem;
+  }
+
+  .checklist-export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: border-color 0.2s ease-out, color 0.2s ease-out;
+  }
+
+  .checklist-export-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  /* ── Export modal ── */
+  .export-modal {
+    position: fixed;
+    inset: 0;
+    /* Above the sticky site header (z-index 100) so the dialog overlays it. */
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .export-modal[hidden] { display: none; }
+
+  .export-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transition: opacity 0.18s ease-out;
+  }
+
+  .export-modal.is-open .export-modal-backdrop { opacity: 1; }
+
+  .export-modal-panel {
+    position: relative;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.875rem;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.22);
+    width: 100%;
+    max-width: 34rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    transform: translateY(8px);
+    opacity: 0;
+    transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+  }
+
+  .export-modal.is-open .export-modal-panel {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .export-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.125rem 1.25rem 0.875rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .export-modal-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin: 0;
+    color: var(--color-text-primary);
+    letter-spacing: -0.005em;
+  }
+
+  .export-modal-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background 0.15s ease-out, color 0.15s ease-out;
+    min-height: 0;
+  }
+
+  .export-modal-close:hover {
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+  }
+
+  @media (pointer: coarse) {
+    .export-modal-close {
+      min-width: 44px;
+      min-height: 44px;
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .export-modal-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+  }
+
+  .export-field-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    font-weight: 600;
+  }
+
+  .export-format-options {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .export-format-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+  }
+
+  .export-format-option:has(input:checked) {
+    border-color: var(--color-accent);
+    background: var(--color-accent-subtle);
+  }
+
+  .export-format-option input { accent-color: var(--color-accent); margin: 0; }
+
+  .export-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .export-section-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+  }
+
+  .export-section-option input { accent-color: var(--color-accent); margin: 0; flex-shrink: 0; }
+
+  .export-section-count { color: var(--color-text-muted); font-size: 0.8125rem; }
+
+  .export-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .export-toggle input { accent-color: var(--color-accent); margin: 0; }
+
+  .export-preview {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 9rem;
+    max-height: 16rem;
+    resize: vertical;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .export-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .export-action-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: background 0.15s ease-out, border-color 0.15s ease-out, color 0.15s ease-out;
+    min-height: 0;
+  }
+
+  .export-action-primary {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    border: 1px solid var(--color-accent);
+  }
+
+  .export-action-primary:hover { background: var(--color-accent-hover); }
+
+  .export-action-secondary {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+  }
+
+  .export-action-secondary:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .export-modal-footer {
+    padding: 0.75rem 1.25rem 1rem;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
 </style>
 
 <script>
@@ -530,6 +852,9 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
 
   const CHECKLIST_KEY = 'distilledcs_checklist';
 
+  interface ChecklistItem { id: string; text: string; estimated_time?: string; why_it_matters?: string; }
+  interface ChecklistGroup { title: string; stageId: string; items: ChecklistItem[]; }
+
   function getChecklist(): Record<string, boolean> {
     try {
       const raw = localStorage.getItem(CHECKLIST_KEY);
@@ -541,58 +866,210 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
     try { localStorage.setItem(CHECKLIST_KEY, JSON.stringify(data)); } catch {}
   }
 
+  function mapActions(stage: any): ChecklistItem[] {
+    return stage.priority_actions.map((a: any, i: number) => ({
+      id: `${stage.id}_${i}`,
+      text: typeof a === 'string' ? a : a.text,
+      estimated_time: typeof a === 'object' ? a.estimated_time : undefined,
+      why_it_matters: typeof a === 'object' ? a.why_it_matters : undefined,
+    }));
+  }
+
+  // Assessed grouping: Foundation (previous stage) / Current / Next milestone.
+  function buildAssessedGroups(userIdx: number): ChecklistGroup[] {
+    const groups: ChecklistGroup[] = [];
+    if (userIdx > 0) {
+      const prevStage = stages[userIdx - 1];
+      groups.push({
+        title: `Foundation (${stageLabels[prevStage.id]}, should be done)`,
+        stageId: prevStage.id,
+        items: mapActions(prevStage),
+      });
+    }
+    const currentStage = stages[userIdx];
+    groups.push({
+      title: `Current Priorities (${stageLabels[currentStage.id]})`,
+      stageId: currentStage.id,
+      items: mapActions(currentStage),
+    });
+    if (userIdx < stages.length - 1) {
+      const nextStage = stages[userIdx + 1];
+      groups.push({
+        title: `Next Milestone (${stageLabels[nextStage.id]})`,
+        stageId: nextStage.id,
+        items: mapActions(nextStage),
+      });
+    }
+    return groups;
+  }
+
+  // Non-assessed: all three stages in order, as a clean template.
+  function buildStaticGroups(): ChecklistGroup[] {
+    return stages.map((stage: any) => ({
+      title: `${stage.label} (${stage.subtitle})`,
+      stageId: stage.id,
+      items: mapActions(stage),
+    }));
+  }
+
+  // ── Export ──
+  interface ExportItem extends ChecklistItem { checked: boolean; }
+  interface ExportSection { title: string; items: ExportItem[]; }
+  interface ExportModel { sections: ExportSection[]; assessed: boolean; stageLabel: string | null; }
+
+  // Build the export model for the current state. Assessed users export their
+  // grouped list with real checked state; everyone else exports an all-stages
+  // template (the static view has no checkboxes to reflect).
+  function getExportModel(): ExportModel {
+    const checklist = getChecklist();
+    const assessed = isAssessmentCompleted();
+    let groups: ChecklistGroup[];
+    let stageLabel: string | null = null;
+    if (assessed) {
+      const scores = getScores();
+      const idx = stageOrder.indexOf(scores?.stage);
+      groups = buildAssessedGroups(idx >= 0 ? idx : 0);
+      stageLabel = scores?.stage ? stageLabels[scores.stage] : null;
+    } else {
+      groups = buildStaticGroups();
+    }
+    const sections = groups.map(g => ({
+      title: g.title,
+      items: g.items.map(it => ({ ...it, checked: assessed ? !!checklist[it.id] : false })),
+    }));
+    return { sections, assessed, stageLabel };
+  }
+
+  // Pure serializer: GitHub-style Markdown task list or plain text.
+  function buildChecklistExport(model: ExportModel, selected: number[], format: string, includeNotes: boolean): string {
+    const isMd = format === 'md';
+    const lines: string[] = [];
+    lines.push(isMd ? '# Customer Success Execution Checklist' : 'Customer Success Execution Checklist');
+    const sub = model.stageLabel ? `Stage: ${model.stageLabel}. From distilledcs.org` : 'From distilledcs.org';
+    if (isMd) { lines.push('', `_${sub}_`); } else { lines.push(sub); }
+
+    model.sections.forEach((section, i) => {
+      if (!selected.includes(i)) return;
+      lines.push('');
+      lines.push(isMd ? `## ${section.title}` : section.title);
+      if (!isMd) lines.push('');
+      section.items.forEach(item => {
+        const box = item.checked ? '[x]' : '[ ]';
+        const time = item.estimated_time ? ` (est. ${item.estimated_time})` : '';
+        lines.push(isMd ? `- ${box} ${item.text}${time}` : `${box} ${item.text}${time}`);
+        if (includeNotes && item.why_it_matters) {
+          lines.push(isMd ? `  > Why: ${item.why_it_matters}` : `    Why: ${item.why_it_matters}`);
+        }
+      });
+    });
+    return lines.join('\n') + '\n';
+  }
+
+  // ── Export modal wiring (runs for assessed and non-assessed) ──
+  const exportModal = document.getElementById('export-modal');
+  const exportPreview = document.getElementById('export-preview') as HTMLTextAreaElement | null;
+  const exportSectionsEl = document.getElementById('export-sections');
+  const exportNotesToggle = document.getElementById('export-include-notes') as HTMLInputElement | null;
+  let exportModel: ExportModel | null = null;
+
+  function getSelectedSectionIndexes(): number[] {
+    return Array.from(document.querySelectorAll<HTMLInputElement>('.export-section-cb'))
+      .filter(cb => cb.checked)
+      .map(cb => parseInt(cb.value, 10));
+  }
+
+  function getExportFormat(): string {
+    const checked = document.querySelector<HTMLInputElement>('input[name="export-format"]:checked');
+    return checked ? checked.value : 'md';
+  }
+
+  function renderSectionCheckboxes(model: ExportModel) {
+    if (!exportSectionsEl) return;
+    exportSectionsEl.innerHTML = model.sections.map((s, i) => `
+      <label class="export-section-option">
+        <input type="checkbox" class="export-section-cb" value="${i}" checked />
+        <span>${s.title} <span class="export-section-count">(${s.items.length})</span></span>
+      </label>
+    `).join('');
+  }
+
+  function refreshExportPreview() {
+    if (!exportModel || !exportPreview) return;
+    exportPreview.value = buildChecklistExport(
+      exportModel,
+      getSelectedSectionIndexes(),
+      getExportFormat(),
+      exportNotesToggle?.checked ?? true,
+    );
+  }
+
+  function openExportModal() {
+    if (!exportModal) return;
+    exportModel = getExportModel();
+    renderSectionCheckboxes(exportModel);
+    refreshExportPreview();
+    exportModal.hidden = false;
+    requestAnimationFrame(() => exportModal.classList.add('is-open'));
+    document.getElementById('export-modal-close')?.focus();
+  }
+
+  function closeExportModal() {
+    if (!exportModal) return;
+    exportModal.classList.remove('is-open');
+    setTimeout(() => { exportModal.hidden = true; }, 180);
+  }
+
+  document.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('[data-open-export]')) openExportModal();
+  });
+  document.getElementById('export-modal-backdrop')?.addEventListener('click', closeExportModal);
+  document.getElementById('export-modal-close')?.addEventListener('click', closeExportModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && exportModal && !exportModal.hidden) closeExportModal();
+  });
+  exportSectionsEl?.addEventListener('change', refreshExportPreview);
+  exportNotesToggle?.addEventListener('change', refreshExportPreview);
+  document.querySelectorAll<HTMLInputElement>('input[name="export-format"]').forEach(r => {
+    r.addEventListener('change', refreshExportPreview);
+  });
+
+  const exportCopyBtn = document.getElementById('export-copy');
+  exportCopyBtn?.addEventListener('click', async () => {
+    if (!exportPreview) return;
+    try { await navigator.clipboard.writeText(exportPreview.value); }
+    catch { exportPreview.select(); document.execCommand?.('copy'); }
+    const original = exportCopyBtn.textContent ?? 'Copy';
+    exportCopyBtn.textContent = 'Copied';
+    setTimeout(() => { exportCopyBtn.textContent = original; }, 1600);
+  });
+
+  document.getElementById('export-download')?.addEventListener('click', () => {
+    if (!exportPreview) return;
+    const format = getExportFormat();
+    const ext = format === 'md' ? 'md' : 'txt';
+    const mime = format === 'md' ? 'text/markdown' : 'text/plain';
+    const blob = new Blob([exportPreview.value], { type: `${mime};charset=utf-8` });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cs-execution-checklist.${ext}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  // ── Assessed interactive checklist ──
   if (isAssessmentCompleted()) {
     const scores = getScores();
     if (scores && scores.stage) {
-      const userStage = scores.stage;
-      const userIdx = stageOrder.indexOf(userStage);
+      const userIdx = stageOrder.indexOf(scores.stage);
 
       // Show assessed, hide default
       document.querySelectorAll('[data-show-if-assessed]').forEach(el => (el as HTMLElement).style.display = '');
       document.querySelectorAll('[data-hide-if-assessed]').forEach(el => (el as HTMLElement).style.display = 'none');
 
-      // Build groups: Foundation (previous stage), Current, Next milestone
-      interface ChecklistGroup {
-        title: string;
-        stageId: string;
-        items: { id: string; text: string; estimated_time?: string; why_it_matters?: string }[];
-      }
-
-      const groups: ChecklistGroup[] = [];
-
-      function mapActions(stage: any) {
-        return stage.priority_actions.map((a: any, i: number) => ({
-          id: `${stage.id}_${i}`,
-          text: typeof a === 'string' ? a : a.text,
-          estimated_time: typeof a === 'object' ? a.estimated_time : undefined,
-          why_it_matters: typeof a === 'object' ? a.why_it_matters : undefined,
-        }));
-      }
-
-      if (userIdx > 0) {
-        const prevStage = stages[userIdx - 1];
-        groups.push({
-          title: `Foundation (${stageLabels[prevStage.id]} — should be done)`,
-          stageId: prevStage.id,
-          items: mapActions(prevStage),
-        });
-      }
-
-      const currentStage = stages[userIdx];
-      groups.push({
-        title: `Current Priorities (${stageLabels[currentStage.id]})`,
-        stageId: currentStage.id,
-        items: mapActions(currentStage),
-      });
-
-      if (userIdx < stages.length - 1) {
-        const nextStage = stages[userIdx + 1];
-        groups.push({
-          title: `Next Milestone (${stageLabels[nextStage.id]})`,
-          stageId: nextStage.id,
-          items: mapActions(nextStage),
-        });
-      }
+      const groups = buildAssessedGroups(userIdx);
 
       const allItems = groups.flatMap(g => g.items);
       let checklist = getChecklist();
@@ -609,7 +1086,13 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
         let html = `
           <div class="page-header">
             <h1 class="page-title">Execution Checklist</h1>
-            <p class="page-subtitle">Track your progress on the priority actions from your stage playbooks. Check them off as you go — progress is saved automatically.</p>
+            <p class="page-subtitle">Track your progress on the priority actions from your stage playbooks. Check them off as you go, progress is saved automatically.</p>
+          </div>
+          <div class="checklist-toolbar">
+            <button type="button" class="checklist-export-btn" data-open-export>
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.5v8M5 6.5l3 3 3-3"/><path d="M2.5 11v2a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2"/></svg>
+              Export checklist
+            </button>
           </div>
           <div class="overall-progress">
             <div class="overall-progress-label">
