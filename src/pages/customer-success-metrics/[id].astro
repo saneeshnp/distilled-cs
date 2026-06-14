@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import frameworkData from '../../data/lean-cs-data.json';
+import calculatorSpecs from '../../data/metric-calculators.json';
+import { calculators } from '../../scripts/metric-calculators.js';
 
 export function getStaticPaths() {
   return frameworkData.metrics_directory.metrics.map(metric => ({
@@ -32,6 +34,51 @@ const relatedPrinciples = (frameworkData.principles as any[])
   .map((p) => ({ slug: p.slug, title: p.title, summary: p.summary || p.description }));
 
 const benchmarkEntries = Object.entries(metric.benchmarks_by_context || {});
+
+// Calculator: build-time lookup of this metric's spec (only ~19 of 24 metrics
+// have one). The current metric's entry is inlined; the rest of the JSON never
+// ships to the client.
+const calcSpec = (calculatorSpecs as Record<string, any>)[metric.id] || null;
+const calcFn = (calculators as Record<string, (v: any) => number>)[metric.id];
+
+// Render input props per variable type and pre-fill with the worked example.
+const calcFields = calcSpec
+  ? calcSpec.variables.map((v: any) => {
+      const isDate = v.type === 'date';
+      const isInteger = v.type === 'integer';
+      return {
+        ...v,
+        inputType: isDate ? 'date' : 'number',
+        inputmode: isDate ? undefined : isInteger ? 'numeric' : 'decimal',
+        step: isDate ? undefined : isInteger ? '1' : 'any',
+        prefix: v.unit === '$' ? '$' : null,
+        suffix: v.unit === '%' ? '%' : null,
+        exampleValue: calcSpec.example[v.key],
+      };
+    })
+  : [];
+
+// The example result, computed at build time so the static (no-JS) page shows a
+// real worked answer rather than an empty calculator.
+const calcExampleResult = calcSpec && calcFn ? calcFn(calcSpec.example) : null;
+
+function formatResult(value: number | null, unit: string, precision: number): string {
+  if (value == null || !Number.isFinite(value)) return '—';
+  const rounded = Number(value).toFixed(precision);
+  if (unit === '$') {
+    return (
+      '$' +
+      Number(rounded).toLocaleString('en-US', {
+        minimumFractionDigits: precision,
+        maximumFractionDigits: precision,
+      })
+    );
+  }
+  if (unit === '%') return `${rounded}%`;
+  if (unit === 'days') return `${rounded} days`;
+  if (unit === 'months') return `${rounded} months`;
+  return rounded;
+}
 
 const segmentLabels: Record<string, string> = {
   seg_smb: 'SMB',
@@ -101,6 +148,54 @@ const breadcrumbSchema = {
         <code>{metric.formula}</code>
       </div>
     </section>
+
+    <!-- Calculator (server-rendered; enhanced to live calculation by JS later) -->
+    {calcSpec && (
+      <section
+        class="metric-section calc-section"
+        data-calc-id={metric.id}
+        data-result-unit={calcSpec.result_unit}
+        data-result-precision={calcSpec.result_precision}
+      >
+        <h2 class="section-heading">Calculate it</h2>
+        <p class="calc-intro">
+          Enter your own numbers to calculate {calcSpec.result_label}. The fields start with an example.
+        </p>
+        <form class="calc-form">
+          <div class="calc-fields">
+            {calcFields.map((f: any) => (
+              <div class="calc-field">
+                <label class="calc-label" for={`calc-${metric.id}-${f.key}`}>{f.label}</label>
+                <div class={`calc-input-wrap${f.prefix ? ' has-prefix' : ''}${f.suffix ? ' has-suffix' : ''}`}>
+                  {f.prefix && <span class="calc-affix calc-prefix" aria-hidden="true">{f.prefix}</span>}
+                  <input
+                    class="calc-input"
+                    id={`calc-${metric.id}-${f.key}`}
+                    name={f.key}
+                    data-key={f.key}
+                    data-type={f.type}
+                    type={f.inputType}
+                    inputmode={f.inputmode}
+                    step={f.step}
+                    min={f.min}
+                    max={f.max}
+                    value={f.exampleValue}
+                    autocomplete="off"
+                  />
+                  {f.suffix && <span class="calc-affix calc-suffix" aria-hidden="true">{f.suffix}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div class="calc-result">
+            <span class="calc-result-label">{calcSpec.result_label}</span>
+            <output class="calc-result-value" data-calc-output>
+              {formatResult(calcExampleResult, calcSpec.result_unit, calcSpec.result_precision)}
+            </output>
+          </div>
+        </form>
+      </section>
+    )}
 
     <!-- Audience -->
     {metric.audience && metric.audience.length > 0 && (
@@ -360,6 +455,98 @@ const breadcrumbSchema = {
     font-size: 0.9375rem;
     color: var(--color-accent);
     white-space: pre-wrap;
+  }
+
+  /* Calculator */
+  .calc-intro {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .calc-form {
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .calc-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .calc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .calc-label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+
+  .calc-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .calc-affix {
+    position: absolute;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  .calc-prefix { left: 0.75rem; }
+  .calc-suffix { right: 0.75rem; }
+
+  .calc-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+  }
+
+  .calc-input-wrap.has-prefix .calc-input { padding-left: 1.5rem; }
+  .calc-input-wrap.has-suffix .calc-input { padding-right: 1.75rem; }
+
+  .calc-input:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+    border-color: var(--color-accent);
+  }
+
+  .calc-result {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .calc-result-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .calc-result-value {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-accent);
   }
 
   /* Priority by stage */
