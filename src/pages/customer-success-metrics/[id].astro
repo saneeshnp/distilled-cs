@@ -28,11 +28,6 @@ const relatedMetrics = (metric.related_metrics || [])
   .map((id: string) => allMetrics.find((m: any) => m.id === id))
   .filter(Boolean);
 
-// Reverse-lookup: principles whose related_metrics include this metric
-const relatedPrinciples = (frameworkData.principles as any[])
-  .filter((p) => (p.related_metrics || []).includes(metric.id))
-  .map((p) => ({ slug: p.slug, title: p.title, summary: p.summary || p.description }));
-
 const benchmarkEntries = Object.entries(metric.benchmarks_by_context || {});
 
 // Calculator: build-time lookup of this metric's spec (only ~19 of 24 metrics
@@ -157,9 +152,9 @@ const breadcrumbSchema = {
         data-result-unit={calcSpec.result_unit}
         data-result-precision={calcSpec.result_precision}
       >
-        <h2 class="section-heading">Calculate it</h2>
+        <h2 class="section-heading">{metric.name} calculator</h2>
         <p class="calc-intro">
-          Enter your own numbers to calculate {calcSpec.result_label}. The fields start with an example.
+          Enter your own numbers to calculate {calcSpec.result_label}. It uses the formula above and updates the result as you type, starting from a worked example so you can see a realistic calculation first. Use this {calcSpec.result_label} calculator to model a scenario or validate a figure before you report it.
         </p>
         <form class="calc-form">
           <div class="calc-fields">
@@ -340,20 +335,6 @@ const breadcrumbSchema = {
               <svg class="playbook-ref-arrow" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
-
-    {relatedPrinciples.length > 0 && (
-      <section class="metric-section">
-        <h2 class="section-heading">Related Principles</h2>
-        <div class="related-principles-list">
-          {relatedPrinciples.map((p: any) => (
-            <a href={`/customer-success-principles/${p.slug}/`} class="related-principle-card">
-              <span class="related-principle-title">{p.title}</span>
-              <span class="related-principle-summary">{p.summary}</span>
             </a>
           ))}
         </div>
@@ -846,42 +827,6 @@ const breadcrumbSchema = {
     display: grid;
     place-items: center;
     margin-top: 0.4rem;
-  }
-
-  /* Related principles */
-  .related-principles-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .related-principle-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.875rem 1rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-    text-decoration: none;
-    transition: border-color 0.2s, background-color 0.2s;
-  }
-
-  .related-principle-card:hover {
-    border-color: var(--color-accent);
-    background: var(--color-surface-hover);
-  }
-
-  .related-principle-title {
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: var(--color-text-primary);
-  }
-
-  .related-principle-summary {
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-    line-height: 1.5;
   }
 
   /* Related metrics */
