@@ -188,8 +188,14 @@ const breadcrumbSchema = {
             ))}
           </div>
           <div class="calc-result">
-            <span class="calc-result-label">{calcSpec.result_label}</span>
-            <output class="calc-result-value" data-calc-output>
+            <span class="calc-result-label" id={`calc-result-label-${metric.id}`}>{calcSpec.result_label}</span>
+            <output
+              class="calc-result-value"
+              data-calc-output
+              aria-labelledby={`calc-result-label-${metric.id}`}
+              aria-live="polite"
+              aria-atomic="true"
+            >
               {formatResult(calcExampleResult, calcSpec.result_unit, calcSpec.result_precision)}
             </output>
           </div>
@@ -578,6 +584,20 @@ const breadcrumbSchema = {
   .calc-reset:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
+  }
+
+  /* Benchmark targets line — JS-injected, so styled globally (scoped hashes
+     don't reach elements created via createElement). */
+  :global(.calc-benchmark) {
+    margin-top: 0.875rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  :global(.calc-benchmark strong) {
+    color: var(--color-text-secondary);
+    font-weight: 600;
   }
 
   /* Priority by stage */
@@ -1062,6 +1082,33 @@ const breadcrumbSchema = {
       });
       recompute();
     });
+
+    // Assessed users: surface their own segment's targets next to the result,
+    // read straight from the already-rendered benchmarks row. No parsing and no
+    // verdict — the user compares their calculated number against the targets.
+    if (isAssessmentCompleted()) {
+      const profile = getProfile();
+      const keys = [profile?.customer_segment, profile?.product_complexity, '_default'].filter(
+        Boolean,
+      ) as string[];
+      let row: Element | null = null;
+      for (const key of keys) {
+        row = document.querySelector(`tr[data-benchmark-segment="${key}"]`);
+        if (row) break;
+      }
+      const cells = row ? Array.from(row.querySelectorAll('td')) : [];
+      if (cells.length >= 4) {
+        const segment = cells[0].textContent?.trim() || '';
+        const good = cells[1].textContent?.trim() || '';
+        const great = cells[2].textContent?.trim() || '';
+        const worldClass = cells[3].textContent?.trim() || '';
+        const note = document.createElement('p');
+        note.className = 'calc-benchmark';
+        const lead = segment && segment !== 'All Segments' ? `Targets for ${segment} — ` : 'Targets — ';
+        note.innerHTML = `${lead}Good: <strong>${good}</strong> · Great: <strong>${great}</strong> · World class: <strong>${worldClass}</strong>`;
+        section.querySelector('.calc-result')?.insertAdjacentElement('afterend', note);
+      }
+    }
   })();
 
   const panel = document.getElementById('contextual-panel');
