@@ -12,7 +12,7 @@
     "postbuild": "pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "node src/scripts/recommendation-engine.test.js && node src/scripts/share-encoder.test.js",
+    "test": "node src/scripts/recommendation-engine.test.js && node src/scripts/share-encoder.test.js && node src/scripts/metric-calculators.test.js",
     "check:data": "node scripts/checks/validate-data-references.mjs",
     "check:roadmap": "node scripts/checks/validate-roadmap.mjs",
     "check:links": "node scripts/checks/validate-internal-links.mjs",

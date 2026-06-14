@@ -1,6 +1,13 @@
 {
-  "last_updated": "2026-06-11",
+  "last_updated": "2026-06-14",
   "items": [
+    {
+      "title": "Interactive metric calculators",
+      "description": "Calculate any metric right on its page. Each metric detail page has a calculator that starts with a worked example, recalculates as you change the inputs, and shows your own segment's targets next to the result once you have taken the assessment.",
+      "status": "shipped",
+      "shipped": "2026-06-14",
+      "pageUrl": "/customer-success-metrics/nrr/"
+    },
     {
       "title": "Re-assessment reminder",
       "description": "Download a calendar invite to re-take the assessment and keep the improvement loop moving. The CS Maturity Report includes a reminder modal where you pick the interval (30, 60, or 90 days, with 90 recommended) and add a day-before heads-up alert. The Transform page offers a quick 90-day reminder.",

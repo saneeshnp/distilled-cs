@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import frameworkData from '../../data/lean-cs-data.json';
+import calculatorSpecs from '../../data/metric-calculators.json';
+import { calculators } from '../../scripts/metric-calculators.js';
 
 export function getStaticPaths() {
   return frameworkData.metrics_directory.metrics.map(metric => ({
@@ -26,12 +28,52 @@ const relatedMetrics = (metric.related_metrics || [])
   .map((id: string) => allMetrics.find((m: any) => m.id === id))
   .filter(Boolean);
 
-// Reverse-lookup: principles whose related_metrics include this metric
-const relatedPrinciples = (frameworkData.principles as any[])
-  .filter((p) => (p.related_metrics || []).includes(metric.id))
-  .map((p) => ({ slug: p.slug, title: p.title, summary: p.summary || p.description }));
-
 const benchmarkEntries = Object.entries(metric.benchmarks_by_context || {});
+
+// Calculator: build-time lookup of this metric's spec (only ~19 of 24 metrics
+// have one). The current metric's entry is inlined; the rest of the JSON never
+// ships to the client.
+const calcSpec = (calculatorSpecs as Record<string, any>)[metric.id] || null;
+const calcFn = (calculators as Record<string, (v: any) => number>)[metric.id];
+
+// Render input props per variable type and pre-fill with the worked example.
+const calcFields = calcSpec
+  ? calcSpec.variables.map((v: any) => {
+      const isDate = v.type === 'date';
+      const isInteger = v.type === 'integer';
+      return {
+        ...v,
+        inputType: isDate ? 'date' : 'number',
+        inputmode: isDate ? undefined : isInteger ? 'numeric' : 'decimal',
+        step: isDate ? undefined : isInteger ? '1' : 'any',
+        prefix: v.unit === '$' ? '$' : null,
+        suffix: v.unit === '%' ? '%' : null,
+        exampleValue: calcSpec.example[v.key],
+      };
+    })
+  : [];
+
+// The example result, computed at build time so the static (no-JS) page shows a
+// real worked answer rather than an empty calculator.
+const calcExampleResult = calcSpec && calcFn ? calcFn(calcSpec.example) : null;
+
+function formatResult(value: number | null, unit: string, precision: number): string {
+  if (value == null || !Number.isFinite(value)) return '—';
+  const rounded = Number(value).toFixed(precision);
+  if (unit === '$') {
+    return (
+      '$' +
+      Number(rounded).toLocaleString('en-US', {
+        minimumFractionDigits: precision,
+        maximumFractionDigits: precision,
+      })
+    );
+  }
+  if (unit === '%') return `${rounded}%`;
+  if (unit === 'days') return `${rounded} days`;
+  if (unit === 'months') return `${rounded} months`;
+  return rounded;
+}
 
 const segmentLabels: Record<string, string> = {
   seg_smb: 'SMB',
@@ -101,6 +143,63 @@ const breadcrumbSchema = {
         <code>{metric.formula}</code>
       </div>
     </section>
+
+    <!-- Calculator (server-rendered; enhanced to live calculation by JS later) -->
+    {calcSpec && (
+      <section
+        class="metric-section calc-section"
+        data-calc-id={metric.id}
+        data-result-unit={calcSpec.result_unit}
+        data-result-precision={calcSpec.result_precision}
+      >
+        <h2 class="section-heading">{metric.name} calculator</h2>
+        <p class="calc-intro">
+          Enter your own numbers to calculate {calcSpec.result_label}. It uses the formula above and updates the result as you type, starting from a worked example so you can see a realistic calculation first. Use this {calcSpec.result_label} calculator to model a scenario or validate a figure before you report it.
+        </p>
+        <form class="calc-form">
+          <div class="calc-fields">
+            {calcFields.map((f: any) => (
+              <div class="calc-field">
+                <label class="calc-label" for={`calc-${metric.id}-${f.key}`}>{f.label}</label>
+                <div class={`calc-input-wrap${f.prefix ? ' has-prefix' : ''}${f.suffix ? ' has-suffix' : ''}`}>
+                  {f.prefix && <span class="calc-affix calc-prefix" aria-hidden="true">{f.prefix}</span>}
+                  <input
+                    class="calc-input"
+                    id={`calc-${metric.id}-${f.key}`}
+                    name={f.key}
+                    data-key={f.key}
+                    data-type={f.type}
+                    type={f.inputType}
+                    inputmode={f.inputmode}
+                    step={f.step}
+                    min={f.min}
+                    max={f.max}
+                    value={f.exampleValue}
+                    autocomplete="off"
+                  />
+                  {f.suffix && <span class="calc-affix calc-suffix" aria-hidden="true">{f.suffix}</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div class="calc-result">
+            <span class="calc-result-label" id={`calc-result-label-${metric.id}`}>{calcSpec.result_label}</span>
+            <output
+              class="calc-result-value"
+              data-calc-output
+              aria-labelledby={`calc-result-label-${metric.id}`}
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {formatResult(calcExampleResult, calcSpec.result_unit, calcSpec.result_precision)}
+            </output>
+          </div>
+          <div class="calc-actions" hidden data-calc-actions>
+            <button type="button" class="calc-reset" data-calc-reset>Reset to example</button>
+          </div>
+        </form>
+      </section>
+    )}
 
     <!-- Audience -->
     {metric.audience && metric.audience.length > 0 && (
@@ -242,20 +341,6 @@ const breadcrumbSchema = {
       </section>
     )}
 
-    {relatedPrinciples.length > 0 && (
-      <section class="metric-section">
-        <h2 class="section-heading">Related Principles</h2>
-        <div class="related-principles-list">
-          {relatedPrinciples.map((p: any) => (
-            <a href={`/customer-success-principles/${p.slug}/`} class="related-principle-card">
-              <span class="related-principle-title">{p.title}</span>
-              <span class="related-principle-summary">{p.summary}</span>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
-
     <!-- Related metrics -->
     {relatedMetrics.length > 0 && (
       <section class="metric-section">
@@ -360,6 +445,140 @@ const breadcrumbSchema = {
     font-size: 0.9375rem;
     color: var(--color-accent);
     white-space: pre-wrap;
+  }
+
+  /* Calculator */
+  .calc-intro {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .calc-form {
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+  }
+
+  .calc-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .calc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .calc-label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+
+  .calc-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .calc-affix {
+    position: absolute;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  .calc-prefix { left: 0.75rem; }
+  .calc-suffix { right: 0.75rem; }
+
+  .calc-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9375rem;
+    font-family: var(--font-body);
+    color: var(--color-text-primary);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+  }
+
+  .calc-input-wrap.has-prefix .calc-input { padding-left: 1.5rem; }
+  .calc-input-wrap.has-suffix .calc-input { padding-right: 1.75rem; }
+
+  .calc-input:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+    border-color: var(--color-accent);
+  }
+
+  .calc-result {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .calc-result-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .calc-result-value {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .calc-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .calc-reset {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease-out, color 0.2s ease-out;
+  }
+
+  .calc-reset:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .calc-reset:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* Benchmark targets line — JS-injected, so styled globally (scoped hashes
+     don't reach elements created via createElement). */
+  :global(.calc-benchmark) {
+    margin-top: 0.875rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  :global(.calc-benchmark strong) {
+    color: var(--color-text-secondary);
+    font-weight: 600;
   }
 
   /* Priority by stage */
@@ -610,42 +829,6 @@ const breadcrumbSchema = {
     margin-top: 0.4rem;
   }
 
-  /* Related principles */
-  .related-principles-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .related-principle-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.875rem 1rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-    text-decoration: none;
-    transition: border-color 0.2s, background-color 0.2s;
-  }
-
-  .related-principle-card:hover {
-    border-color: var(--color-accent);
-    background: var(--color-surface-hover);
-  }
-
-  .related-principle-title {
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: var(--color-text-primary);
-  }
-
-  .related-principle-summary {
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-    line-height: 1.5;
-  }
-
   /* Related metrics */
   .related-grid {
     display: flex;
@@ -764,8 +947,114 @@ const breadcrumbSchema = {
 
 <script>
   import { isAssessmentCompleted, getScores, getProfile } from '../../scripts/context-manager.js';
+  import { calculators } from '../../scripts/metric-calculators.js';
 
   const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
+
+  // ── Metric calculator (progressive enhancement) ──────────────────────────────
+  // The form and a worked-example result are already server-rendered. JS makes it
+  // recompute live as the user edits, and reveals the (otherwise useless) reset.
+  (function initCalculator() {
+    const section = document.querySelector<HTMLElement>('.calc-section');
+    if (!section) return;
+
+    const metricId = section.dataset.calcId || '';
+    const fn = (calculators as Record<string, (v: any) => number>)[metricId];
+    const output = section.querySelector<HTMLOutputElement>('[data-calc-output]');
+    if (!fn || !output) return;
+
+    const unit = section.dataset.resultUnit || '';
+    const precision = parseInt(section.dataset.resultPrecision || '0', 10);
+    const inputs = Array.from(section.querySelectorAll<HTMLInputElement>('.calc-input'));
+
+    function formatResult(value: number | null): string {
+      if (value == null || !Number.isFinite(value)) return '—';
+      const rounded = Number(value).toFixed(precision);
+      if (unit === '$') {
+        return (
+          '$' +
+          Number(rounded).toLocaleString('en-US', {
+            minimumFractionDigits: precision,
+            maximumFractionDigits: precision,
+          })
+        );
+      }
+      if (unit === '%') return `${rounded}%`;
+      if (unit === 'days') return `${rounded} days`;
+      if (unit === 'months') return `${rounded} months`;
+      return rounded;
+    }
+
+    function recompute() {
+      const values: Record<string, number | string> = {};
+      let complete = true;
+      for (const input of inputs) {
+        const key = input.dataset.key || '';
+        if (input.dataset.type === 'date') {
+          if (!input.value) complete = false;
+          values[key] = input.value;
+        } else {
+          if (input.value === '') {
+            complete = false;
+            continue;
+          }
+          const num = parseFloat(input.value);
+          if (Number.isNaN(num)) complete = false;
+          values[key] = num;
+        }
+      }
+      if (!complete) {
+        output!.textContent = '—';
+        return;
+      }
+      let result: number | null = null;
+      try {
+        result = fn(values);
+      } catch {
+        result = null;
+      }
+      output!.textContent = formatResult(result);
+    }
+
+    inputs.forEach((input) => input.addEventListener('input', recompute));
+
+    const actions = section.querySelector<HTMLElement>('[data-calc-actions]');
+    if (actions) actions.hidden = false;
+    const resetBtn = section.querySelector<HTMLButtonElement>('[data-calc-reset]');
+    resetBtn?.addEventListener('click', () => {
+      inputs.forEach((input) => {
+        input.value = input.defaultValue;
+      });
+      recompute();
+    });
+
+    // Assessed users: surface their own segment's targets next to the result,
+    // read straight from the already-rendered benchmarks row. No parsing and no
+    // verdict — the user compares their calculated number against the targets.
+    if (isAssessmentCompleted()) {
+      const profile = getProfile();
+      const keys = [profile?.customer_segment, profile?.product_complexity, '_default'].filter(
+        Boolean,
+      ) as string[];
+      let row: Element | null = null;
+      for (const key of keys) {
+        row = document.querySelector(`tr[data-benchmark-segment="${key}"]`);
+        if (row) break;
+      }
+      const cells = row ? Array.from(row.querySelectorAll('td')) : [];
+      if (cells.length >= 4) {
+        const segment = cells[0].textContent?.trim() || '';
+        const good = cells[1].textContent?.trim() || '';
+        const great = cells[2].textContent?.trim() || '';
+        const worldClass = cells[3].textContent?.trim() || '';
+        const note = document.createElement('p');
+        note.className = 'calc-benchmark';
+        const lead = segment && segment !== 'All Segments' ? `Targets for ${segment} — ` : 'Targets — ';
+        note.innerHTML = `${lead}Good: <strong>${good}</strong> · Great: <strong>${great}</strong> · World class: <strong>${worldClass}</strong>`;
+        section.querySelector('.calc-result')?.insertAdjacentElement('afterend', note);
+      }
+    }
+  })();
 
   const panel = document.getElementById('contextual-panel');
 

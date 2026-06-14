@@ -1,0 +1,198 @@
+{
+  "nrr": {
+    "result_label": "Net Revenue Retention",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "starting_arr", "label": "Starting ARR", "unit": "$", "type": "currency", "min": 0 },
+      { "key": "expansion", "label": "Expansion ARR", "unit": "$", "type": "currency", "min": 0 },
+      { "key": "contraction", "label": "Contraction ARR", "unit": "$", "type": "currency", "min": 0 },
+      { "key": "churn", "label": "Churned ARR", "unit": "$", "type": "currency", "min": 0 }
+    ],
+    "example": { "starting_arr": 1000000, "expansion": 150000, "contraction": 30000, "churn": 70000 }
+  },
+  "grr": {
+    "result_label": "Gross Revenue Retention",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "starting_arr", "label": "Starting ARR", "unit": "$", "type": "currency", "min": 0 },
+      { "key": "contraction", "label": "Contraction ARR", "unit": "$", "type": "currency", "min": 0 },
+      { "key": "churn", "label": "Churned ARR", "unit": "$", "type": "currency", "min": 0 }
+    ],
+    "example": { "starting_arr": 1000000, "contraction": 30000, "churn": 70000 }
+  },
+  "logo_retention": {
+    "result_label": "Logo Retention",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "customers_start", "label": "Customers at start", "type": "integer", "min": 0 },
+      { "key": "customers_end", "label": "Customers at end", "type": "integer", "min": 0 },
+      { "key": "new_customers", "label": "New customers added in period", "type": "integer", "min": 0 }
+    ],
+    "example": { "customers_start": 200, "customers_end": 220, "new_customers": 40 }
+  },
+  "time_to_value": {
+    "result_label": "Time to Value",
+    "result_unit": "days",
+    "result_precision": 0,
+    "variables": [
+      { "key": "contract_start", "label": "Contract start date", "type": "date" },
+      { "key": "value_milestone", "label": "First value milestone date", "type": "date" }
+    ],
+    "example": { "contract_start": "2026-01-01", "value_milestone": "2026-02-15" }
+  },
+  "ttfv": {
+    "result_label": "Time to First Value",
+    "result_unit": "days",
+    "result_precision": 0,
+    "variables": [
+      { "key": "contract_start", "label": "Contract start date", "type": "date" },
+      { "key": "first_milestone", "label": "First success milestone date", "type": "date" }
+    ],
+    "example": { "contract_start": "2026-01-01", "first_milestone": "2026-01-31" }
+  },
+  "csat": {
+    "result_label": "CSAT",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "satisfied_responses", "label": "Satisfied responses (4–5)", "type": "integer", "min": 0 },
+      { "key": "total_responses", "label": "Total responses", "type": "integer", "min": 0 }
+    ],
+    "example": { "satisfied_responses": 850, "total_responses": 1000 }
+  },
+  "adoption_rate": {
+    "result_label": "Adoption Rate",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "active_users", "label": "Active users", "type": "integer", "min": 0 },
+      { "key": "licensed_users", "label": "Total licensed users", "type": "integer", "min": 0 }
+    ],
+    "example": { "active_users": 350, "licensed_users": 500 }
+  },
+  "onboarding_completion": {
+    "result_label": "Onboarding Completion",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "completed", "label": "Customers completing onboarding in target window", "type": "integer", "min": 0 },
+      { "key": "cohort", "label": "Total new customers in cohort", "type": "integer", "min": 0 }
+    ],
+    "example": { "completed": 75, "cohort": 100 }
+  },
+  "product_adoption_depth": {
+    "result_label": "Product Adoption Depth",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "features_used", "label": "Features/modules actively used", "type": "integer", "min": 0 },
+      { "key": "features_available", "label": "Features/modules available in plan", "type": "integer", "min": 0 }
+    ],
+    "example": { "features_used": 8, "features_available": 20 }
+  },
+  "stickiness_ratio": {
+    "result_label": "Stickiness Ratio",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "dau", "label": "Daily Active Users (DAU)", "type": "integer", "min": 0 },
+      { "key": "mau", "label": "Monthly Active Users (MAU)", "type": "integer", "min": 0 }
+    ],
+    "example": { "dau": 1200, "mau": 4000 }
+  },
+  "expansion_rate": {
+    "result_label": "Expansion Rate",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "expansion_arr", "label": "Expansion ARR in period", "unit": "$", "type": "currency", "min": 0 },
+      { "key": "starting_arr", "label": "Starting ARR of existing customers", "unit": "$", "type": "currency", "min": 0 }
+    ],
+    "example": { "expansion_arr": 120000, "starting_arr": 1000000 }
+  },
+  "cac_payback": {
+    "result_label": "CAC Payback",
+    "result_unit": "months",
+    "result_precision": 1,
+    "variables": [
+      { "key": "cac", "label": "Customer Acquisition Cost", "unit": "$", "type": "currency", "min": 0 },
+      { "key": "mrr", "label": "Monthly Recurring Revenue per customer", "unit": "$", "type": "currency", "min": 0 },
+      { "key": "gross_margin", "label": "Gross margin", "unit": "%", "type": "percent", "min": 0, "max": 100 }
+    ],
+    "example": { "cac": 12000, "mrr": 1000, "gross_margin": 80 }
+  },
+  "ces": {
+    "result_label": "Customer Effort Score",
+    "result_unit": "",
+    "result_precision": 1,
+    "variables": [
+      { "key": "sum_ratings", "label": "Sum of all effort ratings", "type": "number", "min": 0 },
+      { "key": "responses", "label": "Number of responses", "type": "integer", "min": 0 }
+    ],
+    "example": { "sum_ratings": 210, "responses": 60 }
+  },
+  "escalation_rate": {
+    "result_label": "Escalation Rate",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "escalated_accounts", "label": "Accounts with escalations in period", "type": "integer", "min": 0 },
+      { "key": "total_accounts", "label": "Total active accounts", "type": "integer", "min": 0 }
+    ],
+    "example": { "escalated_accounts": 18, "total_accounts": 600 }
+  },
+  "ai_assisted_resolution_rate": {
+    "result_label": "AI-Assisted Resolution Rate",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "ai_interventions", "label": "CS interventions with documented AI involvement", "type": "integer", "min": 0 },
+      { "key": "total_interventions", "label": "Total CS interventions in period", "type": "integer", "min": 0 }
+    ],
+    "example": { "ai_interventions": 320, "total_interventions": 800 }
+  },
+  "csm_ai_adoption_rate": {
+    "result_label": "CSM AI Adoption Rate",
+    "result_unit": "%",
+    "result_precision": 1,
+    "variables": [
+      { "key": "csms_with_ai", "label": "CSMs with 3+ AI-assisted interactions this week", "type": "integer", "min": 0 },
+      { "key": "total_csms", "label": "Total active CSMs", "type": "integer", "min": 0 }
+    ],
+    "example": { "csms_with_ai": 9, "total_csms": 12 }
+  },
+  "clv": {
+    "result_label": "Customer Lifetime Value",
+    "result_unit": "$",
+    "result_precision": 0,
+    "variables": [
+      { "key": "avg_acv", "label": "Average Annual Contract Value", "unit": "$", "type": "currency", "min": 0 },
+      { "key": "avg_lifespan", "label": "Average customer lifespan (years)", "type": "number", "min": 0 }
+    ],
+    "example": { "avg_acv": 25000, "avg_lifespan": 4 }
+  },
+  "nps": {
+    "result_label": "Net Promoter Score",
+    "result_unit": "",
+    "result_precision": 0,
+    "variables": [
+      { "key": "promoters", "label": "Promoters (9–10)", "type": "integer", "min": 0 },
+      { "key": "passives", "label": "Passives (7–8)", "type": "integer", "min": 0 },
+      { "key": "detractors", "label": "Detractors (0–6)", "type": "integer", "min": 0 }
+    ],
+    "example": { "promoters": 600, "passives": 250, "detractors": 150 }
+  },
+  "acv": {
+    "result_label": "Annual Contract Value",
+    "result_unit": "$",
+    "result_precision": 0,
+    "variables": [
+      { "key": "total_contract_value", "label": "Total contract value", "unit": "$", "type": "currency", "min": 0 },
+      { "key": "contract_length_years", "label": "Contract length (years)", "type": "number", "min": 0 }
+    ],
+    "example": { "total_contract_value": 90000, "contract_length_years": 3 }
+  }
+}
