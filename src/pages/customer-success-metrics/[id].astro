@@ -169,25 +169,25 @@ const breadcrumbSchema = {
         data-result-unit={calcSpec.result_unit}
         data-result-precision={calcSpec.result_precision}
       >
-        <div class="calc-header">
-          <span class="calc-header-icon" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="4" y="2" width="16" height="20" rx="2"/>
-              <line x1="8" y1="6" x2="16" y2="6"/>
-              <line x1="8" y1="14" x2="8" y2="14"/>
-              <line x1="12" y1="14" x2="12" y2="14"/>
-              <line x1="16" y1="14" x2="16" y2="18"/>
-              <line x1="8" y1="18" x2="12" y2="18"/>
-            </svg>
-          </span>
-          <div class="calc-header-text">
-            <h2 class="section-heading calc-title">{metric.name} calculator</h2>
-            <p class="calc-intro">
-              Enter your own numbers to calculate {calcSpec.result_label}. It uses the formula above and updates as you type, starting from a worked example so you see a realistic calculation first.
-            </p>
-          </div>
-        </div>
         <form class="calc-form">
+          <div class="calc-header">
+            <span class="calc-header-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="2" width="16" height="20" rx="2"/>
+                <line x1="8" y1="6" x2="16" y2="6"/>
+                <line x1="8" y1="14" x2="8" y2="14"/>
+                <line x1="12" y1="14" x2="12" y2="14"/>
+                <line x1="16" y1="14" x2="16" y2="18"/>
+                <line x1="8" y1="18" x2="12" y2="18"/>
+              </svg>
+            </span>
+            <div class="calc-header-text">
+              <h2 class="section-heading calc-title">{metric.name} calculator</h2>
+              <p class="calc-intro">
+                Enter your own numbers to calculate {calcSpec.result_label}. It uses the formula above and updates as you type, starting from a worked example so you see a realistic calculation first.
+              </p>
+            </div>
+          </div>
           <div class="calc-grid">
             <div class="calc-col calc-inputs">
               <h3 class="calc-col-heading">Enter your numbers</h3>
@@ -538,7 +538,8 @@ const breadcrumbSchema = {
     display: flex;
     align-items: flex-start;
     gap: 0.875rem;
-    margin-bottom: 1.25rem;
+    padding: 1.5rem 1.5rem 1.25rem;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .calc-header-icon {
@@ -635,6 +636,12 @@ const breadcrumbSchema = {
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: 0.375rem;
+  }
+
+  /* The default border is barely visible against the dark surface, so use the
+     stronger border token to keep the inputs legible. */
+  :root[data-theme="dark"] .calc-input {
+    border-color: var(--color-border-hover);
   }
 
   .calc-input-wrap.has-prefix .calc-input { padding-left: 1.5rem; }
