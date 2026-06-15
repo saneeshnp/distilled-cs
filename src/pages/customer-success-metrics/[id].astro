@@ -85,6 +85,23 @@ const segmentLabels: Record<string, string> = {
   _default: 'All Segments',
 };
 
+// "How you compare" baseline for the calculator. Server-rendered from _default
+// (or the first segment) so crawlers and non-assessed users see real targets;
+// JS swaps in the assessed user's own segment at runtime.
+const calcBenchmarkEntry: [string, any] | null = calcSpec
+  ? ((metric.benchmarks_by_context && metric.benchmarks_by_context._default)
+      ? ['_default', metric.benchmarks_by_context._default]
+      : (benchmarkEntries[0] as [string, any]) || null)
+  : null;
+const calcBenchmark = calcBenchmarkEntry
+  ? { key: calcBenchmarkEntry[0], values: calcBenchmarkEntry[1] }
+  : null;
+const calcBenchmarkCaption = calcBenchmark
+  ? (calcBenchmark.key === '_default'
+      ? 'Typical targets'
+      : `Targets for ${segmentLabels[calcBenchmark.key] || calcBenchmark.key}`)
+  : '';
+
 const stageOrder = ['crawl', 'walk', 'run'];
 const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
 
@@ -152,50 +169,119 @@ const breadcrumbSchema = {
         data-result-unit={calcSpec.result_unit}
         data-result-precision={calcSpec.result_precision}
       >
-        <h2 class="section-heading">{metric.name} calculator</h2>
-        <p class="calc-intro">
-          Enter your own numbers to calculate {calcSpec.result_label}. It uses the formula above and updates the result as you type, starting from a worked example so you can see a realistic calculation first. Use this {calcSpec.result_label} calculator to model a scenario or validate a figure before you report it.
-        </p>
+        <div class="calc-header">
+          <span class="calc-header-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="2" width="16" height="20" rx="2"/>
+              <line x1="8" y1="6" x2="16" y2="6"/>
+              <line x1="8" y1="14" x2="8" y2="14"/>
+              <line x1="12" y1="14" x2="12" y2="14"/>
+              <line x1="16" y1="14" x2="16" y2="18"/>
+              <line x1="8" y1="18" x2="12" y2="18"/>
+            </svg>
+          </span>
+          <div class="calc-header-text">
+            <h2 class="section-heading calc-title">{metric.name} calculator</h2>
+            <p class="calc-intro">
+              Enter your own numbers to calculate {calcSpec.result_label}. It uses the formula above and updates as you type, starting from a worked example so you see a realistic calculation first.
+            </p>
+          </div>
+        </div>
         <form class="calc-form">
-          <div class="calc-fields">
-            {calcFields.map((f: any) => (
-              <div class="calc-field">
-                <label class="calc-label" for={`calc-${metric.id}-${f.key}`}>{f.label}</label>
-                <div class={`calc-input-wrap${f.prefix ? ' has-prefix' : ''}${f.suffix ? ' has-suffix' : ''}`}>
-                  {f.prefix && <span class="calc-affix calc-prefix" aria-hidden="true">{f.prefix}</span>}
-                  <input
-                    class="calc-input"
-                    id={`calc-${metric.id}-${f.key}`}
-                    name={f.key}
-                    data-key={f.key}
-                    data-type={f.type}
-                    type={f.inputType}
-                    inputmode={f.inputmode}
-                    step={f.step}
-                    min={f.min}
-                    max={f.max}
-                    value={f.exampleValue}
-                    autocomplete="off"
-                  />
-                  {f.suffix && <span class="calc-affix calc-suffix" aria-hidden="true">{f.suffix}</span>}
+          <div class="calc-grid">
+            <div class="calc-col calc-inputs">
+              <h3 class="calc-col-heading">Enter your numbers</h3>
+              <div class="calc-fields">
+                {calcFields.map((f: any) => (
+                  <div class="calc-field">
+                    <label class="calc-label" for={`calc-${metric.id}-${f.key}`}>{f.label}</label>
+                    <div class={`calc-input-wrap${f.prefix ? ' has-prefix' : ''}${f.suffix ? ' has-suffix' : ''}`}>
+                      {f.prefix && <span class="calc-affix calc-prefix" aria-hidden="true">{f.prefix}</span>}
+                      <input
+                        class="calc-input"
+                        id={`calc-${metric.id}-${f.key}`}
+                        name={f.key}
+                        data-key={f.key}
+                        data-type={f.type}
+                        type={f.inputType}
+                        inputmode={f.inputmode}
+                        step={f.step}
+                        min={f.min}
+                        max={f.max}
+                        value={f.exampleValue}
+                        autocomplete="off"
+                      />
+                      {f.suffix && <span class="calc-affix calc-suffix" aria-hidden="true">{f.suffix}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="calc-col calc-output-col">
+              <h3 class="calc-col-heading">Your result</h3>
+              <div class="calc-result">
+                <span class="calc-result-icon" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="2" width="16" height="20" rx="2"/>
+                    <line x1="8" y1="6" x2="16" y2="6"/>
+                    <line x1="8" y1="14" x2="8" y2="14"/>
+                    <line x1="12" y1="14" x2="12" y2="14"/>
+                    <line x1="16" y1="14" x2="16" y2="18"/>
+                    <line x1="8" y1="18" x2="12" y2="18"/>
+                  </svg>
+                </span>
+                <div class="calc-result-body">
+                  <output
+                    class="calc-result-value"
+                    data-calc-output
+                    aria-labelledby={`calc-result-label-${metric.id}`}
+                    aria-live="polite"
+                    aria-atomic="true"
+                  >
+                    {formatResult(calcExampleResult, calcSpec.result_unit, calcSpec.result_precision)}
+                  </output>
+                  <span class="calc-result-label" id={`calc-result-label-${metric.id}`}>{calcSpec.result_label}</span>
                 </div>
               </div>
-            ))}
+
+              {calcBenchmark && (
+                <div class="calc-compare" data-calc-compare>
+                  <h4 class="calc-compare-heading">How you compare</h4>
+                  <p class="calc-compare-caption" data-calc-compare-caption>{calcBenchmarkCaption}</p>
+                  <ul class="calc-compare-list">
+                    <li class="calc-compare-row">
+                      <span class="calc-compare-icon calc-icon-good" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                      </span>
+                      <span class="calc-compare-tier">Good</span>
+                      <span class="calc-compare-value" data-tier-value="good">{calcBenchmark.values.good}</span>
+                    </li>
+                    <li class="calc-compare-row">
+                      <span class="calc-compare-icon calc-icon-great" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2l2.9 6.3 6.6.6-5 4.3 1.6 6.6L12 17l-6.1 3.7L7.5 13.2l-5-4.3 6.6-.6z"/></svg>
+                      </span>
+                      <span class="calc-compare-tier">Great</span>
+                      <span class="calc-compare-value" data-tier-value="great">{calcBenchmark.values.great}</span>
+                    </li>
+                    <li class="calc-compare-row">
+                      <span class="calc-compare-icon calc-icon-world" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18"/></svg>
+                      </span>
+                      <span class="calc-compare-tier">World class</span>
+                      <span class="calc-compare-value" data-tier-value="world">{calcBenchmark.values.world_class}</span>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
-          <div class="calc-result">
-            <span class="calc-result-label" id={`calc-result-label-${metric.id}`}>{calcSpec.result_label}</span>
-            <output
-              class="calc-result-value"
-              data-calc-output
-              aria-labelledby={`calc-result-label-${metric.id}`}
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              {formatResult(calcExampleResult, calcSpec.result_unit, calcSpec.result_precision)}
-            </output>
-          </div>
-          <div class="calc-actions" hidden data-calc-actions>
-            <button type="button" class="calc-reset" data-calc-reset>Reset to example</button>
+
+          <div class="calc-footer">
+            <p class="calc-tip">Use this to set expectations, align stakeholders, and track improvement over time.</p>
+            <div class="calc-actions" hidden data-calc-actions>
+              <button type="button" class="calc-reset" data-calc-reset>Reset to example</button>
+            </div>
           </div>
         </form>
       </section>
@@ -448,18 +534,62 @@ const breadcrumbSchema = {
   }
 
   /* Calculator */
+  .calc-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .calc-header-icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+  }
+
+  .calc-title {
+    margin-bottom: 0.25rem;
+  }
+
   .calc-intro {
     font-size: 0.875rem;
     color: var(--color-text-secondary);
     line-height: 1.6;
-    margin-bottom: 1rem;
+    margin: 0;
   }
 
   .calc-form {
-    padding: 1.25rem 1.5rem;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .calc-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .calc-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+  }
+
+  .calc-col-heading {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
   }
 
   .calc-fields {
@@ -516,40 +646,146 @@ const breadcrumbSchema = {
     border-color: var(--color-accent);
   }
 
+  /* Result box */
   .calc-result {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
+    align-items: center;
     gap: 1rem;
-    margin-top: 1.25rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--color-border);
+    padding: 1.25rem 1.5rem;
+    background: var(--color-accent-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
   }
 
-  .calc-result-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--color-text-secondary);
+  .calc-result-icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-accent);
+  }
+
+  .calc-result-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
   }
 
   .calc-result-value {
     font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 1.875rem;
+    font-weight: 700;
+    line-height: 1.1;
     color: var(--color-accent);
   }
 
-  .calc-actions {
-    margin-top: 1rem;
+  .calc-result-label {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-top: 0.25rem;
+  }
+
+  /* How you compare */
+  .calc-compare {
+    margin-top: 1.5rem;
+  }
+
+  .calc-compare-heading {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 0.125rem;
+  }
+
+  .calc-compare-caption {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .calc-compare-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .calc-compare-row {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.625rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .calc-compare-row:first-child { border-top: none; }
+
+  .calc-compare-icon {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .calc-icon-good { color: var(--color-success); }
+  .calc-icon-great { color: var(--color-accent); }
+  .calc-icon-world { color: var(--color-text-secondary); }
+
+  .calc-compare-tier {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+  }
+
+  .calc-compare-value {
+    margin-left: auto;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.25rem 0.625rem;
+    white-space: nowrap;
+  }
+
+  /* Footer */
+  .calc-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+
+  .calc-tip {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 32rem;
+  }
+
+  .calc-actions {
+    display: flex;
+    margin-left: auto;
   }
 
   .calc-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
     font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--color-text-muted);
-    background: none;
+    color: var(--color-text-secondary);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 0.375rem;
     padding: 0.375rem 0.75rem;
@@ -565,20 +801,6 @@ const breadcrumbSchema = {
   .calc-reset:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
-  }
-
-  /* Benchmark targets line — JS-injected, so styled globally (scoped hashes
-     don't reach elements created via createElement). */
-  :global(.calc-benchmark) {
-    margin-top: 0.875rem;
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-    line-height: 1.5;
-  }
-
-  :global(.calc-benchmark strong) {
-    color: var(--color-text-secondary);
-    font-weight: 600;
   }
 
   /* Priority by stage */
@@ -1028,12 +1250,14 @@ const breadcrumbSchema = {
       recompute();
     });
 
-    // Assessed users: surface their own segment's targets next to the result,
-    // read straight from the already-rendered benchmarks row. No parsing and no
-    // verdict — the user compares their calculated number against the targets.
-    if (isAssessmentCompleted()) {
+    // "How you compare" is server-rendered from the default segment. For assessed
+    // users, swap in their own segment's targets, read straight from the
+    // already-rendered benchmarks row. No parsing and no verdict — the user
+    // compares their calculated number against the targets.
+    const compare = section.querySelector<HTMLElement>('[data-calc-compare]');
+    if (compare && isAssessmentCompleted()) {
       const profile = getProfile();
-      const keys = [profile?.customer_segment, profile?.product_complexity, '_default'].filter(
+      const keys = [profile?.customer_segment, profile?.product_complexity].filter(
         Boolean,
       ) as string[];
       let row: Element | null = null;
@@ -1044,14 +1268,18 @@ const breadcrumbSchema = {
       const cells = row ? Array.from(row.querySelectorAll('td')) : [];
       if (cells.length >= 4) {
         const segment = cells[0].textContent?.trim() || '';
-        const good = cells[1].textContent?.trim() || '';
-        const great = cells[2].textContent?.trim() || '';
-        const worldClass = cells[3].textContent?.trim() || '';
-        const note = document.createElement('p');
-        note.className = 'calc-benchmark';
-        const lead = segment && segment !== 'All Segments' ? `Targets for ${segment} — ` : 'Targets — ';
-        note.innerHTML = `${lead}Good: <strong>${good}</strong> · Great: <strong>${great}</strong> · World class: <strong>${worldClass}</strong>`;
-        section.querySelector('.calc-result')?.insertAdjacentElement('afterend', note);
+        const caption = compare.querySelector('[data-calc-compare-caption]');
+        if (caption) {
+          caption.textContent =
+            segment && segment !== 'All Segments' ? `Targets for ${segment}` : 'Typical targets';
+        }
+        const setTier = (tier: string, value: string) => {
+          const el = compare.querySelector(`[data-tier-value="${tier}"]`);
+          if (el) el.textContent = value;
+        };
+        setTier('good', cells[1].textContent?.trim() || '');
+        setTier('great', cells[2].textContent?.trim() || '');
+        setTier('world', cells[3].textContent?.trim() || '');
       }
     }
   })();
