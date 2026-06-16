@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-14",
+  "last_updated": "2026-06-16",
   "items": [
     {
       "title": "Interactive metric calculators",
@@ -21,13 +21,28 @@
     {
       "title": "Checklist revamp with export",
       "description": "A rebuilt execution checklist, with export as the headline feature. Save your checklist as a Markdown or plain-text file and bring it into the tools you already use. Export the full list or only the sections you choose, whether or not you have taken the assessment.",
-      "status": "planned",
-      "links": []
+      "status": "shipped",
+      "shipped": "2026-06-16",
+      "pageUrl": "/checklist/"
     },
     {
       "title": "Resume an in-progress assessment",
       "description": "Pick up where you left off instead of starting the questionnaire over.",
       "status": "planned",
+      "links": []
+    },
+    {
+      "title": "Data backup and restore",
+      "description": "Export all your assessment results, profile, and checklist progress as a single file, and restore it in any browser. Keeps your data safe across browser history clears, device switches, or accidental resets.",
+      "status": "exploring",
+      "note": "Concept stage",
+      "links": []
+    },
+    {
+      "title": "Compare with a colleague",
+      "description": "Paste a colleague's share URL into the Transform page and see their stage and domain scores alongside yours. No accounts, no backend — just two share URLs side by side. A lightweight starting point for team-level conversations about CS maturity.",
+      "status": "exploring",
+      "note": "Concept stage",
       "links": []
     },
     {
