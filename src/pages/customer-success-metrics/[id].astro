@@ -159,6 +159,9 @@ const breadcrumbSchema = {
       <div class="formula-block">
         <code>{metric.formula}</code>
       </div>
+      {metric.formula_note && (
+        <p class="formula-note">{metric.formula_note}</p>
+      )}
     </section>
 
     <!-- Calculator (server-rendered; enhanced to live calculation by JS later) -->
@@ -518,6 +521,13 @@ const breadcrumbSchema = {
   }
 
   /* Formula */
+  .formula-note {
+    margin-top: 0.625rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    white-space: pre-line;
+  }
+
   .formula-block {
     padding: 1.25rem 1.5rem;
     background: var(--color-surface);

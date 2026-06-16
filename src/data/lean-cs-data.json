@@ -2891,6 +2891,7 @@
         ],
         "definition": "A measure of customer loyalty and likelihood to recommend, based on a single question: 'How likely are you to recommend us to a colleague or peer?' Scored 0–10, NPS splits respondents into Promoters (9–10), Passives (7–8), and Detractors (0–6). The result is a single score from -100 to +100.",
         "formula": "% Promoters (9–10) − % Detractors (0–6)",
+        "formula_note": "% Promoters = (Number of promoters / Total respondents) × 100\n% Detractors = (Number of detractors / Total respondents) × 100",
         "priority_by_stage": {
           "crawl": "low",
           "walk": "medium",
