@@ -83,6 +83,25 @@ const contextualRecs = frameworkData.contextual_recommendations;
                 Update My Answers
               </a>
             </li>
+            <li role="none">
+              <button type="button" class="report-menu-item" id="report-backup-btn" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M2 10v2.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7 1v7.5M4.5 6L7 8.5 9.5 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Backup data
+              </button>
+            </li>
+            <li role="none">
+              <button type="button" class="report-menu-item" id="report-restore-btn" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M2 4v2.5a.5.5 0 0 0 .5.5H5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M2 6.5A5 5 0 1 1 3.5 10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+                Restore from backup
+              </button>
+              <input type="file" id="report-restore-file" accept=".json" hidden>
+            </li>
             <li class="report-menu-divider" role="separator"></li>
             <li role="none">
               <button type="button" class="report-menu-item report-menu-item--danger" id="report-restart-btn" role="menuitem">
@@ -2463,7 +2482,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
 </style>
 
 <script>
-  import { getProfile, getScores, isAssessmentCompleted, resetAll } from '../scripts/context-manager.js';
+  import { getProfile, getScores, isAssessmentCompleted, resetAll, downloadBackup, importData } from '../scripts/context-manager.js';
   import frameworkData from '../data/lean-cs-data.json';
   import {
     composePriorityActions,
@@ -3595,6 +3614,30 @@ const contextualRecs = frameworkData.contextual_recommendations;
   remindDownloadBtn?.addEventListener('click', () => {
     downloadReminderIcs();
     remindController.close();
+  });
+
+  document.getElementById('report-backup-btn')?.addEventListener('click', () => {
+    downloadBackup();
+  });
+
+  const reportRestoreFile = document.getElementById('report-restore-file') as HTMLInputElement;
+  document.getElementById('report-restore-btn')?.addEventListener('click', () => {
+    reportRestoreFile?.click();
+  });
+  reportRestoreFile?.addEventListener('change', () => {
+    const file = reportRestoreFile.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = importData(e.target?.result as string);
+      if (result.ok) {
+        window.location.reload();
+      } else {
+        alert(result.reason);
+      }
+    };
+    reader.readAsText(file);
+    reportRestoreFile.value = '';
   });
 
   document.getElementById('report-restart-btn')?.addEventListener('click', () => {

@@ -162,8 +162,9 @@ const sessionKeys = [
       <h2 class="section-heading">Bulk Actions</h2>
       <div class="bulk-actions">
         <button class="preset-btn preset-clear" id="action-clear-all" type="button">Clear All localStorage</button>
-        <button class="preset-btn" id="action-export" type="button">Export State to Clipboard</button>
-        <button class="preset-btn" id="action-import" type="button">Import State from Clipboard</button>
+        <button class="preset-btn" id="action-export" type="button">Export data to file</button>
+        <button class="preset-btn" id="action-import" type="button">Restore from file</button>
+        <input type="file" id="action-import-file" accept=".json" hidden>
       </div>
     </section>
 
@@ -620,6 +621,7 @@ const sessionKeys = [
     calculateOverallScore,
     determineStage,
   } from '../scripts/scoring-engine.js';
+  import { downloadBackup, importData } from '../scripts/context-manager.js';
 
   // ── Gate: require ?debug-enabled=true ──
   const debugEnabled = new URLSearchParams(window.location.search).get('debug-enabled') === 'true';
@@ -1039,34 +1041,33 @@ const sessionKeys = [
   });
 
   document.getElementById('action-export')?.addEventListener('click', () => {
-    const exported: Record<string, any> = {};
-    for (const key of storageKeys) {
-      try {
-        const raw = localStorage.getItem(key);
-        if (raw !== null) exported[key] = raw;
-      } catch {}
-    }
-    navigator.clipboard.writeText(JSON.stringify(exported, null, 2))
-      .then(() => showToast('Copied to clipboard'))
-      .catch(() => showToast('Failed to copy'));
+    downloadBackup();
+    showToast('Backup downloaded');
   });
 
-  document.getElementById('action-import')?.addEventListener('click', async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      const data = JSON.parse(text);
-      for (const [key, value] of Object.entries(data)) {
-        if (key.startsWith('distilledcs_')) {
-          localStorage.setItem(key, value as string);
-        }
+  const importFileInput = document.getElementById('action-import-file') as HTMLInputElement;
+
+  document.getElementById('action-import')?.addEventListener('click', () => {
+    importFileInput?.click();
+  });
+
+  importFileInput?.addEventListener('change', () => {
+    const file = importFileInput.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = importData(e.target?.result as string);
+      if (result.ok) {
+        showToast('Data restored');
+        refreshState();
+        refreshKeyDisplays();
+        renderRecommendationPreview();
+      } else {
+        showToast(result.reason ?? 'Failed to restore.');
       }
-      showToast('State imported');
-      refreshState();
-      refreshKeyDisplays();
-      renderRecommendationPreview();
-    } catch {
-      showToast('Failed to import. Check clipboard has valid JSON.');
-    }
+    };
+    reader.readAsText(file);
+    importFileInput.value = '';
   });
 
   // ── Init ──

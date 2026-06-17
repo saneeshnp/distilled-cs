@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-16",
+  "last_updated": "2026-06-17",
   "items": [
     {
       "title": "Interactive metric calculators",
@@ -34,9 +34,9 @@
     {
       "title": "Data backup and restore",
       "description": "Export all your assessment results, profile, and checklist progress as a single file, and restore it in any browser. Keeps your data safe across browser history clears, device switches, or accidental resets.",
-      "status": "exploring",
-      "note": "Concept stage",
-      "links": []
+      "status": "shipped",
+      "shipped": "2026-06-17",
+      "pageUrl": "/transform/"
     },
     {
       "title": "Compare with a colleague",
