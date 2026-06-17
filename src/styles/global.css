@@ -209,6 +209,10 @@ button, a, input, select, textarea {
   transition: all 0.2s ease-out;
 }
 
+button {
+  cursor: pointer;
+}
+
 /* Focus styles */
 :focus-visible {
   outline: 2px solid var(--color-accent);

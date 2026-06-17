@@ -1,0 +1,93 @@
+---
+---
+<div class="data-backup">
+  <h2 class="backup-heading">Data backup</h2>
+  <p class="backup-desc">Export your assessment results, profile, and checklist progress as a single file. Restore it in any browser to pick up where you left off.</p>
+  <div class="backup-actions">
+    <button type="button" id="backup-export-btn" class="btn btn-outline">Export data</button>
+    <button type="button" id="backup-import-btn" class="btn btn-outline">Restore from backup</button>
+    <input type="file" id="backup-file-input" accept=".json" hidden>
+  </div>
+  <p class="backup-feedback" id="backup-feedback" hidden></p>
+</div>
+
+<script>
+  import { downloadBackup, importData } from '../scripts/context-manager.js';
+
+  const exportBtn = document.getElementById('backup-export-btn');
+  const importBtn = document.getElementById('backup-import-btn');
+  const fileInput = document.getElementById('backup-file-input') as HTMLInputElement;
+  const feedback = document.getElementById('backup-feedback');
+
+  function showFeedback(msg: string, isError = false) {
+    if (!feedback) return;
+    feedback.textContent = msg;
+    feedback.hidden = false;
+    feedback.classList.toggle('backup-feedback--error', isError);
+    setTimeout(() => { feedback.hidden = true; }, 4000);
+  }
+
+  exportBtn?.addEventListener('click', () => {
+    downloadBackup();
+  });
+
+  importBtn?.addEventListener('click', () => {
+    fileInput?.click();
+  });
+
+  fileInput?.addEventListener('change', () => {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = importData(e.target?.result as string);
+      if (result.ok) {
+        showFeedback('Data restored. The page now reflects your previous state.');
+      } else {
+        showFeedback(result.reason, true);
+      }
+    };
+    reader.readAsText(file);
+    fileInput.value = '';
+  });
+</script>
+
+<style>
+  .data-backup {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+  }
+
+  .backup-heading {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem;
+  }
+
+  .backup-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    margin: 0 0 1.25rem;
+    line-height: 1.6;
+  }
+
+  .backup-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .backup-feedback {
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+    color: var(--color-accent);
+  }
+
+  .backup-feedback--error {
+    color: var(--color-warning, #F5A623);
+  }
+</style>
