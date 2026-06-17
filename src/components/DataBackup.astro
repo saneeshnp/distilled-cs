@@ -4,51 +4,51 @@
   <h2 class="backup-heading">Data backup</h2>
   <p class="backup-desc">Export your assessment results, profile, and checklist progress as a single file. Restore it in any browser to pick up where you left off.</p>
   <div class="backup-actions">
-    <button type="button" id="backup-export-btn" class="btn btn-outline">Export data</button>
-    <button type="button" id="backup-import-btn" class="btn btn-outline">Restore from backup</button>
-    <input type="file" id="backup-file-input" accept=".json" hidden>
+    <button type="button" data-action="export" class="btn btn-outline">Export data</button>
+    <button type="button" data-action="import" class="btn btn-outline">Restore from backup</button>
+    <input type="file" accept=".json" hidden>
   </div>
-  <p class="backup-feedback" id="backup-feedback" hidden></p>
+  <p class="backup-feedback" hidden></p>
 </div>
 
 <script>
   import { downloadBackup, importData } from '../scripts/context-manager.js';
 
-  const exportBtn = document.getElementById('backup-export-btn');
-  const importBtn = document.getElementById('backup-import-btn');
-  const fileInput = document.getElementById('backup-file-input') as HTMLInputElement;
-  const feedback = document.getElementById('backup-feedback');
+  // Script is deduplicated by Astro when the component is used multiple times on
+  // the same page, so scope each instance's listeners to its own container.
+  document.querySelectorAll('.data-backup').forEach((container) => {
+    const exportBtn = container.querySelector<HTMLButtonElement>('[data-action="export"]');
+    const importBtn = container.querySelector<HTMLButtonElement>('[data-action="import"]');
+    const fileInput = container.querySelector<HTMLInputElement>('input[type="file"]');
+    const feedback = container.querySelector<HTMLElement>('.backup-feedback');
 
-  function showFeedback(msg: string, isError = false) {
-    if (!feedback) return;
-    feedback.textContent = msg;
-    feedback.hidden = false;
-    feedback.classList.toggle('backup-feedback--error', isError);
-    setTimeout(() => { feedback.hidden = true; }, 4000);
-  }
+    function showFeedback(msg: string, isError = false) {
+      if (!feedback) return;
+      feedback.textContent = msg;
+      feedback.hidden = false;
+      feedback.classList.toggle('backup-feedback--error', isError);
+      setTimeout(() => { feedback.hidden = true; }, 4000);
+    }
 
-  exportBtn?.addEventListener('click', () => {
-    downloadBackup();
-  });
+    exportBtn?.addEventListener('click', () => { downloadBackup(); });
 
-  importBtn?.addEventListener('click', () => {
-    fileInput?.click();
-  });
+    importBtn?.addEventListener('click', () => { fileInput?.click(); });
 
-  fileInput?.addEventListener('change', () => {
-    const file = fileInput.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = importData(e.target?.result as string);
-      if (result.ok) {
-        showFeedback('Data restored. The page now reflects your previous state.');
-      } else {
-        showFeedback(result.reason, true);
-      }
-    };
-    reader.readAsText(file);
-    fileInput.value = '';
+    fileInput?.addEventListener('change', () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = importData(e.target?.result as string);
+        if (result.ok) {
+          showFeedback('Data restored. The page now reflects your previous state.');
+        } else {
+          showFeedback(result.reason, true);
+        }
+      };
+      reader.readAsText(file);
+      fileInput.value = '';
+    });
   });
 </script>
 

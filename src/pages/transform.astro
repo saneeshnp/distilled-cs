@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import StrategyLoop from '../components/StrategyLoop.astro';
+import DataBackup from '../components/DataBackup.astro';
 import frameworkData from '../data/lean-cs-data.json';
 
 const stageTransitions = frameworkData.stage_transitions;
@@ -107,6 +108,8 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
         </div>
         <p class="reassess-ics-hint">Adds a calendar event 90 days from your last assessment.</p>
       </div>
+
+      <DataBackup />
     </div>
 
     <!-- ═══ Not-assessed user view ═══ -->
@@ -141,6 +144,8 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
           </div>
         </div>
         <a href="/assess/" class="btn btn-primary btn-large">Start with the Assessment</a>
+
+        <DataBackup />
 
         <div class="transform-explainer">
           <h2>What the Transform phase does</h2>
