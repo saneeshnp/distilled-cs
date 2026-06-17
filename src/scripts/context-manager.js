@@ -192,3 +192,56 @@ export function getAssessmentAge() {
   const diffMs = now - assessedDate;
   return Math.floor(diffMs / (1000 * 60 * 60 * 24));
 }
+
+// Data backup / restore
+const BACKUP_KEYS = [
+  PROFILE_KEY,
+  SCORES_KEY,
+  COMPLETED_KEY,
+  PREVIOUS_SCORES_KEY,
+  'distilledcs_checklist',
+];
+
+export function exportData() {
+  const data = {};
+  for (const key of BACKUP_KEYS) {
+    const val = safeGetItem(key);
+    if (val !== null) data[key] = val;
+  }
+  return { version: 1, exported: new Date().toISOString(), data };
+}
+
+export function downloadBackup() {
+  const payload = exportData();
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const date = new Date().toISOString().slice(0, 10);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `distilledcs-backup-${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function importData(jsonString) {
+  let parsed;
+  try {
+    parsed = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
+  } catch {
+    return { ok: false, reason: 'File could not be read as JSON.' };
+  }
+  if (!parsed || typeof parsed.data !== 'object' || parsed.data === null) {
+    return { ok: false, reason: 'File does not look like a Distilled CS backup.' };
+  }
+  for (const [key, val] of Object.entries(parsed.data)) {
+    if (BACKUP_KEYS.includes(key) && typeof val === 'string') {
+      safeSetItem(key, val);
+    }
+  }
+  try {
+    window.dispatchEvent(new CustomEvent('distilledcs:updated'));
+  } catch {
+    // ignore
+  }
+  return { ok: true };
+}
