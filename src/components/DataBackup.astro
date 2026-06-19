@@ -30,6 +30,16 @@
       setTimeout(() => { feedback.hidden = true; }, 4000);
     }
 
+    function syncExportState() {
+      if (!exportBtn) return;
+      const assessed = localStorage.getItem('distilledcs_completed') === 'true';
+      exportBtn.disabled = !assessed;
+      exportBtn.title = assessed ? '' : 'Complete the assessment first to export your data';
+    }
+
+    syncExportState();
+    window.addEventListener('distilledcs:updated', syncExportState);
+
     exportBtn?.addEventListener('click', () => { downloadBackup(); });
 
     importBtn?.addEventListener('click', () => { fileInput?.click(); });
@@ -42,6 +52,7 @@
         const result = importData(e.target?.result as string);
         if (result.ok) {
           showFeedback('Data restored. The page now reflects your previous state.');
+          syncExportState();
         } else {
           showFeedback(result.reason, true);
         }
@@ -89,5 +100,10 @@
 
   .backup-feedback--error {
     color: var(--color-warning, #F5A623);
+  }
+
+  .backup-actions button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
   }
 </style>
