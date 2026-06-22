@@ -152,8 +152,6 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
   .checklist-page {
     padding-top: 2rem;
     padding-bottom: 6rem;
-    max-width: 48rem;
-    margin-inline: auto;
   }
 
   .checklist-loop-indicator {
@@ -299,17 +297,28 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
   }
 
   .checklist-static {
-    padding-left: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    list-style: none;
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+
+  @media (min-width: 768px) {
+    .checklist-static {
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+    }
   }
 
   .checklist-static li {
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
     line-height: 1.55;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0;
+    padding: 0.875rem 1rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
   }
 
   .action-time {
@@ -374,9 +383,15 @@ const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run:
   }
 
   :global(.checklist-items) {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+
+  @media (min-width: 768px) {
+    :global(.checklist-items) {
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+    }
   }
 
   :global(.checklist-item) {
