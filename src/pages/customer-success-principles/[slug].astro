@@ -120,7 +120,7 @@ const articleSchema = {
         <p class="section-lede">The same principle looks different at every stage. Calibrate the expectation to where the team actually is.</p>
         <div class="stage-rows">
           {stageOrder.map(stage => (
-            <article class={`stage-row stage-${stage}`}>
+            <article class={`stage-row stage-${stage}`} data-stage={stage}>
               <div class="stage-row-head">
                 <div class="stage-row-img">
                   <img
@@ -136,6 +136,7 @@ const articleSchema = {
                   <span class="stage-badge">{stageLabels[stage]}</span>
                   <span class="stage-subtitle">{stageSubtitles[stage]}</span>
                 </div>
+                <span class="your-stage-tag" hidden>Your stage</span>
               </div>
               <p class="stage-body">{principle.stage_manifestation[stage]}</p>
             </article>
@@ -307,10 +308,33 @@ const articleSchema = {
     border-radius: 0.5rem;
   }
 
+  .stage-row {
+    transition: border-color 0.2s ease-out, background 0.2s ease-out;
+  }
+
+  .stage-row.user-stage {
+    border-color: var(--color-accent);
+    background: var(--color-accent-subtle);
+  }
+
   .stage-row-head {
     display: flex;
     align-items: center;
     gap: 0.875rem;
+  }
+
+  .your-stage-tag {
+    margin-left: auto;
+    align-self: flex-start;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.1875rem 0.5rem;
+    border-radius: 0.25rem;
+    background: var(--color-accent);
+    color: #fff;
+    white-space: nowrap;
   }
 
   .stage-row-img {
@@ -493,3 +517,20 @@ const articleSchema = {
     flex-wrap: wrap;
   }
 </style>
+
+<script>
+  import { isAssessmentCompleted, getScores } from '../../scripts/context-manager.js';
+
+  if (isAssessmentCompleted()) {
+    const scores = getScores();
+    const stage = scores?.stage;
+    if (stage) {
+      const row = document.querySelector(`.stage-row[data-stage="${stage}"]`);
+      if (row) {
+        row.classList.add('user-stage');
+        const tag = row.querySelector('.your-stage-tag');
+        if (tag) tag.removeAttribute('hidden');
+      }
+    }
+  }
+</script>
