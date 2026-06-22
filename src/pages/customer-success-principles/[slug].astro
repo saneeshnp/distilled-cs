@@ -313,8 +313,8 @@ const articleSchema = {
   }
 
   .stage-row.user-stage {
-    border-color: var(--color-accent);
-    background: var(--color-accent-subtle);
+    border-color: var(--stage-color, var(--color-accent));
+    background: color-mix(in srgb, var(--stage-color, var(--color-accent)) 8%, var(--color-surface));
   }
 
   .stage-row-head {
@@ -332,8 +332,8 @@ const articleSchema = {
     text-transform: uppercase;
     padding: 0.1875rem 0.5rem;
     border-radius: 0.25rem;
-    background: var(--color-accent);
-    color: #fff;
+    background: var(--stage-color, var(--color-accent));
+    color: var(--color-on-stage, #fff);
     white-space: nowrap;
   }
 
@@ -342,6 +342,7 @@ const articleSchema = {
     height: 56px;
     border-radius: 50%;
     background: color-mix(in srgb, var(--stage-color) 10%, var(--color-surface));
+    border: 1px solid color-mix(in srgb, var(--stage-color) 35%, var(--color-border));
     display: flex;
     align-items: center;
     justify-content: center;
