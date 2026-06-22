@@ -1,6 +1,12 @@
 {
-  "last_updated": "2026-06-17",
+  "last_updated": "2026-06-22",
   "items": [
+    {
+      "title": "In-depth metric pages",
+      "description": "Expand each metric page beyond the definition and formula. New sections cover how to read the number, what it actually tells you, what tends to move it, and how to improve it, so a metric page becomes a working guide rather than a reference card.",
+      "status": "planned",
+      "links": []
+    },
     {
       "title": "Interactive metric calculators",
       "description": "Calculate any metric right on its page. Each metric detail page has a calculator that starts with a worked example, recalculates as you change the inputs, and shows your own segment's targets next to the result once you have taken the assessment.",
@@ -39,20 +45,6 @@
       "pageUrl": "/transform/"
     },
     {
-      "title": "Compare with a colleague",
-      "description": "Paste a colleague's share URL into the Transform page and see their stage and domain scores alongside yours. No accounts, no backend — just two share URLs side by side. A lightweight starting point for team-level conversations about CS maturity.",
-      "status": "exploring",
-      "note": "Concept stage",
-      "links": []
-    },
-    {
-      "title": "Gap-to-next-stage view",
-      "description": "A visual map of the capability gaps between your current stage and the next, and the playbooks that close them.",
-      "status": "exploring",
-      "note": "Concept stage",
-      "links": []
-    },
-    {
       "title": "Anonymous CS score submission",
       "description": "Optionally share your maturity score, industry, and company type to contribute to aggregate industry benchmark data.",
       "status": "planned",
@@ -78,6 +70,20 @@
         { "label": "V2", "url": "https://github.com/saneeshnp/distilled-cs/commit/d434ccc0f0c9beb594f617a6ae62d84290d65484" },
         { "label": "V3", "url": "https://github.com/saneeshnp/distilled-cs/commit/55c1715c48b25f85002a5720de8c7a54de6408d4" }
       ]
+    },
+    {
+      "title": "Compare with a colleague",
+      "description": "Paste a colleague's share URL into the Transform page and see their stage and domain scores alongside yours. No accounts, no backend — just two share URLs side by side. A lightweight starting point for team-level conversations about CS maturity.",
+      "status": "exploring",
+      "note": "Concept stage",
+      "links": []
+    },
+    {
+      "title": "Gap-to-next-stage view",
+      "description": "A visual map of the capability gaps between your current stage and the next, and the playbooks that close them.",
+      "status": "exploring",
+      "note": "Concept stage",
+      "links": []
     }
   ]
 }
