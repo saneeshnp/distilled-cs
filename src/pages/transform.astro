@@ -865,6 +865,14 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
     walk: 'walk_to_run',
   };
 
+  // Color each domain bar by its own score (matches the CS Maturity Report),
+  // not by the user's overall stage. Score is on the 1-4 scale.
+  function barStageClass(score) {
+    if (score >= 3.0) return 'run';
+    if (score >= 2.0) return 'walk';
+    return 'crawl';
+  }
+
   try {
     const completed = localStorage.getItem('distilledcs_completed');
     const scoresRaw = localStorage.getItem('distilledcs_scores');
@@ -957,7 +965,7 @@ domains.forEach((d: any) => { domainLabels[d.id] = d.label; });
           const pct = ((score / 4) * 100).toFixed(1);
           const label = domainLabels[domId] || domId;
           html += `
-            <div class="domain-bar-row stage-${userStage}">
+            <div class="domain-bar-row stage-${barStageClass(Number(score))}">
               <div class="domain-bar-header">
                 <span class="domain-bar-label">${label}</span>
                 <span class="domain-bar-score">${toDisplayScore(score)}<span class="domain-bar-denom"> / 10</span></span>
