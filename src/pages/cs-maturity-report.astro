@@ -75,6 +75,17 @@ const contextualRecs = frameworkData.contextual_recommendations;
           </button>
           <ul class="report-overflow-dropdown" id="report-overflow-dropdown" role="menu">
             <li role="none">
+              <button type="button" class="report-menu-item" id="report-howto-btn" role="menuitem">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+                  <path d="M7 6.2v3.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                  <circle cx="7" cy="4.3" r="0.7" fill="currentColor"/>
+                </svg>
+                How to read this report
+              </button>
+            </li>
+            <li class="report-menu-divider" role="separator"></li>
+            <li role="none">
               <a href="/assess/?mode=update" class="report-menu-item" role="menuitem">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                   <path d="M9.5 2.5l2 2-6.5 6.5H3v-2l6.5-6.5z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -152,6 +163,16 @@ const contextualRecs = frameworkData.contextual_recommendations;
           </button>
         </div>
       </div>
+
+<!-- How-to trigger (in-body, hidden in print) -->
+      <button type="button" class="report-howto-link" id="report-howto-link-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M7 6.2v3.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="7" cy="4.3" r="0.7" fill="currentColor"/>
+        </svg>
+        How to read this report
+      </button>
 
 <!-- Report body — populated by JS -->
       <div id="report-content"></div>
@@ -302,6 +323,64 @@ const contextualRecs = frameworkData.contextual_recommendations;
             <path d="M4.5 6.5V4.5a2.5 2.5 0 0 1 5 0v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
           </svg>
           <span id="remind-footer-note">The reminder is a standard .ics calendar file. Nothing is stored or sent, it downloads straight to your device.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ How-to modal ═══ -->
+    <div class="share-modal share-modal--wide" id="howto-modal" role="dialog" aria-modal="true" aria-labelledby="howto-modal-title" hidden>
+      <div class="share-modal-backdrop" id="howto-modal-backdrop"></div>
+      <div class="share-modal-panel" role="document">
+        <div class="share-modal-header">
+          <h2 class="share-modal-title" id="howto-modal-title">How to read this report</h2>
+          <button type="button" class="share-modal-close" id="howto-modal-close" aria-label="Close help dialog">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="share-modal-panel-body">
+          <p class="share-modal-blurb">
+            This report turns your assessment answers into a snapshot of where your CS function stands today and what to work on next. Here is what each section is for.
+          </p>
+
+          <dl class="howto-list">
+            <dt>Your stage and score</dt>
+            <dd>Your overall maturity stage, Crawl, Walk, or Run, and your score out of 10, averaged across the eight domains.</dd>
+            <dt>Executive summary</dt>
+            <dd>A plain-language read of your stage, your strongest and weakest areas, and what they mean together.</dd>
+            <dt>Your strengths</dt>
+            <dd>The domains where your team already scores well. Protect these as you push on weaker areas.</dd>
+            <dt>Scores across CS domains</dt>
+            <dd>Your score in each of the eight domains, colored by score. If you have re-assessed, the arrows show movement since last time.</dd>
+            <dt>Priority actions</dt>
+            <dd>The highest-leverage moves for your stage, ordered. The first few matter most, so start there.</dd>
+            <dt>Recommended playbooks</dt>
+            <dd>Step-by-step guides for your current stage, your weakest area, and the stage ahead.</dd>
+            <dt>Metric priorities</dt>
+            <dd>Which metrics to track now, grouped by how much they matter at your stage.</dd>
+            <dt>Maturity journey</dt>
+            <dd>Where this stage sits in the full Crawl to Walk to Run path.</dd>
+            <dt>Transition guide</dt>
+            <dd>The signals and shifts that tell you when you are ready for the next stage.</dd>
+          </dl>
+
+          <div class="howto-disclaimer">
+            <h3 class="howto-disclaimer-title">What this report is, and is not</h3>
+            <p>
+              The recommendations are generated from your assessment answers and the patterns we see across CS teams at your stage. They are a well-informed starting point, not a tailored consulting plan. The assessment cannot account for everything specific to your business: your product, your contracts, your customers, your team's history, or the constraints you work under. Use this report to focus the conversation and decide where to dig in, then bring your own judgment and context before you act.
+            </p>
+          </div>
+        </div>
+
+        <div class="share-modal-footer">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M7 6.2v3.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <circle cx="7" cy="4.3" r="0.7" fill="currentColor"/>
+          </svg>
+          <span>A starting point for your own analysis, not a substitute for it.</span>
         </div>
       </div>
     </div>
@@ -1130,6 +1209,82 @@ const contextualRecs = frameworkData.contextual_recommendations;
     .report-download-btn {
       display: none !important;
     }
+  }
+
+  /* ── How-to: in-body trigger link ── */
+  .report-howto-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 1.5rem;
+    padding: 0.375rem 0;
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: color 0.2s ease-out;
+  }
+
+  .report-howto-link:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .report-howto-link svg {
+    flex-shrink: 0;
+  }
+
+  /* ── How-to modal: wider panel + content ── */
+  .share-modal--wide .share-modal-panel {
+    max-width: 40rem;
+  }
+
+  .howto-list {
+    margin: 1.25rem 0 0;
+  }
+
+  .howto-list dt {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    font-size: 0.9375rem;
+    margin-top: 0.875rem;
+  }
+
+  .howto-list dt:first-child {
+    margin-top: 0;
+  }
+
+  .howto-list dd {
+    margin: 0.1875rem 0 0;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+
+  .howto-disclaimer {
+    margin-top: 1.5rem;
+    padding: 1rem 1.125rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.625rem;
+  }
+
+  .howto-disclaimer-title {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    margin: 0 0 0.5rem;
+    color: var(--color-text-primary);
+  }
+
+  .howto-disclaimer p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.6;
   }
 
 </style>
@@ -2133,6 +2288,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     .report-share-btn,
     .report-remind-btn,
     .report-overflow-menu,
+    .report-howto-link,
     .shared-banner,
     .share-modal {
       display: none !important;
@@ -2479,6 +2635,36 @@ const contextualRecs = frameworkData.contextual_recommendations;
   .report-footer a:hover {
     text-decoration: underline;
   }
+
+  .report-footer-disclaimer {
+    max-width: 36rem;
+    margin: 0.5rem auto !important;
+    font-style: italic;
+  }
+
+  /* ── How-to: inline expectation-setting callout ── */
+  .report-howto-callout {
+    margin-top: 1.75rem;
+    padding: 1.125rem 1.25rem;
+    background: var(--color-accent-subtle);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 25%, var(--color-border));
+    border-radius: 0.75rem;
+  }
+
+  .report-howto-callout-title {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    margin: 0 0 0.4rem;
+    color: var(--color-text-primary);
+  }
+
+  .report-howto-callout p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
 </style>
 
 <script>
@@ -2748,6 +2934,9 @@ const contextualRecs = frameworkData.contextual_recommendations;
     // Summary needs stage data
     if (stage) bodySections.push(renderSummary(data, stage));
 
+    // Expectation-setting note (prints with the report)
+    bodySections.push(renderHowToCallout());
+
     // Strengths: response-composed, only renders when ≥ 2 high-score fragments exist
     const strengthsHtml = renderStrengths(data);
     if (strengthsHtml) bodySections.push(strengthsHtml);
@@ -2879,6 +3068,20 @@ const contextualRecs = frameworkData.contextual_recommendations;
     sectionEls.forEach(s => { s.style.scrollMarginTop = '5rem'; });
   }
 
+  // Always-visible expectation-setting note. Renders right after the summary
+  // and prints with the report, so the "starting point, not a plan" framing
+  // travels into shared/PDF copies even if no one opens the how-to modal.
+  function renderHowToCallout(): string {
+    return `
+      <div class="report-howto-callout" role="note">
+        <h2 class="report-howto-callout-title">How to use this report</h2>
+        <p>
+          This report is a starting point, not a finished plan. It scores your team on what the assessment measured and maps that to stage-appropriate priorities, playbooks, and metrics. It cannot see everything that shapes your situation: your product, your contracts, your customers, your team's history, or the constraints you work under. Treat the recommendations as an informed prompt for discussion, not a prescription. Use them to decide where to look next, then apply your own context before acting.
+        </p>
+      </div>
+    `;
+  }
+
   function renderFooter(data: ReportData): string {
     const generated = formatDateTime(data.timestamp);
     return `
@@ -2886,6 +3089,9 @@ const contextualRecs = frameworkData.contextual_recommendations;
         <p>
           This report was generated on
           <a href="https://distilledcs.org" target="_blank" rel="noopener noreferrer">DistilledCS.org</a>${generated ? ` on ${generated}` : ''}.
+        </p>
+        <p class="report-footer-disclaimer">
+          These recommendations are a starting point based on your assessment answers, not a tailored consulting engagement. Apply your own judgment and context before acting.
         </p>
         <p>
           For an updated report, please visit
@@ -3616,6 +3822,20 @@ const contextualRecs = frameworkData.contextual_recommendations;
     remindController.close();
   });
 
+  // ── How-to modal ──
+  const howtoModal = document.getElementById('howto-modal');
+  const howtoController = createModalController(howtoModal, null);
+  const howtoLinkBtn = document.getElementById('report-howto-link-btn');
+  const howtoMenuBtn = document.getElementById('report-howto-btn');
+  howtoLinkBtn?.addEventListener('click', howtoController.open);
+  howtoMenuBtn?.addEventListener('click', () => {
+    overflowMenu?.classList.remove('is-open');
+    overflowTrigger?.setAttribute('aria-expanded', 'false');
+    howtoController.open();
+  });
+  document.getElementById('howto-modal-backdrop')?.addEventListener('click', howtoController.close);
+  document.getElementById('howto-modal-close')?.addEventListener('click', howtoController.close);
+
   document.getElementById('report-backup-btn')?.addEventListener('click', () => {
     downloadBackup();
   });
@@ -3709,6 +3929,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     if (e.key !== 'Escape') return;
     if (shareModal && !shareModal.hidden) shareController.close();
     if (remindModal && !remindModal.hidden) remindController.close();
+    if (howtoModal && !howtoModal.hidden) howtoController.close();
   });
 
   // Tab switching
