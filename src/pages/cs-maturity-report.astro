@@ -735,7 +735,9 @@ const contextualRecs = frameworkData.contextual_recommendations;
   .share-modal {
     position: fixed;
     inset: 0;
-    z-index: 80;
+    /* Above the sticky site header (z-index 100) so the dialog overlays it,
+       matching the checklist export modal. */
+    z-index: 300;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3651,6 +3653,8 @@ const contextualRecs = frameworkData.contextual_recommendations;
       if (!modal) return;
       opts.onOpen?.();
       modal.hidden = false;
+      // Lock background scroll so the page behind the modal stays put.
+      document.body.style.overflow = 'hidden';
       requestAnimationFrame(() => modal.classList.add('is-open'));
       const focusEl = opts.initialFocus?.() ?? modal.querySelector<HTMLElement>('.share-modal-close');
       focusEl?.focus();
@@ -3658,6 +3662,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     function close() {
       if (!modal) return;
       modal.classList.remove('is-open');
+      document.body.style.overflow = '';
       setTimeout(() => { modal.hidden = true; }, 180);
       trigger?.focus();
     }
