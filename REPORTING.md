@@ -120,7 +120,7 @@ Order matters — sections render top-to-bottom in this order:
 |---|---|---|---|
 | 1 | Header | `renderHeader` | Always renders. Includes attribution + (in shared view, sub-header logo is hidden so only the page-level brand mark shows in print) |
 | 2 | Executive Summary | `renderSummary` | Four paragraphs — see below |
-| 2.5 | How-to callout | `renderHowToCallout` | Always renders, right after the summary. An always-visible "How to use this report" note (`.report-howto-callout`) that frames the report as a starting point, not a tailored plan. **Prints with the report** so the framing travels into PDF/shared copies. Pure static copy, takes no data. The fuller per-section guide lives in the how-to modal (see section 0 / modals). |
+| 1.5 | How-to callout | `renderHowToCallout` | Renders **before** the executive summary (leads the body). An on-screen "How to use this report" note (`.report-howto-callout`) framing the report as a starting point, not a tailored plan. Carries a "See what each section means →" link (`#report-howto-callout-link`) that opens the how-to modal. **Hidden in print** (excluded from PDF for now). Pure static copy, takes no data. |
 | 3 | Your Strengths | `renderStrengths` | **Conditional** — only renders if `composeStrengths` returns ≥ 2 fragments |
 | 4 | Domain Breakdown | `renderDomainBreakdown` | Sorted by score descending, with delta arrows when `previousScores` exists |
 | 5 | Priority Actions | `renderPriorityActions` | Body = `insight + " " + next_step` (personalized lead-in + directive). Up to 8 scored (1 per domain via adaptive cap) + 1 stage fallback = 9 max. Cards 1–5 prominent; 6–9 grouped under "More actions worth considering" with compact muted styling. Domain eyebrow above each card; no question/answer attribution footer. |
@@ -324,7 +324,7 @@ A third modal (`#howto-modal`) explains what each report section is for, plus a 
 
 Two triggers, both opening the same modal: the **"How to read this report"** item at the top of the Options overflow menu (`#report-howto-btn`, which also closes the menu) and an in-body **`ⓘ How to read this report`** link (`#report-howto-link-btn`, `.report-howto-link`) rendered just above `#report-content`. The in-body link is hidden in print; the modal is hidden in print via the shared `.share-modal` rule. Wired with `createModalController(howtoModal, null)` — `trigger` is `null` since there are two triggers, so focus-return-to-trigger is skipped (acceptable; both triggers remain in the DOM).
 
-This is the always-on-demand counterpart to the always-visible `renderHowToCallout` (section 5, row 2.5) and the one-line footer disclaimer: the callout/footer print and set expectations passively; this modal carries the detailed guide.
+This is the on-demand counterpart to the on-screen `renderHowToCallout` (section 5, row 1.5) and the one-line footer disclaimer: the callout sets expectations on screen (hidden in print for now), the footer disclaimer prints, and this modal carries the detailed per-section guide. The callout's "See what each section means" link is one of the modal's two triggers (the other is the Options-menu item).
 
 **Shared modal controller** — `createModalController(modal, trigger, { onOpen, initialFocus })` returns `{ open, close }` and is used by the Share, Remind, **and How-to** modals (open adds `.is-open` next frame + focuses an initial element; close removes it, hides after the 180ms transition, returns focus to the trigger when one is passed). A single `keydown` Escape listener closes whichever modal is currently open. When adding a fourth modal, reuse this controller and extend the Escape listener.
 
@@ -336,7 +336,7 @@ Toolbar button is labeled **"Save as PDF"** with a document-plus-down-arrow icon
 
 Print rules to be aware of:
 
-- Hides: header, footer, ContextBar, `.report-toolbar` and all its buttons (`.report-overflow-menu`, `.report-share-btn`, `.report-remind-btn`, `.report-download-btn`), the in-body `.report-howto-link` trigger, `.shared-banner`, `.share-modal` (the Remind modal AND the How-to modal both share the `.share-modal` class, so they're hidden by the same rule). Note: the in-body `.report-howto-callout` and `.report-footer-disclaimer` are NOT hidden — they deliberately print with the report.
+- Hides: header, footer, ContextBar, `.report-toolbar` and all its buttons (`.report-overflow-menu`, `.report-share-btn`, `.report-remind-btn`, `.report-download-btn`), the `.report-howto-callout` (its "See what each section means" link is inside it, so it's hidden too), `.shared-banner`, `.share-modal` (the Remind modal AND the How-to modal both share the `.share-modal` class, so they're hidden by the same rule). Note: the `.report-footer-disclaimer` line is NOT hidden — it deliberately prints with the report.
 - Forces light-mode CSS variables on both `:root` and `:root[data-theme="dark"]`
 - Forces solid stage colors (Material 700) regardless of theme
 - Strips the header background image and falls back to a flat surface

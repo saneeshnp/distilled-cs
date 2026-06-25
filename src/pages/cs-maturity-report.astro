@@ -1203,32 +1203,6 @@ const contextualRecs = frameworkData.contextual_recommendations;
     }
   }
 
-  /* ── How-to: in-body trigger link ── */
-  .report-howto-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin: 0 0 1.5rem;
-    padding: 0.375rem 0;
-    background: transparent;
-    border: none;
-    color: var(--color-text-secondary);
-    font-family: var(--font-body);
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: color 0.2s ease-out;
-  }
-
-  .report-howto-link:hover {
-    color: var(--color-accent);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .report-howto-link svg {
-    flex-shrink: 0;
-  }
-
   /* ── How-to modal: wider panel + content ── */
   .share-modal--wide .share-modal-panel {
     max-width: 40rem;
@@ -2280,7 +2254,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     .report-share-btn,
     .report-remind-btn,
     .report-overflow-menu,
-    .report-howto-link,
+    .report-howto-callout,
     .shared-banner,
     .share-modal {
       display: none !important;
@@ -2637,6 +2611,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
   /* ── How-to: inline expectation-setting callout ── */
   .report-howto-callout {
     margin-top: 1.75rem;
+    margin-bottom: 2.5rem;
     padding: 1.125rem 1.25rem;
     background: var(--color-accent-subtle);
     border: 1px solid color-mix(in srgb, var(--color-accent) 25%, var(--color-border));
@@ -2656,6 +2631,32 @@ const contextualRecs = frameworkData.contextual_recommendations;
     font-size: 0.9rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
+  }
+
+  .report-howto-callout-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.75rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--color-accent);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: gap 0.2s ease-out;
+  }
+
+  .report-howto-callout-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    gap: 0.5rem;
+  }
+
+  .report-howto-callout-link svg {
+    flex-shrink: 0;
   }
 </style>
 
@@ -2923,11 +2924,12 @@ const contextualRecs = frameworkData.contextual_recommendations;
     // Phase 2: build body sections into a reveal wrapper that fades in after the header
     const bodySections: string[] = [];
 
+    // Expectation-setting note (prints with the report) — leads the body so it
+    // frames the report before the reader reaches the summary and recommendations.
+    bodySections.push(renderHowToCallout());
+
     // Summary needs stage data
     if (stage) bodySections.push(renderSummary(data, stage));
-
-    // Expectation-setting note (prints with the report)
-    bodySections.push(renderHowToCallout());
 
     // Strengths: response-composed, only renders when ≥ 2 high-score fragments exist
     const strengthsHtml = renderStrengths(data);
@@ -3068,8 +3070,14 @@ const contextualRecs = frameworkData.contextual_recommendations;
       <div class="report-howto-callout" role="note">
         <h2 class="report-howto-callout-title">How to use this report</h2>
         <p>
-          This report is a starting point, not a finished plan. It scores your team on what the assessment measured and maps that to stage-appropriate priorities, playbooks, and metrics. It cannot see everything that shapes your situation: your product, your contracts, your customers, your team's history, or the constraints you work under. Treat the recommendations as an informed prompt for discussion, not a prescription. Use them to decide where to look next, then apply your own context before acting.
+          This assessment provides a structured starting point for improving Customer Success. It recommends priorities, playbooks, and metrics based on your assessment results and your current stage. Developing a complete CS strategy requires additional business context that an assessment can't capture. Review the recommendations, discuss them with your team, and use them alongside strategic planning before making significant organizational or process changes.
         </p>
+        <button type="button" class="report-howto-callout-link" id="report-howto-callout-link">
+          See what each section means
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 7h8M7.5 3.5L11 7l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
     `;
   }
@@ -3642,8 +3650,8 @@ const contextualRecs = frameworkData.contextual_recommendations;
     downloadBtn.addEventListener('click', () => window.print());
   }
 
-  // Shared open/close controller for the report's modals (Share + Remind).
-  // Reuses the .share-modal shell styles for both; only the body differs.
+  // Shared open/close controller for the report's modals (Share + Remind + How-to).
+  // Reuses the .share-modal shell styles for all; only the body differs.
   function createModalController(
     modal: HTMLElement | null,
     trigger: HTMLElement | null,
@@ -3820,13 +3828,18 @@ const contextualRecs = frameworkData.contextual_recommendations;
   // ── How-to modal ──
   const howtoModal = document.getElementById('howto-modal');
   const howtoController = createModalController(howtoModal, null);
-  const howtoLinkBtn = document.getElementById('report-howto-link-btn');
   const howtoMenuBtn = document.getElementById('report-howto-btn');
-  howtoLinkBtn?.addEventListener('click', howtoController.open);
   howtoMenuBtn?.addEventListener('click', () => {
     overflowMenu?.classList.remove('is-open');
     overflowTrigger?.setAttribute('aria-expanded', 'false');
     howtoController.open();
+  });
+  // The callout's "See what each section means" link is injected into the body
+  // via innerHTML after this script runs, so it's reached through delegation.
+  document.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement)?.closest('#report-howto-callout-link')) {
+      howtoController.open();
+    }
   });
   document.getElementById('howto-modal-backdrop')?.addEventListener('click', howtoController.close);
   document.getElementById('howto-modal-close')?.addEventListener('click', howtoController.close);
