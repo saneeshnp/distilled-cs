@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-22",
+  "last_updated": "2026-06-26",
   "items": [
     {
       "title": "In-depth metric pages",
@@ -33,9 +33,10 @@
     },
     {
       "title": "Resume an in-progress assessment",
-      "description": "Pick up where you left off instead of starting the questionnaire over.",
-      "status": "planned",
-      "links": []
+      "description": "Pick up where you left off instead of starting the questionnaire over. Your answers are saved as you go, and a resume prompt appears when you return so you can continue without retaking the questions.",
+      "status": "shipped",
+      "shipped": "2026-06-26",
+      "pageUrl": "/assess/"
     },
     {
       "title": "Data backup and restore",

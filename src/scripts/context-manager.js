@@ -5,6 +5,7 @@ const PROFILE_KEY = 'distilledcs_profile';
 const SCORES_KEY = 'distilledcs_scores';
 const COMPLETED_KEY = 'distilledcs_completed';
 const PREVIOUS_SCORES_KEY = 'distilledcs_previous_scores';
+const DRAFT_KEY = 'distilledcs_draft';
 
 // Stage score ranges (from framework data — D1 bands, ordered ascending by min)
 const STAGE_RANGES = [
@@ -135,11 +136,28 @@ export function setAssessmentCompleted(value) {
   safeSetItem(COMPLETED_KEY, String(!!value));
 }
 
+// In-progress assessment draft (resume support)
+// Holds partial answers so a user who leaves mid-assessment can pick up
+// where they left off. Separate from SCORES_KEY, which only holds a completed
+// assessment. Cleared once the assessment is finished or reset.
+export function saveDraft(draft) {
+  return safeSetItem(DRAFT_KEY, JSON.stringify(draft));
+}
+
+export function getDraft() {
+  return safeParse(safeGetItem(DRAFT_KEY));
+}
+
+export function clearDraft() {
+  safeRemoveItem(DRAFT_KEY);
+}
+
 // Full reset
 export function resetAll() {
   safeRemoveItem(PROFILE_KEY);
   safeRemoveItem(SCORES_KEY);
   safeRemoveItem(COMPLETED_KEY);
+  safeRemoveItem(DRAFT_KEY);
   try {
     localStorage.removeItem('distilledcs_checklist');
   } catch {
