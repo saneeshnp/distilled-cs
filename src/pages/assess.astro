@@ -18,6 +18,18 @@ const stages = frameworkData.maturity_stages.stages;
       <StrategyLoop activePhase="assess" size="sm" />
     </div>
 
+    <!-- Resume banner — revealed by JS only when an in-progress draft exists -->
+    <div class="resume-banner" id="resume-banner" style="display:none;" role="status">
+      <div class="resume-banner-text">
+        <strong>You have an assessment in progress.</strong>
+        <span class="resume-progress" id="resume-progress-text"></span>
+      </div>
+      <div class="resume-banner-actions">
+        <button class="btn btn-primary" id="resume-btn" type="button">Resume</button>
+        <button class="resume-discard-btn" id="resume-discard-btn" type="button">Start over</button>
+      </div>
+    </div>
+
     <!-- Static crawlable intro (hidden once user has completed the assessment) -->
     <section class="assess-intro" data-hide-if-assessed aria-label="About the assessment">
       <h1 class="assess-intro-headline">Customer Success Maturity Assessment</h1>
@@ -178,7 +190,14 @@ const stages = frameworkData.maturity_stages.stages;
       </div>
     </section>
 
-
+    <!-- Auto-save reassurance — revealed by JS only in the normal (non-update) flow -->
+    <div class="autosave-hint" id="autosave-hint" style="display:none;" role="note">
+      <svg class="autosave-hint-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <span>Your answers are saved automatically. You can close this tab and pick up where you left off.</span>
+    </div>
 
   </div>
   </div>
@@ -372,6 +391,89 @@ const stages = frameworkData.maturity_stages.stages;
 
   .btn-start-fresh:hover {
     background: rgba(229, 57, 53, 0.08);
+  }
+
+  /* Resume banner */
+  .resume-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--color-accent-subtle);
+    border: 1px solid var(--color-accent);
+    border-radius: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .resume-banner-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+  }
+
+  .resume-progress {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .resume-banner-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .resume-discard-btn {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    background: none;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    min-height: 0;
+  }
+
+  .resume-discard-btn:hover {
+    color: var(--color-text-primary);
+  }
+
+  /* Auto-save reassurance callout */
+  .autosave-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.625rem 0.875rem;
+    background: var(--color-accent-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.45;
+  }
+
+  .autosave-hint-icon {
+    color: var(--color-accent);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    .resume-banner-actions {
+      width: 100%;
+    }
+
+    .resume-banner-actions .btn {
+      flex: 1;
+    }
   }
 
   /* Company name field */
@@ -573,7 +675,7 @@ const stages = frameworkData.maturity_stages.stages;
 </style>
 
 <script>
-  import { saveProfile, saveScores, setAssessmentCompleted, resetAll, isAssessmentCompleted, getScores, getProfile, savePreviousScores } from '../scripts/context-manager.js';
+  import { saveProfile, saveScores, setAssessmentCompleted, resetAll, isAssessmentCompleted, getScores, getProfile, savePreviousScores, saveDraft, getDraft, clearDraft } from '../scripts/context-manager.js';
   import { calculateAllDomainScores, calculateOverallScore, determineStage, toDisplayScore } from '../scripts/scoring-engine.js';
   import frameworkData from '../data/lean-cs-data.json';
 
@@ -586,6 +688,7 @@ const stages = frameworkData.maturity_stages.stages;
   const responses: Record<string, number> = {};
   let currentDomainIdx = 0;
   let isUpdating = false;
+  let inAssessmentPhase = false;
 
   const totalQuestions = contextParams.length + domains.reduce((s: number, d: any) => s + d.questions.length, 0);
 
@@ -604,8 +707,106 @@ const stages = frameworkData.maturity_stages.stages;
   // Crawlers still see the full intro in the initial HTML; this only affects the in-session view.
   assessStartBtn?.addEventListener('click', () => {
     if (assessIntro) assessIntro.style.display = 'none';
+    const banner = document.getElementById('resume-banner');
+    if (banner) banner.style.display = 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+
+  // ── In-progress draft persistence (resume support) ──
+  // Save a lightweight snapshot of partial answers on every change, so a user
+  // who leaves mid-assessment can pick up where they left off. Never runs during
+  // the update flow (a completed assessment is already saved) or once completed.
+  function persistDraft() {
+    if (isUpdating || isAssessmentCompleted()) return;
+    const companyInput = document.getElementById('company-name-input') as HTMLInputElement;
+    const companyName = companyInput?.value.trim() || '';
+    if (Object.keys(profile).length === 0 && Object.keys(responses).length === 0 && !companyName) {
+      return;
+    }
+    saveDraft({
+      profile: { ...profile },
+      responses: { ...responses },
+      companyName,
+      phase: inAssessmentPhase ? 'assessment' : 'profile',
+      domainIdx: currentDomainIdx,
+      savedAt: new Date().toISOString(),
+    });
+  }
+
+  // Apply saved profile/response values to the visible option cards.
+  function applyProfileSelectionsToUI() {
+    for (const [key, val] of Object.entries(profile)) {
+      const btn = document.querySelector(`#profile-form .option-card[data-param="${key}"][data-value="${val}"]`) as HTMLElement | null;
+      if (btn) {
+        btn.closest('.profile-question')?.querySelectorAll('.option-card').forEach(b => {
+          b.classList.remove('selected');
+          b.setAttribute('aria-checked', 'false');
+        });
+        btn.classList.add('selected');
+        btn.setAttribute('aria-checked', 'true');
+      }
+    }
+  }
+
+  function applyResponseSelectionsToUI() {
+    for (const [qId, score] of Object.entries(responses)) {
+      const btn = document.querySelector(`.option-assess[data-question="${qId}"][data-score="${score}"]`) as HTMLElement | null;
+      if (btn) {
+        btn.closest('.assess-question')?.querySelectorAll('.option-assess').forEach(b => {
+          b.classList.remove('selected');
+          b.setAttribute('aria-checked', 'false');
+        });
+        btn.classList.add('selected');
+        btn.setAttribute('aria-checked', 'true');
+      }
+    }
+  }
+
+  // ── Restore an in-progress draft and continue where the user left off ──
+  function resumeAssessment(draft: any) {
+    // Restore company name
+    if (draft.companyName) {
+      const companyInput = document.getElementById('company-name-input') as HTMLInputElement;
+      if (companyInput) companyInput.value = draft.companyName;
+    }
+
+    // Restore state
+    if (draft.profile && typeof draft.profile === 'object') {
+      for (const [key, val] of Object.entries(draft.profile)) profile[key] = val as string;
+    }
+    if (draft.responses && typeof draft.responses === 'object') {
+      for (const [qId, score] of Object.entries(draft.responses)) responses[qId] = score as number;
+    }
+
+    applyProfileSelectionsToUI();
+    applyResponseSelectionsToUI();
+
+    if (contextParams.every((p: any) => profile[p.id] !== undefined)) {
+      profileNextBtn.removeAttribute('disabled');
+    }
+
+    // Hide intro + resume banner
+    document.querySelectorAll<HTMLElement>('[data-hide-if-assessed]').forEach(el => { el.style.display = 'none'; });
+    if (assessIntro) assessIntro.style.display = 'none';
+    const banner = document.getElementById('resume-banner');
+    if (banner) banner.style.display = 'none';
+    if (progressBarWrap) progressBarWrap.style.display = '';
+
+    // Land them on the phase/domain they were on
+    if (draft.phase === 'assessment') {
+      inAssessmentPhase = true;
+      phaseProfile.style.display = 'none';
+      phaseAssessment.style.display = '';
+      const idx = typeof draft.domainIdx === 'number' && draft.domainIdx >= 0 && draft.domainIdx < domains.length ? draft.domainIdx : 0;
+      showDomain(idx);
+    } else {
+      phaseProfile.style.display = '';
+      phaseAssessment.style.display = 'none';
+    }
+
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   // ── Pre-populate and start assessment with previous answers ──
   function startAssessmentWithPreviousAnswers() {
@@ -694,6 +895,34 @@ const stages = frameworkData.maturity_stages.stages;
         window.location.replace('/cs-maturity-report/');
       }
     }
+  } else {
+    // Not completed — surface a resume banner if an in-progress draft exists.
+    maybeShowResumeBanner();
+  }
+
+  // ── Resume banner: reveal it when a draft with real progress is present ──
+  function maybeShowResumeBanner() {
+    const draft = getDraft();
+    if (!draft) return;
+    const profileCount = draft.profile ? Object.keys(draft.profile).length : 0;
+    const responseCount = draft.responses ? Object.keys(draft.responses).length : 0;
+    if (profileCount === 0 && responseCount === 0) {
+      clearDraft();
+      return;
+    }
+    const answered = profileCount + responseCount;
+    const banner = document.getElementById('resume-banner');
+    const progressText = document.getElementById('resume-progress-text');
+    if (progressText) progressText.textContent = `You answered ${answered} of ${totalQuestions} questions. Pick up where you left off.`;
+    if (banner) banner.style.display = '';
+
+    document.getElementById('resume-btn')?.addEventListener('click', () => resumeAssessment(draft));
+    document.getElementById('resume-discard-btn')?.addEventListener('click', () => {
+      if (confirm('This will discard your in-progress answers and start over. Continue?')) {
+        clearDraft();
+        window.location.href = '/assess/';
+      }
+    });
   }
 
   function updateProgress() {
@@ -725,7 +954,15 @@ const stages = frameworkData.maturity_stages.stages;
         profileNextBtn.removeAttribute('disabled');
       }
       updateProgress();
+      persistDraft();
     });
+  });
+
+  // ── Company name → persist as part of the draft (debounced) ──
+  let companyDraftTimer: ReturnType<typeof setTimeout> | undefined;
+  document.getElementById('company-name-input')?.addEventListener('input', () => {
+    clearTimeout(companyDraftTimer);
+    companyDraftTimer = setTimeout(persistDraft, 400);
   });
 
   // ── Continue to assessment ──
@@ -735,10 +972,12 @@ const stages = frameworkData.maturity_stages.stages;
     // rather than clicking the Start button. Without this, scrollTo({top:0})
     // dumps subsequent domain transitions at the top of the explainer copy.
     if (assessIntro) assessIntro.style.display = 'none';
+    inAssessmentPhase = true;
     phaseProfile.style.display = 'none';
     phaseAssessment.style.display = '';
     showDomain(0);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    persistDraft();
   });
 
   // ── Assessment option selection ──
@@ -757,6 +996,7 @@ const stages = frameworkData.maturity_stages.stages;
 
       updateDomainNav();
       updateProgress();
+      persistDraft();
     });
   });
 
@@ -767,6 +1007,7 @@ const stages = frameworkData.maturity_stages.stages;
     });
     updateDomainNav();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    persistDraft();
   }
 
   function updateDomainNav() {
@@ -818,6 +1059,7 @@ const stages = frameworkData.maturity_stages.stages;
     saveProfile(profile);
     saveScores({ domainScores, overallScore, stage: stageId, responses, timestamp: new Date().toISOString() });
     setAssessmentCompleted(true);
+    clearDraft();
 
     const wasUpdating = isUpdating;
     isUpdating = false;
@@ -838,5 +1080,9 @@ const stages = frameworkData.maturity_stages.stages;
   // Init progress (only if not showing results)
   if (!isAssessmentCompleted()) {
     updateProgress();
+    // Reveal the auto-save reassurance in the normal flow (it's misleading in the
+    // update flow, where edits aren't drafted, so that path leaves it hidden).
+    const autosaveHint = document.getElementById('autosave-hint');
+    if (autosaveHint) autosaveHint.style.display = '';
   }
 </script>
