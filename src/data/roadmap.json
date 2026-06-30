@@ -46,6 +46,12 @@
       "pageUrl": "/transform/"
     },
     {
+      "title": "CS report settings",
+      "description": "A settings panel on the CS Maturity Report that lets you tailor the output before you read or export it. Choose how many recommendations to show, and toggle individual sections on or off. The PDF export and print view reflect your choices, so what you share or save matches what you actually want.",
+      "status": "planned",
+      "links": []
+    },
+    {
       "title": "Anonymous CS score submission",
       "description": "Optionally share your maturity score, industry, and company type to contribute to aggregate industry benchmark data.",
       "status": "planned",
