@@ -3481,7 +3481,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
       </div>
     `;
 
-    const currentCards = currentPlaybooks.map((pb: any) => renderCard(pb)).join('');
+    const currentCards = currentPlaybooks.slice(0, 6).map((pb: any) => renderCard(pb)).join('');
 
     const weakestHtml = weakestDomain.length
       ? `<h3 class="report-subsection-label">Strengthen Your Weakest Area</h3>
@@ -3490,7 +3490,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
 
     const nextCards = nextPlaybooks.length
       ? `<h3 class="report-subsection-label">Coming Next</h3>
-         <div class="report-playbooks-grid">${nextPlaybooks.map((pb: any) => renderCard(pb, ' is-next-stage')).join('')}</div>`
+         <div class="report-playbooks-grid">${nextPlaybooks.slice(0, 3).map((pb: any) => renderCard(pb, ' is-next-stage')).join('')}</div>`
       : '';
 
     return `
