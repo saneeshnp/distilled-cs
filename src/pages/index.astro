@@ -145,6 +145,7 @@ const stageImageAlts: Record<string, string> = {
             </div>
             <div class="hp-stage-divider"></div>
             <ul class="hp-stage-chars">
+              <li>A CS maturity score of <span class="hp-stage-score-value">{(stage.score_range[0] * 2.5).toFixed(1)}&ndash;{(stage.score_range[1] * 2.5).toFixed(1)}</span> out of 10</li>
               {stage.key_characteristics.slice(0, 4).map(char => (
                 <li>{char}</li>
               ))}
@@ -910,6 +911,14 @@ const stageImageAlts: Record<string, string> = {
     height: 1px;
     background: var(--color-border);
     margin-bottom: 1rem;
+  }
+
+  /* Distilled CS score, shown as the first characteristic bullet */
+  .hp-stage-score-value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--stage-color);
+    white-space: nowrap;
   }
 
   /* Characteristics list with checkmark circles */
