@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import frameworkData from '../data/lean-cs-data.json';
 
 const stages = frameworkData.maturity_stages.stages;
+const comparisonMatrix = frameworkData.maturity_stages.comparison_matrix;
 const stageOrder = ['crawl', 'walk', 'run'];
 const stageTransitions = frameworkData.stage_transitions;
 const stageLabels: Record<string, string> = { crawl: 'Crawl', walk: 'Walk', run: 'Run' };
@@ -55,6 +56,10 @@ const faqItems = [
     a: 'A combination of outgrowing the current stage playbook (CSMs hit the ceiling of what reactive motion can achieve) and new pressure on the business (board expectations, new segment, scale). The transition guide on the transform page walks through the signals that mark each boundary.',
   },
   {
+    q: 'How do the stages compare across CS functions?',
+    a: 'Read the stage comparison matrix on this page. It lays the eight capability domains down the left and the three stages across the top, so you can see how a single function shifts as a team matures. Health scoring, for example, moves from gut feel at Crawl, to basic scores at Walk, to multi-signal models with automated alerts at Run. Read a row to see what progression looks like for one function; scan a column to picture the operating mode of a whole stage.',
+  },
+  {
     q: 'How does this compare to other CS frameworks?',
     a: 'Most published CS frameworks focus on either metric taxonomies or operational checklists. The Distilled CS model connects a maturity stage to specific principles, metrics, and playbooks. It is open-source, vendor-neutral, and designed so the advice changes as the team matures, not just as its size grows.',
   },
@@ -92,6 +97,71 @@ const faqSchema = {
     <!-- CTA for non-assessed users -->
     <div class="assess-cta" id="model-cta" data-hide-if-assessed>
       <a href="/assess/" class="btn btn-primary">Take the Assessment to see where you stand</a>
+    </div>
+
+    <!-- Stage comparison matrix — the model at a glance, above the per-stage detail -->
+    <section class="stage-comparison" aria-labelledby="comparison-heading">
+      <h2 id="comparison-heading">The model at a glance</h2>
+      <p class="comparison-intro">{comparisonMatrix.description}</p>
+      <div class="comparison-scroll-shell">
+      <div class="comparison-table-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th scope="col" class="comparison-corner">Dimension</th>
+              {stageOrder.map(id => (
+                <th scope="col" class={`comparison-stage-head stage-${id}`} data-stage-col={id}>
+                  <span class="comparison-stage-icon">
+                    <img
+                      src={`/images/maturity-stages/cs-maturity-stage-${id}.png`}
+                      alt=""
+                      width="28"
+                      height="28"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                  <span class="comparison-stage-label">{stageLabels[id]}</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="comparison-score-row">
+              <th scope="row" class="comparison-param">Distilled CS maturity score <span class="comparison-param-note">out of 10</span></th>
+              {stageOrder.map(id => {
+                const st = stages.find(s => s.id === id);
+                return (
+                  <td class="comparison-cell" data-stage-col={id}>
+                    {(st.score_range[0] * 2.5).toFixed(1)}&ndash;{(st.score_range[1] * 2.5).toFixed(1)}
+                  </td>
+                );
+              })}
+            </tr>
+            {comparisonMatrix.rows.map((row: any) => (
+              <tr>
+                <th scope="row" class="comparison-param">{row.parameter}</th>
+                {stageOrder.map(id => (
+                  <td class="comparison-cell" data-stage-col={id}>
+                    <strong class="comparison-cell-label">{row[id].label}</strong>
+                    <span class="comparison-cell-detail">{row[id].detail}</span>
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <button class="comparison-scroll-hint" type="button" aria-label="Scroll to see more stages">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      </div>
+    </section>
+
+    <!-- Per-stage detail lead-in -->
+    <div class="stage-detail-lead">
+      <h2 class="stage-detail-lead-heading">Each stage in detail</h2>
+      <p class="stage-detail-lead-sub">Expand any stage for its characteristics, priority actions, and what unlocks at the next stage.</p>
     </div>
 
     <!-- Stage progression -->
@@ -734,6 +804,125 @@ const faqSchema = {
   /* Persistent header */
   .model-header { margin-bottom: 1.5rem; }
 
+  /* Stage comparison matrix */
+  .stage-comparison { margin-top: 2rem; }
+  .stage-comparison h2 { font-family: var(--font-display); font-size: 1.75rem; letter-spacing: -0.02em; margin-bottom: 0.5rem; color: var(--color-text-primary); }
+  .comparison-intro { font-size: 0.9375rem; line-height: 1.65; color: var(--color-text-secondary); max-width: 44rem; margin-bottom: 1.5rem; }
+  .comparison-scroll-shell { position: relative; }
+  .comparison-table-wrap { overflow-x: auto; border: 1px solid var(--color-border); border-radius: 0.75rem; }
+
+  /* Horizontal-scroll affordance (mobile): fade + pulsing chevron, shown only while more columns lie to the right */
+  .comparison-scroll-shell::after {
+    content: "";
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    width: 3.5rem;
+    z-index: 1;
+    border-radius: 0 0.75rem 0.75rem 0;
+    background: linear-gradient(to right, transparent, color-mix(in srgb, var(--color-accent) 22%, var(--color-bg)));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  /* Pinned dimension column casts a shadow once earlier columns scroll under it */
+  .comparison-corner, .comparison-param { transition: box-shadow 0.3s ease; }
+  .comparison-scroll-shell.scrolled-past-start .comparison-corner,
+  .comparison-scroll-shell.scrolled-past-start .comparison-param { box-shadow: 8px 0 10px -6px rgba(0, 0, 0, 0.2); }
+  .comparison-scroll-hint {
+    position: absolute;
+    top: 5.5rem;
+    right: 0.625rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+    color: var(--color-accent);
+    cursor: pointer;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    animation: comparison-scroll-nudge 1.5s ease-in-out infinite;
+  }
+  .comparison-scroll-shell.is-scrollable:not(.scrolled-end)::after { opacity: 1; }
+  .comparison-scroll-shell.is-scrollable:not(.scrolled-end) .comparison-scroll-hint { opacity: 1; pointer-events: auto; }
+  @keyframes comparison-scroll-nudge {
+    0%, 100% { transform: translateX(0) scale(1); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16); }
+    50% { transform: translateX(4px) scale(1.08); box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .comparison-scroll-hint { animation: none; }
+  }
+  .comparison-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; min-width: 40rem; table-layout: fixed; }
+  /* First (dimension) column: fixed, wrapping, pinned while the stage columns scroll */
+  .comparison-corner, .comparison-param { width: 10rem; }
+  .comparison-table th,
+  .comparison-table td { text-align: left; padding: 0.75rem 1rem; vertical-align: top; border-bottom: 1px solid var(--color-border); }
+  .comparison-table tbody tr:last-child th,
+  .comparison-table tbody tr:last-child td { border-bottom: none; }
+  .comparison-corner { background: var(--color-surface); font-weight: 600; color: var(--color-text-secondary); font-size: 0.9375rem; position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--color-border); }
+  .comparison-stage-head {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    color: var(--stage-color);
+    background: color-mix(in srgb, var(--stage-color) 8%, var(--color-surface));
+    border-bottom: 2px solid color-mix(in srgb, var(--stage-color) 45%, transparent);
+    white-space: nowrap;
+  }
+  .comparison-stage-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--stage-color) 16%, var(--color-surface));
+    border: 1px solid color-mix(in srgb, var(--stage-color) 35%, transparent);
+    overflow: hidden;
+    vertical-align: middle;
+  }
+  .comparison-stage-icon img { width: 80%; height: 80%; object-fit: contain; display: block; }
+  .comparison-stage-label { vertical-align: middle; }
+  .comparison-param {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    border-right: 1px solid var(--color-border);
+  }
+  .comparison-cell { color: var(--color-text-secondary); line-height: 1.5; }
+  .comparison-cell-label { display: block; font-weight: 600; color: var(--color-text-secondary); }
+  .comparison-cell-detail { display: block; margin-top: 0.125rem; font-size: 0.8125rem; color: var(--color-text-muted); line-height: 1.45; }
+  .comparison-param-note { display: block; font-weight: 400; font-size: 0.6875rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  /* Score row: slightly set apart with a faint accent tint */
+  .comparison-score-row .comparison-param { background: color-mix(in srgb, var(--color-accent) 6%, var(--color-surface)); }
+  .comparison-score-row .comparison-cell { background: color-mix(in srgb, var(--color-accent) 6%, transparent); color: var(--color-accent); font-weight: 600; }
+  .comparison-table tbody tr:hover .comparison-cell { background: color-mix(in srgb, var(--color-accent) 4%, transparent); }
+  .comparison-table tbody tr:hover .comparison-param { background: color-mix(in srgb, var(--color-accent) 4%, var(--color-surface)); }
+
+  @media print {
+    .comparison-table-wrap { overflow-x: visible; }
+    .comparison-table { min-width: 0; font-size: 0.75rem; }
+  }
+
+  /* Per-stage detail lead-in (sits between the matrix overview and the accordion) */
+  .stage-detail-lead { margin-top: 3.5rem; margin-bottom: 1.25rem; }
+  .stage-detail-lead-heading { font-family: var(--font-display); font-size: 1.75rem; letter-spacing: -0.02em; margin-bottom: 0.375rem; color: var(--color-text-primary); }
+  .stage-detail-lead-sub { font-size: 0.9375rem; line-height: 1.6; color: var(--color-text-secondary); max-width: 44rem; }
+
   /* Pillar content */
   .pillar-intro { max-width: 44rem; margin-top: 4rem; }
   .pillar-intro h2 { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: -0.01em; margin-bottom: 0.75rem; color: var(--color-text-primary); }
@@ -782,6 +971,26 @@ const faqSchema = {
       if (content) content.hidden = expanded;
     });
   });
+
+  // Horizontal-scroll affordance for the comparison matrix
+  (() => {
+    const shell = document.querySelector('.comparison-scroll-shell');
+    const wrap = shell?.querySelector('.comparison-table-wrap');
+    if (!shell || !wrap) return;
+    const update = () => {
+      const scrollable = wrap.scrollWidth - wrap.clientWidth > 4;
+      shell.classList.toggle('is-scrollable', scrollable);
+      const atEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 4;
+      shell.classList.toggle('scrolled-end', atEnd);
+      shell.classList.toggle('scrolled-past-start', wrap.scrollLeft > 4);
+    };
+    update();
+    wrap.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    shell.querySelector('.comparison-scroll-hint')?.addEventListener('click', () => {
+      wrap.scrollBy({ left: Math.round(wrap.clientWidth * 0.7), behavior: 'smooth' });
+    });
+  })();
 
   // Contextual personalization
   if (isAssessmentCompleted()) {

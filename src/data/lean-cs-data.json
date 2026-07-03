@@ -619,7 +619,68 @@
           }
         ]
       }
-    ]
+    ],
+    "comparison_matrix": {
+      "description": "The table below compares the three stages side by side, so you can see how each part of CS grows as a team matures.",
+      "rows": [
+        {
+          "domain_id": "segmentation_coverage",
+          "parameter": "Segmentation & coverage",
+          "crawl": { "label": "One tier", "detail": "every account gets the same touch" },
+          "walk": { "label": "Tiered", "detail": "2–3 tiers by ARR, set coverage ratios" },
+          "run": { "label": "Dynamic", "detail": "tiers by value and usage, ratios tuned to potential" }
+        },
+        {
+          "domain_id": "journey_lifecycle",
+          "parameter": "Journey & lifecycle",
+          "crawl": { "label": "Undocumented", "detail": "no playbooks or journey map" },
+          "walk": { "label": "Partly documented", "detail": "onboarding and renewal playbooks" },
+          "run": { "label": "Fully mapped", "detail": "playbooks for every lifecycle stage, with milestones" }
+        },
+        {
+          "domain_id": "health_risk",
+          "parameter": "Health & risk",
+          "crawl": { "label": "Gut feel", "detail": "no health score" },
+          "walk": { "label": "Scored", "detail": "3–5 signal score, refreshed monthly" },
+          "run": { "label": "Predictive", "detail": "multi-signal score, real-time alerts" }
+        },
+        {
+          "domain_id": "metrics_data",
+          "parameter": "Metrics & data",
+          "crawl": { "label": "Manual", "detail": "churn and CSAT in a spreadsheet" },
+          "walk": { "label": "Tracked", "detail": "GRR, NRR, and adoption in a BI tool" },
+          "run": { "label": "Instrumented", "detail": "leading indicators in a CS platform" }
+        },
+        {
+          "domain_id": "expansion_value",
+          "parameter": "Expansion & value",
+          "crawl": { "label": "Accidental", "detail": "no owned expansion motion" },
+          "walk": { "label": "Noticed", "detail": "signals flagged, handed to Sales" },
+          "run": { "label": "Repeatable", "detail": "CS-owned expansion motion" }
+        },
+        {
+          "domain_id": "org_strategy",
+          "parameter": "Org & strategy",
+          "crawl": { "label": "Buried", "detail": "reports into Sales or Support" },
+          "walk": { "label": "At the table", "detail": "has a voice, not yet setting strategy" },
+          "run": { "label": "Strategic", "detail": "board-level reporting, formal CS career paths" }
+        },
+        {
+          "domain_id": "cs_culture_alignment",
+          "parameter": "Culture & alignment",
+          "crawl": { "label": "Siloed", "detail": "seen as a support cost center" },
+          "walk": { "label": "Coordinated", "detail": "handoffs defined but manual" },
+          "run": { "label": "Shared", "detail": "outcomes are a company-wide goal" }
+        },
+        {
+          "domain_id": "ai_leverage",
+          "parameter": "AI leverage",
+          "crawl": { "label": "None", "detail": "no AI in CS workflows" },
+          "walk": { "label": "Assistive", "detail": "AI drafts and summarizes for CSMs" },
+          "run": { "label": "Orchestrated", "detail": "AI predicts risk and triggers interventions" }
+        }
+      ]
+    }
   },
   "assessment_domains": {
     "description": "Eight capability domains, each with 3 questions scored 1–4. Domain average determines domain maturity. Overall average determines stage.",
