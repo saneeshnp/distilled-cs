@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-26",
+  "last_updated": "2026-07-03",
   "items": [
     {
       "title": "In-depth metric pages",
@@ -54,8 +54,9 @@
     {
       "title": "CS maturity stage comparison matrix",
       "description": "A comparison matrix on the maturity model page with CS parameters along the left and the three maturity stages across the top. Each cell describes the characteristic behavior at that stage. For example, how health is tracked moves from ad hoc to systematic to predictive. Gives teams a fast way to pinpoint where they sit within a stage and show stakeholders what progression looks like.",
-      "status": "planned",
-      "links": []
+      "status": "shipped",
+      "shipped": "2026-07-03",
+      "pageUrl": "/customer-success-maturity-model/"
     },
     {
       "title": "Anonymous CS score submission",
