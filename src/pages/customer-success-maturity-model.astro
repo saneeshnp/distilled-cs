@@ -913,6 +913,32 @@ const faqSchema = {
   .comparison-table tbody tr:hover .comparison-cell { background: color-mix(in srgb, var(--color-accent) 4%, transparent); }
   .comparison-table tbody tr:hover .comparison-param { background: color-mix(in srgb, var(--color-accent) 4%, var(--color-surface)); }
 
+  /* Assessed-user active column */
+  .comparison-cell.col-active {
+    background: color-mix(in srgb, var(--stage-color) 8%, transparent);
+    color: var(--color-text-primary);
+    box-shadow: inset 2px 0 0 color-mix(in srgb, var(--stage-color) 45%, transparent),
+                inset -2px 0 0 color-mix(in srgb, var(--stage-color) 45%, transparent);
+  }
+  .comparison-table tbody tr:last-child .comparison-cell.col-active {
+    box-shadow: inset 2px 0 0 color-mix(in srgb, var(--stage-color) 45%, transparent),
+                inset -2px 0 0 color-mix(in srgb, var(--stage-color) 45%, transparent),
+                inset 0 -2px 0 color-mix(in srgb, var(--stage-color) 45%, transparent);
+  }
+  .comparison-stage-head.col-active {
+    background: color-mix(in srgb, var(--stage-color) 16%, var(--color-surface));
+  }
+  :global(.comparison-your-stage) {
+    display: block;
+    margin-top: 0.25rem;
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+  }
+
   @media print {
     .comparison-table-wrap { overflow-x: visible; }
     .comparison-table { min-width: 0; font-size: 0.75rem; }
@@ -1041,6 +1067,19 @@ const faqSchema = {
           }
         }
       });
+
+      // Highlight the user's stage column in the comparison matrix
+      const stageTag = companyName ? `${companyName}'s stage` : 'Your stage';
+      document.querySelectorAll(`.comparison-table [data-stage-col="${userStage}"]`).forEach(cell => {
+        cell.classList.add('col-active');
+      });
+      const activeHead = document.querySelector(`.comparison-stage-head[data-stage-col="${userStage}"]`);
+      if (activeHead && !activeHead.querySelector('.comparison-your-stage')) {
+        const tag = document.createElement('span');
+        tag.className = 'comparison-your-stage';
+        tag.textContent = stageTag;
+        activeHead.appendChild(tag);
+      }
 
     }
   }
