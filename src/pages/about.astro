@@ -1,70 +1,71 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+// ProfilePage/Person schema — establishes Saneesh as the author entity and
+// links his identity across the web (personal site, LinkedIn, GitHub).
+const authorSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'Saneesh Narikutty Pacha',
+    alternateName: 'Saneesh',
+    url: 'https://saneesh.net',
+    image: 'https://distilledcs.org/images/saneesh-narikutty-pacha.jpg',
+    description: 'Creator of Distilled CS, an open framework for Customer Success maturity. Around ten years of experience across Customer Success teams.',
+    sameAs: [
+      'https://saneesh.net',
+      'https://www.linkedin.com/in/saneesh-np/',
+      'https://github.com/saneeshnp',
+    ],
+  },
+};
 ---
 
-<BaseLayout title="About" description="Why Distilled CS exists, who built it, and how a vendor-neutral CS maturity framework helps practitioners cut through tool-vendor noise.">
+<BaseLayout title="About" description="The story behind Distilled CS: why Saneesh built an open, vendor-neutral framework to help Customer Success teams see where they stand and improve their strategy stage by stage." structuredData={[authorSchema]}>
 
   <div class="container about-page">
 
     <header class="page-header">
       <h1 class="page-title">About Distilled CS</h1>
-      <p class="page-subtitle">
-        An open, vendor-neutral framework for Customer Success maturity.
-      </p>
+      <p class="page-subtitle">Why I built it, and how it can help your CS team.</p>
     </header>
 
     <div class="page-body">
-      <section class="content-section">
-        <h2>What is Distilled CS?</h2>
-        <p>
-          Distilled CS is a community-driven framework that gives Customer Success teams a shared language for measuring maturity, setting benchmarks, and building repeatable processes. It is inspired by what the FinOps Foundation did for cloud cost management — providing an open standard where none existed.
-        </p>
-      </section>
+      <p class="about-lead">
+        Hi, thank you for visiting Distilled CS! I'm Saneesh, and I built Distilled CS with one goal in mind: help CS teams see their gaps clearly and give them a structured way to improve their strategy.
+      </p>
 
-      <section class="content-section">
-        <h2>Why we built this</h2>
-        <p>
-          Every CS team reinvents the wheel — building health scores from scratch, guessing at benchmarks, and hoping their metrics are the right ones. Existing frameworks are paywalled, vendor-locked, or too generic to be useful. Distilled CS aims to change that by offering a practical, context-aware framework that adapts to your stage of growth, team size, and customer segment.
-        </p>
-      </section>
+      <p>
+        Today, there is no standard framework to assess the <a href="/customer-success-maturity-model/">maturity of a customer success team</a> or organization. Having worked in the industry for close to 10 years across different customer success teams, I have realized that customer success teams often need to shift strategy to operate at the optimum level, and without a way to measure where they stand, that shift is not easy.
+      </p>
 
-      <section class="content-section">
-        <h2>The Strategy Loop: Assess → Execute → Transform</h2>
-        <p>
-          Distilled CS is built around a continuous improvement cycle — a repeatable system your CS team returns to as it grows.
-        </p>
-        <div class="loop-phases">
-          <div class="loop-phase">
-            <h3>Assess</h3>
-            <p>Score your CS maturity across 8 domains. Understand your strengths, gaps, and current stage — from Crawl to Run.</p>
-          </div>
-          <div class="loop-phase">
-            <h3>Execute</h3>
-            <p>Follow stage-specific strategy playbooks, track the right metrics, and work through your execution checklist.</p>
-          </div>
-          <div class="loop-phase">
-            <h3>Transform</h3>
-            <p>Measure your progress, compare against your previous assessment, and level up to the next maturity stage.</p>
-          </div>
-        </div>
-        <p>
-          The three-stage maturity model — Crawl, Walk, Run — is the axis the strategy loop rotates around. Each time you complete the loop, your team moves closer to the next stage.
-        </p>
-      </section>
+      <p>
+        To understand what is the best strategy for your CS organization, you first need to understand where you are, and that's exactly what the <a href="/assess/">Distilled CS assessment</a> tries to do. It measures your team across various domains to give you a score that tells you where you stand.
+      </p>
 
-      <section class="content-section">
-        <h2>Open source & community</h2>
-        <p>
-          The framework content (assessment questions, maturity stages, metrics, playbooks, and principles) is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>. The codebase is MIT. No vendor lock-in, no paywall, no hidden agenda. Built by practitioners, for practitioners.
-        </p>
-      </section>
+      <p>
+        The goal of this framework is not to give a precise consultation. That's not possible as customer success teams operate very differently across customer segments and products. My goal is to provide a solid starting point for teams to assess where they are. I also want this to be a small platform with all the guidance available in one place to help you get there, stage by stage.
+      </p>
 
-      <section class="content-section">
-        <h2>Get started</h2>
-        <p>
-          Ready to find out where your CS team stands? <a href="/assess/">Take the free maturity assessment</a> — it takes about 5 minutes and gives you a personalized strategy starting point.
+      <p>
+        You can start with the CS maturity assessment and go further from there. All the recommendations that are provided here are supported by detailed <a href="/customer-success-metrics/">metrics</a>, <a href="/customer-success-playbooks/">playbooks</a>, <a href="/checklist/">checklists</a> and more.
+      </p>
+
+      <p>
+        Distilled CS is open source because I want it to be fully transparent, and it is <a href="/contribute/">open to your ideas</a>. If something here doesn't match your experience, I would love to hear it. <a href="https://github.com/saneeshnp/distilled-cs/issues/new/choose" target="_blank" rel="noopener noreferrer">Open an issue on GitHub</a> or share what worked for your team. For now, you can find Distilled CS on <a href="https://www.linkedin.com/company/distilled-cs/" target="_blank" rel="noopener noreferrer">LinkedIn</a> and <a href="https://github.com/saneeshnp/distilled-cs" target="_blank" rel="noopener noreferrer">GitHub</a>, and I hope to expand more in the future.
+      </p>
+
+      <div class="about-signoff">
+        <p class="about-signoff-name">Saneesh</p>
+        <p class="about-signoff-links">
+          <a href="https://www.linkedin.com/in/saneesh-np/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <span class="about-signoff-sep" aria-hidden="true">|</span>
+          <a href="https://x.com/saneeshnp" target="_blank" rel="noopener noreferrer">X</a>
+          <span class="about-signoff-sep" aria-hidden="true">|</span>
+          <a href="https://saneesh.net" target="_blank" rel="noopener noreferrer">Website</a>
         </p>
-      </section>
+      </div>
     </div>
 
   </div>
@@ -100,60 +101,62 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .page-body {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 1.25rem;
   }
 
-  .content-section h2 {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
+  .about-lead {
+    font-size: 1.1875rem;
+    line-height: 1.65;
     color: var(--color-text-primary);
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.02em;
+    font-weight: 500;
   }
 
-  .content-section p {
+  .page-body > p:not(.about-lead) {
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
     line-height: 1.7;
   }
 
-  .content-section a {
+  .page-body > p a {
     color: var(--color-accent);
   }
 
-  .content-section a:hover {
+  .page-body > p a:hover {
     color: var(--color-accent-hover);
   }
 
-  .loop-phases {
-    display: grid;
-    gap: 1rem;
-    margin: 1.5rem 0;
+  .about-signoff {
+    margin-top: 0.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
   }
 
-  @media (min-width: 640px) {
-    .loop-phases {
-      grid-template-columns: repeat(3, 1fr);
-    }
+  .about-signoff-name {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 0.375rem;
   }
 
-  .loop-phase {
-    padding: 1.25rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
+  .about-signoff-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.9375rem;
   }
 
-  .loop-phase h3 {
-    font-family: var(--font-display);
-    font-size: 1.125rem;
+  .about-signoff-links a {
     color: var(--color-accent);
-    margin-bottom: 0.5rem;
+    text-decoration: none;
   }
 
-  .loop-phase p {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
+  .about-signoff-links a:hover {
+    color: var(--color-accent-hover);
+    text-decoration: underline;
+  }
+
+  .about-signoff-sep {
+    color: var(--color-text-muted);
   }
 </style>
