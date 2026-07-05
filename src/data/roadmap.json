@@ -1,10 +1,12 @@
 {
-  "last_updated": "2026-07-03",
+  "last_updated": "2026-07-05",
   "items": [
     {
       "title": "In-depth metric pages",
       "description": "Expand each metric page beyond the definition and formula. New sections cover how to read the number, what it actually tells you, what tends to move it, and how to improve it, so a metric page becomes a working guide rather than a reference card.",
-      "status": "planned",
+      "status": "in-progress",
+      "note": "Rolling out one metric at a time. Gross Revenue Retention is the first.",
+      "pageUrl": "/customer-success-metrics/grr/",
       "links": []
     },
     {
