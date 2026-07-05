@@ -4,12 +4,14 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import compress from '@playform/compress';
+import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
   site: 'https://distilledcs.org',
   integrations: [
+    mdx(),
     sitemap({
       filter: (page) =>
         !page.includes('/admin') &&
