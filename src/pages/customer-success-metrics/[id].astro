@@ -1,17 +1,29 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
 import frameworkData from '../../data/lean-cs-data.json';
 import calculatorSpecs from '../../data/metric-calculators.json';
 import { calculators } from '../../scripts/metric-calculators.js';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  // Editorial enrichment layer (see src/content/metrics/). A metric with a
+  // matching MDX file gets long-form prose + FAQ; the rest render as before.
+  const enrichments = await getCollection('metrics');
   return frameworkData.metrics_directory.metrics.map(metric => ({
     params: { id: metric.id },
-    props: { metric },
+    props: {
+      metric,
+      enrichment: enrichments.find(e => e.id === metric.id) || null,
+    },
   }));
 }
 
-const { metric } = Astro.props;
+const { metric, enrichment } = Astro.props;
+
+// Render the MDX body and pull its FAQ + SEO description when present.
+const { Content } = enrichment ? await render(enrichment) : { Content: null };
+const faqs: { q: string; a: string }[] = enrichment?.data.faqs ?? [];
+const metaDescription = enrichment?.data.meta_description || metric.definition;
 
 const categoryLabels: Record<string, string> = {
   revenue: 'Revenue',
@@ -131,9 +143,25 @@ const breadcrumbSchema = {
     { '@type': 'ListItem', position: 3, name: metric.name, item: metricUrl },
   ],
 };
+
+// FAQPage schema when the enrichment provides FAQs. Built from the same array
+// that renders the visible FAQ section, so the two stay in parity.
+const faqSchema = faqs.length > 0
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map(({ q, a }) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+      })),
+    }
+  : null;
+
+const structuredData = faqSchema ? [breadcrumbSchema, faqSchema] : [breadcrumbSchema];
 ---
 
-<BaseLayout title={metric.name} description={metric.definition} structuredData={[breadcrumbSchema]}>
+<BaseLayout title={metric.name} description={metaDescription} structuredData={structuredData}>
   <div class="container metric-detail-page">
 
     <!-- Back link -->
@@ -290,6 +318,28 @@ const breadcrumbSchema = {
       </section>
     )}
 
+    <!-- Editorial enrichment (MDX): long-form prose, rendered after the calculator -->
+    {Content && (
+      <section class="metric-section metric-enriched">
+        <Content />
+      </section>
+    )}
+
+    <!-- FAQ (from enrichment frontmatter; also emitted as FAQPage JSON-LD) -->
+    {faqs.length > 0 && (
+      <section class="metric-section metric-faq">
+        <h2 class="section-heading">Frequently Asked Questions</h2>
+        <div class="faq-list">
+          {faqs.map(({ q, a }) => (
+            <div class="faq-item">
+              <h3 class="faq-question">{q}</h3>
+              <p class="faq-answer">{a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
     <!-- Audience -->
     {metric.audience && metric.audience.length > 0 && (
       <section class="metric-section">
@@ -400,8 +450,8 @@ const breadcrumbSchema = {
       </section>
     )}
 
-    <!-- Common mistakes -->
-    {metric.common_mistakes && metric.common_mistakes.length > 0 && (
+    <!-- Common mistakes (dropped when an enrichment covers them in prose) -->
+    {!enrichment && metric.common_mistakes && metric.common_mistakes.length > 0 && (
       <section class="metric-section">
         <h2 class="section-heading">Common Mistakes</h2>
         <ol class="mistakes-list">
@@ -518,6 +568,94 @@ const breadcrumbSchema = {
     font-size: 1.0625rem;
     color: var(--color-text-secondary);
     line-height: 1.7;
+  }
+
+  /* Editorial enrichment (MDX prose). The rendered content is not tagged with
+     the component's scope hash, so its inner elements are targeted via :global. */
+  .metric-enriched :global(h2) {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.5vw, 1.6rem);
+    letter-spacing: -0.01em;
+    margin: 2.5rem 0 0.875rem;
+    color: var(--color-text-primary);
+  }
+
+  .metric-enriched :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .metric-enriched :global(h3) {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    margin: 1.75rem 0 0.625rem;
+    color: var(--color-text-primary);
+  }
+
+  .metric-enriched :global(p) {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin-bottom: 1.1rem;
+  }
+
+  .metric-enriched :global(ul) {
+    margin: 0 0 1.1rem;
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
+
+  .metric-enriched :global(li) {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.4rem;
+  }
+
+  .metric-enriched :global(strong) {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .metric-enriched :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .metric-enriched :global(a:hover) {
+    text-decoration: none;
+  }
+
+  /* FAQ — these elements are component-rendered, so normal scoped styles apply */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .faq-item {
+    border-top: 1px solid var(--color-border);
+    padding-top: 1.25rem;
+  }
+
+  .faq-item:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .faq-question {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .faq-answer {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin: 0;
   }
 
   /* Formula */
