@@ -19,6 +19,7 @@
     "check:pagefind": "node -e \"const e=require('./dist/pagefind/pagefind-entry.json');const n=e.languages.en.page_count;if(n<60){console.error('\\u2717 Pagefind indexed only '+n+' pages (expected >=60)');process.exit(1)}console.log('\\u2713 Pagefind indexed '+n+' pages')\""
   },
   "dependencies": {
+    "@astrojs/mdx": "^6.0.3",
     "@astrojs/sitemap": "^3.7.2",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.0.8",
