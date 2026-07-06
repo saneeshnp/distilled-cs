@@ -60,9 +60,7 @@ const authorSchema = {
         <p class="about-signoff-name">Saneesh</p>
         <p class="about-signoff-links">
           <a href="https://www.linkedin.com/in/saneesh-np/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <span class="about-signoff-sep" aria-hidden="true">|</span>
           <a href="https://x.com/saneeshnp" target="_blank" rel="noopener noreferrer">X</a>
-          <span class="about-signoff-sep" aria-hidden="true">|</span>
           <a href="https://saneesh.net" target="_blank" rel="noopener noreferrer">Website</a>
         </p>
       </div>
@@ -141,8 +139,7 @@ const authorSchema = {
   .about-signoff-links {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 0.375rem;
+    align-items: baseline;
     font-size: 0.9375rem;
   }
 
@@ -156,7 +153,13 @@ const authorSchema = {
     text-decoration: underline;
   }
 
-  .about-signoff-sep {
+  /* Separator rides with its link (as a ::before), so it can never be
+     orphaned at a line end on wrap; inline-block keeps it off the hover
+     underline and baseline-aligned with the link text. */
+  .about-signoff-links a + a::before {
+    content: "|";
+    display: inline-block;
+    margin: 0 0.75rem;
     color: var(--color-text-muted);
   }
 </style>
