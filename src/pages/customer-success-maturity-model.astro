@@ -91,6 +91,20 @@ const faqSchema = {
       <p class="model-subtitle">The Distilled CS maturity model places your CS organization on a three-stage scale (Crawl, Walk, Run) and shows the priority actions for moving up. It anchors the assessment, the recommended playbooks, and the metrics directory.</p>
     </header>
 
+    <!-- Table of contents -->
+    <div class="model-toc-card">
+      <p class="model-toc-card-label">Table of Contents</p>
+      <ol class="model-toc-list">
+        <li class="model-toc-item"><a href="#comparison-heading" class="model-toc-link">The model at a glance</a></li>
+        <li class="model-toc-item"><a href="#stage-crawl" class="model-toc-link">Crawl stage</a></li>
+        <li class="model-toc-item"><a href="#stage-walk" class="model-toc-link">Walk stage</a></li>
+        <li class="model-toc-item"><a href="#stage-run" class="model-toc-link">Run stage</a></li>
+        <li class="model-toc-item" data-hide-if-assessed><a href="#why-maturity-model" class="model-toc-link">Why a maturity model for CS</a></li>
+        <li class="model-toc-item"><a href="#maturity-model-faq" class="model-toc-link">Frequently asked questions</a></li>
+        <li class="model-toc-item"><a href="#related-topics" class="model-toc-link">Related topics</a></li>
+      </ol>
+    </div>
+
     <!-- Contextual header — shown if assessed (populated by JS) -->
     <div class="user-stage-header" id="user-stage-header" data-show-if-assessed style="display:none;"></div>
 
@@ -267,13 +281,13 @@ const faqSchema = {
 
     <!-- Intro prose (moved below stages so users see the model first) -->
     <section class="pillar-intro" data-hide-if-assessed>
-      <h2>Why a maturity model for customer success</h2>
+      <h2 id="why-maturity-model">Why a maturity model for customer success</h2>
       <p>A maturity model gives the CS team a shared frame for what it is ready to do next, instead of arguing about tactics in the abstract. Principles that work at Crawl can misfire at Run. Metrics that matter at Run are noise at Crawl. Naming the stage lets the team match the advice to the reality of the organization.</p>
       <p>The three stages above are ordered by capability, not by company size. A lean team at a Series A startup can operate at Run. A hundred-person CS org at a public company can still be stuck at Crawl if the motions are inconsistent. Stage is a description of the operating system, not a badge for the team.</p>
     </section>
 
     <section class="pillar-faq">
-      <h2>Frequently asked questions</h2>
+      <h2 id="maturity-model-faq">Frequently asked questions</h2>
       <div class="faq-list">
         {faqItems.map(item => (
           <details class="faq-item">
@@ -285,7 +299,7 @@ const faqSchema = {
     </section>
 
     <section class="pillar-related">
-      <h2>Related topics</h2>
+      <h2 id="related-topics">Related topics</h2>
       <div class="related-grid">
         <a href="/customer-success-principles/" class="related-card">
           <h3>Principles</h3>
@@ -342,6 +356,83 @@ const faqSchema = {
 
   .assess-cta {
     margin-bottom: 3rem;
+  }
+
+  /* ── Table of contents ── */
+  .model-toc-card {
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .model-toc-card-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+    margin: 0 0 0.625rem;
+  }
+
+  .model-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    counter-reset: toc-counter;
+  }
+
+  .model-toc-item {
+    counter-increment: toc-counter;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .model-toc-item:last-child {
+    border-bottom: none;
+  }
+
+  .model-toc-item::before {
+    content: counter(toc-counter, decimal-leading-zero);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    min-width: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .model-toc-link {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    line-height: 1.4;
+    transition: color 0.15s;
+    min-height: 0;
+  }
+
+  @media (max-width: 559px) {
+    .model-toc-link {
+      font-size: 1rem;
+    }
+  }
+
+  .model-toc-link:hover {
+    color: var(--color-accent);
+  }
+
+  /* Anchor targets for the ToC links above (offsets the sticky header) */
+  #comparison-heading,
+  #why-maturity-model,
+  #maturity-model-faq,
+  #related-topics {
+    scroll-margin-top: 5rem;
   }
 
   .btn {
