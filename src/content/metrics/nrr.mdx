@@ -1,0 +1,116 @@
+---
+title: "Net Revenue Retention (NRR)"
+metric_id: "nrr"
+status: "drafted"
+primary_keyword: "net revenue retention"
+secondary_keywords:
+  - "what is net revenue retention"
+  - "net revenue retention benchmarks"
+  - "how to improve net revenue retention"
+  - "net dollar retention"
+  - "NRR vs GRR"
+  - "what is a good NRR for SaaS"
+  - "NRR above 100"
+  - "net revenue retention by segment"
+search_intent: "Informational (understand and interpret NRR) plus how-to (improve it). Readers are CS, RevOps, and finance practitioners who know the formula and want interpretation, composition analysis, and expansion levers."
+meta_description: "Net revenue retention shows whether your customer base grows without new sales. Learn how to read your NRR, what moves it, and how to improve it by stage."
+faqs:
+  - q: "What is a good net revenue retention rate?"
+    a: "It depends on segment. Recent industry medians sit near 97% for SMB-focused companies, around 108% for mid-market, and roughly 118% for enterprise, so 100% at SMB can be solid while 105% at enterprise is soft. Above 100% means your existing base is growing without new sales; the benchmarks on this page set the targets by segment."
+  - q: "What is the difference between NRR and NDR?"
+    a: "Nothing meaningful. Net revenue retention, net dollar retention, and dollar-based net retention all describe the same metric, and the terms are used interchangeably. What varies is calculation detail between companies, not the name, so when comparing figures, check the definition rather than the label."
+  - q: "How is NRR different from gross revenue retention?"
+    a: "GRR measures only what you keep, excludes expansion, and caps at 100%. NRR adds expansion, so it can exceed 100% and can also hide weak retention behind strong upsell. Read them together: GRR is the floor, NRR is the floor plus the growth engine."
+  - q: "Does NRR include new customers?"
+    a: "No. NRR only covers accounts that were already customers at the start of the measurement period. Letting new business into the calculation inflates the figure and turns a retention metric into a growth metric."
+  - q: "What does NRR above 100% actually mean?"
+    a: "Expansion from existing customers outweighed everything lost to churn and downgrades, so the installed base grew on its own. Sustained, it compounds: at 110% NRR, revenue from today's customers roughly doubles in about seven years with zero new logos."
+  - q: "Over what period should NRR be measured?"
+    a: "Trailing twelve months is the most common and comparable window, since it smooths seasonality and renewal timing. Faster-moving teams also track monthly or quarterly cohort NRR for early signal. The rule that matters most is consistency: same window, same method, every period."
+  - q: "Do price increases count toward NRR?"
+    a: "Yes, a price rise on existing customers is expansion in the formula. But it behaves differently from organic growth: customers absorb an increase once rather than compounding it. Track price-driven and organic expansion separately so a pricing action doesn't read as durable momentum."
+  - q: "Why have NRR benchmarks declined in recent years?"
+    a: "Buyer behavior shifted after 2021: tighter budgets, heavier renewal scrutiny, seat trimming, and consolidation of overlapping tools pushed industry median NRR down several points. Some of any multi-year decline is climate, which is context for the board, not a diagnosis; composition still tells you what is yours to fix."
+---
+
+Net revenue retention measures how the recurring revenue from your existing customers changes over a period once expansion, contraction, and churn have all settled out. Above 100%, your installed base is growing on its own; the company would get bigger this year even if sales never signed another logo.
+
+That property is why boards and investors treat **NRR** as a headline number. For the CS team, though, the headline is the least useful part. The value is in the composition underneath it: what mix of keeping and growing produced the number, and whether that mix can hold.
+
+## What Net Revenue Retention Really Tells You
+
+NRR is basically [gross revenue retention (GRR)](/customer-success-metrics/grr/) with expansion added, so it works out to GRR plus your expansion points. So while GRR answers "how well do we keep what we have," **net revenue retention** answers a bigger question: does our existing base grow itself?
+
+The answer compounds. A company holding 110% NRR roughly doubles the revenue from its current customers in about seven years without acquiring anyone new, and every point of that growth arrives without sales and marketing cost. That is why NRR moves valuations and why a durable number above 100% is treated as evidence of product-market fit that renews itself.
+
+What NRR deliberately leaves out is new business. Only accounts that were customers at the start of the period belong in the calculation; the moment new logos leak in, you are measuring growth, not retention.
+
+What NRR quietly hides is composition. Two companies can both report 110%. One holds a 95% GRR floor and adds 15 points of broad expansion; the other holds an 85% floor and covers the gap with 25 points of expansion from a handful of large accounts. Same number, two different businesses, and only one of them keeps that number when expansion slows. This is why NRR should never be read alone: GRR is the floor, [expansion revenue](/customer-success-metrics/expansion_revenue/) is the engine, and [logo retention](/customer-success-metrics/logo_retention/) tells you whether the growth is broad or riding on a few whales.
+
+## How to Read Your NRR
+
+The pivot line is 100%. Above it, the base funds its own growth; below it, new sales are partly refilling a leaking bucket. But where you should sit relative to that line depends heavily on segment, and the benchmarks table on this page reflects that: enterprise targets run well above SMB targets, the opposite of what teams often expect.
+
+The gap has structural causes. Enterprise accounts carry more whitespace: more seats to add, more teams to reach, more modules to attach, and multi-year contracts that hold the floor steady underneath the expansion. SMB customers have less room to grow and churn more by nature, so an SMB-heavy book sitting near 100% can be performing well while an enterprise book at the same figure is underperforming. Read your result against your segment's row, and if your book blends segments, read segment-level NRR before the blended one; the aggregate hides exactly the differences that matter.
+
+Two further habits sharpen the read.
+
+**Always read NRR with GRR next to it.** The pair tells you whether the number rests on a solid floor or on expansion covering for churn. An NRR that holds while GRR slides is an early warning, however healthy the headline looks.
+
+**Account for the market, then set it aside.** Industry medians have compressed since the 2021 peak as buyers scrutinize renewals and trim seats, so part of a multi-year NRR decline may be climate rather than execution. Useful context for the board conversation; not an excuse to stop diagnosing your own composition.
+
+One more property worth internalizing: NRR is a lagging measure. A trailing twelve-month figure describes accounts that started the period a year ago, so it reflects onboarding, adoption, and pricing decisions made well before the quarter you report it in. When NRR moves, the cause is usually months old.
+
+## What Moves NRR
+
+Three movements feed the formula. Churn and contraction pull it down, and everything that drives them, value realization, onboarding quality, adoption depth, payment failures, is covered in depth on the [GRR page](/customer-success-metrics/grr/); the floor of NRR is built there. What is distinct to NRR is the third movement: **expansion**.
+
+Expansion has its own drivers, and the first one is set long before CS gets involved: **pricing structure**. A product priced with natural growth paths, more seats, higher usage tiers, additional modules, expands as the customer succeeds; a flat single-price product forces every dollar of expansion through a manual sales conversation. A meaningful share of NRR is designed at the pricing table. If your packaging has no room to grow, no CS motion will manufacture it.
+
+The second driver is **realized value**. Customers expand after the product has proven itself, almost never before. Expansion propensity tracks adoption depth closely: accounts with rising usage, multiple active teams, and integrations wired into their workflows generate expansion signals on their own. This is why expansion work aimed at struggling accounts fails and annoys; the sequence is always retain, realize value, then grow.
+
+The third is **whitespace and timing**. Expansion happens when a customer approaches a real limit: seats nearly full, usage near the tier ceiling, an adjacent team asking for access, a use case the current plan doesn't cover. Teams that systematically map whitespace and catch those moments expand steadily; teams that wait for the renewal conversation to raise it expand occasionally.
+
+One driver deserves separate labeling: **price increases**. A price rise lifts NRR the same way organic expansion does, but it is a different quality of point. Customers absorb a fair increase once; they don't compound it the way growing usage does. Track price-driven and organic expansion separately, or a pricing action will read as momentum you don't have.
+
+## How to Improve Net Revenue Retention
+
+The honest first answer is stage-dependent, and at the earliest stage the answer is: don't, yet.
+
+### Crawl: Record It Right, Optimize GRR
+
+At this stage NRR is a low-priority metric for good reason: expansion optimization on top of weak retention builds on sand. The work that matters is on the floor, and the [Establish a Retention Baseline](/customer-success-playbooks/crawl-retention-baseline/) playbook covers it.
+
+But do one NRR-relevant thing now: categorize every MRR movement correctly from the start. New, expansion, contraction, churn, each tagged at the transaction level in your billing data. Teams that skip this spend months later reconstructing history before they can trust their first NRR figure. Measure it, report it if asked, and spend your energy on GRR.
+
+### Walk: Build the Expansion Signal Pipeline
+
+Here NRR earns a place beside GRR in your reporting, segmented from day one, and the groundwork for expansion begins.
+
+**Health scoring** does double duty at this stage: the same signals that flag risk, when inverted, flag expansion readiness. High adoption, growing usage, active champions, approaching plan limits: these accounts belong on an expansion-ready list alongside the safe list. As those signals mature, formalize them into [customer success qualified leads (CSQLs)](/customer-success-metrics/csql/) handed to sales with context, which builds the case for CS as a revenue contributor without turning CSMs into quota carriers. Protect the floor in parallel; the [Build a Renewal and At-Risk Save Motion](/customer-success-playbooks/walk-renewal-save-motion/) playbook keeps the churn side from undoing the expansion side.
+
+### Run: Make Expansion Systematic
+
+At maturity, NRR becomes a primary CS metric, and the difference between 105% and 115% is usually whether expansion is systematic.
+
+The [Formalize Expansion Motion with CS](/customer-success-playbooks/run-expansion-motion/) playbook covers building the operating rhythm: whitespace mapping across the book, expansion plays per segment, clear CS-to-sales handoffs, and expansion pipeline reviewed like new-business pipeline. The [CS-Led Revenue Strategy](/customer-success-playbooks/run-cs-revenue-strategy/) playbook extends it to owning the number: segment-level NRR targets, CS accountability for the installed-base growth plan, and board reporting that decomposes NRR rather than headlines it. Predictive scoring, covered in the [Build a Predictive Customer Intelligence Model](/customer-success-playbooks/run-predictive-churn/) playbook, adds expansion-propensity modeling so effort concentrates where the whitespace and the readiness overlap.
+
+## A Worked Read
+
+A company reports 112% NRR for the year. Mid-market book, so against the benchmarks that reads as great, and the board takes it as a strong quarter.
+
+Decomposed, it looks different. GRR is 87%, below the good range for the segment. Expansion contributed 25 points, but 8 of them came from a portfolio-wide price increase, so organic expansion is 17 points, and two-thirds of that came from three large accounts. Strip the pricing action and the concentration, and the durable engine is a 87% floor plus single-digit broad-based expansion: an organic NRR barely above 100%, with next year's number depending on whether three specific customers keep growing.
+
+None of this makes 112% false. It makes it fragile, and it redirects the work: the priority is the retention floor and widening the expansion base, not celebrating the headline. The calculator on this page produces the 112%; the judgment is in asking what it is made of.
+
+## Nuances and Edge Cases
+
+**Naming and definitional drift.** Net dollar retention (NDR) and dollar-based net retention are the same idea, but public companies vary in how they compute it: different windows, different treatment of contraction, sometimes top-customer cohorts only. Before benchmarking against a public comp's reported figure, check their definition in the filing; a 115% under one method is not a 115% under another.
+
+**Window consistency.** Trailing twelve months is the standard and smooths seasonality. Whatever you choose, apply it identically every period; comparing a 12-month figure to a 6-month figure manufactures a trend. Resist annualizing monthly NRR by compounding it to the twelfth power: small monthly movements explode into implausible annual figures.
+
+**The whale effect.** Because NRR is dollar-weighted, one large account expanding can outweigh many small accounts churning. Strong NRR alongside deteriorating logo retention means the base is narrowing even as it grows, and concentration risk is accumulating. The pairing of the two metrics is the check.
+
+**Usage-based pricing volatility.** Consumption models raise expansion potential and contraction risk together, since revenue falls as easily as it rises. NRR under usage pricing swings more and means less in any single quarter; read it over longer windows and alongside usage trends.
+
+**Young-company noise.** NRR is computed on the base from a year ago. A fast-growing company measures it on a small, unrepresentative early cohort, so a startup's NRR can swing wildly on a few accounts. Treat early figures as directional until the measured base is large enough to mean something.
