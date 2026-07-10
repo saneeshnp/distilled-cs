@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-05",
+  "last_updated": "2026-07-10",
   "items": [
     {
       "title": "In-depth metric pages",
@@ -7,6 +7,14 @@
       "status": "in-progress",
       "note": "Rolling out one metric at a time. Gross Revenue Retention is the first.",
       "pageUrl": "/customer-success-metrics/grr/",
+      "links": []
+    },
+    {
+      "title": "Table of contents on long pages",
+      "description": "A table of contents on pages with long content, so the user can scan the structure and move straight to the part you need. To be added to the metrics, playbooks, and maturity framework pages.",
+      "status": "in-progress",
+      "note": "Already available on maturity model page now",
+      "pageUrl": "/customer-success-maturity-model/",
       "links": []
     },
     {
