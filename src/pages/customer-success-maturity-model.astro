@@ -203,7 +203,7 @@ const faqSchema = {
               </div>
             </div>
             <div class="stage-header-right">
-              <span class="stage-score-range">{stage.score_range[0] * 2.5} – {stage.score_range[1] * 2.5}</span>
+              <span class="stage-score-range">Score of <span class="stage-score-value">{stage.score_range[0] * 2.5} – {stage.score_range[1] * 2.5}</span> / 10</span>
               <span class="stage-badge-slot" data-stage-badge={stage.id}></span>
               <svg class="stage-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
@@ -601,6 +601,11 @@ const faqSchema = {
     font-size: 0.8125rem;
     color: var(--color-text-muted);
     display: none;
+  }
+
+  .stage-score-value {
+    font-weight: 600;
+    color: var(--color-text-secondary);
   }
 
   @media (min-width: 640px) {
