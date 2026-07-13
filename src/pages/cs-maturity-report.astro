@@ -1203,9 +1203,29 @@ const contextualRecs = frameworkData.contextual_recommendations;
     }
   }
 
-  /* ── How-to modal: wider panel + content ── */
+  /* ── How-to modal: wider panel + content ──
+     Long dl content used to grow the whole panel (including the header
+     and footer) to near-viewport height and scroll as one block, so the
+     title and close button disappeared as soon as you scrolled. Cap the
+     panel height below the default and make only the body scroll, so the
+     header/footer stay put and the dialog reads as a normal-sized card. */
   .share-modal--wide .share-modal-panel {
     max-width: 40rem;
+    max-height: min(80vh, 38rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .share-modal--wide .share-modal-header,
+  .share-modal--wide .share-modal-footer {
+    flex-shrink: 0;
+  }
+
+  .share-modal--wide .share-modal-panel-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
   }
 
   .howto-list {
