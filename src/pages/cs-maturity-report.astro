@@ -3682,6 +3682,9 @@ const contextualRecs = frameworkData.contextual_recommendations;
       opts.onOpen?.();
       modal.hidden = false;
       // Lock background scroll so the page behind the modal stays put.
+      // The scrolling element is <html>, not <body>, in most browsers, so
+      // both need overflow: hidden or the page still scrolls underneath.
+      document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
       requestAnimationFrame(() => modal.classList.add('is-open'));
       const focusEl = opts.initialFocus?.() ?? modal.querySelector<HTMLElement>('.share-modal-close');
@@ -3690,6 +3693,7 @@ const contextualRecs = frameworkData.contextual_recommendations;
     function close() {
       if (!modal) return;
       modal.classList.remove('is-open');
+      document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
       setTimeout(() => { modal.hidden = true; }, 180);
       trigger?.focus();
